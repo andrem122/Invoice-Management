@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -71,8 +72,8 @@
                     </tr>
                     <tr class="job-info">
                       <td>{{job.id}}</td>
-                      <td>{{job.start_amount}}</td>
-                      <td>{{job.balance}}</td>
+                      <td>${{job.start_amount|intcomma}}</td>
+                      <td>${{job.balance|intcomma}}</td>
                       <td><a href="{{job.document_link}}">View Contract</a></td>
                       <td><a href="#" class="btn btn-primary" id="request-payment">Request Payment</a></td>
                     </tr>
