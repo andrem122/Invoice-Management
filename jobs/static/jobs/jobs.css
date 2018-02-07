@@ -145,6 +145,10 @@ body {
   padding: 8px 10px;
 }
 
+.job-info {
+  border-bottom: 1px solid #ddd;
+}
+
 @media(min-width:768px) {
   #wrapper {
     padding-left: 0;

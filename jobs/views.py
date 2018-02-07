@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import House, Job
 
 def index(request):
@@ -24,3 +24,11 @@ def job_detail(request, job_id):
         'jobs': jobs,
     }
     return HttpResponse(template.render(context, request))
+
+#redirect a user after successful login
+def redirect_user(request):
+    #if the user is a staff member, redirect them to the admin page after login
+    if request.user.is_staff is True:
+        return redirect('/admin')
+    else:
+        return redirect('/jobs')

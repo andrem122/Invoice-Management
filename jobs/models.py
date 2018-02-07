@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+from django.contrib.auth.models import User
 # import the logging library
 import logging
 
@@ -13,16 +15,15 @@ class House(models.Model):
         return self.address
 
 class Job(models.Model):
-    house_id = models.ForeignKey(House, on_delete=models.CASCADE)
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,)
     start_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     start_date = models.DateTimeField(auto_now_add=True, blank=True)
     total_paid = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     document_link = models.CharField(max_length=800)
 
     def __str__(self):
-        info = [self.house_id, self.start_amount, self.start_date]
-        info = [str(x) for x in info]
-        return info[0] + '-' + info[1] + '-' + info[2]
+        return str(self.company.get_username()) + '-' + str(self.house.address)
 
     #returns a property
     #balance is calculated using the start_amount and total_paid

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'project_management.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['./templates',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,4 +121,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = 'http://127.0.0.1/django-apps/project_management/'
+STATIC_URL = '/static/'
+PROJECT_ROOT = os.path.dirname(__file__)
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+LOGIN_REDIRECT_URL = '/jobs/redirect'
+LOGIN_URL = '/accounts/login'

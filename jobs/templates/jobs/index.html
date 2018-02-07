@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 {% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +22,7 @@
     <!-- Font Awesome -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <!-- Custom Css -->
-    <link rel="stylesheet" href="{% static 'jobs/static/css/jobs.css' %}">
+    <link rel="stylesheet" href="{% static 'jobs/jobs.css' %}">
 </head>
 
 <body>
@@ -60,8 +60,6 @@
                   <div class="jobs">
 
                   </div>
-                  {% for job in jobs %}
-                    {% if job.house_id.address == house.address %}
                   <table class="job-summary">
                     <tr class="job-headings">
                       <th>Job ID</th>
@@ -70,6 +68,8 @@
                       <th>Contract Link</th>
                       <th>Request Payment</th>
                     </tr>
+                    {% for job in jobs %}
+                      {% if job.house.address == house.address %}
                     <tr class="job-info">
                       <td>{{job.id}}</td>
                       <td>${{job.start_amount|intcomma}}</td>
@@ -77,9 +77,9 @@
                       <td><a href="{{job.document_link}}">View Contract</a></td>
                       <td><a href="#" class="btn btn-primary" id="request-payment">Request Payment</a></td>
                     </tr>
+                      {% endif %}
+                    {% endfor %}
                   </table>
-                    {% endif %}
-                  {% endfor %}
                 </div> <!-- /.job-container -->
                 {% endfor %}
             </div>
