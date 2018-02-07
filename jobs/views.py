@@ -2,15 +2,21 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render, redirect
 from .models import House, Job
+from django.contrib.auth.models import User
 
 def index(request):
-    #get all rows from the Jobs and House tables
-    houses = House.objects.all()
-    jobs = Job.objects.all()
+    #get all houses that have a job with the current user
+    current_user = request.user
+    houses = House.objects.filter(contractors=current_user.id)
+
+    #get all jobs for ONLY the current user
+    jobs = Job.objects.filter(company_id=current_user.id)
+
     template = loader.get_template('jobs/index.html')
     context = {
         'houses': houses,
         'jobs': jobs,
+        'current_user': current_user,
     }
     return HttpResponse(template.render(context, request))
 

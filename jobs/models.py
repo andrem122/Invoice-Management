@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 #create database table structure here
 class House(models.Model):
     address = models.CharField(max_length=250)
+    contractors = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
     def __str__(self):
         return self.address
