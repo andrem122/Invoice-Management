@@ -10,10 +10,19 @@ logger = logging.getLogger(__name__)
 #create database table structure here
 class House(models.Model):
     address = models.CharField(max_length=250)
-    contractors = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    companies = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Current_Worker')
 
     def __str__(self):
         return self.address
+
+#the class that shows if the current company has at least one job in a house
+class Current_Worker(models.Model):
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    current = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.company) + '-' + str(self.house)
 
 class Job(models.Model):
     house = models.ForeignKey(House, on_delete=models.CASCADE)
@@ -22,6 +31,7 @@ class Job(models.Model):
     start_date = models.DateTimeField(auto_now_add=True, blank=True)
     total_paid = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     document_link = models.CharField(max_length=800)
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.company.get_username()) + '-' + str(self.house.address)

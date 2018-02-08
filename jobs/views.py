@@ -1,20 +1,20 @@
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render, redirect
-from .models import House, Job
+from .models import House, Job, Current_Worker
 from django.contrib.auth.models import User
 
 def index(request):
-    #get all houses that have a job with the current user
+    #get all houses that the contractor is working on
     current_user = request.user
-    houses = House.objects.filter(contractors=current_user.id)
+    current_workers = Current_Worker.objects.filter(company_id=current_user.id, current=True)
 
-    #get all jobs for ONLY the current user
-    jobs = Job.objects.filter(company_id=current_user.id)
+    #get all jobs for ONLY the current user and make sure they are approved
+    jobs = Job.objects.filter(company_id=current_user.id, approved=True)
 
     template = loader.get_template('jobs/index.html')
     context = {
-        'houses': houses,
+        'current_workers': current_workers,
         'jobs': jobs,
         'current_user': current_user,
     }

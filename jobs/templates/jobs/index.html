@@ -5,10 +5,10 @@
 {% block title %}Jobs{% endblock title %}
 
 {% block content %}
-{% for house in houses %}
+{% for current_worker in current_workers %}
 <div class="job-container">
   <div class="house">
-    <h3 class="house-address">{{house.address}}</h3>
+    <h3 class="house-address">{{current_worker.house.address}}</h3>
   </div>
   <div class="jobs">
 
@@ -22,7 +22,7 @@
       <th>Request Payment</th>
     </tr>
     {% for job in jobs %}
-      {% if job.house.address == house.address %}
+      {% if job.house.address == current_worker.house.address %}
     <tr class="job-info">
       <td>{{job.id}}</td>
       <td>${{job.start_amount|intcomma}}</td>

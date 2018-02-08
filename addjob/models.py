@@ -7,7 +7,3 @@ import logging
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-
-#create database table structure here
-
-#table for jobs that have not been approved yet
