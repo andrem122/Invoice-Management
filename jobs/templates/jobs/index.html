@@ -1,111 +1,41 @@
-{% load static %}
+{% extends 'base_login.html' %}
+
 {% load humanize %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Jobs</title>
-    <!-- Bootstrap -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" integrity="sha384-feJI7QwhOS+hwpX2zkaeJQjeiwlhOP+SdQDqhgvvo1DsjtiSQByFdThsxO669S2D" crossorigin="anonymous"></script>
-    <!--jQuery-->
-    <script
-			  src="http://code.jquery.com/jquery-3.3.1.slim.min.js"
-			  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
-			  crossorigin="anonymous">
-    </script>
-    <!-- Font Awesome -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <!-- Custom Css -->
-    <link rel="stylesheet" href="{% static 'jobs/jobs.css' %}">
-</head>
+{% block title %}Jobs{% endblock title %}
 
-<body>
+{% block content %}
+{% for house in houses %}
+<div class="job-container">
+  <div class="house">
+    <h3 class="house-address">{{house.address}}</h3>
+  </div>
+  <div class="jobs">
 
-    <div id="wrapper" class="toggled">
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <div class="close-nav" href="#"><i class="fa fa-times"></i></div>
-            <ul class="sidebar-nav">
-                <li>
-                    <a href="#">View Jobs</a>
-                </li>
-                <li>
-                    <a href="#">Add New Job</a>
-                </li>
-                <li>
-                    <a href="#">Contact</a>
-                </li>
-            </ul>
-        </div>
-        <!-- /#sidebar-wrapper -->
-
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <div class="btn-options-container">
-                  <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Menu</a>
-                  <a href="#" class="btn btn-primary" id="add-job">Add Job</a>
-                </div>
-                {% for house in houses %}
-                <div class="job-container">
-                  <div class="house">
-                    <h3 class="house-address">{{house.address}}</h3>
-                  </div>
-                  <div class="jobs">
-
-                  </div>
-                  <table class="job-summary">
-                    <tr class="job-headings">
-                      <th>Job ID</th>
-                      <th>Amount</th>
-                      <th>Balance</th>
-                      <th>Contract Link</th>
-                      <th>Request Payment</th>
-                    </tr>
-                    {% for job in jobs %}
-                      {% if job.house.address == house.address %}
-                    <tr class="job-info">
-                      <td>{{job.id}}</td>
-                      <td>${{job.start_amount|intcomma}}</td>
-                      <td>${{job.balance|intcomma}}</td>
-                      <td><a href="{{job.document_link}}">View Contract</a></td>
-                      <td><a href="#" class="btn btn-primary" id="request-payment">Request Payment</a></td>
-                    </tr>
-                      {% endif %}
-                    {% endfor %}
-                  </table>
-                </div> <!-- /.job-container -->
-                {% endfor %}
-            </div>
-        </div>
-        <!-- /#page-content-wrapper -->
-
-    </div>
-    <!-- /#wrapper -->
-
-    <!-- Menu Toggle Script -->
-    <script>
-    var $menuToggle = $('#menu-toggle');
-    var $wrapper = $('#wrapper');
-    var $pageContent = $('#page-content-wrapper');
-    var $closeNav = $('.close-nav i');
-
-    $menuToggle.click(function(e) {
-        e.preventDefault();
-        $wrapper.toggleClass("toggled");
-    });
-
-    $closeNav.click(function(){
-      $wrapper.removeClass('toggled');
-    });
-    </script>
-
+  </div>
+  <table class="job-summary">
+    <tr class="job-headings">
+      <th>Job ID</th>
+      <th>Amount</th>
+      <th>Balance</th>
+      <th>Contract Link</th>
+      <th>Request Payment</th>
+    </tr>
+    {% for job in jobs %}
+      {% if job.house.address == house.address %}
+    <tr class="job-info">
+      <td>{{job.id}}</td>
+      <td>${{job.start_amount|intcomma}}</td>
+      <td>${{job.balance|intcomma}}</td>
+      <td><a href="{{job.document_link}}">View Contract</a></td>
+      <td><a href="#" class="btn btn-primary" id="request-payment">Request Payment</a></td>
+    </tr>
+      {% endif %}
+    {% endfor %}
+  </table>
+</div> <!-- /.job-container -->
+{% endfor %}
+{% endblock content %}
 </body>
 
 </html>

@@ -1,0 +1,48 @@
+{% extends 'base_login.html' %}
+
+{ # allow static resources to be loaded from each app's 'static' folder #}
+{% load static %}
+
+{ # text that goes to the <title> tag #}
+{% block title %}Add Jobs{% endblock title %}
+
+{ # extra stylesheets and scripts custom to each page #}
+{% block scripts %}
+<link rel="stylesheet" href="{% static 'login/login.css' %}">
+<script src="{% static 'login/login.js' %}" type="text/javascript"></script>
+{% endblock scripts %}
+
+{% block content %}
+<div class="container">
+      <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-login">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col-xs-6">
+                <a href="#" class="active" id="login-form-link">Add Job</a>
+              </div>
+            </div>
+            <hr>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <form id="login-form" action="" method="post" role="form" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {% if form.errors %}
+                  <div class="form-messages">
+                    <p>Your username and password didn't match. Please try again.</p>
+                  </div>
+                  {% endif %}
+                  {{form}}
+                  <input type="submit" value="Add Job">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

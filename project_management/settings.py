@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['10.0.0.27', '127.0.0.1']
 
 INSTALLED_APPS = [
     'jobs.apps.JobsConfig',
+    'addjob.apps.AddjobConfig',
     'login.apps.LoginConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -117,12 +118,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Login Redirect
+LOGIN_REDIRECT_URL = '/jobs/redirect'
+LOGIN_URL = '/accounts/login'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-PROJECT_ROOT = os.path.dirname(__file__)
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
-LOGIN_REDIRECT_URL = '/jobs/redirect'
-LOGIN_URL = '/accounts/login'
+PROJECT_ROOT = os.path.dirname(__file__)[0:45]
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_ROOT, 'static'),
+]
