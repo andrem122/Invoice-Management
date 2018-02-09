@@ -56,6 +56,6 @@ def index(request):
 def redirect_user(request):
     #if the user is a staff member, redirect them to the admin page after login
     if request.user.is_staff is True:
-        return redirect('/admin')
+        return redirect('/jobs_admin')
     else:
         return redirect('/jobs')

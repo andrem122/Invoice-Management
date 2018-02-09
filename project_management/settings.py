@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['10.0.0.27', '127.0.0.1', 'http://127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders',
+    'jobs_admin.apps.JobsAdminConfig',
     'jobs.apps.JobsConfig',
     'addjob.apps.AddjobConfig',
     'login.apps.LoginConfig',
@@ -46,7 +46,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
