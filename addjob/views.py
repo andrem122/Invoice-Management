@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from jobs.models import Job, Current_Worker
-
 from .forms import AddJob
 
 def add_job(request):

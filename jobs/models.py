@@ -46,3 +46,8 @@ class Job(models.Model):
         #store the difference in the database as column balance
         balance = models.DecimalField(max_digits=8, decimal_places=2, default=diff)
         return diff
+
+class Request_Payment(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    approved = models.BooleanField(default=False)

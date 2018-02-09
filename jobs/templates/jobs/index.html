@@ -1,8 +1,13 @@
 {% extends 'base_login.html' %}
 
 {% load humanize %}
+{% load static %}
 
 {% block title %}Jobs{% endblock title %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'jobs/jobs.js' %}" defer></script>
+{% endblock scripts %}
 
 {% block content %}
 {% for current_worker in current_workers %}
@@ -28,7 +33,19 @@
       <td>${{job.start_amount|intcomma}}</td>
       <td>${{job.balance|intcomma}}</td>
       <td><a href="{{job.document_link}}">View Contract</a></td>
-      <td><a href="#" class="btn btn-primary" id="request-payment">Request Payment</a></td>
+      <td>
+        <form class="request-payment-form" action="" method="post">
+          {% csrf_token %}
+          {% if form.errors %}
+          <div class="form-messages">
+            <p>Please try again.</p>
+          </div>
+          {% endif %}
+          {{form}}
+          <input type="hidden" name="job_id" value="{{job.id}}">
+          <input class="btn btn-primary request-payment" type="submit" name="" value="Request Payment">
+        </form>
+      </td>
     </tr>
       {% endif %}
     {% endfor %}
