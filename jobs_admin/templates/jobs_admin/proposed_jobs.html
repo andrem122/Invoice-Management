@@ -1,10 +1,12 @@
 {% extends 'base_login.html' %}
 
 {% load humanize %}
+{% load static %}
 
-{% block title %}All Approved Jobs{% endblock title %}
+{% block title %}All Proposed Jobs{% endblock title %}
 
 {% block scripts %}
+<script type="text/javascript" src="{% static 'jobs_admin/jobs_admin.js' %}" defer></script>
 {% endblock scripts %}
 
 {% block content %}
@@ -23,6 +25,7 @@
       <th>Company</th>
       <th>Amount</th>
       <th>Contract Link</th>
+      <th>Approve Job</th>
     </tr>
     {% for job in jobs %}
       {% if job.house.address == house.address %}
@@ -33,6 +36,18 @@
       <td>${{job.start_amount|intcomma}}</td>
       <td><a href="{{job.document_link}}">View Contract</a></td>
       <td>
+        <form class="request-payment-form" action="" method="post">
+          {% csrf_token %}
+          {% if form.errors %}
+          <div class="form-messages">
+            <p>Please try again.</p>
+          </div>
+          {% endif %}
+          {{form}}
+          <input type="hidden" name="job_house" value="{{job.house}}">
+          <input type="hidden" name="job_id" value="{{job.id}}">
+          <input class="btn btn-primary request-payment" type="submit" name="" value="Approve Job">
+        </form>
       </td>
     </tr>
       {% endif %}

@@ -41,8 +41,8 @@ def index(request):
 
             if not flag:
                 # create an instance of the Request_Payment Class and populate it with the form data and default values
-                job = Request_Payment(job=job[0], amount=amount, approved=False)
-                job.save()
+                payment = Request_Payment(job=job[0], amount=amount, approved=False)
+                payment.save()
 
             return redirect('/accounts/login')
 

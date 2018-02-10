@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from jobs.models import Job, Current_Worker, House
+from .forms import Approve_Job
 
 def index(request):
     #get all houses that currently have workers working on them
@@ -31,12 +32,42 @@ def proposed_jobs(request):
     #get all unapproved jobs
     jobs = Job.objects.filter(approved=False)
 
+    #get form
+    form = Approve_Job()
+
     template = loader.get_template('jobs_admin/proposed_jobs.html')
 
     context = {
         'houses': houses,
         'jobs': jobs,
         'current_user': current_user,
+        'form': form
     }
+
+    #form logic
+    if request.method == 'POST':
+        #get empty form
+        form = Approve_Job(request.POST)
+
+        if form.is_valid():
+            #get job ID from POST
+            job_id = int(request.POST.get('job_id'))
+            address = str(request.POST.get('job_house'))
+
+            #update approved column to True for the specific job
+            Job.objects.filter(id=job_id).update(approved=True)
+
+            """if there are no more unapproved jobs for a house,
+            set proposed_jobs=False for that specific house
+            """
+            house = House.objects.filter(address=address)
+            unapproved_jobs = Job.objects.filter(house=house[0], approved=False)
+
+            if not unapproved_jobs:
+                House.objects.filter(address=address).update(proposed_jobs=False)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = Approve_Job()
 
     return HttpResponse(template.render(context, request))
