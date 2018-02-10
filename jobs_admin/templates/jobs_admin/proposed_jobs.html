@@ -1,0 +1,46 @@
+{% extends 'base_login.html' %}
+
+{% load humanize %}
+
+{% block title %}All Approved Jobs{% endblock title %}
+
+{% block scripts %}
+{% endblock scripts %}
+
+{% block content %}
+{% for house in houses %}
+<div class="job-container">
+  <div class="house">
+    <h3 class="house-address">{{house.address}}</h3>
+  </div>
+  <div class="jobs">
+
+  </div>
+  <table class="job-summary">
+    <tr class="job-headings">
+      <th>Job ID</th>
+      <th>Timestamp</th>
+      <th>Company</th>
+      <th>Amount</th>
+      <th>Contract Link</th>
+    </tr>
+    {% for job in jobs %}
+      {% if job.house.address == house.address %}
+    <tr class="job-info">
+      <td>{{job.id}}</td>
+      <td>{{job.start_date}}</td>
+      <td>{{job.company}}</td>
+      <td>${{job.start_amount|intcomma}}</td>
+      <td><a href="{{job.document_link}}">View Contract</a></td>
+      <td>
+      </td>
+    </tr>
+      {% endif %}
+    {% endfor %}
+  </table>
+</div> <!-- /.job-container -->
+{% endfor %}
+{% endblock content %}
+</body>
+
+</html>

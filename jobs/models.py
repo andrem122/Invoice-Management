@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 class House(models.Model):
     address = models.CharField(max_length=250)
     companies = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Current_Worker')
+    proposed_jobs = models.BooleanField(default=False)
 
     def __str__(self):
         return self.address
