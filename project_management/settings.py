@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'jobs_admin.apps.JobsAdminConfig',
     'jobs.apps.JobsConfig',
     'addjob.apps.AddjobConfig',
-    'login.apps.LoginConfig',
+    'payment_requests.apps.PaymentRequestsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

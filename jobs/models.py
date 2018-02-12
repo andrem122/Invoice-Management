@@ -12,6 +12,8 @@ class House(models.Model):
     address = models.CharField(max_length=250)
     companies = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Current_Worker')
     proposed_jobs = models.BooleanField(default=False)
+    pending_payments = models.BooleanField(default=False)
+    payment_history = models.BooleanField(default=False)
 
     def __str__(self):
         return self.address
@@ -44,11 +46,16 @@ class Job(models.Model):
         if self.total_paid > self.start_amount:
             logger.error('Total amount paid exceeds the starting job amount.')
         diff = self.start_amount - self.total_paid
-        #store the difference in the database as column balance
-        balance = models.DecimalField(max_digits=8, decimal_places=2, default=diff)
         return diff
 
 class Request_Payment(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        info = [self.job.company, self.amount, self.approved]
+        info = [str(x) for x in info]
+
+        return info[0] + '-' + info[1] + '-' + info[2]

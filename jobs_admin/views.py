@@ -54,13 +54,18 @@ def proposed_jobs(request):
             job_id = int(request.POST.get('job_id'))
             address = str(request.POST.get('job_house'))
 
+            house = House.objects.filter(address=address)
+
             #update approved column to True for the specific job
             Job.objects.filter(id=job_id).update(approved=True)
+
+            #add the user as a current worker on the house
+            current_worker = Current_Worker(house=house[0], company=current_user, current=True)
+            current_worker.save()
 
             """if there are no more unapproved jobs for a house,
             set proposed_jobs=False for that specific house
             """
-            house = House.objects.filter(address=address)
             unapproved_jobs = Job.objects.filter(house=house[0], approved=False)
 
             if not unapproved_jobs:
