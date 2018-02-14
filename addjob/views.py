@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from jobs.models import Job, Current_Worker, House
 from .forms import AddJob
+from .upload_file import upload_file
+import os
 
 def add_job(request):
     current_user = request.user
@@ -20,8 +22,6 @@ def add_job(request):
             total_paid = 0.00
             approved = False
             document_link = 'http://andremashraghi.com'
-            #variables for the Current Worker instance
-
 
             # create an instance of the Job and House Class and populate it with the form data and default values
             job = Job(house=house, company=company, start_amount=start_amount, total_paid=total_paid, document_link=document_link, approved=approved)
@@ -37,7 +37,9 @@ def add_job(request):
                 #the house now has a proposed job, so set proposed_jobs=True
                 House.objects.filter(address=house.address).update(proposed_jobs=True)
 
+            #save the uploaded file and the job
             job.save()
+            upload_file(f=request.FILES['document'], address=house.address)
             return HttpResponseRedirect('/jobs')
 
     # if a GET (or any other method) we'll create a blank form

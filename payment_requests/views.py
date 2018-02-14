@@ -3,6 +3,7 @@ from django.template import loader
 from django.shortcuts import render, redirect
 from jobs.models import Job, House, Request_Payment
 from .forms import Approve_Payment
+from datetime import datetime
 
 def approved_payments(request):
     #get all houses that have payment requests
@@ -109,9 +110,10 @@ def unapproved_payments(request):
 
                 total = total_paid + request_amount
 
-                #update approved column to True for the specific payment and add to the total_paid column
+                """update approved column to True and set approved_date to the time the payment was
+                approved and update the total_paid column for the job"""
                 job.update(total_paid=total)
-                payment.update(approved=True)
+                payment.update(approved=True, approved_date=datetime.now())
 
                 #since a payment was approved, set payment history to true
                 house.update(payment_history=True)

@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['10.0.0.27', '127.0.0.1', 'http://127.0.0.1']
 
 INSTALLED_APPS = [
     'jobs_admin.apps.JobsAdminConfig',
+    'payment_history.apps.PaymentHistoryConfig',
     'jobs.apps.JobsConfig',
     'addjob.apps.AddjobConfig',
     'payment_requests.apps.PaymentRequestsConfig',

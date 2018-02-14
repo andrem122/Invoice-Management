@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{% block title %}{% endblock title %}</title>
+    <!--jQuery-->
+    <script
+			  src="http://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous" defer>
+    </script>
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous" defer></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" integrity="sha384-feJI7QwhOS+hwpX2zkaeJQjeiwlhOP+SdQDqhgvvo1DsjtiSQByFdThsxO669S2D" crossorigin="anonymous" defer></script>
+    <!-- Font Awesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <!-- Custom -->
+    <link rel="stylesheet" href="{% static 'logged-in.css' %}">
+    <script src="{% static 'logged-in.js' %}" type="text/javascript" defer></script>
+    {% block scripts %}
+    {% endblock scripts %}
+</head>
+
+<body>
+  <div id="wrapper" class="toggled">
+      <!-- Sidebar -->
+      <div id="sidebar-wrapper">
+          <div class="close-nav" href="#"><i class="fa fa-times"></i></div>
+          <ul class="sidebar-nav">
+              <li>
+                  <a href="/jobs_admin">View Jobs</a>
+              </li>
+              <li>
+                  <a href="proposed_jobs">View Estimates</a>
+              </li>
+              <li>
+                  <a href="/payment_requests/unapproved_payments">View Payment Requests</a>
+              </li>
+              <li>
+                  <a href="/payment_requests/approved_payments">View Payment History</a>
+              </li>
+          </ul>
+      </div>
+      <!-- /#sidebar-wrapper -->
+
+      <!-- Page Content -->
+      <div id="page-content-wrapper">
+          <div class="container-fluid">
+              <div class="btn-options-container">
+                <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Menu</a>
+                <a href="/jobs_admin" class="btn btn-primary" id="add-job">View Jobs</a>
+              </div>
+              {% block content %}
+              {% endblock content %}
+          </div>
+      </div>
+      <!-- /#page-content-wrapper -->
+  </div><!-- /#wrapper -->
+
+  {% block body_end %}
+  {% endblock %}
+</body>
+
+</html>

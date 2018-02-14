@@ -3,6 +3,7 @@ from django.template import loader
 from django.shortcuts import render, redirect
 from jobs.models import Job, Current_Worker, House
 from .forms import Approve_Job
+from payment_history.forms import Payment_History_Form
 
 def index(request):
     #get all houses that currently have workers working on them
@@ -13,12 +14,16 @@ def index(request):
     #get all approved jobs
     jobs = Job.objects.filter(approved=True)
 
+    #get the empty forms
+    payment_history_form = Payment_History_Form()
+
     template = loader.get_template('jobs_admin/index.html')
 
     context = {
         'current_workers': current_workers,
         'jobs': jobs,
         'current_user': current_user,
+        'payment_history_form': payment_history_form,
     }
 
     return HttpResponse(template.render(context, request))

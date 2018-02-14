@@ -50,6 +50,8 @@ class Job(models.Model):
 
 class Request_Payment(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    submit_date = models.DateTimeField(auto_now_add=True, blank=True)
+    approved_date = models.DateTimeField(auto_now_add=True, blank=True)
     house = models.ForeignKey(House, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     approved = models.BooleanField(default=False)

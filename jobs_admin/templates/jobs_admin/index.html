@@ -1,4 +1,4 @@
-{% extends 'base_login.html' %}
+{% extends 'base_login_admin.html' %}
 
 {% load humanize %}
 {% load static %}
@@ -26,6 +26,7 @@
       <th>Total Paid</th>
       <th>Balance</th>
       <th>Contract Link</th>
+      <th>Payment History</th>
     </tr>
     {% for job in jobs %}
       {% if job.house.address == current_worker.house.address %}
@@ -38,6 +39,18 @@
       <td>${{job.balance|intcomma}}</td>
       <td><a href="{{job.document_link}}">View Contract</a></td>
       <td>
+        <form class="payment-history-form" action="/payment_history/p_history_job" method="post">
+          {% csrf_token %}
+          {% if form.errors %}
+          <div class="form-messages">
+            <p>Please try again.</p>
+          </div>
+          {% endif %}
+          {{payment_history_form}}
+          <input type="hidden" name="job_house" value="{{job.house}}">
+          <input type="hidden" name="job_id" value="{{job.id}}">
+          <input class="btn btn-primary v-payment-history" type="submit" name="" value="View Payments">
+        </form>
       </td>
     </tr>
       {% endif %}
