@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from jobs.models import Job, Current_Worker, House
 from .forms import AddJob
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def add_job(request):
     current_user = request.user
 

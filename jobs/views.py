@@ -4,7 +4,9 @@ from django.shortcuts import render, redirect
 from .models import House, Job, Current_Worker, Request_Payment
 from django.contrib.auth.models import User
 from .forms import Request_Payment_Form
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def index(request):
     #get all houses that the contractor is working on
     current_user = request.user

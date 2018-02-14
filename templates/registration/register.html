@@ -1,6 +1,6 @@
 {% extends 'base_generic.html' %}
 {% load static %}
-{% block title %}Login - Samjack Blackstone Invoice System{% endblock title %}
+{% block title %}Register - Samjack Blackstone Invoice System{% endblock title %}
 {% block scripts %}
 <link rel="stylesheet" href="{% static 'login.css' %}">
 {% endblock scripts %}
@@ -20,7 +20,7 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-lg-12">
-                <form id="login-form" action="{% url 'login' %}" method="post" role="form" style="display: block;">
+                <form id="register-form" action="" method="post" role="form">
                   {% csrf_token %}
                   {% if form.errors %}
                   <div class="form-messages">
@@ -28,27 +28,20 @@
                   </div>
                   {% endif %}
                   <div class="form-group">
-                    {{ form.username.label_tag }}
-                    {{ form.username }}
+                    <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
                   </div>
                   <div class="form-group">
-                    {{ form.password.label_tag }}
-                    {{ form.password }}
+                    <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="">
                   </div>
-                  <div class="form-group text-center">
-                    <input type="checkbox" tabindex="3" class="" name="remember" id="remember">
-                    <label for="remember"> Remember Me</label>
+                  <div class="form-group">
+                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
                   </div>
                   <div class="form-group">
                     <div class="row">
                       <div class="col-sm-6 col-sm-offset-3">
-                        <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
-                        <input type="hidden" name="next" value="{{ next }}" />
+                        <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Register Now">
                       </div>
                     </div>
-                  </div>
-                  <div class="form-group">
-                    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
                   </div>
                 </form>
               </div>
