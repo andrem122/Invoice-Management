@@ -1,9 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from jobs.models import Job, Current_Worker, House
 from .forms import AddJob
 from .upload_file import upload_file
-import os
 
 def add_job(request):
     current_user = request.user
@@ -21,10 +20,9 @@ def add_job(request):
             company = current_user
             total_paid = 0.00
             approved = False
-            document_link = 'http://andremashraghi.com'
 
             # create an instance of the Job and House Class and populate it with the form data and default values
-            job = Job(house=house, company=company, start_amount=start_amount, total_paid=total_paid, document_link=document_link, approved=approved)
+            job = Job(house=house, company=company, start_amount=start_amount, total_paid=total_paid, approved=approved)
 
             """if the current company already has been approved for a job for the house
             do NOT write to the Current_Worker table
@@ -39,7 +37,7 @@ def add_job(request):
 
             #save the uploaded file and the job
             job.save()
-            upload_file(f=request.FILES['document'], address=house.address)
+            upload_file(f=request.FILES['document'], address=house.address, job=job)
             return HttpResponseRedirect('/jobs')
 
     # if a GET (or any other method) we'll create a blank form
@@ -47,3 +45,7 @@ def add_job(request):
         form = AddJob()
 
     return render(request, 'addjob/addjob.html', {'form': form})
+
+def view_contract(request):
+    test_file = open('Uploads/10697 Old Hammock Way, Wellington, FL 33414/owner_names.csv ', 'rb')
+    response = HttpResponse(content=test_file)
