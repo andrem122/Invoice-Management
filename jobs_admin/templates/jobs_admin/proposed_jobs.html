@@ -46,7 +46,9 @@
           {{form}}
           <input type="hidden" name="job_house" value="{{job.house}}">
           <input type="hidden" name="job_id" value="{{job.id}}">
+          {% if request.user.is_superuser %}
           <input class="btn btn-primary approve-job" type="submit" name="" value="Approve Job">
+          {% endif %}
         </form>
       </td>
     </tr>

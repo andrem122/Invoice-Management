@@ -24,7 +24,9 @@
       <th>Company</th>
       <th>Amount</th>
       <th>Contract Link</th>
+      {% if request.user.is_superuser %}
       <th>Approve Payment</th>
+      {% endif %}
     </tr>
     {% for p in payments %}
       {% if p.job.house.address == house.address %}
@@ -34,6 +36,7 @@
       <td>{{p.job.company}}</td>
       <td>${{p.amount|intcomma}}</td>
       <td><a href="{{p.job.document_link.url}}">View Contract</a></td>
+      {% if request.user.is_superuser %}
       <td>
         <form class="approve-payment-form" action="" method="post">
           {% csrf_token %}
@@ -49,6 +52,7 @@
           <input class="btn btn-primary approve-payment" type="submit" value="Approve Payment">
         </form>
       </td>
+      {% endif %}
     </tr>
       {% endif %}
     {% endfor %}
