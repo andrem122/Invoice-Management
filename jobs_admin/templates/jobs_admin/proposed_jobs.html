@@ -34,7 +34,7 @@
       <td>{{job.start_date}}</td>
       <td>{{job.company}}</td>
       <td>${{job.start_amount|intcomma}}</td>
-      <td><a href="{{job.document_link}}">View Contract</a></td>
+      <td><a href="{{job.document_link.url}}">View Contract</a></td>
       <td>
         <form class="approve-job-form" action="" method="post">
           {% csrf_token %}

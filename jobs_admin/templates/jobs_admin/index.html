@@ -37,7 +37,7 @@
       <td>${{job.start_amount|intcomma}}</td>
       <td>${{job.total_paid}}</td>
       <td>${{job.balance|intcomma}}</td>
-      <td><a href="{{job.document_link}}">View Contract</a></td>
+      <td><a href="{{job.document_link.url}}">View Contract</a></td>
       <td>
         <form class="payment-history-form" action="/payment_history/p_history_job" method="post">
           {% csrf_token %}

@@ -51,11 +51,11 @@ def approved_payments(request):
             #update approved column to True for the specific payment and add to the total_paid column
             job.update(total_paid=total)
             payment.update(approved=False)
+            house.update(pending_payments=True)
 
             """if there are no more approved payments for a house,
             set payment_history=False for that specific house
             """
-            house = House.objects.filter(address=address)
             payments = Request_Payment.objects.filter(house=house[0], approved=True)
 
             if not payments:

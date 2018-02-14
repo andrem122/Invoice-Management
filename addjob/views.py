@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from jobs.models import Job, Current_Worker, House
 from .forms import AddJob
-from .upload_file import upload_file
 
 def add_job(request):
     current_user = request.user
@@ -17,12 +16,6 @@ def add_job(request):
             #variables for the Job instance
             house = form.cleaned_data['house']
             start_amount = form.cleaned_data['start_amount']
-            company = current_user
-            total_paid = 0.00
-            approved = False
-
-            # create an instance of the Job and House Class and populate it with the form data and default values
-            job = Job(house=house, company=company, start_amount=start_amount, total_paid=total_paid, approved=approved)
 
             """if the current company already has been approved for a job for the house
             do NOT write to the Current_Worker table
@@ -36,8 +29,13 @@ def add_job(request):
                 House.objects.filter(address=house.address).update(proposed_jobs=True)
 
             #save the uploaded file and the job
+            #job.generate_filename(request.FILES['document_link'].name)
+            job = form.save(commit=False)
+            job.company = current_user
+            job.total_paid = 0.00
+            job.approved = False
             job.save()
-            upload_file(f=request.FILES['document'], address=house.address, job=job)
+
             return HttpResponseRedirect('/jobs')
 
     # if a GET (or any other method) we'll create a blank form

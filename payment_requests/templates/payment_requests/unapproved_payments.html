@@ -33,7 +33,7 @@
       <td>{{p.job.start_date}}</td>
       <td>{{p.job.company}}</td>
       <td>${{p.amount|intcomma}}</td>
-      <td><a href="{{p.job.document_link}}">View Contract</a></td>
+      <td><a href="{{p.job.document_link.url}}">View Contract</a></td>
       <td>
         <form class="approve-payment-form" action="" method="post">
           {% csrf_token %}

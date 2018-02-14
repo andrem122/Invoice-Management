@@ -33,11 +33,17 @@ class Job(models.Model):
     start_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     start_date = models.DateTimeField(auto_now_add=True, blank=True)
     total_paid = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
-    document_link = models.CharField(max_length=800)
     approved = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.company.get_username()) + '-' + str(self.house.address)
+
+    def generate_filename(self, filename):
+        file_path = 'uploads/{}/{}'.format(str(self.house.address), str(filename))
+        return file_path
+
+    document_link = models.FileField(upload_to=generate_filename)
+
 
     #returns a property
     #balance is calculated using the start_amount and total_paid
@@ -45,8 +51,7 @@ class Job(models.Model):
     def balance(self):
         if self.total_paid > self.start_amount:
             logger.error('Total amount paid exceeds the starting job amount.')
-        diff = self.start_amount - self.total_paid
-        return diff
+        return self.start_amount - self.total_paid
 
 class Request_Payment(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE)

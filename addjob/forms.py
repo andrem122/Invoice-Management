@@ -5,13 +5,11 @@ import os
 
 #a form that has all the attributes of the Job class from the jobs app
 class AddJob(ModelForm, forms.Form):
-    #extra form fields we want to add not included in the Job class
-    document = forms.FileField(required=True, label='Upload the invoice document')
     class Meta:
         model = Job
 
         #the attributes from the Job class that we want to exclude in our form
-        exclude = ['total_paid', 'document_link', 'company', 'approved']
+        exclude = ['total_paid', 'company', 'approved']
 
         #custom labels for each input
         labels = {
