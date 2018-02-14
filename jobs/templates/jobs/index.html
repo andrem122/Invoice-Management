@@ -8,7 +8,7 @@
 {% block scripts %}
 <script type="text/javascript" src="{% static 'jobs/jobs.js' %}" defer></script>
 {% endblock scripts %}
-
+{% block body_class %}jobs{% endblock body_class %}
 {% block content %}
 {% for current_worker in current_workers %}
 <div class="job-container">
