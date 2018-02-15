@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
-# import the logging library
 import logging
 
 # Get an instance of a logger
@@ -44,14 +43,14 @@ class Job(models.Model):
 
     document_link = models.FileField(upload_to=generate_filename)
 
-
-    #returns a property
     #balance is calculated using the start_amount and total_paid
     @property
     def balance(self):
         if self.total_paid > self.start_amount:
             logger.error('Total amount paid exceeds the starting job amount.')
-        return self.start_amount - self.total_paid
+        return float(self.start_amount) - float(self.total_paid)
+
+    balance_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
 
 class Request_Payment(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE)

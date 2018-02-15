@@ -97,3 +97,33 @@ body {
 	background-color: #1CA347;
 	border-color: #1CA347;
 }
+
+form label {
+  display: block;
+  font-weight: 900;
+  font-size: 18px;
+}
+
+form select, form input {
+  margin-bottom: 20px;
+}
+
+form select {
+  background-color: transparent;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 3px;
+  width: 100%;
+}
+
+form input {
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+form input[type="submit"] {
+  display: block;
+}

@@ -6,9 +6,7 @@ from jobs.models import House, Job
 class AddJob(ModelForm, forms.Form):
     class Meta:
         model = Job
-
-        #the attributes from the Job class that we want to exclude in our form
-        exclude = ['total_paid', 'company', 'approved']
+        fields = ['house', 'start_amount', 'document_link']
 
         #custom labels for each input
         labels = {

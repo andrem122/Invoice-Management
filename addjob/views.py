@@ -36,6 +36,7 @@ def add_job(request):
             job.company = current_user
             job.total_paid = 0.00
             job.approved = False
+            job.balance_amount = job.balance
             job.save()
 
             return HttpResponseRedirect('/jobs')
@@ -45,7 +46,3 @@ def add_job(request):
         form = AddJob()
 
     return render(request, 'addjob/addjob.html', {'form': form})
-
-def view_contract(request):
-    test_file = open('Uploads/10697 Old Hammock Way, Wellington, FL 33414/owner_names.csv ', 'rb')
-    response = HttpResponse(content=test_file)

@@ -8,7 +8,7 @@ class Approve_Job(ModelForm, forms.Form):
         model = Job
         #the attributes from the Job class that we want to exclude in our form
         #widgets for each input element
-        exclude = ['house', 'company', 'start_amount', 'start_date', 'total_paid', 'document_link', 'approved']
+        exclude = ['house', 'company', 'start_amount', 'start_date', 'total_paid', 'document_link', 'approved', 'balance_amount']
         widgets = {
         }
 

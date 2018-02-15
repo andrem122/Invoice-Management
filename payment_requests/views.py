@@ -50,12 +50,16 @@ def approved_payments(request):
                 job = Job.objects.filter(id=job_id)
                 total_paid = job[0].total_paid
 
-                total = total_paid - request_amount
+                #find new total paid
+                new_total_paid = total_paid - request_amount
 
                 #update approved column to True for the specific payment and add to the total_paid column
-                job.update(total_paid=total)
+                job.update(total_paid=new_total_paid)
                 payment.update(approved=False)
                 house.update(pending_payments=True)
+
+                #update the balance_amount column AFTER updating the total_paid column
+                job.update(balance_amount=job[0].balance)
 
                 """if there are no more approved payments for a house,
                 set payment_history=False for that specific house
@@ -118,12 +122,16 @@ def unapproved_payments(request):
                     job = Job.objects.filter(id=job_id)
                     total_paid = job[0].total_paid
 
-                    total = total_paid + request_amount
+                    #find new total paid
+                    new_total_paid = total_paid + request_amount
 
                     """update approved column to True and set approved_date to the time the payment was
                     approved and update the total_paid column for the job"""
-                    job.update(total_paid=total)
+                    job.update(total_paid=new_total_paid)
                     payment.update(approved=True, approved_date=datetime.now())
+
+                    #update the balance_amount column AFTER updating the total_paid column
+                    job.update(balance_amount=job[0].balance)
 
                     #since a payment was approved, set payment history to true
                     house.update(payment_history=True)

@@ -10,10 +10,10 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     #get all houses that the contractor is working on
     current_user = request.user
-    current_workers = Current_Worker.objects.filter(company_id=current_user.id, current=True)
+    current_workers = Current_Worker.objects.filter(company=current_user, current=True)
 
-    #get all jobs for ONLY the current user and make sure they are approved
-    jobs = Job.objects.filter(company_id=current_user.id, approved=True)
+    #get all jobs for ONLY the current user that are approved and have a balance > 0
+    jobs = Job.objects.filter(company=current_user, approved=True, balance_amount__gt=0)
 
     template = loader.get_template('jobs/index.html')
     form = Request_Payment_Form()
