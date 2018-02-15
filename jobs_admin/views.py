@@ -10,12 +10,11 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     current_user = request.user
     if current_user.is_active and current_user.is_staff:
-        #get all houses that currently have workers working on them
-        sql = 'SELECT * FROM jobs_current_worker WHERE current=1 GROUP BY house_id'
-        current_workers = Current_Worker.objects.raw(sql)
+        #get all houses with current workers
+        current_workers = Current_Worker.objects.filter(current=True)
 
         #get all approved jobs
-        jobs = Job.objects.filter(approved=True)
+        jobs = Job.objects.filter(approved=True, balance_amount__gt=0)
 
         #get the empty forms
         payment_history_form = Payment_History_Form()
@@ -72,9 +71,13 @@ def proposed_jobs(request):
                 #update approved column to True for the specific job
                 Job.objects.filter(id=job_id).update(approved=True)
 
-                #add the user as a current worker on the house
-                current_worker = Current_Worker(house=house[0], company=current_user, current=True)
-                current_worker.save()
+                """add the user as a current worker on the house OR update current to True if they
+                were a current worker"""
+                was_current = Current_Worker.objects.filter(house=house[0], company=current_user, current=False)
+                if was_current:
+                    was_current[0].update(current=True)
+                else:
+                    Current_Worker(house=house[0], company=current_user, current=True).save()
 
                 """if there are no more unapproved jobs for a house,
                 set proposed_jobs=False for that specific house

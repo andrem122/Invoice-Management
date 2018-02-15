@@ -13,6 +13,7 @@ class House(models.Model):
     proposed_jobs = models.BooleanField(default=False)
     pending_payments = models.BooleanField(default=False)
     payment_history = models.BooleanField(default=False)
+    completed_jobs = models.BooleanField(default=False)
 
     def __str__(self):
         return self.address
@@ -28,7 +29,7 @@ class Current_Worker(models.Model):
 
 class Job(models.Model):
     house = models.ForeignKey(House, on_delete=models.CASCADE)
-    company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,)
+    company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     start_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     start_date = models.DateTimeField(auto_now_add=True, blank=True)
     total_paid = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)

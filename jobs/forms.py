@@ -11,7 +11,7 @@ class Request_Payment_Form(ModelForm, forms.Form):
 
         #widgets for each input element
         widgets = {
-            'amount': forms.HiddenInput(),
+            'amount': forms.HiddenInput(attrs={'step': '0.01'}),
         }
 
         #custom labels for each input

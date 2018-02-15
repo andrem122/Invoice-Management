@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['10.0.0.27', '127.0.0.1', 'http://127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'jobs_complete.apps.JobsCompleteConfig',
     'register.apps.RegisterConfig',
     'jobs_admin.apps.JobsAdminConfig',
     'payment_history.apps.PaymentHistoryConfig',

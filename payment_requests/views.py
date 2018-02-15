@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import render, redirect
-from jobs.models import Job, House, Request_Payment
+from jobs.models import Job, House, Request_Payment, Current_Worker
 from .forms import Approve_Payment
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
@@ -53,7 +53,7 @@ def approved_payments(request):
                 #find new total paid
                 new_total_paid = total_paid - request_amount
 
-                #update approved column to True for the specific payment and add to the total_paid column
+                #update approved column to False for the specific payment and subtract from the total_paid column
                 job.update(total_paid=new_total_paid)
                 payment.update(approved=False)
                 house.update(pending_payments=True)
@@ -61,14 +61,26 @@ def approved_payments(request):
                 #update the balance_amount column AFTER updating the total_paid column
                 job.update(balance_amount=job[0].balance)
 
+                #if job balance greater than zero, set completed_jobs=False
+                if job[0].balance_amount > 0:
+                    house.update(completed_jobs=False)
+
                 """if there are no more approved payments for a house,
                 set payment_history=False for that specific house
+                AND if the job now has a balance greater than zero when the
+                payment is unapproved, set current=True in jobs_current_worker
                 """
-                payments = Request_Payment.objects.filter(house=house[0], approved=True)
 
-                if not payments:
+                flags = [
+                            Request_Payment.objects.filter(house=house[0], approved=True),
+                            Job.objects.filter(company=job[0].company, house=job[0].house, balance_amount__gt=0),
+                        ]
+
+                if not flags[0]:
                     house.update(pending_payments=True, payment_history=False)
-
+                if flags[1]:
+                    worker = Current_Worker.objects.filter(company=job[0].company, house=job[0].house)
+                    worker.update(current=True)
 
         # if a GET (or any other method) we'll create a blank form
         else:
@@ -136,14 +148,26 @@ def unapproved_payments(request):
                     #since a payment was approved, set payment history to true
                     house.update(payment_history=True)
 
+                    #if balance is less than or equal to zero, set completed_jobs=True
+                    if job[0].balance <= 0:
+                        house.update(completed_jobs=True)
+
 
                     """if there are no more unapproved payments for a house,
                     set pending_payments=False for that specific house
+                    AND if a company has no more jobs for a house with a balance greater than zero,
+                    then set current=False for them in the table jobs_current_worker
                     """
-                    payments = Request_Payment.objects.filter(house=house[0], approved=False)
+                    flags = [
+                                Request_Payment.objects.filter(house=house[0], approved=False),
+                                Job.objects.filter(company=job[0].company, house=job[0].house, balance_amount__gt=0),
+                            ]
 
-                    if not payments:
+                    if not flags[0]:
                         house.update(pending_payments=False, payment_history=True)
+                    if not flags[1]:
+                        worker = Current_Worker.objects.filter(company=job[0].company, house=job[0].house)
+                        worker.update(current=False)
 
             # if a GET (or any other method) we'll create a blank form
             else:

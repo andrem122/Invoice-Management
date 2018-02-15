@@ -16,40 +16,39 @@
     <h3 class="house-address">{{current_worker.house.address}}</h3>
   </div>
   <div class="jobs">
-
-  </div>
-  <table class="job-summary">
-    <tr class="job-headings">
-      <th>Job ID</th>
-      <th>Amount</th>
-      <th>Balance</th>
-      <th>Contract Link</th>
-      <th>Request Payment</th>
-    </tr>
-    {% for job in jobs %}
+    <table class="job-summary">
+      <tr class="job-headings">
+        <th>Job ID</th>
+        <th>Amount</th>
+        <th>Balance</th>
+        <th>Contract Link</th>
+        <th>Request Payment</th>
+      </tr>
+      {% for job in jobs %}
       {% if job.house.address == current_worker.house.address %}
-    <tr class="job-info">
-      <td>{{job.id}}</td>
-      <td>${{job.start_amount|intcomma}}</td>
-      <td>${{job.balance_amount|intcomma}}</td>
-      <td><a href="{{job.document_link.url}}">View Contract</a></td>
-      <td>
-        <form class="request-payment-form" action="" method="post">
-          {% csrf_token %}
-          {% if form.errors %}
-          <div class="form-messages">
-            <p>Please try again.</p>
-          </div>
-          {% endif %}
-          {{form}}
-          <input type="hidden" name="job_id" value="{{job.id}}">
-          <input class="btn btn-primary request-payment" type="submit" name="" value="Request Payment">
-        </form>
-      </td>
-    </tr>
+      <tr class="job-info">
+        <td>{{job.id}}</td>
+        <td>${{job.start_amount|intcomma}}</td>
+        <td>${{job.balance_amount|intcomma}}</td>
+        <td><a href="{{job.document_link.url}}">View Contract</a></td>
+        <td>
+          <form class="request-payment-form" action="" method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+            <div class="form-messages">
+              <p>Please try again.</p>
+            </div>
+            {% endif %}
+            {{form}}
+            <input type="hidden" name="job_id" value="{{job.id}}">
+            <input class="btn btn-primary request-payment" type="submit" name="" value="Request Payment">
+          </form>
+        </td>
+      </tr>
       {% endif %}
-    {% endfor %}
-  </table>
+      {% endfor %}
+    </table>
+  </div>
 </div> <!-- /.job-container -->
 {% endfor %}
 {% endblock content %}
