@@ -47,6 +47,20 @@ def proposed_jobs(request):
 
         #get all houses that have job proposals
         houses = House.objects.filter(proposed_jobs=True)
+        jobs = Job.objects.filter(approved=False)
+
+        """check if houses have proposed jobs in the current week.
+        if not, set proposed_jobs=False"""
+        for h in houses.iterator():
+            for j in jobs.iterator():
+                if j.house == h:
+                    proposed_jobs_for_house = Job.objects.filter(house=h, approved=False, start_date__range=[start_week, end_week])
+                    if not proposed_jobs_for_house:
+                        h.proposed_jobs=False
+                        h.save(update_fields=['proposed_jobs'])
+                    else:
+                        h.proposed_jobs=True
+                        h.save(update_fields=['proposed_jobs'])
 
         #get all unapproved jobs for the current week
         jobs = Job.objects.filter(approved=False, start_date__range=[start_week, end_week])
