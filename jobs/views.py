@@ -5,6 +5,7 @@ from .models import House, Job, Current_Worker, Request_Payment
 from django.contrib.auth.models import User
 from .forms import Request_Payment_Form
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 @login_required
 def index(request):
@@ -34,7 +35,6 @@ def index(request):
             job_id = int(request.POST.get('job_id'))
 
             #clean the form data and store into variables
-            #variables for the Job instance
             job = Job.objects.filter(id=job_id)
             amount = form.cleaned_data['amount']
 
@@ -53,7 +53,7 @@ def index(request):
             if not flags[1]:
                 house.update(pending_payments=True)
 
-            return redirect('/accounts/login')
+            messages.success(request, 'Thanks! Your payment request has been submitted and is awaiting approval.')
 
     # if a GET (or any other method) we'll create a blank form
     else:

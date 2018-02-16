@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from jobs.models import Job, Current_Worker, House
 from .forms import AddJob
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 @login_required
 def add_job(request):
@@ -39,7 +40,8 @@ def add_job(request):
             job.balance_amount = job.balance
             job.save()
 
-            return HttpResponseRedirect('/jobs')
+            messages.success(request, 'Thanks! Your Job was submitted and is awaiting approval.')
+            form = AddJob()
 
     # if a GET (or any other method) we'll create a blank form
     else:

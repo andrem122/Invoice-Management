@@ -34,6 +34,11 @@
         <td>
           <form class="request-payment-form" action="" method="post">
             {% csrf_token %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message}}</li>
+                {% endfor %}
+            </ul>
             {% if form.errors %}
             <div class="form-messages">
               <p>Please try again.</p>

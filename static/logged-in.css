@@ -207,6 +207,18 @@ form input[type="submit"] {
   margin-bottom: 30px;
 }
 
+form ul.messages {
+  list-style: none;
+  padding: 0;
+  display: none;
+}
+
+form ul.messages li.success {
+  color: #4BB543;
+  background-color: #DAFFD8;
+  padding: 10px;
+}
+
 #add-job-heading {
   padding-left: 15px;
 }

@@ -30,6 +30,13 @@
               <div class="col-lg-12">
                 <form id="login-form" action="" method="post" role="form" enctype="multipart/form-data">
                   {% csrf_token %}
+                  {% if messages %}
+                  <ul class="messages">
+                      {% for message in messages %}
+                      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message}}</li>
+                      {% endfor %}
+                  </ul>
+                  {% endif %}
                   {% if form.errors %}
                   <div class="form-messages">
                     <p>Please enter in all data and try again.</p>
