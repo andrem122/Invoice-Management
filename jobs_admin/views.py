@@ -5,13 +5,15 @@ from jobs.models import Job, Current_Worker, House
 from .forms import Approve_Job
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import login_required
+import datetime
 
 @login_required
 def index(request):
     current_user = request.user
     if current_user.is_active and current_user.is_staff:
         #get all houses with current workers
-        current_workers = Current_Worker.objects.filter(current=True)
+        sql = 'SELECT * FROM jobs_current_worker WHERE current=1 GROUP BY house_id'
+        current_workers = Current_Worker.objects.raw(sql)
 
         #get all approved jobs
         jobs = Job.objects.filter(approved=True, balance_amount__gt=0)
@@ -38,11 +40,16 @@ def proposed_jobs(request):
     current_user = request.user
     if current_user.is_active and current_user.is_staff:
 
+        #filter results by current week
+        date = datetime.date.today()
+        start_week = date - datetime.timedelta(date.weekday())
+        end_week = start_week + datetime.timedelta(7)
+
         #get all houses that have job proposals
         houses = House.objects.filter(proposed_jobs=True)
 
-        #get all unapproved jobs
-        jobs = Job.objects.filter(approved=False)
+        #get all unapproved jobs for the current week
+        jobs = Job.objects.filter(approved=False, start_date__range=[start_week, end_week])
 
         #get form
         form = Approve_Job()
@@ -72,10 +79,13 @@ def proposed_jobs(request):
                 Job.objects.filter(id=job_id).update(approved=True)
 
                 """add the user as a current worker on the house OR update current to True if they
-                were a current worker"""
+                were a current worker OR do nothing if they are already active"""
                 was_current = Current_Worker.objects.filter(house=house[0], company=current_user, current=False)
+                is_current = Current_Worker.objects.filter(house=house[0], company=current_user, current=True)
                 if was_current:
                     was_current[0].update(current=True)
+                elif is_current:
+                    pass
                 else:
                     Current_Worker(house=house[0], company=current_user, current=True).save()
 

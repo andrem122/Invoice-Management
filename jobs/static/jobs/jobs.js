@@ -1,8 +1,6 @@
 $(document).ready(function() {
 
   var $requestBtn = $('.request-payment');
-  var $messages = $('ul.messages');
-  var $form = $('.request-payment-form');
 
   //call event.preventDefault() once when the Request Payment button is clicked
   $requestBtn.one('click', false);
@@ -12,11 +10,6 @@ $(document).ready(function() {
 
     $amountInput.attr({type: 'number'});
 
-  });
-
-  $form.submit(function(){
-    $(this).find('ul.messages').css('display', 'block');
-    console.log('form submitted');
   });
 
 });

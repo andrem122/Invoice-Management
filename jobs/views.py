@@ -53,11 +53,20 @@ def index(request):
             if not flags[1]:
                 house.update(pending_payments=True)
 
-            messages.success(request, 'Thanks! Your payment request has been submitted and is awaiting approval.')
+            return redirect('/jobs/thank_you')
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = Request_Payment_Form()
+
+    return HttpResponse(template.render(context, request))
+    
+def thank_you(request):
+    template = loader.get_template('thank_you.html')
+
+    context = {
+
+    }
 
     return HttpResponse(template.render(context, request))
 

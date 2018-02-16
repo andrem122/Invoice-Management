@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block title %}Thank You{% endblock title %}
+{% block html_class %}thank-you{% endblock html_class %}
+{% block scripts %}
+<link rel="stylesheet" href="{% static 'thank-you.css' %}">
+{% endblock scripts %}
+{% block body_class %}thank-you{% endblock body_class %}
+{% block content %}
+<div class="content-center">
+  <h1>Thank You</h1>
+  <p>Thanks! Your payment has been submitted and is awaiting approval.</p>
+  <a class="btn btn-primary" href="/jobs">Return to Jobs</a>
+</div>
+{% endblock %}

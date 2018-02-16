@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="{% block html_class %}{% endblock html_class %}" lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,7 +21,7 @@
     {% endblock scripts %}
 </head>
 
-<body>
+<body class="{% block body_class %}{% endblock body_class %}">
   {% block content %}
   {% endblock content %}
 </body>

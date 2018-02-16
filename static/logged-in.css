@@ -210,7 +210,6 @@ form input[type="submit"] {
 form ul.messages {
   list-style: none;
   padding: 0;
-  display: none;
 }
 
 form ul.messages li.success {
