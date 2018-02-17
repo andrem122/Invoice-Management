@@ -32,7 +32,7 @@
       {% if p.job.house.address == house.address %}
     <tr class="job-info">
       <td>{{p.job.id}}</td>
-      <td>{{p.job.start_date}}</td>
+      <td>{{p.approved_date}}</td>
       <td>{{p.job.company}}</td>
       <td>${{p.amount|intcomma}}</td>
       <td><a href="{{p.job.document_link.url}}">View Contract</a></td>

@@ -45,8 +45,8 @@ def proposed_jobs(request):
         start_week = date - datetime.timedelta(date.weekday())
         end_week = start_week + datetime.timedelta(7)
 
-        #get all houses that have job proposals
-        houses = House.objects.filter(proposed_jobs=True)
+        #get all houses
+        houses = House.objects.all()
         jobs = Job.objects.filter(approved=False)
 
         """check if houses have proposed jobs in the current week.
@@ -58,9 +58,12 @@ def proposed_jobs(request):
                     if not proposed_jobs_for_house:
                         h.proposed_jobs=False
                         h.save(update_fields=['proposed_jobs'])
-                    else:
+                    elif proposed_jobs_for_house:
                         h.proposed_jobs=True
                         h.save(update_fields=['proposed_jobs'])
+
+        #get all houses with proposed jobs
+        houses = House.objects.filter(proposed_jobs=True)
 
         #get all unapproved jobs for the current week
         jobs = Job.objects.filter(approved=False, start_date__range=[start_week, end_week])
@@ -103,13 +106,14 @@ def proposed_jobs(request):
                 else:
                     Current_Worker(house=house[0], company=current_user, current=True).save()
 
-                """if there are no more unapproved jobs for a house,
-                set proposed_jobs=False for that specific house
-                """
-                unapproved_jobs = Job.objects.filter(house=house[0], approved=False)
+                """If the house has no more proposed jobs for the current week,
+                set proposed_jobs=False"""
+                jobs = Job.objects.filter(house=house[0], approved=False, start_date__range=[start_week, end_week])
 
-                if not unapproved_jobs:
-                    House.objects.filter(address=address).update(proposed_jobs=False)
+                if not jobs:
+                    h = House.objects.filter(address=address)[0]
+                    h.proposed_jobs=False
+                    h.save(update_fields=['proposed_jobs'])
 
         # if a GET (or any other method) we'll create a blank form
         else:

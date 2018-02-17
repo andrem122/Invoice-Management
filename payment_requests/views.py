@@ -3,8 +3,9 @@ from django.template import loader
 from django.shortcuts import render, redirect
 from jobs.models import Job, House, Request_Payment, Current_Worker
 from .forms import Approve_Payment
-from datetime import datetime
 from django.contrib.auth.decorators import login_required
+from jobs.dates_and_times import Dates_And_Times
+import datetime
 
 @login_required
 def approved_payments(request):
@@ -12,9 +13,12 @@ def approved_payments(request):
     current_user = request.user
 
     if current_user.is_active and current_user.is_staff:
-        houses = House.objects.filter(payment_history=True)
 
-        #get all approved payments
+        payments_datetime = Dates_And_Times(House.objects.all(), Request_Payment.objects.filter(approved=True), Request_Payment)
+        payments_datetime.current_week_results(update_field={'payment_history': [True, False]}, approved=True, approved_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
+
+        houses = House.objects.filter(payment_history=True)
+        #get all approved payments for the current week
         payments = Request_Payment.objects.filter(approved=True)
 
         #get an empty form
@@ -140,7 +144,7 @@ def unapproved_payments(request):
                     """update approved column to True and set approved_date to the time the payment was
                     approved and update the total_paid column for the job"""
                     job.update(total_paid=new_total_paid)
-                    payment.update(approved=True, approved_date=datetime.now())
+                    payment.update(approved=True, approved_date=datetime.datetime.now())
 
                     #update the balance_amount column AFTER updating the total_paid column
                     job.update(balance_amount=job[0].balance)
