@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from jobs.models import Job, Current_Worker, House
 from .forms import AddJob
@@ -8,10 +8,10 @@ from django.contrib import messages
 @login_required
 def add_job(request):
     current_user = request.user
-    if current_user.is_active and current_user.groups.filter(name='Contractors').exists():
+    if current_user.is_active and current_user.groups.filter(name='Workers').exists():
         if request.method == 'POST':
             # create a form instance and populate it with data from the request:
-            form = AddJob(request.POST, request.FILES)
+            form = AddJob(data=request.POST, files=request.FILES, user=current_user)
 
             if form.is_valid():
 
@@ -38,11 +38,11 @@ def add_job(request):
                 job.save()
 
                 messages.success(request, 'Thanks! Your Job was submitted and is awaiting approval.')
-                form = AddJob()
+                form = AddJob(user=current_user)
 
         # if a GET (or any other method) we'll create a blank form
         else:
-            form = AddJob()
+            form = AddJob(user=current_user)
     else:
         return redirect('/accounts/login')
 

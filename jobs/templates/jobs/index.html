@@ -10,6 +10,16 @@
 {% endblock scripts %}
 {% block body_class %}jobs{% endblock body_class %}
 {% block content %}
+{% if new_user %}
+<div class="welcome-message">
+  <h3>Welcome to Your Job Dashboard!</h3>
+  <p>
+    Here is where you can add new jobs and request payments for
+    existing jobs. Click the blue button above titled 'Add Job' to
+    add your first job.
+  </p>
+</div>
+{% endif %}
 {% for current_worker in current_workers %}
 <div class="job-container">
   <div class="house">

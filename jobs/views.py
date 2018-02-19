@@ -11,8 +11,7 @@ from django.contrib import messages
 def index(request):
     current_user = request.user
 
-    if current_user.is_active and current_user.groups.filter(name='Contractors').exists():
-        customer_houses = ''
+    if current_user.is_active and current_user.groups.filter(name='Workers').exists():
         #get all houses that the contractor is working on for the customer
         current_workers = Current_Worker.objects.filter(company=current_user, current=True)
 
@@ -28,6 +27,12 @@ def index(request):
             'current_user': current_user,
             'form': form,
         }
+
+        #check if the user is new to send a welcome message
+        new_user = request.GET.get('new_user')
+
+        if new_user:
+            context['new_user'] = new_user
 
         if request.method == 'POST':
             # create a form instance and populate it with data from the request:

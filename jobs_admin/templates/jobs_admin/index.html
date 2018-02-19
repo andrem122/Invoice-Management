@@ -13,7 +13,7 @@
 {% block content %}
 {% if register_url %}
 <div class="signup-link">
-  <h3>Sign Up Link</h3>
+  <h3>Welcome to Your Job Dashboard!</h3>
   <p>Send this signup link to your workers, so that they can
   submit jobs and send payment requests to you:</p>
   <a href="{{register_url}}">{{register_url}}</a>
@@ -73,9 +73,7 @@
               {{change_job_status_form}}
               <input type="hidden" name="job_house" value="{{job.house}}">
               <input type="hidden" name="job_id" value="{{job.id}}">
-              {% if request.user.is_superuser %}
               <input class="btn btn-primary change-job-status" type="submit" name="" value="Unapprove Job">
-              {% endif %}
             </form>
           </td>
         </tr>

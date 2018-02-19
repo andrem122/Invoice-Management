@@ -12,3 +12,8 @@ class AddJob(ModelForm, forms.Form):
         labels = {
             'start_amount': 'Amount($)'
         }
+
+    def __init__(self, user, *args, **kwargs):
+        super(AddJob, self).__init__(*args, **kwargs)
+        #filter house by customer id
+        self.fields['house'].queryset = House.objects.filter(customer=int(user.groups.values_list('name', flat=True)[1]))

@@ -5,6 +5,7 @@ from jobs.models import Job, Current_Worker, House
 from .forms import Change_Job_Status
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group, User
 from jobs.dates_and_times import Dates_And_Times
 import datetime
 
@@ -12,15 +13,24 @@ import datetime
 def index(request):
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
-        #get the register url if it exists
-        register_url = request.GET.get('url', None)
+        #get all customer houses and houses with active jobs
+        customer_houses = House.objects.filter(customer=current_user)
+        current_houses = Current_Worker.objects.filter(current=True)
 
-        #get all houses with current workers
-        sql = 'SELECT * FROM jobs_current_worker WHERE current=1 GROUP BY house_id'
-        current_workers = Current_Worker.objects.raw(sql)
+        current_customer_houses = []
+        for h in customer_houses.iterator():
+            for c_h in current_houses.iterator():
+                if c_h.house == h:
+                    current_customer_houses.append(c_h)
 
-        #get all approved jobs
+        #get all customer workers jobs that are approved
         jobs = Job.objects.filter(approved=True, balance_amount__gt=0)
+
+        customer_worker_jobs = []
+        for h in current_customer_houses:
+            for j in jobs:
+                if j.house.customer == h.house.customer:
+                    customer_worker_jobs.append(j)
 
         #get the empty forms
         payment_history_form = Payment_History_Form()
@@ -30,12 +40,15 @@ def index(request):
         template = loader.get_template('jobs_admin/index.html')
 
         context = {
-            'current_workers': current_workers,
-            'jobs': jobs,
+            'current_workers': current_customer_houses,
+            'jobs': customer_worker_jobs,
             'current_user': current_user,
             'payment_history_form': payment_history_form,
             'change_job_status_form': change_job_status_form,
         }
+
+        #get the register url if it exists
+        register_url = request.GET.get('url', None)
 
         if register_url:
             context['register_url'] = register_url
