@@ -14,7 +14,7 @@ class House(models.Model):
     pending_payments = models.BooleanField(default=False)
     payment_history = models.BooleanField(default=False)
     completed_jobs = models.BooleanField(default=False)
-    customer = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer')
+    customer = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer_house')
 
     def __str__(self):
         return self.address

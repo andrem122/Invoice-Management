@@ -7,8 +7,6 @@ class Add_House(ModelForm, forms.Form):
     class Meta:
         model = House
         fields = ['address']
-
-        #custom labels for each input
-        labels = {
-            'address': '1234 N Drive Street',
+        widgets = {
+            'address': forms.TextInput(attrs={'placeholder': '1234 N Drive Street'})
         }

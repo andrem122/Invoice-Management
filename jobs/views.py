@@ -10,9 +10,10 @@ from django.contrib import messages
 @login_required
 def index(request):
     current_user = request.user
-    
+
     if current_user.is_active and current_user.groups.filter(name='Contractors').exists():
-        #get all houses that the contractor is working on
+        customer_houses = ''
+        #get all houses that the contractor is working on for the customer
         current_workers = Current_Worker.objects.filter(company=current_user, current=True)
 
         #get all jobs for ONLY the current user that are approved and have a balance > 0

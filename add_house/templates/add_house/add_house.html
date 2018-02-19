@@ -16,7 +16,7 @@
           <div class="panel-heading">
             <div class="row">
               <div class="col-xs-6">
-                <h3 id="add-job-heading">Add Job</h3>
+                <h3 id="add-job-heading">Add House</h3>
               </div>
             </div>
             <hr>
@@ -25,8 +25,6 @@
             <div class="row">
               <div class="col-lg-12">
                 <form id="add-house-form" action="" method="post" role="form">
-                  <p>Add each house seperated by a semicolon.</p>
-                  <p>Example: 1234 N Drive Way; 456 S Street Way</p>
                   {% csrf_token %}
                   {% if messages %}
                   <ul class="messages">

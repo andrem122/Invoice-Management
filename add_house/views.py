@@ -32,4 +32,4 @@ def add_house(request):
     else:
         return HttpResponseRedirect('/accounts/login')
 
-    return render(request, 'addjob/addjob.html', {'form': form})
+    return render(request, 'add_house/add_house.html', {'form': form})

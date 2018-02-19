@@ -11,6 +11,14 @@
 {% block body_class %}jobs_admin{% endblock body_class %}
 
 {% block content %}
+{% if register_url %}
+<div class="signup-link">
+  <h3>Sign Up Link</h3>
+  <p>Send this signup link to your workers, so that they can
+  submit jobs and send payment requests to you:</p>
+  <a href="{{register_url}}">{{register_url}}</a>
+</div>
+{% endif %}
 {% for w in current_workers %}
 <div class="job-container">
   <div class="house">

@@ -12,6 +12,9 @@ import datetime
 def index(request):
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
+        #get the register url if it exists
+        register_url = request.GET.get('url', None)
+
         #get all houses with current workers
         sql = 'SELECT * FROM jobs_current_worker WHERE current=1 GROUP BY house_id'
         current_workers = Current_Worker.objects.raw(sql)
@@ -33,6 +36,9 @@ def index(request):
             'payment_history_form': payment_history_form,
             'change_job_status_form': change_job_status_form,
         }
+
+        if register_url:
+            context['register_url'] = register_url
 
         #form logic
         if request.method == 'POST':
