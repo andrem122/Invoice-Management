@@ -144,6 +144,11 @@ body .job-info td:last-child input[type="submit"] {
   padding: 8px 10px;
 }
 
+.job-summary td:last-child {
+  padding-top: 16px;
+  vertical-align: top;
+}
+
 .job-info {
   border-bottom: 1px solid #ddd;
 }

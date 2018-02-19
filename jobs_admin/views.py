@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import render, redirect
 from jobs.models import Job, Current_Worker, House
-from .forms import Approve_Job
+from .forms import Change_Job_Status
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import login_required
 from jobs.dates_and_times import Dates_And_Times
@@ -21,7 +21,9 @@ def index(request):
 
         #get the empty forms
         payment_history_form = Payment_History_Form()
+        change_job_status_form = Change_Job_Status()
 
+        #load template
         template = loader.get_template('jobs_admin/index.html')
 
         context = {
@@ -29,7 +31,36 @@ def index(request):
             'jobs': jobs,
             'current_user': current_user,
             'payment_history_form': payment_history_form,
+            'change_job_status_form': change_job_status_form,
         }
+
+        #form logic
+        if request.method == 'POST':
+            #get empty form
+            form = Change_Job_Status(request.POST)
+
+            if form.is_valid():
+                #get job ID from POST
+                job_id = int(request.POST.get('job_id'))
+                address = str(request.POST.get('job_house'))
+
+                house = House.objects.get(address=address)
+
+                #update approved column to False for the specific job
+                job = Job.objects.get(pk=job_id)
+                job.approved=False
+                job.save()
+
+                """if no more current jobs for specific house, delete as current worker"""
+                current_house_jobs = Job.objects.filter(company=job.company, approved=True, house=house)
+
+                if not current_house_jobs:
+                    Current_Worker.objects.filter(company=job.company, house=house).delete()
+
+
+        # if a GET (or any other method) we'll create a blank form
+        else:
+            form = Change_Job_Status()
 
         return HttpResponse(template.render(context, request))
     else:
@@ -50,7 +81,7 @@ def proposed_jobs(request):
         jobs = Job.objects.filter(approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
 
         #get form
-        form = Approve_Job()
+        form = Change_Job_Status()
 
         template = loader.get_template('jobs_admin/proposed_jobs.html')
 
@@ -64,7 +95,7 @@ def proposed_jobs(request):
         #form logic
         if request.method == 'POST':
             #get empty form
-            form = Approve_Job(request.POST)
+            form = Change_Job_Status(request.POST)
 
             if form.is_valid():
                 #get job ID from POST
@@ -100,7 +131,7 @@ def proposed_jobs(request):
 
         # if a GET (or any other method) we'll create a blank form
         else:
-            form = Approve_Job()
+            form = Change_Job_Status()
 
         return HttpResponse(template.render(context, request))
 

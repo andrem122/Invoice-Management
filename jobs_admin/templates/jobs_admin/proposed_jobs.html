@@ -43,7 +43,7 @@
       <td>${{job.start_amount|intcomma}}</td>
       <td><a href="{{job.document_link.url}}">View Contract</a></td>
       <td>
-        <form class="approve-job-form" action="" method="post">
+        <form class="change-job-status-form" action="" method="post">
           {% csrf_token %}
           {% if form.errors %}
           <div class="form-messages">
@@ -54,7 +54,7 @@
           <input type="hidden" name="job_house" value="{{job.house}}">
           <input type="hidden" name="job_id" value="{{job.id}}">
           {% if request.user.is_superuser %}
-          <input class="btn btn-primary approve-job" type="submit" name="" value="Approve Job">
+          <input class="btn btn-primary change-job-status" type="submit" name="" value="Approve Job">
           {% endif %}
         </form>
       </td>

@@ -28,6 +28,7 @@
           <th>Balance</th>
           <th>Contract Link</th>
           <th>Payment History</th>
+          <th>Unapprove Job</th>
         </tr>
         {% for job in jobs %}
         {% if job.house.address == w.house.address %}
@@ -42,15 +43,31 @@
           <td>
             <form class="payment-history-form" action="/payment_history/p_history_job" method="post">
               {% csrf_token %}
-              {% if form.errors %}
+              {% if payment_history_form.errors %}
               <div class="form-messages">
-                <p>Please try again.</p>
+                <p>{{payment_history_form.errors}}</p>
               </div>
               {% endif %}
               {{payment_history_form}}
               <input type="hidden" name="job_house" value="{{job.house}}">
               <input type="hidden" name="job_id" value="{{job.id}}">
               <input class="btn btn-primary v-payment-history" type="submit" name="v-payment-history" value="View Payments">
+            </form>
+          </td>
+          <td>
+            <form class="change-job-status-form" action="" method="post">
+              {% csrf_token %}
+              {% if change_job_status_form.errors %}
+              <div class="form-messages">
+                <p>{{change_job_status_form.errors}}</p>
+              </div>
+              {% endif %}
+              {{change_job_status_form}}
+              <input type="hidden" name="job_house" value="{{job.house}}">
+              <input type="hidden" name="job_id" value="{{job.id}}">
+              {% if request.user.is_superuser %}
+              <input class="btn btn-primary change-job-status" type="submit" name="" value="Unapprove Job">
+              {% endif %}
             </form>
           </td>
         </tr>

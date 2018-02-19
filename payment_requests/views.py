@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import render, redirect
 from jobs.models import Job, House, Request_Payment, Current_Worker
-from .forms import Approve_Payment
+from .forms import Change_Payment_Status
 from django.contrib.auth.decorators import login_required
 from jobs.dates_and_times import Dates_And_Times
 import datetime
@@ -23,7 +23,7 @@ def approved_payments(request):
         payments = Request_Payment.objects.filter(approved=True, approved_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
 
         #get an empty form
-        form = Approve_Payment()
+        form = Change_Payment_Status()
 
         template = loader.get_template('payment_requests/approved_payments.html')
 
@@ -37,7 +37,7 @@ def approved_payments(request):
         #form logic for unapproving payments
         if request.method == 'POST':
             #get populated form
-            form = Approve_Payment(request.POST)
+            form = Change_Payment_Status(request.POST)
 
             if form.is_valid():
                 #get payment ID and house address from POST
@@ -89,7 +89,7 @@ def approved_payments(request):
 
         # if a GET (or any other method) we'll create a blank form
         else:
-            form = Approve_Payment()
+            form = Change_Payment_Status()
 
         return HttpResponse(template.render(context, request))
 
@@ -112,7 +112,7 @@ def unapproved_payments(request):
             payments = Request_Payment.objects.filter(approved=False)
 
             #get an empty form
-            form = Approve_Payment()
+            form = Change_Payment_Status()
 
             template = loader.get_template('payment_requests/unapproved_payments.html')
 
@@ -126,7 +126,7 @@ def unapproved_payments(request):
             #form logic
             if request.method == 'POST':
                 #get populated form
-                form = Approve_Payment(request.POST)
+                form = Change_Payment_Status(request.POST)
 
                 if form.is_valid():
                     #get job ID from POST
@@ -180,7 +180,7 @@ def unapproved_payments(request):
 
             # if a GET (or any other method) we'll create a blank form
             else:
-                form = Approve_Payment()
+                form = Change_Payment_Status()
 
             return HttpResponse(template.render(context, request))
 
