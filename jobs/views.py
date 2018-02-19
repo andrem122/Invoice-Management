@@ -61,14 +61,10 @@ def index(request):
 
     return HttpResponse(template.render(context, request))
     
+@login_required
 def thank_you(request):
-    template = loader.get_template('thank_you.html')
-
-    context = {
-
-    }
-
-    return HttpResponse(template.render(context, request))
+    template = loader.get_template('jobs/thank_you.html')
+    return HttpResponse(template.render(request=request))
 
 #redirect a user after successful login
 def redirect_user(request):

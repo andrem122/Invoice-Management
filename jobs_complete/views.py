@@ -12,8 +12,8 @@ def index(request):
         #get all houses with completed jobs
         houses = House.objects.filter(completed_jobs=True)
 
-        #get all approved jobs with a balance less than or equal to zero
-        jobs = Job.objects.filter(approved=True, balance_amount__lte=0)
+        #get all approved jobs with a balance less than or equal to zero; limit to 50 results
+        jobs = Job.objects.filter(approved=True, balance_amount__lte=0)[:50]
 
         #get the empty forms
         payment_history_form = Payment_History_Form()

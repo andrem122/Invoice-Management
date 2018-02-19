@@ -66,3 +66,9 @@ class Request_Payment(models.Model):
         info = [str(x) for x in info]
 
         return info[0] + '-' + info[1] + '-' + info[2]
+
+    def generate_filename(self, filename):
+        file_path = 'admin_uploads/{}/{}'.format(str(self.job), str(filename))
+        return file_path
+
+    document_link = models.FileField(upload_to=generate_filename)

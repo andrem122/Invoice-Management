@@ -9,7 +9,7 @@
 {% block content %}
 <div class="content-center">
   <h1>Thank You</h1>
-  <p>Thanks! Your payment has been submitted and is awaiting approval.</p>
-  <a class="btn btn-primary" href="/jobs">Return to Jobs</a>
+  <p>{% block thank_you_message %}{% endblock %}</p>
+  <a class="btn btn-primary" href="{% block return_link %}{% endblock %}">{% block return_message %}{% endblock %}</a>
 </div>
 {% endblock %}

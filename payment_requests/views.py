@@ -14,12 +14,13 @@ def approved_payments(request):
 
     if current_user.is_active and current_user.is_staff:
 
+        #filter data by current week
         payments_datetime = Dates_And_Times(House.objects.all(), Request_Payment.objects.filter(approved=True), Request_Payment)
         payments_datetime.current_week_results(update_field={'payment_history': [True, False]}, approved=True, approved_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
 
+        #get all houses with a payment history and approved payments for the current week
         houses = House.objects.filter(payment_history=True)
-        #get all approved payments for the current week
-        payments = Request_Payment.objects.filter(approved=True)
+        payments = Request_Payment.objects.filter(approved=True, approved_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
 
         #get an empty form
         form = Approve_Payment()
@@ -101,9 +102,13 @@ def unapproved_payments(request):
         current_user = request.user
 
         if current_user.is_active and current_user.is_staff:
-            houses = House.objects.filter(pending_payments=True)
 
-            #get all unapproved payments
+            #filter data by current week
+            payments_datetime = Dates_And_Times(House.objects.all(), Request_Payment.objects.filter(approved=False), Request_Payment)
+            payments_datetime.current_week_results(update_field={'pending_payments': [True, False]}, approved=False, submit_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
+
+            #get all unapproved payments and houses with pending payments
+            houses = House.objects.filter(pending_payments=True)
             payments = Request_Payment.objects.filter(approved=False)
 
             #get an empty form

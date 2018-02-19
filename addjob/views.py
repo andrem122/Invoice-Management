@@ -20,9 +20,7 @@ def add_job(request):
             house = form.cleaned_data['house']
             start_amount = form.cleaned_data['start_amount']
 
-            """if the current company already has been approved for a job for the house
-            do NOT write to the Current_Worker table
-            AND if the house already has proposed jobs, do NOT write to the House table"""
+            """if the house already has proposed jobs, do NOT write to the House table"""
             flags = [
                         House.objects.filter(address=house.address, proposed_jobs=True),
                     ]
@@ -32,7 +30,6 @@ def add_job(request):
                 House.objects.filter(address=house.address).update(proposed_jobs=True)
 
             #save the uploaded file and the job
-            #job.generate_filename(request.FILES['document_link'].name)
             job = form.save(commit=False)
             job.company = current_user
             job.total_paid = 0.00

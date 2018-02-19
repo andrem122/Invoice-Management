@@ -5,6 +5,7 @@ from jobs.models import Job, Current_Worker, House
 from .forms import Approve_Job
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import login_required
+from jobs.dates_and_times import Dates_And_Times
 import datetime
 
 @login_required
@@ -40,33 +41,13 @@ def proposed_jobs(request):
     current_user = request.user
     if current_user.is_active and current_user.is_staff:
 
-        #filter results by current week
-        date = datetime.date.today()
-        start_week = date - datetime.timedelta(date.weekday())
-        end_week = start_week + datetime.timedelta(7)
+        #filter data by current week
+        jobs_datetime = Dates_And_Times(House.objects.all(), Job.objects.filter(approved=False), Job)
+        jobs_datetime.current_week_results(update_field={'proposed_jobs': [True, False]}, approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
 
-        #get all houses
-        houses = House.objects.all()
-        jobs = Job.objects.filter(approved=False)
-
-        """check if houses have proposed jobs in the current week.
-        if not, set proposed_jobs=False"""
-        for h in houses.iterator():
-            for j in jobs.iterator():
-                if j.house == h:
-                    proposed_jobs_for_house = Job.objects.filter(house=h, approved=False, start_date__range=[start_week, end_week])
-                    if not proposed_jobs_for_house:
-                        h.proposed_jobs=False
-                        h.save(update_fields=['proposed_jobs'])
-                    elif proposed_jobs_for_house:
-                        h.proposed_jobs=True
-                        h.save(update_fields=['proposed_jobs'])
-
-        #get all houses with proposed jobs
+        #get all houses with proposed jobs and unapproved jobs
         houses = House.objects.filter(proposed_jobs=True)
-
-        #get all unapproved jobs for the current week
-        jobs = Job.objects.filter(approved=False, start_date__range=[start_week, end_week])
+        jobs = Job.objects.filter(approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
 
         #get form
         form = Approve_Job()
@@ -93,22 +74,24 @@ def proposed_jobs(request):
                 house = House.objects.filter(address=address)
 
                 #update approved column to True for the specific job
-                Job.objects.filter(id=job_id).update(approved=True)
+                job = Job.objects.get(pk=job_id)
+                job.approved=True
+                job.save()
 
                 """add the user as a current worker on the house OR update current to True if they
                 were a current worker OR do nothing if they are already active"""
-                was_current = Current_Worker.objects.filter(house=house[0], company=current_user, current=False)
-                is_current = Current_Worker.objects.filter(house=house[0], company=current_user, current=True)
+                was_current = Current_Worker.objects.filter(house=house[0], company=job.company, current=False)
+                is_current = Current_Worker.objects.filter(house=house[0], company=job.company, current=True)
                 if was_current:
                     was_current[0].update(current=True)
                 elif is_current:
                     pass
                 else:
-                    Current_Worker(house=house[0], company=current_user, current=True).save()
+                    Current_Worker(house=house[0], company=job.company, current=True).save()
 
                 """If the house has no more proposed jobs for the current week,
                 set proposed_jobs=False"""
-                jobs = Job.objects.filter(house=house[0], approved=False, start_date__range=[start_week, end_week])
+                jobs = Job.objects.filter(house=house[0], approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
 
                 if not jobs:
                     h = House.objects.filter(address=address)[0]

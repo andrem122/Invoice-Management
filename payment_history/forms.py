@@ -7,5 +7,12 @@ class Payment_History_Form(ModelForm, forms.Form):
     class Meta:
         model = Request_Payment
         #the attributes from the Job class that we want to exclude in our form
-        #widgets for each input element
-        exclude = ['job', 'submit_date', 'approved_date', 'house', 'amount', 'approved']
+        exclude = ['job', 'submit_date', 'approved_date', 'house', 'amount', 'approved', 'document_link']
+
+class Upload_Document_Form(ModelForm, forms.Form):
+    class Meta:
+        model = Request_Payment
+        fields = ['document_link']
+        widgets ={
+            'document_link': forms.HiddenInput(attrs={'class':'document_link', 'required':''}),
+        }

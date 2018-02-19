@@ -3,10 +3,10 @@
 {% load humanize %}
 {% load static %}
 
-{% block title %}All Proposed Jobs{% endblock title %}
+{% block title %}All Payments for Job {{job_id}}{% endblock title %}
 
 {% block scripts %}
-<script type="text/javascript" src="{% static 'jobs_admin/jobs_admin.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'payment_history/payment_history.js' %}" defer></script>
 {% endblock scripts %}
 
 {% block content %}
@@ -22,12 +22,29 @@
       <th>Timestamp</th>
       <th>Company</th>
       <th>Amount</th>
+      <th>Document Link</th>
+      <th>Upload Document</th>
     </tr>
     {% for p in payments %}
     <tr class="job-info">
       <td>{{p.approved_date}}</td>
       <td>{{p.job.company}}</td>
       <td>${{p.amount|intcomma}}</td>
+      <td><a href="{% if p.document_link.url != None %}{{p.document_link.url}}{% else %}#{% endif %}">View Document</a></td>
+      <td>
+        <form class="upload-document-form" action="" method="post" role="form" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% if upload_document_form.errors %}
+          <div class="form-messages">
+            <p>{{upload_document_form.errors}}</p>
+          </div>
+          {% endif %}
+          {{upload_document_form}}
+          <input type="hidden" name="job_id" value="{{p.job.id}}">
+          <input type="hidden" name="p_id" value="{{p.id}}">
+          <input class="btn btn-primary upload-document" type="submit" name="upload-document" value="Upload Document">
+        </form>
+      </td>
     </tr>
     {% endfor %}
   </table>
