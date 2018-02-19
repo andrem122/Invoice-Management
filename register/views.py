@@ -1,11 +1,10 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from .forms import Register
 
 def register(request):
-    #get all houses that currently have workers working on them
     current_user = request.user
 
     #get the empty forms
@@ -28,9 +27,19 @@ def register(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            #save the form
+            #save the user to the database
             user = User.objects.create_user(username, email, password)
             user.save()
+
+            #create the Workers group if it does not exist
+            if Group.objects.filter(name='Workers').exists():
+                pass
+            else:
+                group = Group(name='Workers')
+                group.save()
+
+            #add user to group
+            user.groups.add(group)
 
             #redirect
             return HttpResponseRedirect('/accounts/login')

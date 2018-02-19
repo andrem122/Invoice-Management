@@ -28,7 +28,9 @@ urlpatterns = [
     path('payment_requests/', include('payment_requests.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', include('register.urls')),
+    path('customer_register/', include('customer_register.urls')),
     path('jobs_complete/', include('jobs_complete.urls')),
+    path('add_house/', include('add_house.urls')),
 ]
 
 if settings.DEBUG:

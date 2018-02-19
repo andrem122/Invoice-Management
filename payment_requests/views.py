@@ -12,8 +12,7 @@ def approved_payments(request):
     #get all houses that have payment requests
     current_user = request.user
 
-    if current_user.is_active and current_user.is_staff:
-
+    if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         #filter data by current week
         payments_datetime = Dates_And_Times(House.objects.all(), Request_Payment.objects.filter(approved=True), Request_Payment)
         payments_datetime.current_week_results(update_field={'payment_history': [True, False]}, approved=True, approved_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
@@ -101,8 +100,7 @@ def unapproved_payments(request):
         #get all houses that have payment requests
         current_user = request.user
 
-        if current_user.is_active and current_user.is_staff:
-
+        if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
             #filter data by current week
             payments_datetime = Dates_And_Times(House.objects.all(), Request_Payment.objects.filter(approved=False), Request_Payment)
             payments_datetime.current_week_results(update_field={'pending_payments': [True, False]}, approved=False, submit_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])

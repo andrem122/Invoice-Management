@@ -11,7 +11,7 @@ import datetime
 @login_required
 def index(request):
     current_user = request.user
-    if current_user.is_active and current_user.is_staff:
+    if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         #get all houses with current workers
         sql = 'SELECT * FROM jobs_current_worker WHERE current=1 GROUP BY house_id'
         current_workers = Current_Worker.objects.raw(sql)
@@ -70,7 +70,7 @@ def index(request):
 def proposed_jobs(request):
     #get current user
     current_user = request.user
-    if current_user.is_active and current_user.is_staff:
+    if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
 
         #filter data by current week
         jobs_datetime = Dates_And_Times(House.objects.all(), Job.objects.filter(approved=False), Job)

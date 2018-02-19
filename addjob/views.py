@@ -8,40 +8,42 @@ from django.contrib import messages
 @login_required
 def add_job(request):
     current_user = request.user
+    if current_user.is_active and current_user.groups.filter(name='Contractors').exists():
+        if request.method == 'POST':
+            # create a form instance and populate it with data from the request:
+            form = AddJob(request.POST, request.FILES)
 
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = AddJob(request.POST, request.FILES)
+            if form.is_valid():
 
-        if form.is_valid():
+                #clean the form data and store into variables
+                #variables for the Job instance
+                house = form.cleaned_data['house']
+                start_amount = form.cleaned_data['start_amount']
 
-            #clean the form data and store into variables
-            #variables for the Job instance
-            house = form.cleaned_data['house']
-            start_amount = form.cleaned_data['start_amount']
+                """if the house already has proposed jobs, do NOT write to the House table"""
+                flags = [
+                            House.objects.filter(address=house.address, proposed_jobs=True),
+                        ]
 
-            """if the house already has proposed jobs, do NOT write to the House table"""
-            flags = [
-                        House.objects.filter(address=house.address, proposed_jobs=True),
-                    ]
+                if not flags[0]:
+                    #the house now has a proposed job, so set proposed_jobs=True
+                    House.objects.filter(address=house.address).update(proposed_jobs=True)
 
-            if not flags[0]:
-                #the house now has a proposed job, so set proposed_jobs=True
-                House.objects.filter(address=house.address).update(proposed_jobs=True)
+                #save the uploaded file and the job
+                job = form.save(commit=False)
+                job.company = current_user
+                job.total_paid = 0.00
+                job.approved = False
+                job.balance_amount = job.balance
+                job.save()
 
-            #save the uploaded file and the job
-            job = form.save(commit=False)
-            job.company = current_user
-            job.total_paid = 0.00
-            job.approved = False
-            job.balance_amount = job.balance
-            job.save()
+                messages.success(request, 'Thanks! Your Job was submitted and is awaiting approval.')
+                form = AddJob()
 
-            messages.success(request, 'Thanks! Your Job was submitted and is awaiting approval.')
+        # if a GET (or any other method) we'll create a blank form
+        else:
             form = AddJob()
-
-    # if a GET (or any other method) we'll create a blank form
     else:
-        form = AddJob()
+        return redirect('/accounts/login')
 
     return render(request, 'addjob/addjob.html', {'form': form})

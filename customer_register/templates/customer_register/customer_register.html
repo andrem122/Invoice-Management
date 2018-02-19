@@ -1,0 +1,55 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block title %}Register - Samjack Blackstone Invoice System{% endblock title %}
+{% block scripts %}
+<link rel="stylesheet" href="{% static 'login.css' %}">
+{% endblock scripts %}
+{% block content %}
+<div class="container">
+      <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-login">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col-xs-12">
+                <a href="#" class="active" id="register-form-link">Sign Up For Free Invoice Software</a>
+              </div>
+            </div>
+            <hr>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <form id="register-form" action="" method="post" role="form">
+                  {% csrf_token %}
+                  {% if form.errors %}
+                  <div class="form-messages">
+                    <p>{{form.errors}}</p>
+                  </div>
+                  {% endif %}
+                  {{form}}
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-sm-6 col-sm-offset-3">
+                        <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Register Now">
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+  {% endif %}
+{% endblock content %}

@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def index(request):
     current_user = request.user
-    if current_user.is_active and current_user.is_staff:
+    if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         #get all houses with completed jobs
         houses = House.objects.filter(completed_jobs=True)
 

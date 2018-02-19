@@ -8,10 +8,8 @@ from django.contrib import messages
 
 @login_required
 def p_history_job(request):
-    #get the current user
     current_user = request.user
-    if current_user.is_active and current_user.is_staff:
-
+    if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         template = loader.get_template('payment_history/p_history_job.html')
         upload_document_form = Upload_Document_Form()
 
