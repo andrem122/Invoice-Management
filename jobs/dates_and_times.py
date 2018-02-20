@@ -5,7 +5,7 @@ class Dates_And_Times():
     #filter results by current week
     date = datetime.date.today()
     start_week = date - datetime.timedelta(date.weekday())
-    end_week = start_week + datetime.timedelta(7)
+    end_week = start_week + datetime.timedelta(14)
 
     def __init__(self, houses, queryset, model):
         #initialize object with houses, queryset, and model

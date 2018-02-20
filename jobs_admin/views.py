@@ -7,6 +7,7 @@ from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from jobs.dates_and_times import Dates_And_Times
+from customer_register.customer import Customer
 import datetime
 
 @login_required
@@ -14,23 +15,9 @@ def index(request):
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         #get all customer houses and houses with active jobs
-        customer_houses = House.objects.filter(customer=current_user)
-        current_houses = Current_Worker.objects.filter(current=True)
-
-        current_customer_houses = []
-        for h in customer_houses.iterator():
-            for c_h in current_houses.iterator():
-                if c_h.house == h:
-                    current_customer_houses.append(c_h)
-
-        #get all customer workers jobs that are approved
-        jobs = Job.objects.filter(approved=True, balance_amount__gt=0)
-
-        customer_worker_jobs = []
-        for h in current_customer_houses:
-            for j in jobs:
-                if j.house.customer == h.house.customer:
-                    customer_worker_jobs.append(j)
+        customer = Customer(customer=current_user)
+        current_houses = customer.current_houses
+        approved_jobs = customer.approved_jobs()
 
         #get the empty forms
         payment_history_form = Payment_History_Form()
@@ -40,8 +27,8 @@ def index(request):
         template = loader.get_template('jobs_admin/index.html')
 
         context = {
-            'current_workers': current_customer_houses,
-            'jobs': customer_worker_jobs,
+            'current_workers': current_houses,
+            'jobs': approved_jobs,
             'current_user': current_user,
             'payment_history_form': payment_history_form,
             'change_job_status_form': change_job_status_form,
@@ -91,12 +78,12 @@ def proposed_jobs(request):
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
 
-        #filter data by current week
-        jobs_datetime = Dates_And_Times(House.objects.all(), Job.objects.filter(approved=False), Job)
+        #filter data by current week for customer
+        jobs_datetime = Dates_And_Times(House.objects.filter(customer=current_user), Job.objects.filter(approved=False), Job)
         jobs_datetime.current_week_results(update_field={'proposed_jobs': [True, False]}, approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
 
-        #get all houses with proposed jobs and unapproved jobs
-        houses = House.objects.filter(proposed_jobs=True)
+        #get all houses with unapproved jobs for only the customers houses
+        houses = House.objects.filter(customer=current_user, proposed_jobs=True)
         jobs = Job.objects.filter(approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
 
         #get form
