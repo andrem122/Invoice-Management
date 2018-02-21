@@ -56,11 +56,9 @@ class Customer():
 
     #returns all houses with completed jobs
     def completed_houses(self):
-        #get all houses with completed jobs
-        completed_houses = House.objects.filter(completed_jobs=True)
-        return self.get_queryset(append_outer=True, houses=completed_houses, queryset=self.houses, compare=[{1: 'customer'}, {1: 'customer'}])
+        return House.objects.filter(customer=self.customer, completed_jobs=True)
 
     #return all completed jobs
     def completed_jobs(self):
-        completed_jobs = Job.objects.filter(approved=True, balance_amount__lte=0)[:50]
-        return self.get_queryset(houses=self.completed_houses, queryset=completed_jobs, compare=[{1: 'customer'}, {2: ['house', 'customer']}])
+        completed_jobs = Job.objects.filter(approved=True, balance_amount__lte=0)
+        return self.get_queryset(houses=self.completed_houses, queryset=completed_jobs, compare=[{0: 0}, {1: 'house'}])

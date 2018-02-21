@@ -1,10 +1,11 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render, redirect
 from jobs.models import Job, House, Request_Payment, Current_Worker
 from .forms import Change_Payment_Status
 from django.contrib.auth.decorators import login_required
 from jobs.dates_and_times import Dates_And_Times
+from payment_history.forms import Upload_Document_Form
 import datetime
 
 @login_required
@@ -21,6 +22,7 @@ def approved_payments(request):
 
         #get an empty form
         form = Change_Payment_Status()
+        upload_document_form = Upload_Document_Form()
 
         template = loader.get_template('payment_requests/approved_payments.html')
 
@@ -29,6 +31,7 @@ def approved_payments(request):
             'payments': payments,
             'current_user': current_user,
             'form': form,
+            'upload_document_form': upload_document_form,
         }
 
         #form logic for unapproving payments
@@ -91,7 +94,7 @@ def approved_payments(request):
         return HttpResponse(template.render(context, request))
 
     else:
-        return HttpResponseRedirect('/accounts/login')
+        return redirect('/accounts/login')
 
 @login_required
 def unapproved_payments(request):
@@ -181,4 +184,4 @@ def unapproved_payments(request):
             return HttpResponse(template.render(context, request))
 
         else:
-            return HttpResponseRedirect('/accounts/login')
+            return redirect('/accounts/login')

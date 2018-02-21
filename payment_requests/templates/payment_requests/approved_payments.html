@@ -7,6 +7,7 @@
 {% block title %}All Approved Payments{% endblock title %}
 
 {% block scripts %}
+<script type="text/javascript" src="{% static 'payment_requests/payment_requests.js' %}" defer></script>
 {% endblock scripts %}
 
 {% block content %}
@@ -25,9 +26,11 @@
       <th>Company</th>
       <th>Amount</th>
       <th>Contract Link</th>
+      <th>Document Link</th>
       {% if current_user|in_group:'Customers' %}
       <th>Unapprove Payment</th>
       {% endif %}
+      <th>Upload Document</th>
     </tr>
     {% for p in payments %}
       {% if p.job.house.address == house.address %}
@@ -37,13 +40,14 @@
       <td>{{p.job.company}}</td>
       <td>${{p.amount|intcomma}}</td>
       <td><a href="{{p.job.document_link.url}}">View Contract</a></td>
+      <td><a href="{% if p.document_link.url != None %}{{p.document_link.url}}{% else %}#{% endif %}">View Document</a></td>
       {% if current_user|in_group:'Customers' %}
       <td>
         <form class="unapprove-payment-form" action="" method="post">
           {% csrf_token %}
           {% if form.errors %}
           <div class="form-messages">
-            <p>Please try again.</p>
+            <p>{{form.errors}}</p>
           </div>
           {% endif %}
           {{form}}
@@ -54,6 +58,20 @@
         </form>
       </td>
       {% endif %}
+      <td>
+        <form class="upload-document-form" action="/payment_history/p_history_job" method="post" role="form" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% if upload_document_form.errors %}
+          <div class="form-messages">
+            <p>{{upload_document_form.errors}}</p>
+          </div>
+          {% endif %}
+          {{upload_document_form}}
+          <input name="job_id" value="{{p.job.id}}" type="hidden">
+          <input name="p_id" value="{{p.id}}" type="hidden">
+          <input class="btn btn-primary upload-document" name="upload-document" value="Upload Document" type="submit">
+        </form>
+      </td>
     </tr>
       {% endif %}
     {% endfor %}

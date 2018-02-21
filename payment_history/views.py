@@ -50,7 +50,6 @@ def p_history_job(request):
                 upload_document_form = Upload_Document_Form(data=request.FILES, instance=payment)
 
                 if upload_document_form.is_valid():
-                    logger.error('Upload document form is valid!')
                     #get the form data
                     document_link = upload_document_form.cleaned_data['document_link']
 
