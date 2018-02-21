@@ -44,11 +44,11 @@ def register(request):
             user.groups.add(group)
 
             #generate url for customer to send to workers to sign up
-            def generate_url(user):
-                register_url = 'http://127.0.0.1:8000/register/' + '?c=' + str(user.id)
+            def generate_url(request, user):
+                register_url = 'http://' + request.get_host() + '/register/' + '?c=' + str(user.id)
                 return register_url
 
-            register_url = generate_url(user)
+            register_url = generate_url(request=request, user=user)
             redirect_url = '/jobs_admin/?url=' + register_url
 
             #login new user

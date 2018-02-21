@@ -2,6 +2,7 @@
 
 {% load humanize %}
 {% load static %}
+{% load jobs_admin_group_check %}
 
 {% block title %}All Approved Jobs{% endblock title %}
 
@@ -14,7 +15,7 @@
 {% if register_url %}
 <div class="signup-link">
   <h3>Welcome to Your Job Dashboard!</h3>
-  <p>Send this signup link to your workers, so that they can
+  <p>Keep this signup link, and send it to your workers, so that they can
   submit jobs and send payment requests to you:</p>
   <a href="{{register_url}}">{{register_url}}</a>
 </div>
@@ -36,7 +37,9 @@
           <th>Balance</th>
           <th>Contract Link</th>
           <th>Payment History</th>
+          {% if current_user|in_group:'Customers' %}
           <th>Unapprove Job</th>
+          {% endif %}
         </tr>
         {% for job in jobs %}
         {% if job.house.address == w.house.address %}
@@ -62,6 +65,7 @@
               <input class="btn btn-primary v-payment-history" type="submit" name="v-payment-history" value="View Payments">
             </form>
           </td>
+          {% if current_user|in_group:'Customers' %}
           <td>
             <form class="change-job-status-form" action="" method="post">
               {% csrf_token %}
@@ -76,6 +80,7 @@
               <input class="btn btn-primary change-job-status" type="submit" name="" value="Unapprove Job">
             </form>
           </td>
+          {% endif %}
         </tr>
         {% endif %}
         {% endfor %}

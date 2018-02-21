@@ -2,18 +2,12 @@
 
 {% load humanize %}
 {% load static %}
+{% load jobs_admin_group_check %}
 
 {% block title %}All Proposed Jobs{% endblock title %}
 
 {% block scripts %}
 <script type="text/javascript" src="{% static 'jobs_admin/jobs_admin.js' %}" defer></script>
-<script type="text/javascript">
-  {% if messages %}
-    {% for message in messages %}
-      alert(message);
-    {% endfor %}
-  {% endif %}
-</script>
 {% endblock scripts %}
 
 {% block content %}
@@ -32,7 +26,9 @@
       <th>Company</th>
       <th>Amount</th>
       <th>Contract Link</th>
+      {% if current_user|in_group:'Customers' %}
       <th>Approve Job</th>
+      {% endif %}
     </tr>
     {% for job in jobs %}
       {% if job.house.address == house.address %}
@@ -42,6 +38,7 @@
       <td>{{job.company}}</td>
       <td>${{job.start_amount|intcomma}}</td>
       <td><a href="{{job.document_link.url}}">View Contract</a></td>
+      {% if current_user|in_group:'Customers' %}
       <td>
         <form class="change-job-status-form" action="" method="post">
           {% csrf_token %}
@@ -56,6 +53,7 @@
           <input class="btn btn-primary change-job-status" type="submit" name="" value="Approve Job">
         </form>
       </td>
+      {% endif %}
     </tr>
       {% endif %}
     {% endfor %}

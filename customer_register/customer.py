@@ -23,9 +23,12 @@ class Customer():
     #reduces repetition of looping code to get a query set
     def get_queryset(self, append_outer=False, houses=[], queryset=[], compare=[]):
         result_queryset = []
+        #house object
         for h in houses:
+            #current house object
             for q in queryset.iterator():
                 #get attributes to compare
+                #{0: 0}, {1: 'house'}
                 a = self.attribute_level(obj=h, compare=compare[0])
                 b = self.attribute_level(obj=q, compare=compare[1])
                 if a == b:
@@ -45,14 +48,16 @@ class Customer():
         """compare house with active jobs to customer house
         if the houses are the same, then it is a current customer house"""
         #get all customer houses and houses with active jobs
-        houses = Current_Worker.objects.filter(current=True)
-        return self.get_queryset(append_outer=True, houses=houses, queryset=self.houses, compare=[{1: 'house'}, {0: 0}])
+        sql = 'SELECT * FROM jobs_current_worker WHERE current=1 GROUP BY house_id'
+        current_houses = Current_Worker.objects.raw(sql)
+
+        return self.get_queryset(append_outer=True, houses=current_houses, queryset=self.houses, compare=[{1: 'house'}, {0: 0}])
 
     #returns all approved jobs for houses for each customer
     def approved_jobs(self):
         #get all customer workers jobs that are approved
         approved_jobs = Job.objects.filter(approved=True, balance_amount__gt=0)
-        return self.get_queryset(houses=self.current_houses, queryset=approved_jobs, compare=[{2: ['house', 'customer']}, {2: ['house', 'customer']}])
+        return self.get_queryset(houses=self.current_houses, queryset=approved_jobs, compare=[{1: 'house'}, {1: 'house'}])
 
     #returns all houses with completed jobs
     def completed_houses(self):
