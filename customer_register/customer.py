@@ -3,33 +3,64 @@ class Customer():
 
     def __init__(self, customer):
         self.customer = customer
+        self.houses = self.houses()
         self.current_houses = self.current_houses()
+        self.completed_houses = self.completed_houses()
+
+    #gets attributes of objects up to two levels down
+    def attribute_level(self, obj, compare={}):
+        level = list(compare.keys())
+        attribute = list(compare.values())
+
+        if level[0] is not 0:
+            if level[0] is 1:
+                return getattr(obj, attribute[0])
+            elif level[0] is 2:
+                return getattr(getattr(obj, attribute[0][0]), attribute[0][1])
+        else:
+            return obj
+
+    #reduces repetition of looping code to get a query set
+    def get_queryset(self, append_outer=False, houses=[], queryset=[], compare=[]):
+        result_queryset = []
+        for h in houses:
+            for q in queryset.iterator():
+                #get attributes to compare
+                a = self.attribute_level(obj=h, compare=compare[0])
+                b = self.attribute_level(obj=q, compare=compare[1])
+                if a == b:
+                    if append_outer == True:
+                        result_queryset.append(h)
+                    else:
+                        result_queryset.append(q)
+
+        return result_queryset
+
+    #returns all houses that belong to the customer
+    def houses(self):
+        return House.objects.filter(customer=self.customer)
 
     #returns houses that are activley being worked on by workers
     def current_houses(self):
-        #get all customer houses and houses with active jobs
-        customer_houses = House.objects.filter(customer=self.customer)
-        current_houses = Current_Worker.objects.filter(current=True)
-
         """compare house with active jobs to customer house
-        if the house are the same, then it is a current customer house"""
-        current_customer_houses = []
-        for h in customer_houses.iterator():
-            for c_h in current_houses.iterator():
-                if c_h.house == h:
-                    current_customer_houses.append(c_h)
+        if the houses are the same, then it is a current customer house"""
+        #get all customer houses and houses with active jobs
+        houses = Current_Worker.objects.filter(current=True)
+        return self.get_queryset(append_outer=True, houses=houses, queryset=self.houses, compare=[{1: 'house'}, {0: 0}])
 
-        return current_customer_houses
-
-    #returns all approved houses for the customer
+    #returns all approved jobs for houses for each customer
     def approved_jobs(self):
         #get all customer workers jobs that are approved
-        jobs = Job.objects.filter(approved=True, balance_amount__gt=0)
+        approved_jobs = Job.objects.filter(approved=True, balance_amount__gt=0)
+        return self.get_queryset(houses=self.current_houses, queryset=approved_jobs, compare=[{2: ['house', 'customer']}, {2: ['house', 'customer']}])
 
-        customer_worker_jobs = []
-        for h in self.current_houses:
-            for j in jobs:
-                if j.house.customer == h.house.customer:
-                    customer_worker_jobs.append(j)
+    #returns all houses with completed jobs
+    def completed_houses(self):
+        #get all houses with completed jobs
+        completed_houses = House.objects.filter(completed_jobs=True)
+        return self.get_queryset(append_outer=True, houses=completed_houses, queryset=self.houses, compare=[{1: 'customer'}, {1: 'customer'}])
 
-        return customer_worker_jobs
+    #return all completed jobs
+    def completed_jobs(self):
+        completed_jobs = Job.objects.filter(approved=True, balance_amount__lte=0)[:50]
+        return self.get_queryset(houses=self.completed_houses, queryset=completed_jobs, compare=[{1: 'customer'}, {2: ['house', 'customer']}])

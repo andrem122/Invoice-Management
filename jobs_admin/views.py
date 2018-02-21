@@ -63,6 +63,9 @@ def index(request):
                 if not current_house_jobs:
                     Current_Worker.objects.filter(company=job.company, house=house).delete()
 
+                #redirect because Django does not get database results after form submit
+                return redirect('/jobs_admin')
+
 
         # if a GET (or any other method) we'll create a blank form
         else:
@@ -108,32 +111,31 @@ def proposed_jobs(request):
                 job_id = int(request.POST.get('job_id'))
                 address = str(request.POST.get('job_house'))
 
-                house = House.objects.filter(address=address)
+                house = House.objects.get(address=address)
+                job = Job.objects.get(pk=job_id)
 
                 #update approved column to True for the specific job
-                job = Job.objects.get(pk=job_id)
                 job.approved=True
                 job.save()
 
                 """add the user as a current worker on the house OR update current to True if they
                 were a current worker OR do nothing if they are already active"""
-                was_current = Current_Worker.objects.filter(house=house[0], company=job.company, current=False)
-                is_current = Current_Worker.objects.filter(house=house[0], company=job.company, current=True)
+                was_current = Current_Worker.objects.filter(house=house, company=job.company, current=False)
+                is_current = Current_Worker.objects.filter(house=house, company=job.company, current=True)
                 if was_current:
                     was_current[0].update(current=True)
                 elif is_current:
                     pass
                 else:
-                    Current_Worker(house=house[0], company=job.company, current=True).save()
+                    Current_Worker(house=house, company=job.company, current=True).save()
 
                 """If the house has no more proposed jobs for the current week,
                 set proposed_jobs=False"""
-                jobs = Job.objects.filter(house=house[0], approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
+                jobs = Job.objects.filter(house=house, approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
 
                 if not jobs:
-                    h = House.objects.filter(address=address)[0]
-                    h.proposed_jobs=False
-                    h.save(update_fields=['proposed_jobs'])
+                    house.proposed_jobs=False
+                    house.save(update_fields=['proposed_jobs'])
 
         # if a GET (or any other method) we'll create a blank form
         else:

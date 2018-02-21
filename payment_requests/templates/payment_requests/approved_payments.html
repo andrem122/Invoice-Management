@@ -2,6 +2,7 @@
 
 {% load humanize %}
 {% load static %}
+{% load payment_requests_group_check %}
 
 {% block title %}All Approved Payments{% endblock title %}
 
@@ -24,7 +25,7 @@
       <th>Company</th>
       <th>Amount</th>
       <th>Contract Link</th>
-      {% if request.user.is_superuser %}
+      {% if current_user|in_group:'Customers' %}
       <th>Unapprove Payment</th>
       {% endif %}
     </tr>
@@ -36,7 +37,7 @@
       <td>{{p.job.company}}</td>
       <td>${{p.amount|intcomma}}</td>
       <td><a href="{{p.job.document_link.url}}">View Contract</a></td>
-      {% if request.user.is_superuser %}
+      {% if current_user|in_group:'Customers' %}
       <td>
         <form class="unapprove-payment-form" action="" method="post">
           {% csrf_token %}

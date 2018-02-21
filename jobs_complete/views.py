@@ -4,16 +4,21 @@ from django.shortcuts import render, redirect
 from jobs.models import Job, Current_Worker, House
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import login_required
+from customer_register.customer import Customer
 
 @login_required
 def index(request):
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         #get all houses with completed jobs
-        houses = House.objects.filter(completed_jobs=True)
+        #houses = House.objects.filter(completed_jobs=True)
+
+        customer = Customer(current_user)
+        houses = customer.completed_houses
+        jobs = customer.completed_jobs()
 
         #get all approved jobs with a balance less than or equal to zero; limit to 50 results
-        jobs = Job.objects.filter(approved=True, balance_amount__lte=0)[:50]
+        #jobs = Job.objects.filter(approved=True, balance_amount__lte=0)[:50]
 
         #get the empty forms
         payment_history_form = Payment_History_Form()
