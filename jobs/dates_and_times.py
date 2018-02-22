@@ -13,14 +13,14 @@ class Dates_And_Times():
         self.queryset = queryset
         self.model = model
 
-    #fetch current weeks results
+    #fetch current week results
     def current_week_results(self, update_field={}, **kwargs):
         """fetch current week results, if there are none
         then set the appropriate house attributes to false"""
         for h in self.houses.iterator():
             for q in self.queryset.iterator():
                 if q.house == h:
-                    query_set_check = getattr(self.model, 'objects').filter(house=h, **kwargs)
+                    query_set_check = self.model.objects.filter(house=h, **kwargs)
                     if query_set_check:
                         setattr(h, list(update_field.keys())[0], list(update_field.values())[0][0])
                     else:

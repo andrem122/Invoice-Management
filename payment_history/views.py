@@ -56,7 +56,11 @@ def p_history_job(request):
                     #update the document_link for the specific payment instance
                     upload_document_form.save()
 
-                    return redirect('/payment_history/thank_you')
+                    redirect_url = request.POST.get('thank_you', None)
+                    if redirect_url is not None:
+                        return redirect(redirect_url)
+                    else:
+                        return redirect('/payment_history/thank_you')
         # if a GET (or any other method) we'll create a blank form
         else:
             form = Payment_History_Form()

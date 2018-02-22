@@ -1,12 +1,11 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import render, redirect
-from jobs.models import Job, Current_Worker, House
+from jobs.models import Job, Current_Worker, House, Request_Payment
 from .forms import Change_Job_Status
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
-from jobs.dates_and_times import Dates_And_Times
 from customer_register.customer import Customer
 import datetime
 
@@ -16,7 +15,7 @@ def index(request):
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         #get all customer houses and houses with active jobs
         customer = Customer(customer=current_user)
-        current_houses = customer.current_houses
+        current_houses = customer.current_houses()
         approved_jobs = customer.approved_jobs()
 
         #get the empty forms
@@ -57,11 +56,23 @@ def index(request):
                 job.approved=False
                 job.save()
 
-                """if no more current jobs for specific house, delete as current worker"""
+                """update house to proposed_jobs=True if the unapproved job is
+                within the last 2 weeks"""
+                if Customer.start_week <= job.start_date <= Customer.end_week:
+                    house.proposed_jobs=True
+                    house.save(update_fields=['proposed_jobs'])
+
+                """if no more current jobs for specific house, delete as current worker
+                AND if no more pending payments from other approved jobs for the house exist,
+                set pending_payments=False"""
                 current_house_jobs = Job.objects.filter(company=job.company, approved=True, house=house)
+                payment_requests = Request_Payment.objects.filter(house=house, job__approved=True, approved=False)
 
                 if not current_house_jobs:
                     Current_Worker.objects.filter(company=job.company, house=house).delete()
+                if not payment_requests:
+                    house.pending_payments=False
+                    house.save(update_fields=['pending_payments'])
 
                 #redirect because Django does not get database results after form submit
                 return redirect('/jobs_admin')
@@ -73,7 +84,7 @@ def index(request):
 
         return HttpResponse(template.render(context, request))
     else:
-        return HttpResponseRedirect('/accounts/login')
+        return redirect('/accounts/login')
 
 @login_required
 def proposed_jobs(request):
@@ -81,13 +92,11 @@ def proposed_jobs(request):
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
 
-        #filter data by current week for customer
-        jobs_datetime = Dates_And_Times(House.objects.filter(customer=current_user), Job.objects.filter(approved=False), Job)
-        jobs_datetime.current_week_results(update_field={'proposed_jobs': [True, False]}, approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
+        customer = Customer(current_user)
 
         #get all houses with unapproved jobs for only the customers houses
-        houses = House.objects.filter(customer=current_user, proposed_jobs=True)
-        jobs = Job.objects.filter(approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
+        houses = customer.proposed_jobs_houses()
+        jobs = customer.proposed_jobs()
 
         #get form
         form = Change_Job_Status()
@@ -130,12 +139,18 @@ def proposed_jobs(request):
                     Current_Worker(house=house, company=job.company, current=True).save()
 
                 """If the house has no more proposed jobs for the current week,
-                set proposed_jobs=False"""
-                jobs = Job.objects.filter(house=house, approved=False, start_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
+                set proposed_jobs=False
+                AND if there were any requested payments because the job was previously approved,
+                set pending=payments=True for the house"""
+                jobs = Job.objects.filter(house=house, approved=False, start_date__range=[Customer.start_week, Customer.end_week])
+                requested_payments = Request_Payment.objects.filter(house=house, job=job, approved=False)
 
                 if not jobs:
                     house.proposed_jobs=False
                     house.save(update_fields=['proposed_jobs'])
+                if requested_payments:
+                    house.pending_payments=True
+                    house.save(update_fields=['pending_payments'])
 
         # if a GET (or any other method) we'll create a blank form
         else:

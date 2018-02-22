@@ -68,6 +68,7 @@
           {% endif %}
           {{upload_document_form}}
           <input name="job_id" value="{{p.job.id}}" type="hidden">
+          <input name="thank_you" value="/payment_requests/thank_you" type="hidden">
           <input name="p_id" value="{{p.id}}" type="hidden">
           <input class="btn btn-primary upload-document" name="upload-document" value="Upload Document" type="submit">
         </form>

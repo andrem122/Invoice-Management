@@ -5,6 +5,7 @@ from jobs.models import Job, House, Request_Payment, Current_Worker
 from .forms import Change_Payment_Status
 from django.contrib.auth.decorators import login_required
 from jobs.dates_and_times import Dates_And_Times
+from customer_register.customer import Customer
 from payment_history.forms import Upload_Document_Form
 import datetime
 
@@ -12,13 +13,10 @@ import datetime
 def approved_payments(request):
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
-        #filter data by current week
-        payments_datetime = Dates_And_Times(House.objects.filter(customer=current_user), Request_Payment.objects.filter(approved=True), Request_Payment)
-        payments_datetime.current_week_results(update_field={'payment_history': [True, False]}, approved=True, approved_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
-
+        customer = Customer(current_user)
         #get all houses with a payment history and approved payments for the current week
-        houses = House.objects.filter(customer=current_user, payment_history=True)
-        payments = Request_Payment.objects.filter(approved=True, approved_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
+        houses = customer.payment_history_houses()
+        payments = customer.current_payments()
 
         #get an empty form
         form = Change_Payment_Status()
@@ -73,17 +71,22 @@ def approved_payments(request):
                 """if there are no more approved payments for a house,
                 set payment_history=False for that specific house
                 AND if the job now has a balance greater than zero when the
-                payment is unapproved, set current=True in jobs_current_worker
+                payment is unapproved, add them as a current worker if they dont already
+                exist as one
                 """
 
                 flags = [
                             Request_Payment.objects.filter(house=house[0], approved=True),
                             Job.objects.filter(company=job[0].company, house=job[0].house, balance_amount__gt=0),
+                            Current_Worker.objects.filter(company=job[0].company, house=job[0].house)
                         ]
 
                 if not flags[0]:
                     house.update(pending_payments=True, payment_history=False)
-                if flags[1]:
+                if not flags[1]:
+                    worker = Current_Worker(company=job[0].company, house=job[0].house)
+                    worker.save()
+                elif flags[1]:
                     worker = Current_Worker.objects.filter(company=job[0].company, house=job[0].house)
                     worker.update(current=True)
 
@@ -102,13 +105,13 @@ def unapproved_payments(request):
         current_user = request.user
 
         if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
-            #filter data by current week
-            payments_datetime = Dates_And_Times(House.objects.filter(customer=current_user), Request_Payment.objects.filter(approved=False), Request_Payment)
-            payments_datetime.current_week_results(update_field={'pending_payments': [True, False]}, approved=False, submit_date__range=[Dates_And_Times.start_week, Dates_And_Times.end_week])
+
+            #create an instance of the Customer class
+            customer = Customer(current_user)
 
             #get all unapproved payments and houses with pending payments
             houses = House.objects.filter(pending_payments=True)
-            payments = Request_Payment.objects.filter(approved=False)
+            payments = customer.current_payment_requests()
 
             #get an empty form
             form = Change_Payment_Status()
@@ -164,7 +167,7 @@ def unapproved_payments(request):
                     """if there are no more unapproved payments for a house,
                     set pending_payments=False for that specific house
                     AND if a company has no more jobs for a house with a balance greater than zero,
-                    then set current=False for them in the table jobs_current_worker
+                    then delete them as a current_worker
                     """
                     flags = [
                                 Request_Payment.objects.filter(house=house[0], approved=False),
@@ -175,7 +178,7 @@ def unapproved_payments(request):
                         house.update(pending_payments=False, payment_history=True)
                     if not flags[1]:
                         worker = Current_Worker.objects.filter(company=job[0].company, house=job[0].house)
-                        worker.update(current=False)
+                        worker.delete()
 
             # if a GET (or any other method) we'll create a blank form
             else:
@@ -185,3 +188,7 @@ def unapproved_payments(request):
 
         else:
             return redirect('/accounts/login')
+@login_required
+def thank_you(request):
+    template = loader.get_template('payment_requests/thank_you.html')
+    return HttpResponse(template.render(request=request))
