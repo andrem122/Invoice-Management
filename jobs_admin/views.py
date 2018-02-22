@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render, redirect
 from jobs.models import Job, Current_Worker, House, Request_Payment
@@ -152,6 +152,8 @@ def proposed_jobs(request):
                     house.pending_payments=True
                     house.save(update_fields=['pending_payments'])
 
+                return redirect('/jobs_admin/proposed_jobs')
+
         # if a GET (or any other method) we'll create a blank form
         else:
             form = Change_Job_Status()
@@ -159,4 +161,4 @@ def proposed_jobs(request):
         return HttpResponse(template.render(context, request))
 
     else:
-        return HttpResponseRedirect('/accounts/login')
+        return redirect('/accounts/login')

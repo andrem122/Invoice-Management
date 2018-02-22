@@ -3,7 +3,9 @@ import datetime
 import pytz
 
 class Customer():
+    #allow datetime to be naive
     utc = pytz.UTC
+
     #filter results by 2 weeks
     date = datetime.datetime.now()
     start_week = date - datetime.timedelta(date.weekday())
@@ -48,6 +50,24 @@ class Customer():
 
         return result_queryset
 
+    def current_two_week_results(self, houses, queryset, model, update_field={}, **kwargs):
+        """fetch current 2 week results, if there are none
+        then set the appropriate house attributes to false"""
+        result_queryset = []
+        for h in houses.iterator():
+            for q in queryset.iterator():
+                if q.house == h:
+                    query_set_check = model.objects.filter(house=h, **kwargs)
+                    if query_set_check:
+                        setattr(h, list(update_field.keys())[0], list(update_field.values())[0][0])
+                        result_queryset.append(h)
+                        break
+                    else:
+                        setattr(h, list(update_field.keys())[0], list(update_field.values())[0][1])
+
+                    h.save(update_fields=[list(update_field.keys())[0]])
+
+        return result_queryset
     #returns all houses that belong to the customer
     def houses(self):
         return House.objects.filter(customer=self.customer)
@@ -65,7 +85,6 @@ class Customer():
     #returns all approved jobs for houses for each customer
     def approved_jobs(self):
         return Job.objects.filter(house__customer=self.customer, approved=True, balance_amount__gt=0)
-        #return self.get_queryset(houses=self.current_houses, queryset=approved_jobs, compare=[{1: 'house'}, {1: 'house'}])
 
     """Completed"""
     #returns all houses with completed jobs
@@ -75,8 +94,6 @@ class Customer():
     #return all completed jobs
     def completed_jobs(self):
         return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0)
-        #return self.get_queryset(houses=self.completed_houses, queryset=completed_jobs, compare=[{0: 0}, {1: 'house'}])
-
     """Current 2 Weeks Results"""
     #returns current(2 weeks) payment requests for approved jobs
     def current_payment_requests(self):
@@ -92,10 +109,12 @@ class Customer():
         return Request_Payment.objects.filter(approved=True, approved_date__range=[Customer.start_week, Customer.end_week])
 
     """Proposed Jobs"""
-    #returns all houses with proposed jobs
+    #returns all houses with proposed jobs for the last weeks
     def proposed_jobs_houses(self):
-        return House.objects.filter(customer=self.customer, proposed_jobs=True)
+        houses = House.objects.filter(customer=self.customer)
+        jobs = Job.objects.filter(house__customer=self.customer, approved=False)
+        return self.current_two_week_results(houses=houses, queryset=jobs, model=Job, update_field={'proposed_jobs': [True, False]}, approved=False, start_date__range=[Customer.start_week, Customer.end_week])
 
-    #returns all proposed jobs submitted within the last 2 weeks
+    #returns all proposed jobs submitted for the last 2 weeks
     def proposed_jobs(self):
         return Job.objects.filter(house__customer=self.customer, approved=False, start_date__range=[Customer.start_week, Customer.end_week])
