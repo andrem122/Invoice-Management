@@ -58,7 +58,7 @@ def index(request):
 
                 """update house to proposed_jobs=True if the unapproved job is
                 within the last 2 weeks"""
-                if Customer.start_week <= job.start_date <= Customer.end_week:
+                if Customer.start_week <= job.start_date <= Customer.today:
                     house.proposed_jobs=True
                     house.save(update_fields=['proposed_jobs'])
 
@@ -141,7 +141,7 @@ def proposed_jobs(request):
                 set proposed_jobs=False
                 AND if there were any requested payments because the job was previously approved,
                 set pending=payments=True for the house"""
-                jobs = Job.objects.filter(house=house, approved=False, start_date__range=[Customer.start_week, Customer.end_week])
+                jobs = Job.objects.filter(house=house, approved=False, start_date__range=[Customer.start_week, Customer.today])
                 requested_payments = Request_Payment.objects.filter(house=house, job=job, approved=False)
 
                 if not jobs:

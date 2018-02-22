@@ -6,13 +6,13 @@ class Customer:
     #allow datetime to be naive
     utc = pytz.UTC
 
-    #filter results by 2 weeks
-    date = datetime.datetime.now()
-    start_week = date - datetime.timedelta(date.weekday())
-    end_week = start_week + datetime.timedelta(14)
+    #filter results by the last 2 weeks
+    today = datetime.datetime.now()
+    start_delta = datetime.timedelta(days=14)
+    start_week = today - start_delta
 
     start_week = start_week.replace(tzinfo=utc)
-    end_week = end_week.replace(tzinfo=utc)
+    today = today.replace(tzinfo=utc)
 
     def __init__(self, customer):
         self.customer = customer
@@ -93,18 +93,18 @@ class Customer:
 
     #returns all completed jobs
     def completed_jobs(self):
-        return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0)
+        return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0)[:50]
 
     """Current 2 Weeks Results"""
     #returns all houses with payment requests for the last 2 weeks
     def current_payment_requests_houses(self):
         houses = House.objects.filter(customer=self.customer)
-        payments = Request_Payment.objects.filter(house__customer=self.customer, approved=False)
-        return self.current_two_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'pending_payments': [True, False]}, approved=False, submit_date__range=[Customer.start_week, Customer.end_week])
+        payments = Request_Payment.objects.filter(house__customer=self.customer, job__approved=True, approved=False)
+        return self.current_two_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'pending_payments': [True, False]}, approved=False, submit_date__range=[Customer.start_week, Customer.today])
 
     #returns all payment requests for the last 2 weeks for approved jobs
     def current_payment_requests(self):
-        return Request_Payment.objects.filter(job__approved=True, approved=False, submit_date__range=[Customer.start_week, Customer.end_week])
+        return Request_Payment.objects.filter(job__approved=True, approved=False, submit_date__range=[Customer.start_week, Customer.today])
 
     """Payment History"""
     #returns all houses with a payment history for the last 2 weeks
@@ -113,15 +113,15 @@ class Customer:
 
     #returns all approved payments for the last 2 weeks
     def current_payments(self):
-        return Request_Payment.objects.filter(approved=True, approved_date__range=[Customer.start_week, Customer.end_week])
+        return Request_Payment.objects.filter(approved=True, approved_date__range=[Customer.start_week, Customer.today])
 
     """Proposed Jobs"""
     #returns all houses with proposed jobs for the last weeks
     def proposed_jobs_houses(self):
         houses = House.objects.filter(customer=self.customer)
         jobs = Job.objects.filter(house__customer=self.customer, approved=False)
-        return self.current_two_week_results(houses=houses, queryset=jobs, model=Job, update_field={'proposed_jobs': [True, False]}, approved=False, start_date__range=[Customer.start_week, Customer.end_week])
+        return self.current_two_week_results(houses=houses, queryset=jobs, model=Job, update_field={'proposed_jobs': [True, False]}, approved=False, start_date__range=[Customer.start_week, Customer.today])
 
     #returns all proposed jobs submitted for the last 2 weeks
     def proposed_jobs(self):
-        return Job.objects.filter(house__customer=self.customer, approved=False, start_date__range=[Customer.start_week, Customer.end_week])
+        return Job.objects.filter(house__customer=self.customer, approved=False, start_date__range=[Customer.start_week, Customer.today])
