@@ -109,11 +109,13 @@ class Customer:
     """Payment History"""
     #returns all houses with a payment history for the last 2 weeks
     def payment_history_houses(self):
-        return House.objects.filter(customer=self.customer, payment_history=True)
+        houses = House.objects.filter(customer=self.customer)
+        payments = Request_Payment.objects.filter(house__customer=self.customer, approved=True)
+        return self.current_two_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'payment_history': [True, False]}, approved=True, approved_date__range=[Customer.start_week, Customer.today])
 
     #returns all approved payments for the last 2 weeks
     def current_payments(self):
-        return Request_Payment.objects.filter(approved=True, approved_date__range=[Customer.start_week, Customer.today])
+        return Request_Payment.objects.filter(house__customer=self.customer, approved=True, approved_date__range=[Customer.start_week, Customer.today])
 
     """Proposed Jobs"""
     #returns all houses with proposed jobs for the last weeks

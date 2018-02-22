@@ -90,6 +90,8 @@ def approved_payments(request):
                     worker = Current_Worker.objects.filter(company=job[0].company, house=job[0].house)
                     worker.update(current=True)
 
+                return redirect('/payment_requests/approved_payments')
+
         # if a GET (or any other method) we'll create a blank form
         else:
             form = Change_Payment_Status()
@@ -177,6 +179,8 @@ def unapproved_payments(request):
                     if not flags[1]:
                         worker = Current_Worker.objects.filter(company=job[0].company, house=job[0].house)
                         worker.delete()
+
+                    return redirect('/payment_requests/unapproved_payments')
 
             # if a GET (or any other method) we'll create a blank form
             else:
