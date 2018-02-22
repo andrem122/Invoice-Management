@@ -98,9 +98,8 @@ def proposed_jobs(request):
         houses = customer.proposed_jobs_houses()
         jobs = customer.proposed_jobs()
 
-        #get form
+        #get form and template
         form = Change_Job_Status()
-
         template = loader.get_template('jobs_admin/proposed_jobs.html')
 
         context = {
@@ -112,7 +111,7 @@ def proposed_jobs(request):
 
         #form logic
         if request.method == 'POST':
-            #get empty form
+            #get from with POST data
             form = Change_Job_Status(request.POST)
 
             if form.is_valid():

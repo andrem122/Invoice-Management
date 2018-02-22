@@ -2,7 +2,7 @@ from jobs.models import Job, Current_Worker, House, Request_Payment
 import datetime
 import pytz
 
-class Customer():
+class Customer:
     #allow datetime to be naive
     utc = pytz.UTC
 
@@ -91,11 +91,18 @@ class Customer():
     def completed_houses(self):
         return House.objects.filter(customer=self.customer, completed_jobs=True)
 
-    #return all completed jobs
+    #returns all completed jobs
     def completed_jobs(self):
         return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0)
+
     """Current 2 Weeks Results"""
-    #returns current(2 weeks) payment requests for approved jobs
+    #returns all houses with payment requests for the last 2 weeks
+    def current_payment_requests_houses(self):
+        houses = House.objects.filter(customer=self.customer)
+        payments = Request_Payment.objects.filter(house__customer=self.customer, approved=False)
+        return self.current_two_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'pending_payments': [True, False]}, approved=False, submit_date__range=[Customer.start_week, Customer.end_week])
+
+    #returns all payment requests for the last 2 weeks for approved jobs
     def current_payment_requests(self):
         return Request_Payment.objects.filter(job__approved=True, approved=False, submit_date__range=[Customer.start_week, Customer.end_week])
 

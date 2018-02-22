@@ -105,12 +105,10 @@ def unapproved_payments(request):
         current_user = request.user
 
         if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
-
-            #create an instance of the Customer class
             customer = Customer(current_user)
 
             #get all unapproved payments and houses with pending payments
-            houses = House.objects.filter(pending_payments=True)
+            houses = customer.current_payment_requests_houses()
             payments = customer.current_payment_requests()
 
             #get an empty form
