@@ -1,0 +1,74 @@
+<p class="intro-p">
+jQuery is a great tool for web developers. It's easy to use,  has ajax support, and is constantly maintained by a community of developers who know their code well. However, sometimes it's just unnecessary in certain circumstances, and  plain, old JavaScript can get the job done a lot faster. 
+</p>
+<p>
+Today, I want to show you a little function I created in JavaScript for fun that is quite similar to the jQuery <code class="prettyprint">.parents()</code> method. It's not entirely the same, but with a little modification, you can get it quite close to the jQuery <code class="prettyprint">.parents()</code> method. Anyways, let's take a look at the code.
+</p>
+<pre class="prettyprint">
+<code>
+function getParent(ele, parentSelector) {
+
+  var parentSelectorType = parentSelector.substring(0, 1);
+
+  //get the parent
+  var p = ele.parentElement;
+  var check;
+
+  //check to see if parentSelector is a class or id
+  switch (parentSelectorType) {
+    case '.':
+
+      check = p.className;
+      parentSelector = parentSelector.substring(parentSelector.indexOf('.') + 1, parentSelector.length);
+      break;
+
+    case '#':
+
+      check = p.id;
+      parentSelector = parentSelector.substring(parentSelector.indexOf('#') + 1, parentSelector.length);
+      break;
+
+    default:
+
+    return document;
+
+  }
+
+  //keep looping through parents until a match is found
+  while(check !== parentSelector) {
+
+    p = p.parentElement;
+
+    switch (parentSelectorType) {
+      case '.':
+
+        check = p.className;
+        break;
+        
+      case '#':
+
+        check = p.id;
+        break;
+
+      default:
+      
+      //if parent is undefined or an invalid selector, then bubble to the document
+      return document;
+
+    }
+
+  }
+
+  return p;
+
+}
+</code>
+</pre>
+<button class="button expand-code">Expand Code</button>
+<p>So, as you can see from the function name, the parent that is specified is returned, and the specified parent can be found via a class or id. So, for example, if I want to find a parent with an id of <code class="prettyprint">#parent</code> starting from any element, then I would type in the following statement:</p>
+<code class="prettyprint margin-bottom inline-block">getParent(document.getElementById('ele'), '#parent');</code>
+<p>This will fetch the first parent matching the id of <code class="prettyprint">#parent</code>. Now, that we see how to use it. Let's dive into how it works.</p>
+<h2>The Break Down</h2>
+<p>Let's dive into each part of the code, and I'll explain how it works. We'll start of by analyzing the third line.</p>
+<code class="prettyprint margin-bottom inline-block">var parentSelectorType = parentSelector.substring(0, 1);</code>
+<p>Now, this line of code takes our input string <code class="prettyprint">parentSelector</code> and grabs the first character in it. Let's go back to our first example. I input a string of <code class="prettyprint"></code></p>
