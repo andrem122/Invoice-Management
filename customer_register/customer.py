@@ -115,7 +115,7 @@ class Customer:
 
     #returns all approved payments for the last 2 weeks
     def current_payments(self):
-        return Request_Payment.objects.filter(house__customer=self.customer, approved=True, approved_date__range=[Customer.start_week, Customer.today])
+        return Request_Payment.objects.filter(house__customer=self.customer, job__approved=True, approved=True, approved_date__range=[Customer.start_week, Customer.today])
 
     """Proposed Jobs"""
     #returns all houses with proposed jobs for the last weeks
