@@ -27,7 +27,9 @@ def add_job(request):
 
                 if not flags[0]:
                     #the house now has a proposed job, so set proposed_jobs=True
-                    House.objects.filter(address=house.address).update(proposed_jobs=True)
+                    house = House.objects.get(address=house.address)
+                    house.proposed_jobs=True
+                    house.save(update_fields=['proposed_jobs'])
 
                 #save the uploaded file and the job
                 job = form.save(commit=False)

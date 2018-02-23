@@ -7,8 +7,9 @@ class Customer:
     utc = pytz.UTC
 
     #filter results by the last 2 weeks
-    today = datetime.datetime.now()
-    start_delta = datetime.timedelta(days=14)
+    #note: add 1 day to 'today' because time seems to lag in the server
+    today = datetime.datetime.now() + datetime.timedelta(days=1)
+    start_delta = datetime.timedelta(days=7)
     start_week = today - start_delta
 
     start_week = start_week.replace(tzinfo=utc)
@@ -34,9 +35,7 @@ class Customer:
     #reduces repetition of looping code to get a query set
     def get_queryset(self, append_outer=False, houses=[], queryset=[], compare=[]):
         result_queryset = []
-        #house object
         for h in houses:
-            #current house object
             for q in queryset.iterator():
                 #get attributes to compare
                 #{0: 0}, {1: 'house'}
@@ -60,12 +59,13 @@ class Customer:
                     query_set_check = model.objects.filter(house=h, **kwargs)
                     if query_set_check:
                         setattr(h, list(update_field.keys())[0], list(update_field.values())[0][0])
+                        h.save(update_fields=[list(update_field.keys())[0]])
                         result_queryset.append(h)
                         break
                     else:
                         setattr(h, list(update_field.keys())[0], list(update_field.values())[0][1])
+                        h.save(update_fields=[list(update_field.keys())[0]])
 
-                    h.save(update_fields=[list(update_field.keys())[0]])
 
         return result_queryset
     #returns all houses that belong to the customer
@@ -110,7 +110,7 @@ class Customer:
     #returns all houses with a payment history for the last 2 weeks
     def payment_history_houses(self):
         houses = House.objects.filter(customer=self.customer)
-        payments = Request_Payment.objects.filter(house__customer=self.customer, approved=True)
+        payments = Request_Payment.objects.filter(house__customer=self.customer, job__approved=True, approved=True)
         return self.current_two_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'payment_history': [True, False]}, approved=True, approved_date__range=[Customer.start_week, Customer.today])
 
     #returns all approved payments for the last 2 weeks
