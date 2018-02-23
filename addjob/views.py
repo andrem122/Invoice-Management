@@ -39,7 +39,7 @@ def add_job(request):
                 job.balance_amount = job.balance
                 job.save()
 
-                messages.success(request, 'Thanks! Your Job was submitted and is awaiting approval.')
+                messages.success(request, 'Thanks! Your job was submitted and is awaiting approval.')
                 form = AddJob(user=current_user)
 
         # if a GET (or any other method) we'll create a blank form
