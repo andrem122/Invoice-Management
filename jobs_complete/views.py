@@ -10,17 +10,13 @@ from customer_register.customer import Customer
 def index(request):
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
-        #get all houses with completed jobs
-        #houses = House.objects.filter(completed_jobs=True)
-
         customer = Customer(current_user)
+        customer = customer.is_customer_staff()
+
         houses = customer.completed_houses
         jobs = customer.completed_jobs()
 
-        #get all approved jobs with a balance less than or equal to zero; limit to 50 results
-        #jobs = Job.objects.filter(approved=True, balance_amount__lte=0)[:50]
-
-        #get the empty forms
+        #forms
         payment_history_form = Payment_History_Form()
 
         template = loader.get_template('jobs_complete/index.html')

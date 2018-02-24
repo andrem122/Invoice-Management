@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
@@ -43,20 +43,21 @@ def register(request):
             #add user to group
             user.groups.add(group)
 
-            #generate url for customer to send to workers to sign up
-            def generate_url(request, user):
-                register_url = 'http://' + request.get_host() + '/register/' + '?c=' + str(user.id)
-                return register_url
+            #generate url for customer to send to workers and staff to sign up
+            def generate_urls(request, user):
+                worker_url = 'http://' + request.get_host() + '/register/' + '?c=' + str(user.id)
+                staff_url = 'http://' + request.get_host() + '/register/' + '?c=' + str(user.id) + '?staff=True'
+                return [worker_url, staff_url]
 
-            register_url = generate_url(request=request, user=user)
-            redirect_url = '/jobs_admin/?url=' + register_url
+            urls = generate_urls(request=request, user=user)
+            redirect_url = '/jobs_admin/?worker_url=' + urls[0] + '&staff_url=' + urls[1]
 
             #login new user
             new_user = authenticate(username=username, password=password)
             login(request, new_user)
 
             #redirect
-            return HttpResponseRedirect(redirect_url)
+            return redirect(redirect_url)
 
     # if a GET (or any other method) we'll create a blank form
     else:

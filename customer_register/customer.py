@@ -9,7 +9,7 @@ class Customer:
     #filter results by the last 2 weeks
     #note: add 1 day to 'today' because time seems to lag in the server
     today = datetime.datetime.now() + datetime.timedelta(days=1)
-    start_delta = datetime.timedelta(days=7)
+    start_delta = datetime.timedelta(days=today.weekday()+2)
     start_week = today - start_delta
 
     start_week = start_week.replace(tzinfo=utc)
@@ -38,7 +38,6 @@ class Customer:
         for h in houses:
             for q in queryset.iterator():
                 #get attributes to compare
-                #{0: 0}, {1: 'house'}
                 a = self.attribute_level(obj=h, compare=compare[0])
                 b = self.attribute_level(obj=q, compare=compare[1])
                 if a == b:
@@ -68,6 +67,17 @@ class Customer:
 
 
         return result_queryset
+
+    #checks the current user to see if they are a customer or customer staff
+    def is_customer_staff(self):
+        #if the user is customer staff
+        if self.customer.groups.filter(name='Customers Staff').exists():
+            self.customer = int(self.customer.groups.values_list('name', flat=True)[0])
+            return Customer(self.customer)
+
+        return Customer(self.customer)
+
+
     #returns all houses that belong to the customer
     def houses(self):
         return House.objects.filter(customer=self.customer)

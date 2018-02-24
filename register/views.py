@@ -7,10 +7,7 @@ from .forms import Register
 
 def register(request):
     current_user = request.user
-
-    #get the empty forms
     form = Register(auto_id=False)
-
     template = loader.get_template('register/register.html')
 
     context = {
@@ -48,19 +45,28 @@ def register(request):
 
                     return group
 
-                worker_group = create_or_get_group('Workers')
+                #determine if the user signing up is staff or a worker
+                user_type = request.GET.get('staff', None)
+
+                if user_type is not None:
+                    user_group = create_or_get_group('Customers Staff')
+                else:
+                    user_group = create_or_get_group('Workers')
+
                 customer_group = create_or_get_group(c_id)
 
-
                 #add user to group
-                user.groups.add(worker_group, customer_group)
+                user.groups.add(user_group, customer_group)
 
                 #login new user
                 new_user = authenticate(username=username, password=password)
                 login(request, new_user)
 
                 #redirect
-                return redirect('/jobs/?new_user=True')
+                if user_type is not None:
+                    return redirect('/payment_requests/approved_payments?new_user=True')
+                else:
+                    return redirect('/jobs?new_user=True')
 
         # if a GET (or any other method), we'll create a blank form
         else:

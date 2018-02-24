@@ -14,7 +14,9 @@ def index(request):
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         #get all customer houses and houses with active jobs
-        customer = Customer(customer=current_user)
+        customer = Customer(current_user)
+        customer = customer.is_customer_staff()
+
         current_houses = customer.current_houses()
         approved_jobs = customer.approved_jobs()
 
@@ -33,11 +35,17 @@ def index(request):
             'change_job_status_form': change_job_status_form,
         }
 
-        #get the register url if it exists
-        register_url = request.GET.get('url', None)
+        #get the register urls if they exist
+        worker_url = request.GET.get('worker_url', None)
+        staff_url = request.GET.get('staff_url', None)
 
-        if register_url:
-            context['register_url'] = register_url
+        if worker_url and staff_url:
+            #replace '?' with '&' in staff_url
+            index = staff_url.find('staff') - 1
+            staff_url = staff_url[:index]+ '&' + staff_url[index+1:]
+
+            context['worker_url'] = worker_url
+            context['staff_url'] = staff_url
 
         #form logic
         if request.method == 'POST':
@@ -93,6 +101,7 @@ def proposed_jobs(request):
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
 
         customer = Customer(current_user)
+        customer = customer.is_customer_staff()
 
         #get all houses with unapproved jobs for only the customers houses
         houses = customer.proposed_jobs_houses()

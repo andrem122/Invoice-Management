@@ -8,7 +8,7 @@ from django.contrib import messages
 @login_required
 def add_house(request):
     current_user = request.user
-    if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
+    if current_user.is_active and current_user.groups.filter(name__in=['Customers']).exists():
         if request.method == 'POST':
             # create a form instance and populate it with data from the request:
             form = Add_House(request.POST)
