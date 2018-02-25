@@ -222,7 +222,13 @@ form ul.messages li.success {
   background-color: #DAFFD8;
   padding: 10px;
 }
-
+/* Add Job */
 #add-job-heading {
   padding-left: 15px;
+}
+
+/* Add Heading */
+
+#add-job-desc {
+  padding-left: 13px;
 }

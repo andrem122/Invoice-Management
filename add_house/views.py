@@ -23,7 +23,7 @@ def add_house(request):
                     customer=current_user,
                 )
 
-                messages.success(request, 'Thanks! The house has been added.')
+                messages.success(request, 'Thanks! The property has been added.')
                 form = Add_House()
 
         # if a GET (or any other method) we'll create a blank form

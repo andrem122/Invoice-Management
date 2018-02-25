@@ -15,5 +15,9 @@ class AddJob(ModelForm, forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super(AddJob, self).__init__(*args, **kwargs)
+        #get customer id
+        customer_id = user.groups.values_list('name', flat=True)[0]
+        if customer_id == 'Workers':
+            customer_id = int(user.groups.values_list('name', flat=True)[1])
         #filter house by customer id
-        self.fields['house'].queryset = House.objects.filter(customer=int(user.groups.values_list('name', flat=True)[1]))
+        self.fields['house'].queryset = House.objects.filter(customer=customer_id)

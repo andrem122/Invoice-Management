@@ -72,7 +72,10 @@ class Customer:
     def is_customer_staff(self):
         #if the user is customer staff
         if self.customer.groups.filter(name='Customers Staff').exists():
-            self.customer = int(self.customer.groups.values_list('name', flat=True)[0])
+            customer_id = self.customer.groups.values_list('name', flat=True)[1]
+            if customer_id == 'Customers Staff':
+                customer_id = self.customer.groups.values_list('name', flat=True)[0]
+            self.customer = int(self.customer.groups.values_list('name', flat=True)[1])
             return Customer(self.customer)
 
         return Customer(self.customer)
