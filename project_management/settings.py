@@ -175,7 +175,7 @@ LOGGING = {
 #Email
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'andre.mashraghi@gmail.com'
-EMAIL_HOST_PASSWORD = '537H%[*tsnap]Ty'
+EMAIL_HOST_USER = '************'
+EMAIL_HOST_PASSWORD = '***********'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Invoice System <andre.mashraghi@gmail.com>'
