@@ -15,13 +15,15 @@ import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_ROOT = os.path.dirname(__file__)[0:45]
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'c8v$5*at!j87969l(fffc*&stp6q44oq!yvz4t4+++qn1*++ao'
+with open(os.path.join(PROJECT_ROOT, 'project_management', 'secret_key.txt')) as f:
+    SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -169,3 +171,11 @@ LOGGING = {
         },
     },
 }
+
+#Email
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'andre.mashraghi@gmail.com'
+EMAIL_HOST_PASSWORD = '537H%[*tsnap]Ty'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Invoice System <andre.mashraghi@gmail.com>'

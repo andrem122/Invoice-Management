@@ -9,7 +9,7 @@ class Customer:
     #filter results by the last 2 weeks
     #note: add 1 day to 'today' because time seems to lag in the server
     today = datetime.datetime.now() + datetime.timedelta(days=1)
-    start_delta = datetime.timedelta(days=today.weekday()+2)
+    start_delta = datetime.timedelta(days=today.weekday()+7)
     start_week = today - start_delta
 
     start_week = start_week.replace(tzinfo=utc)
@@ -75,7 +75,7 @@ class Customer:
             customer_id = self.customer.groups.values_list('name', flat=True)[1]
             if customer_id == 'Customers Staff':
                 customer_id = self.customer.groups.values_list('name', flat=True)[0]
-            self.customer = int(self.customer.groups.values_list('name', flat=True)[1])
+            self.customer = int(customer_id)
             return Customer(self.customer)
 
         return Customer(self.customer)

@@ -16,6 +16,14 @@
               </div>
             </div>
             <hr>
+            {% if next %}
+              {% if user.is_authenticated %}
+              <p>Your account doesn't have access to this page. To proceed,
+              please login with an account that has access.</p>
+              {% else %}
+              <p>Please login to see this page.</p>
+              {% endif %}
+            {% endif %}
           </div>
           <div class="panel-body">
             <div class="row">
@@ -46,7 +54,7 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+                    <p class="forgot-password"><a href="{% url 'password_reset' %}">Forgot password?</a></p>
                   </div>
                 </form>
               </div>
@@ -56,13 +64,4 @@
       </div>
     </div>
   </div>
-
-  {% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-    {% else %}
-    <p>Please login to see this page.</p>
-    {% endif %}
-  {% endif %}
 {% endblock content %}
