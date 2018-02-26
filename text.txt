@@ -1,0 +1,26 @@
+<VirtualHost *:80>
+    #My site Name
+    ServerName reinvoice.com
+
+    #Demon process for multiple virtual hosts
+    WSGIDaemonProcess reinvoice threads=5
+
+    #Pointing wsgi script to config file
+    WSGIScriptAlias / /var/www/html/django-apps/project_management/django.wsgi
+    WSGIProcessGroup reinvoice
+
+    #Your static files location
+    Alias /static/ "/var/www/html/django-apps/project_management/static/"
+    <Location "/media">
+        SetHandler None
+    </Location>
+    <LocationMatch "\.(jpg|gif|png|js|css)$">
+        SetHandler None
+    </LocationMatch>
+    <Directory /var/www/html/django-apps/project_management >
+        WSGIProcessGroup reinvoice
+        WSGIApplicationGroup %{GLOBAL}
+        Order deny,allow
+        Allow from all
+    </Directory>
+</VirtualHost>
