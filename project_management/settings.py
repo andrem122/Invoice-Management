@@ -136,7 +136,7 @@ LOGIN_URL = '/accounts/login'
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-PROJECT_ROOT = os.path.dirname(__file__)[0:45]
+PROJECT_ROOT = os.path.dirname(__file__)
 STATICFILES_DIRS = [
     os.path.join(PROJECT_ROOT, 'static'),
 ]
