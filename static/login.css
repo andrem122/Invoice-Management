@@ -1,5 +1,6 @@
 body {
     padding-top: 90px;
+    height: 100%;
 }
 .panel-login {
 	border-color: #ccc;
@@ -100,6 +101,10 @@ body {
 	border-color: #1CA347;
 }
 
+#company-name-alert {
+    color: red;
+}
+
 form label {
   display: block;
   font-weight: 900;
@@ -128,4 +133,57 @@ form input {
 
 form input[type="submit"] {
   display: block;
+}
+
+/* Customer Register */
+body.customer-register {
+    background:
+    linear-gradient(
+      rgba(0, 0, 0, 0.20),
+      rgba(0, 0, 0, 0.20)
+    ),
+    url('/static/william-iven-5893-unsplash(1).jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+body.customer-register .panel-login {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+body.customer-register .panel-login input[type="text"], body.customer-register .panel-login input[type="email"],
+body.customer-register .panel-login input[type="password"] {
+    padding: 21px 23px;
+    height: auto;
+    font-size: 16px;
+    color: #fff;
+}
+
+body.customer-register input:-ms-input-placeholder, body.customer-register input::-ms-input-placeholder,
+body.customer-register input::placeholder {
+    color: #fff;
+}
+
+body.customer-register input::placeholder {
+    opacity: 1;
+    color: #fff;
+}
+
+body.customer-register span.helptext {
+    color: #fff;
+}
+form#register-form {
+  color: #fff;
+}
+#signup-title {
+ text-align: center;
+ color: #fff;
+}
+
+@media all and (min-width: 820px) {
+    html {
+        height: 100%;
+    }
 }
