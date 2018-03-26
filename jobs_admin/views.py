@@ -1,13 +1,11 @@
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from jobs.models import Job, Current_Worker, House, Request_Payment
 from .forms import Change_Job_Status
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group, User
 from customer_register.customer import Customer
-import datetime
 
 @login_required
 def index(request):
@@ -106,6 +104,8 @@ def proposed_jobs(request):
         #get all houses with unapproved jobs for only the customers houses
         houses = customer.proposed_jobs_houses()
         jobs = customer.proposed_jobs()
+        start_week = str(Customer.start_week.date())
+        today = str(Customer.today.date())
 
         #get form and template
         form = Change_Job_Status()
@@ -115,7 +115,9 @@ def proposed_jobs(request):
             'houses': houses,
             'jobs': jobs,
             'current_user': current_user,
-            'form': form
+            'form': form,
+            'start_week': start_week,
+            'today': today
         }
 
         #form logic

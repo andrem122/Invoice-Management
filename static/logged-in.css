@@ -232,3 +232,8 @@ form ul.messages li.success {
 #add-job-desc {
   padding-left: 13px;
 }
+
+/* Download Data Form */
+form.download-jobs-form {
+  display: inline-block;
+}

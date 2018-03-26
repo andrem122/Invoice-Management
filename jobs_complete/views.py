@@ -5,6 +5,7 @@ from jobs.models import Job, Current_Worker, House
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import login_required
 from customer_register.customer import Customer
+import csv
 
 @login_required
 def index(request):
@@ -14,7 +15,7 @@ def index(request):
         customer = customer.is_customer_staff()
 
         houses = customer.completed_houses
-        jobs = customer.completed_jobs()
+        completed_jobs = customer.completed_jobs()
 
         #forms
         payment_history_form = Payment_History_Form()
@@ -23,7 +24,7 @@ def index(request):
 
         context = {
             'houses': houses,
-            'jobs': jobs,
+            'completed_jobs': completed_jobs,
             'current_user': current_user,
             'payment_history_form': payment_history_form,
         }

@@ -4,7 +4,6 @@ from django.shortcuts import render, redirect
 from jobs.models import Job, House, Request_Payment, Current_Worker
 from .forms import Change_Payment_Status
 from django.contrib.auth.decorators import login_required
-from jobs.dates_and_times import Dates_And_Times
 from customer_register.customer import Customer
 from payment_history.forms import Upload_Document_Form
 import datetime
@@ -15,6 +14,7 @@ def approved_payments(request):
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         customer = Customer(current_user)
         customer = customer.is_customer_staff()
+
         #get all houses with a payment history and approved payments for the current week
         houses = customer.payment_history_houses()
         payments = customer.current_payments()

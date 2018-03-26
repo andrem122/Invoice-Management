@@ -45,7 +45,7 @@ class Job(models.Model):
 
     document_link = models.FileField(upload_to=generate_filename)
 
-    #balance is calculated using the start_amount and total_paid
+    #balance is calculated using start_amount and total_paid
     @property
     def balance(self):
         if self.total_paid > self.start_amount:

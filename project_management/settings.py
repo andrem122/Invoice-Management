@@ -11,12 +11,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROJECT_ROOT = os.path.dirname(__file__)[0:45]
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -31,8 +28,8 @@ ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
 INSTALLED_APPS = [
+    'download_data.apps.DownloadDataConfig',
     'customer_register.apps.CustomerRegisterConfig',
     'add_house.apps.AddHouseConfig',
     'jobs_complete.apps.JobsCompleteConfig',
@@ -120,11 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/New_York'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 # Login Redirect
@@ -135,14 +129,13 @@ LOGIN_URL = '/accounts/login'
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-PROJECT_ROOT = os.path.dirname(__file__)
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, 'static'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 #Media
 
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 #Logging
@@ -178,13 +171,3 @@ EMAIL_HOST_USER = 'andre.mashraghi@gmail.com'
 EMAIL_HOST_PASSWORD = '537H%[*tsnap]Ty'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Invoice System <andre.mashraghi@gmail.com>'
-
-#Sessions
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
-#Misc
-X_FRAME_OPTIONS = 'DENY'
-SECURE_SSL_REDIRECT = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_BROWSER_XSS_FILTER = True
