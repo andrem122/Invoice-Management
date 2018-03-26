@@ -7,6 +7,7 @@ import csv
 
 @login_required
 def index(request):
+    #current user
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         customer = Customer(current_user)
