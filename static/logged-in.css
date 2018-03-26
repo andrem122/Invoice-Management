@@ -224,7 +224,7 @@ form ul.messages li.success {
 }
 
 /* Download Data Form */
-form#download-jobs {
+form.download-jobs-form {
   display: inline-block;
 }
 /* Add Job */
