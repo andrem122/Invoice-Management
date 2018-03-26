@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from jobs.models import Job, House, Request_Payment, Current_Worker
 from .forms import Change_Payment_Status
 from django.contrib.auth.decorators import login_required
@@ -14,7 +14,6 @@ def approved_payments(request):
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         customer = Customer(current_user)
         customer = customer.is_customer_staff()
-
         #get all houses with a payment history and approved payments for the current week
         houses = customer.payment_history_houses()
         payments = customer.current_payments()
@@ -24,6 +23,8 @@ def approved_payments(request):
         upload_document_form = Upload_Document_Form()
 
         template = loader.get_template('payment_requests/approved_payments.html')
+        start_week = str(Customer.start_week.date())
+        today = str(Customer.today.date())
 
         context = {
             'houses': houses,
@@ -31,6 +32,8 @@ def approved_payments(request):
             'current_user': current_user,
             'form': form,
             'upload_document_form': upload_document_form,
+            'start_week': start_week,
+            'today': today
         }
 
         #form logic for unapproving payments
@@ -99,6 +102,8 @@ def unapproved_payments(request):
             #get all unapproved payments and houses with pending payments
             houses = customer.current_payment_requests_houses()
             payments = customer.current_payment_requests()
+            start_week = str(Customer.start_week.date())
+            today = str(Customer.today.date())
 
             #get an empty form
             form = Change_Payment_Status()
@@ -110,6 +115,8 @@ def unapproved_payments(request):
                 'payments': payments,
                 'current_user': current_user,
                 'form': form,
+                'start_week': start_week,
+                'today': today
             }
 
             #form logic
