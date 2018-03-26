@@ -222,6 +222,11 @@ form ul.messages li.success {
   background-color: #DAFFD8;
   padding: 10px;
 }
+
+/* Download Data Form */
+form#download-jobs {
+  display: inline-block;
+}
 /* Add Job */
 #add-job-heading {
   padding-left: 15px;
