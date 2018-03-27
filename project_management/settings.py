@@ -15,21 +15,23 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'c8v$5*at!j87969l(fffc*&stp6q44oq!yvz4t4+++qn1*++ao'
+with open(os.path.join(BASE_DIR, 'project_management', 'secret_key.txt')) as f:
+    SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['genuwine12.pythonanywhere.com']
 
 
 # Application definition
+
 INSTALLED_APPS = [
-    'download_data.apps.DownloadDataConfig',
     'customer_register.apps.CustomerRegisterConfig',
     'add_house.apps.AddHouseConfig',
     'jobs_complete.apps.JobsCompleteConfig',
@@ -58,14 +60,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
-
 ROOT_URLCONF = 'project_management.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['./templates',],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,8 +117,11 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/New_York'
+
 USE_I18N = True
+
 USE_L10N = True
+
 USE_TZ = True
 
 # Login Redirect
@@ -129,12 +132,9 @@ LOGIN_URL = '/accounts/login'
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 #Media
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
@@ -171,3 +171,13 @@ EMAIL_HOST_USER = 'andre.mashraghi@gmail.com'
 EMAIL_HOST_PASSWORD = '537H%[*tsnap]Ty'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Invoice System <andre.mashraghi@gmail.com>'
+
+#Sessions
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+#Misc
+X_FRAME_OPTIONS = 'DENY'
+SECURE_SSL_REDIRECT = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
