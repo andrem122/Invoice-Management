@@ -3,7 +3,7 @@ import datetime
 import pytz
 
 class Customer:
-    #allow datetime to be 
+    #allow datetime to be aware
     utc = pytz.UTC
 
     #filter results by the last 2 weeks

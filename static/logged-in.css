@@ -50,7 +50,11 @@ body .job-info td:last-child input[type="submit"] {
 }
 
 /* Buttons in Options Container */
-
+@media all and (max-width: 385px) {
+  .btn-options-container .btn {
+    margin-bottom: 10px;
+  }
+}
 
 /* Sidebar Styles */
 
