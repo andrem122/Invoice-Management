@@ -26,7 +26,7 @@ def add_house(request):
             messages.success(request, 'Thanks! The property has been added.')
             form = Add_House()
 
-    # if a GET (or any other method) we'll create a blank form
+    # if a GET (or any other method) we'll create a blank for
     else:
         form = Add_House()
 
