@@ -29,6 +29,7 @@
       <th>Contract Link</th>
       {% if current_user|in_group:'Customers' %}
       <th>Approve Job</th>
+      <th>Approve As Payment</th>
       {% endif %}
     </tr>
     {% for job in jobs %}
@@ -43,15 +44,31 @@
       <td>
         <form class="change-job-status-form" action="" method="post">
           {% csrf_token %}
-          {% if form.errors %}
+          {% if change_job_status_form.errors %}
           <div class="form-messages">
             <p>Please try again.</p>
           </div>
           {% endif %}
-          {{form}}
+          {{change_job_status_form}}
           <input type="hidden" name="job_house" value="{{job.house}}">
           <input type="hidden" name="job_id" value="{{job.id}}">
-          <input class="btn btn-primary change-job-status" type="submit" name="" value="Approve Job">
+          <input class="btn btn-primary change-job-status" type="submit" name="change-job-status" value="Approve Job">
+        </form>
+      </td>
+      <td>
+        <form class="approve-as-payment-form" action="" method="post">
+          {% csrf_token %}
+          {% if approve_as_payment_form.errors %}
+          <div class="form-messages">
+            <p>Please try again.</p>
+          </div>
+          {% endif %}
+          {{approve_as_payment_form}}
+          <input type="hidden" name="job_house" value="{{job.house.address}}">
+          <input type="hidden" name="job_id" value="{{job.id}}">
+          <input type="hidden" name="submit_date" value="{{job.start_date}}">
+          <input type="hidden" name="amount" value="{{job.start_amount}}">
+          <input class="btn btn-secondary approve-as-payment" type="submit" name="approve-as-payment" value="Approve As Payment">
         </form>
       </td>
       {% endif %}
