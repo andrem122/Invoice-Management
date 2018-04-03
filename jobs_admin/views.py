@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import redirect
 from jobs.models import Job, Current_Worker, House, Request_Payment
-from .forms import Change_Job_Status
+from .forms import Change_Job_Status, Approve_As_Payment
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
@@ -103,65 +103,96 @@ def proposed_jobs(request):
     start_week = str(Customer.start_week.date())
     today = str(Customer.today.date())
 
-    #get form and template
-    form = Change_Job_Status()
+    #get forms and template
+    change_job_status_form = Change_Job_Status()
+    approve_as_payment_form = Approve_As_Payment()
     template = loader.get_template('jobs_admin/proposed_jobs.html')
 
     context = {
         'houses': houses,
         'jobs': jobs,
         'current_user': current_user,
-        'form': form,
+        'change_job_status_form': change_job_status_form,
+        'approve_as_payment_form': approve_as_payment_form,
         'start_week': start_week,
         'today': today
     }
 
     #form logic
     if request.method == 'POST':
-        #get from with POST data
-        form = Change_Job_Status(request.POST)
+        if request.POST.get('change-job-status'):
+            change_job_status_form = Change_Job_Status(request.POST)
+            if change_job_status_form.is_valid():
+                #get POST data
+                job_id = int(request.POST.get('job_id'))
+                address = str(request.POST.get('job_house'))
 
-        if form.is_valid():
-            #get job ID from POST
-            job_id = int(request.POST.get('job_id'))
-            address = str(request.POST.get('job_house'))
+                house = House.objects.get(address=address)
+                job = Job.objects.get(pk=job_id)
 
-            house = House.objects.get(address=address)
-            job = Job.objects.get(pk=job_id)
+                #update approved column to True for the specific job
+                job.approved=True
+                job.save()
 
-            #update approved column to True for the specific job
-            job.approved=True
-            job.save()
+                """add the user as a current worker on the house OR update current to True if they
+                were a current worker OR do nothing if they are already active"""
+                was_current = Current_Worker.objects.filter(house=house, company=job.company, current=False)
+                is_current = Current_Worker.objects.filter(house=house, company=job.company, current=True)
+                if was_current:
+                    was_current[0].update(current=True)
+                elif is_current:
+                    pass
+                else:
+                    Current_Worker(house=house, company=job.company, current=True).save()
 
-            """add the user as a current worker on the house OR update current to True if they
-            were a current worker OR do nothing if they are already active"""
-            was_current = Current_Worker.objects.filter(house=house, company=job.company, current=False)
-            is_current = Current_Worker.objects.filter(house=house, company=job.company, current=True)
-            if was_current:
-                was_current[0].update(current=True)
-            elif is_current:
-                pass
-            else:
-                Current_Worker(house=house, company=job.company, current=True).save()
+                """If the house has no more proposed jobs for the current week,
+                set proposed_jobs=False
+                AND if there were any requested payments because the job was previously approved,
+                set pending=payments=True for the house"""
+                jobs = Job.objects.filter(house=house, approved=False, start_date__range=[Customer.start_week, Customer.today])
+                requested_payments = Request_Payment.objects.filter(house=house, job=job, approved=False)
 
-            """If the house has no more proposed jobs for the current week,
-            set proposed_jobs=False
-            AND if there were any requested payments because the job was previously approved,
-            set pending=payments=True for the house"""
-            jobs = Job.objects.filter(house=house, approved=False, start_date__range=[Customer.start_week, Customer.today])
-            requested_payments = Request_Payment.objects.filter(house=house, job=job, approved=False)
+                if not jobs:
+                    house.proposed_jobs=False
+                    house.save(update_fields=['proposed_jobs'])
+                if requested_payments:
+                    house.pending_payments=True
+                    house.save(update_fields=['pending_payments'])
 
-            if not jobs:
-                house.proposed_jobs=False
-                house.save(update_fields=['proposed_jobs'])
-            if requested_payments:
-                house.pending_payments=True
-                house.save(update_fields=['pending_payments'])
+                return redirect('/jobs_admin/proposed_jobs')
 
-            return redirect('/jobs_admin/proposed_jobs')
+        elif request.POST.get('approve-as-payment'):
+            approve_as_payment_form = Approve_As_Payment(request.POST)
+            if approve_as_payment_form.is_valid():
+                #get POST data
+                job_id = int(request.POST.get('job_id'))
+                address = request.POST.get('job_house')
+                submit_date = request.POST.get('submit_date')
+                amount = float(request.POST.get('amount'))
+
+                #get the job and house
+                job = Job.objects.get(pk=job_id)
+                house = House.objects.get(address=address)
+
+                #add payment to database
+                Request_Payment.objects.create(job=job, submit_date=submit_date, house=house, amount=amount, approved=True)
+
+                #update total paid for job
+                total_paid = float(job.total_paid)
+                job.total_paid = total_paid + amount
+                job.balance_amount = job.balance
+                job.approved = True
+                job.save()
+
+                #update house to have completed jobs if balance is <= 0
+                if job.balance <= 0:
+                    house.completed_jobs = True
+                    house.save()
+
+                return redirect('/jobs_admin/proposed_jobs')
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = Change_Job_Status()
-
+        change_job_status_form = Change_Job_Status()
+        approve_as_payment_form = Approve_As_Payment()
     return HttpResponse(template.render(context, request))
