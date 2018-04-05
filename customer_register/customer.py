@@ -9,7 +9,7 @@ class Customer:
     #filter results by the last 2 weeks
     #note: add 1 day to 'today' because time seems to lag in the server
     today = datetime.datetime.now() + datetime.timedelta(days=2)
-    start_delta = datetime.timedelta(days=today.weekday()+6)
+    start_delta = datetime.timedelta(days=today.weekday()+5)
     start_week = today.replace(hour=17, minute=0, second=0) - start_delta #start week is at 5:00PM one week back
 
     start_week = start_week.replace(tzinfo=utc)

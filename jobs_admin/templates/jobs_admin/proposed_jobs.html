@@ -11,7 +11,7 @@
 {% endblock scripts %}
 
 {% block content %}
-<h2>Your Estimates from {{start_week}} to {{today}}</h2>
+<h2>Estimates from {{start_week}} to {{today}}</h2>
 {% for house in houses %}
 <div class="job-container">
   <div class="house">
@@ -39,7 +39,7 @@
       <td>{{job.start_date}}</td>
       <td>{{job.company}}</td>
       <td>${{job.start_amount|intcomma}}</td>
-      <td><a href="{{job.document_link.url}}">View Contract</a></td>
+      <td><a rel="noopener noreferrer" target="_blank" href="{{job.document_link.url}}">View Contract</a></td>
       {% if current_user|in_group:'Customers' %}
       <td>
         <form class="change-job-status-form" action="" method="post">

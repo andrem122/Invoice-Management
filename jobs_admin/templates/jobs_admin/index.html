@@ -26,7 +26,7 @@
   <p><a href="{{staff_url}}">{{staff_url}}</a></p>
 </div>
 {% endif %}
-<h2>Your Open Jobs</h2>
+<h2>Active Jobs</h2>
 {% for w in current_workers %}
 <div class="job-container">
   <div class="house">
@@ -57,7 +57,7 @@
           <td>${{job.start_amount|intcomma}}</td>
           <td>${{job.total_paid}}</td>
           <td>${{job.balance_amount|intcomma}}</td>
-          <td><a href="{{job.document_link.url}}">View Contract</a></td>
+          <td><a rel="noopener noreferrer" target="_blank" href="{{job.document_link.url}}">View Contract</a></td>
           <td>
             <form class="payment-history-form" action="/payment_history/p_history_job" method="post">
               {% csrf_token %}

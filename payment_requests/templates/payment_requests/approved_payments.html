@@ -40,8 +40,8 @@
       <td>{{p.approved_date}}</td>
       <td>{{p.job.company}}</td>
       <td>${{p.amount|intcomma}}</td>
-      <td><a href="{{p.job.document_link.url}}">View Contract</a></td>
-      <td><a href="{% if p.document_link.url != None %}{{p.document_link.url}}{% else %}#{% endif %}">View Document</a></td>
+      <td><a rel="noopener noreferrer" target="_blank" href="{{p.job.document_link.url}}">View Contract</a></td>
+      <td><a rel="noopener noreferrer" {% if p.document_link.url != None %}target="_blank"{% endif %} href="{% if p.document_link.url != None %}{{p.document_link.url}}{% else %}#{% endif %}">View Document</a></td>
       {% if current_user|in_group:'Customers' %}
       <td>
         <form class="unapprove-payment-form" action="" method="post">
