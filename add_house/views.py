@@ -17,11 +17,33 @@ def add_house(request):
             #clean the form data and store into variables
             address = form.cleaned_data['address']
 
-            """update or create the house in the database"""
-            house, created = House.objects.get_or_create(
-                address=address,
-                customer=current_user,
-            )
+            #handle multiple addresses
+            def get_addresses(addresses_string):
+                #check if there are multiple addresses
+                try:
+                    i = addresses_string.index(';')
+                except ValueError:
+                    return False
+
+                addresses = addresses_string.split(';')
+                addresses = (address for address in addresses if address != '') #remove empty elements in the list
+                addresses = (address.strip() for address in addresses) #remove trailing white space
+                return addresses
+
+            result = get_addresses(address)
+
+            """create the house in the database if it does not exist"""
+            if result is not False:
+                for r in result:
+                    house, created = House.objects.get_or_create(
+                        address=r,
+                        customer=current_user,
+                    )
+            else:
+                house, created = House.objects.get_or_create(
+                    address=address,
+                    customer=current_user,
+                )
 
             messages.success(request, 'Thanks! The property has been added.')
             form = Add_House()

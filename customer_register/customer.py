@@ -34,7 +34,6 @@ class Customer:
 
     #reduces repetition of looping code to get a query set
     def get_queryset(self, append_outer=False, houses=[], queryset=[], compare=[]):
-        result_queryset = []
         for h in houses:
             for q in queryset.iterator():
                 #get attributes to compare
@@ -42,11 +41,9 @@ class Customer:
                 b = self.attribute_level(obj=q, compare=compare[1])
                 if a == b:
                     if append_outer == True:
-                        result_queryset.append(h)
+                        yield h
                     else:
-                        result_queryset.append(q)
-
-        return result_queryset
+                        yield q
 
     def current_two_week_results(self, houses, queryset, model, update_field={}, **kwargs):
         """fetch current 2 week results, if there are none
