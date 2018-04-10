@@ -52,7 +52,10 @@
               {{payment_history_form}}
               <input type="hidden" name="job_house" value="{{job.house}}">
               <input type="hidden" name="job_id" value="{{job.id}}">
-              <input class="btn btn-primary v-payment-history" type="submit" name="v-payment-history" value="View Payments">
+              <input type="hidden" name="v-payment-history">
+              <a class="custom-btn v-payment-history-btn" href="#">
+                <p class="v-payment-history-p">View Payment History</p>
+              </a>
             </form>
           </td>
         </tr>

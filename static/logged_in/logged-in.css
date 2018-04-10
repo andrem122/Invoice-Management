@@ -258,11 +258,10 @@ form.download-jobs-form {
 /* Buttons */
 
 .custom-btn {
-  width: 200px;
+  width: auto;
   height: 50px;
   line-height: 50px;
   border: 2px solid currentColor;
-  margin: 30px 0;
   position: relative;
   cursor: pointer;
   transition: all 1s ease;
@@ -342,5 +341,29 @@ form.download-jobs-form {
 }
 
 .unapprove-payment-btn:hover > p {
+  color: #fff;
+}
+
+/* Unapprove Button */
+/* Before */
+.v-payment-history-btn {
+  color: #62a9f999;
+}
+
+.v-payment-history-btn > p {
+  color: #62a9f999;
+  margin: 0;
+}
+
+/* After */
+.v-payment-history-btn::before {
+  background-color: #62a9f9;
+}
+
+.v-payment-history-btn:hover {
+  color: #62a9f9;
+}
+
+.v-payment-history-btn:hover > p {
   color: #fff;
 }
