@@ -1,6 +1,11 @@
+html {
+  background-color: #f3f3f3;
+}
+
 body {
   overflow-x: hidden;
   color: #444;
+  font-family: 'Open Sans', Helvetica, arial, sans-serif;
 }
 
 body .job-info td:last-child input[type="submit"] {
@@ -27,7 +32,7 @@ body .job-info td:last-child input[type="submit"] {
   height: 100%;
   margin-left: -250px;
   overflow-y: auto;
-  background-color: #f3f3f3;
+  background-color: #131a23;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -42,6 +47,7 @@ body .job-info td:last-child input[type="submit"] {
   width: 100%;
   position: absolute;
   padding: 15px;
+  background-color: #f3f3f3;
 }
 
 #wrapper.toggled #page-content-wrapper {
@@ -73,14 +79,24 @@ body .job-info td:last-child input[type="submit"] {
 .sidebar-nav li a {
   display: block;
   text-decoration: none;
-  color: #444;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  color: #969696;
+  transition: all 0.5s;
+  padding: 10px 0;
+}
+.sidebar-nav li a svg {
+  font-size: 23px;
+  margin-right: 8px;
 }
 
 .sidebar-nav li a:hover {
   text-decoration: none;
   background-color: #fff;
+}
+
+.sidebar-nav li a.active {
+  background-color: #09090f;
+  color: #fff;
+  border-left: 3px solid #bc383c;
 }
 
 .sidebar-nav li a:active, .sidebar-nav li a:focus {
@@ -104,17 +120,11 @@ body .job-info td:last-child input[type="submit"] {
 
 /* Close Nav Btn */
 .close-nav {
-  display: block;
-}
-.close-nav i {
-  display: inline-block;
-  margin-left: 171px;
-  color: #444;
-  font-size: 30px;
+  font-size: 28px;
+  text-align: right;
+  margin-right: 25px;
+  margin-top: 8px;
   cursor: pointer;
-  padding-left: 30px;
-  padding-right: 26px;
-  padding-top: 10px;
 }
 
 /* Job Summary Table */
@@ -122,6 +132,10 @@ body .job-info td:last-child input[type="submit"] {
 .job-container {
   overflow-x: auto;
   margin-top: 25px;
+  background-color: #fff;
+  padding: 20px;
+  border: 2px solid #ddd;
+  border-top: 4px solid #546256;
 }
 
 .job-container h3 {
@@ -129,12 +143,11 @@ body .job-info td:last-child input[type="submit"] {
   color: #4A87B6;
 }
 
-.job-headings {
-  background-color: #f3f3f3;
-}
-
 .job-headings th {
   padding: 7px 10px;
+  color: #4b4747;
+  font-weight: normal;
+  white-space: nowrap;
 }
 
 .job-summary {
@@ -148,13 +161,12 @@ body .job-info td:last-child input[type="submit"] {
   padding: 8px 10px;
 }
 
-.job-summary td:last-child {
-  padding-top: 16px;
-  vertical-align: top;
+tr.job-info:nth-child(odd) {
+  background-color: #f3f3f3;
 }
 
-.job-info {
-  border-bottom: 1px solid #ddd;
+tr.spacer {
+  height: 10px;
 }
 
 @media(min-width:768px) {
@@ -240,4 +252,70 @@ form.download-jobs-form {
 
 #add-job-desc {
   padding-left: 13px;
+}
+
+/* Buttons */
+
+.custom-btn {
+  width: 200px;
+  height: 50px;
+  line-height: 50px;
+  border: 2px solid currentColor;
+  margin: 30px 0;
+  position: relative;
+  cursor: pointer;
+  transition: all 1s ease;
+  overflow: hidden;
+  display: block;
+  margin: 0;
+}
+
+.custom-btn:hover {
+  text-decoration: none;
+}
+
+.custom-btn::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: currentColor;
+  position: absolute;
+  transition: all 1s ease;
+  top: 0;
+  left: -210px;
+}
+
+.custom-btn:hover:before {
+  left: 0;
+}
+
+.custom-btn > p {
+  text-align: center;
+  text-transform: uppercase;
+  color: currentColor;
+  font-weight: bold;
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+  transition: all 1s ease;
+}
+
+.upload-document-btn {
+  color: #9db1a1;
+}
+
+.upload-document-btn::before {
+  background-color: #546256;
+}
+
+.upload-document-btn > p {
+  color: #9db1a1;
+}
+
+.upload-document-btn:hover {
+  color: #546256;
+}
+
+.upload-document-btn:hover > p {
+  color: #fff;
 }

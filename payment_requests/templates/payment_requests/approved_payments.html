@@ -11,7 +11,7 @@
 {% endblock scripts %}
 
 {% block content %}
-<h2>Your Payment History from {{start_week}} to {{today}}</h2>
+<h2>Payments for This Week From {{start_week}} To {{today}}</h2>
 {% for house in houses %}
 <div class="job-container">
   <div class="house">
@@ -33,6 +33,7 @@
       {% endif %}
       <th>Upload Document</th>
     </tr>
+    <tr class="spacer"></tr>
     {% for p in payments %}
       {% if p.job.house.address == house.address %}
     <tr class="job-info">
@@ -71,7 +72,10 @@
           <input name="job_id" value="{{p.job.id}}" type="hidden">
           <input name="thank_you" value="/payment_requests/thank_you" type="hidden">
           <input name="p_id" value="{{p.id}}" type="hidden">
-          <input class="btn btn-primary upload-document" name="upload-document" value="Upload Document" type="submit">
+          <input type="hidden" name="upload-document" value="upload-document">
+          <a class="custom-btn upload-document-btn" href="#">
+            <p class="upload-document-btn-p">Upload</p>
+          </a>
         </form>
       </td>
     </tr>

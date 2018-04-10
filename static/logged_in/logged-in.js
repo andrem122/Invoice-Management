@@ -2,7 +2,7 @@ $(document).ready(function(){
   var $menuToggle = $('#menu-toggle');
   var $wrapper = $('#wrapper');
   var $pageContent = $('#page-content-wrapper');
-  var $closeNav = $('.close-nav i');
+  var $closeNav = $('.close-nav');
 
   $menuToggle.click(function(e) {
       e.preventDefault();

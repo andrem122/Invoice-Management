@@ -19,14 +19,14 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous" defer></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" integrity="sha384-feJI7QwhOS+hwpX2zkaeJQjeiwlhOP+SdQDqhgvvo1DsjtiSQByFdThsxO669S2D" crossorigin="anonymous" defer></script>
     <!-- Font Awesome -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
     <!-- Custom -->
     <link rel="stylesheet" href="{% static 'logged-in.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400|Raleway:300">
     <script src="{% static 'logged-in.js' %}" type="text/javascript" defer></script>
     {% block scripts %}
     {% endblock scripts %}
 </head>
-
 <body class="{% block body_class %}{% endblock body_class %}">
   <div id="wrapper" class="toggled">
       <!-- Sidebar -->
@@ -34,22 +34,40 @@
           <div class="close-nav" href="#"><i class="fa fa-times"></i></div>
           <ul class="sidebar-nav">
               <li>
-                  <a href="/jobs_admin">Active Jobs</a>
+                <a{% if request.path == '/jobs_admin/' %} class="active"{% endif %} href="/jobs_admin">
+                  <i class="far fa-handshake"></i>
+                  Active Jobs
+                </a>
               </li>
               <li>
-                  <a href="/jobs_admin/proposed_jobs">Estimates</a>
+                <a{% if request.path == '/jobs_admin/proposed_jobs' %} class="active"{% endif %} href="/jobs_admin/proposed_jobs">
+                  <i class="fas fa-clipboard-list"></i>
+                  Estimates
+                </a>
               </li>
               <li>
-                  <a href="/payment_requests/unapproved_payments">Payment Requests</a>
+                <a{% if request.path == '/payment_requests/unapproved_payments' %} class="active"{% endif %} href="/payment_requests/unapproved_payments">
+                  <i class="fas fa-hand-holding-usd"></i>
+                  Payment Requests
+                </a>
               </li>
               <li>
-                  <a href="/payment_requests/approved_payments">Payments for This Week</a>
+                <a{% if request.path == '/payment_requests/approved_payments' %} class="active"{% endif %} href="/payment_requests/approved_payments">
+                  <i class="far fa-credit-card"></i>
+                  Payments for This Week
+                </a>
               </li>
               <li>
-                  <a href="/jobs_complete">Completed Jobs</a>
+                <a{% if request.path == '/jobs_complete/' %} class="active"{% endif %} href="/jobs_complete">
+                  <i class="fas fa-check"></i>
+                  Completed Jobs
+                </a>
               </li>
               <li>
-                  <a href="/add_house">Add House</a>
+                <a{% if request.path == '/add_house/' %} class="active"{% endif %} href="/add_house">
+                  <i class="fas fa-home"></i>
+                  Add House
+                </a>
               </li>
           </ul>
       </div>

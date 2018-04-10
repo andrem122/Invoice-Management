@@ -10,7 +10,7 @@
 {% endblock scripts %}
 
 {% block content %}
-<h2>Your Payment Requests from {{start_week}} to {{today}}</h2>
+<h2>Payment Requests From {{start_week}} To {{today}}</h2>
 {% for house in houses %}
 <div class="job-container">
   <div class="house">
@@ -30,6 +30,7 @@
       <th>Approve Payment</th>
       {% endif %}
     </tr>
+    <tr class="spacer"></tr>
     {% for p in payments %}
       {% if p.job.house.address == house.address %}
     <tr class="job-info">

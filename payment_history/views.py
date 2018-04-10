@@ -63,8 +63,8 @@ def p_history_job(request):
                     return redirect('/payment_history/thank_you')
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = Payment_History_Form()
         upload_document_form = Upload_Document_Form()
+        form = Payment_History_Form()
 
     return HttpResponse(template.render(context, request))
 
