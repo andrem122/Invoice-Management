@@ -32,7 +32,7 @@ body .job-info td:last-child input[type="submit"] {
   height: 100%;
   margin-left: -250px;
   overflow-y: auto;
-  background-color: #131a23;
+  background-color: #142032;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -125,6 +125,7 @@ body .job-info td:last-child input[type="submit"] {
   margin-right: 25px;
   margin-top: 8px;
   cursor: pointer;
+  color: #969696;
 }
 
 /* Job Summary Table */
@@ -268,6 +269,7 @@ form.download-jobs-form {
   overflow: hidden;
   display: block;
   margin: 0;
+  display: inline-block;
 }
 
 .custom-btn:hover {
@@ -298,7 +300,11 @@ form.download-jobs-form {
   position: relative;
   z-index: 1;
   transition: all 1s ease;
-  padding: 0 10px;
+  padding: 0 25px;
+}
+
+.custom-btn:hover > p {
+  color: #fff;
 }
 
 .upload-document-btn {
@@ -318,35 +324,28 @@ form.download-jobs-form {
   color: #ffa83c;
 }
 
-.upload-document-btn:hover > p {
-  color: #fff;
-}
 /* Unapprove Button */
 /* Before Hover */
-.unapprove-btn {
+.red-slide-btn {
   color: #f7676799;
 }
 
-.unapprove-btn > p {
+.red-slide-btn > p {
   color: #f7676799;
   margin: 0;
 }
 
 /* After Hover */
-.unapprove-btn::before {
+.red-slide-btn::before {
   background-color: #f76767;
 }
 
-.unapprove-btn:hover {
+.red-slide-btn:hover {
   color: #f76767;
 }
 
-.unapprove-btn:hover > p {
-  color: #fff;
-}
-
 /* Approve Button */
-/* Before */
+/* Before Hover */
 .approve-btn {
   color: #53d0c099;
 }
@@ -356,7 +355,7 @@ form.download-jobs-form {
   margin: 0;
 }
 
-/* After */
+/* After Hover */
 .approve-btn::before {
   background-color: #53d0c0;
 }
@@ -365,30 +364,42 @@ form.download-jobs-form {
   color: #53d0c0;
 }
 
-.approve-btn:hover > p {
-  color: #fff;
-}
-
-/* View Payment History */
-/* Before */
-.v-payment-history-btn {
+/* Blue Slide Button */
+/* Before Hover */
+.blue-slide-btn {
   color: #62a9f999;
 }
 
-.v-payment-history-btn > p {
+.blue-slide-btn > p {
   color: #62a9f999;
   margin: 0;
 }
 
-/* After */
-.v-payment-history-btn::before {
+/* After Hover */
+.blue-slide-btn::before {
   background-color: #62a9f9;
 }
 
-.v-payment-history-btn:hover {
+.blue-slide-btn:hover {
   color: #62a9f9;
 }
 
-.v-payment-history-btn:hover > p {
-  color: #fff;
+/* Approve As Payment Button */
+/* Before Hover */
+.approve-as-payment-btn {
+  color: #92929299;
+}
+
+.approve-as-payment-btn > p {
+  color: #92929299;
+  margin: 0;
+}
+
+/* After Hover */
+.approve-as-payment-btn::before {
+  background-color: #929292;
+}
+
+.approve-as-payment-btn:hover {
+  color: #929292;
 }

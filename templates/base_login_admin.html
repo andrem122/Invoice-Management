@@ -77,8 +77,7 @@
       <div id="page-content-wrapper">
           <div class="container-fluid">
               <div class="btn-options-container">
-                <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Menu</a>
-                <a href="/jobs_admin" class="btn btn-primary" id="view-job">View Jobs</a>
+                <a href="#" class="custom-btn blue-slide-btn" id="menu-toggle"><p>Menu</p></a>
                 <form class="download-jobs-form" action="/download_data/" method="post">
                   {% csrf_token %}
                   {% if download_data_form.errors %}
@@ -88,7 +87,9 @@
                   {% endif %}
                   {{download_data_form}}
                   <input type="hidden" name="job_house" value="{{p.job.house}}">
-                  <input id="download-jobs" class="btn btn-primary" type="submit" value="Download All Data">
+                  <a class="custom-btn red-slide-btn" href="#">
+                    <p class="download-data-p">Download Data</p>
+                  </a>
                 </form>
               </div>
               {% block content %}

@@ -4,7 +4,7 @@
 {% load static %}
 {% load jobs_admin_group_check %}
 
-{% block title %}All Proposed Jobs{% endblock title %}
+{% block title %}Estimates{% endblock title %}
 
 {% block scripts %}
 <script type="text/javascript" src="{% static 'jobs_admin/jobs_admin.js' %}" defer></script>
@@ -53,7 +53,10 @@
           {{change_job_status_form}}
           <input type="hidden" name="job_house" value="{{job.house}}">
           <input type="hidden" name="job_id" value="{{job.id}}">
-          <input class="btn btn-primary change-job-status" type="submit" name="change-job-status" value="Approve Job">
+          <input type="hidden" name="change-job-status" value="Approve Job">
+          <a class="custom-btn approve-btn" href="#">
+            <p class="approve-p">Approve Job</p>
+          </a>
         </form>
       </td>
       <td>
@@ -69,7 +72,10 @@
           <input type="hidden" name="job_id" value="{{job.id}}">
           <input type="hidden" name="submit_date" value="{{job.start_date}}">
           <input type="hidden" name="amount" value="{{job.start_amount}}">
-          <input class="btn btn-secondary approve-as-payment" type="submit" name="approve-as-payment" value="Approve As Payment">
+          <input type="hidden" name="approve-as-payment" value="approve-as-payment">
+          <a class="custom-btn approve-as-payment-btn" href="#">
+            <p class="approve-as-payment-p">Approve As Payment</p>
+          </a>
         </form>
       </td>
       {% endif %}

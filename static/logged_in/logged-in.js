@@ -43,7 +43,7 @@ $(document).ready(function(){
     });
   }
 
-  post_form(['v-payment-history-p', 'unapprove-p', 'approve-p']);
+  post_form(['v-payment-history-p', 'unapprove-p', 'approve-p', 'approve-as-payment-p', 'download-data-p']);
 
   //submits upload document form when button is clicked
   var clicks = 0;
