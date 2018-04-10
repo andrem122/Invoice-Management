@@ -302,21 +302,45 @@ form.download-jobs-form {
 }
 
 .upload-document-btn {
-  color: #9db1a1;
-}
-
-.upload-document-btn::before {
-  background-color: #546256;
+  color: #ffa83c99;
 }
 
 .upload-document-btn > p {
-  color: #9db1a1;
+  color: #ffa83c99;
+  margin: 0;
+}
+
+.upload-document-btn::before {
+  background-color: #ffa83c;
 }
 
 .upload-document-btn:hover {
-  color: #546256;
+  color: #ffa83c;
 }
 
 .upload-document-btn:hover > p {
+  color: #fff;
+}
+/* Unapprove Button */
+/* Before */
+.unapprove-payment-btn {
+  color: #53d0c099;
+}
+
+.unapprove-payment-btn > p {
+  color: #53d0c099;
+  margin: 0;
+}
+
+/* After */
+.unapprove-payment-btn::before {
+  background-color: #53d0c0;
+}
+
+.unapprove-payment-btn:hover {
+  color: #53d0c0;
+}
+
+.unapprove-payment-btn:hover > p {
   color: #fff;
 }

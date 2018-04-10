@@ -56,7 +56,10 @@
           <input type="hidden" name="job_house" value="{{p.job.house}}">
           <input type="hidden" name="job_id" value="{{p.job.id}}">
           <input type="hidden" name="p_id" value="{{p.id}}">
-          <input class="btn btn-primary unapprove-payment" type="submit" value="Unapprove Payment">
+          <input name="unapprove-payment" type="hidden">
+          <a class="custom-btn unapprove-payment-btn" href="#">
+            <p class="unapprove-payment-p">Unapprove</p>
+          </a>
         </form>
       </td>
       {% endif %}
