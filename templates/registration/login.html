@@ -30,19 +30,19 @@
 				<div class="login100-pic js-tilt" data-tilt>
 					<img src="{% static 'images/img-01.png' %}" alt="IMG">
 				</div>
-        {% if next %}
-          {% if user.is_authenticated %}
-          <p>Your account doesn't have access to this page. To proceed,
-          please login with an account that has access.</p>
-          {% else %}
-          <p>Please login to see this page.</p>
-          {% endif %}
-        {% endif %}
 				<form class="login100-form validate-form" action="{% url 'login' %}" method="post">
 					<span class="login100-form-title">
 						Member Login
 					</span>
           {% csrf_token %}
+          {% if next %}
+            {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+            {% else %}
+            <p>Please login to see this page.</p>
+            {% endif %}
+          {% endif %}
           {% if form.errors %}
           <div class="form-messages">
             {% for key, value in form.errors.items %}
