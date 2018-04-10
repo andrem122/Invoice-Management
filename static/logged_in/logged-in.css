@@ -158,7 +158,8 @@ body .job-info td:last-child input[type="submit"] {
 }
 
 .job-summary td {
-  padding: 8px 10px;
+  padding: 18px 10px;
+  white-space: nowrap;
 }
 
 tr.job-info:nth-child(odd) {
