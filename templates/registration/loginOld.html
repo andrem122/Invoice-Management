@@ -1,0 +1,67 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block title %}Login - Samjack Blackstone Invoice System{% endblock title %}
+{% block scripts %}
+<link rel="stylesheet" href="{% static 'login.css' %}">
+{% endblock scripts %}
+{% block content %}
+<div class="container">
+      <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-login">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col-xs-12">
+                <a href="#" class="active" id="login-form-link">Login</a>
+              </div>
+            </div>
+            <hr>
+            {% if next %}
+              {% if user.is_authenticated %}
+              <p>Your account doesn't have access to this page. To proceed,
+              please login with an account that has access.</p>
+              {% else %}
+              <p>Please login to see this page.</p>
+              {% endif %}
+            {% endif %}
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <form id="login-form" action="{% url 'login' %}" method="post" role="form" style="display: block;">
+                  {% csrf_token %}
+                  {% if form.errors %}
+                  <div class="form-messages">
+                    <p>{{form.errors}}</p>
+                  </div>
+                  {% endif %}
+                  <div class="form-group">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                  </div>
+                  <div class="form-group text-center">
+                  </div>
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-sm-6 col-sm-offset-3">
+                        <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
+                        <input type="hidden" name="next" value="{{ next }}" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <p class="forgot-password"><a href="{% url 'password_reset' %}">Forgot password?</a></p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
