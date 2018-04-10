@@ -258,7 +258,7 @@ form.download-jobs-form {
 /* Buttons */
 
 .custom-btn {
-  width: auto;
+  max-width: 200px;
   height: 50px;
   line-height: 50px;
   border: 2px solid currentColor;
@@ -298,6 +298,7 @@ form.download-jobs-form {
   position: relative;
   z-index: 1;
   transition: all 1s ease;
+  padding: 0 10px;
 }
 
 .upload-document-btn {
@@ -321,30 +322,54 @@ form.download-jobs-form {
   color: #fff;
 }
 /* Unapprove Button */
-/* Before */
+/* Before Hover */
 .unapprove-btn {
-  color: #53d0c099;
+  color: #f7676799;
 }
 
 .unapprove-btn > p {
-  color: #53d0c099;
+  color: #f7676799;
   margin: 0;
 }
 
-/* After */
+/* After Hover */
 .unapprove-btn::before {
-  background-color: #53d0c0;
+  background-color: #f76767;
 }
 
 .unapprove-btn:hover {
-  color: #53d0c0;
+  color: #f76767;
 }
 
 .unapprove-btn:hover > p {
   color: #fff;
 }
 
-/* Unapprove Button */
+/* Approve Button */
+/* Before */
+.approve-btn {
+  color: #53d0c099;
+}
+
+.approve-btn > p {
+  color: #53d0c099;
+  margin: 0;
+}
+
+/* After */
+.approve-btn::before {
+  background-color: #53d0c0;
+}
+
+.approve-btn:hover {
+  color: #53d0c0;
+}
+
+.approve-btn:hover > p {
+  color: #fff;
+}
+
+/* View Payment History */
 /* Before */
 .v-payment-history-btn {
   color: #62a9f999;

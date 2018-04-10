@@ -44,9 +44,9 @@
           <td>
             <form class="payment-history-form" action="/payment_history/p_history_job" method="post">
               {% csrf_token %}
-              {% if form.errors %}
+              {% if payment_history_form.errors %}
               <div class="form-messages">
-                <p>Please try again.</p>
+                <p>{{payment_history_form.errors}}</p>
               </div>
               {% endif %}
               {{payment_history_form}}

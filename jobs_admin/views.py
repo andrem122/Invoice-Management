@@ -60,7 +60,7 @@ def index(request):
             #update approved column to False for the specific job
             job = Job.objects.get(pk=job_id)
             job.approved=False
-            job.save()
+            job.save(update_fields=['approved'])
 
             """update house to proposed_jobs=True if the unapproved job is
             within the last 2 weeks"""
@@ -71,11 +71,11 @@ def index(request):
             """if no more current jobs for specific house, delete as current worker
             AND if no more pending payments from other approved jobs for the house exist,
             set pending_payments=False"""
-            current_house_jobs = Job.objects.filter(company=job.company, approved=True, house=house)
+            active_jobs_for_house = Job.objects.filter(company=job.company, approved=True, house=house, balance_amount__gt=0)
             payment_requests = Request_Payment.objects.filter(house=house, job__approved=True, approved=False)
 
-            if not current_house_jobs:
-                Current_Worker.objects.filter(company=job.company, house=house).delete()
+            if not active_jobs_for_house:
+                Current_Worker.objects.get(company=job.company, house=house).delete()
             if not payment_requests:
                 house.pending_payments=False
                 house.save(update_fields=['pending_payments'])
@@ -115,7 +115,7 @@ def proposed_jobs(request):
         'change_job_status_form': change_job_status_form,
         'approve_as_payment_form': approve_as_payment_form,
         'start_week': start_week,
-        'today': today
+        'today': today,
     }
 
     #form logic

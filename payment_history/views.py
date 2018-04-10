@@ -30,8 +30,9 @@ def p_history_job(request):
 
             if payment_history_form.is_valid():
 
-                #get the job associated with the payment
+                #get the job and house address associated with the payment
                 job = Job.objects.get(pk=job_id)
+                address = str(request.POST.get('job_house'))
 
                 #get all approved payments for the job
                 payments = Request_Payment.objects.filter(job=job, approved=True)
@@ -39,6 +40,7 @@ def p_history_job(request):
                 #add it to the context dict
                 context['payments'] = payments
                 context['job_id'] = job_id
+                context['address'] = address
 
         #for upload document form
         elif request.POST.get('upload-document'):

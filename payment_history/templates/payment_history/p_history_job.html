@@ -12,7 +12,7 @@
 {% block content %}
 <div class="job-container">
   <div class="house">
-    <h3 class="payments-title">Payments for Job {{job_id}}</h3>
+    <h3 class="payments-title">Payments for Job {{job_id}} At {{address}}</h3>
   </div>
   <div class="jobs">
 
@@ -43,7 +43,10 @@
           {{upload_document_form}}
           <input type="hidden" name="job_id" value="{{p.job.id}}">
           <input type="hidden" name="p_id" value="{{p.id}}">
-          <input class="btn btn-primary upload-document" type="submit" name="upload-document" value="Upload Document">
+          <input type="hidden" name="upload-document" value="upload-document">
+          <a class="custom-btn upload-document-btn" href="#">
+            <p class="upload-document-btn-p">Upload</p>
+          </a>
         </form>
       </td>
     </tr>
