@@ -222,7 +222,7 @@ form input {
   border-radius: 3px;
 }
 
-form input[type="submit"] {
+form input[type="submit"], form input[type="file"], form input[type="number"] {
   display: block;
 }
 
@@ -259,7 +259,7 @@ form.download-jobs-form {
 /* Buttons */
 
 .custom-btn {
-  max-width: 200px;
+  max-width: 250px;
   height: 50px;
   line-height: 50px;
   border: 2px solid currentColor;
@@ -284,7 +284,7 @@ form.download-jobs-form {
   position: absolute;
   transition: all 1s ease;
   top: 0;
-  left: -210px;
+  left: -240px;
 }
 
 .custom-btn:hover:before {

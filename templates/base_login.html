@@ -19,7 +19,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous" defer></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" integrity="sha384-feJI7QwhOS+hwpX2zkaeJQjeiwlhOP+SdQDqhgvvo1DsjtiSQByFdThsxO669S2D" crossorigin="anonymous" defer></script>
     <!-- Font Awesome -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
     <!-- Custom -->
     <link rel="stylesheet" href="{% static 'logged-in.css' %}">
     <script src="{% static 'logged-in.js' %}" type="text/javascript" defer></script>
@@ -34,13 +34,22 @@
           <div class="close-nav" href="#"><i class="fa fa-times"></i></div>
           <ul class="sidebar-nav">
               <li>
-                  <a href="../jobs">View Jobs</a>
+                <a{% if request.path == '/jobs/' %} class="active"{% endif %} href="/jobs">
+                  <i class="far fa-handshake"></i>
+                  View Jobs
+                </a>
               </li>
               <li>
-                  <a href="../addjob">Add New Job</a>
+                <a{% if request.path == '/addjob/' %} class="active"{% endif %} href="/addjob">
+                  <i class="far fa-plus-square"></i>
+                  Add New Job
+                </a>
               </li>
               <li>
-                  <a href="/accounts/logout">Logout</a>
+                  <a href="/accounts/logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                  </a>
               </li>
           </ul>
       </div>
@@ -50,8 +59,8 @@
       <div id="page-content-wrapper">
           <div class="container-fluid">
               <div class="btn-options-container">
-                <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Menu</a>
-                <a href="../addjob" class="btn btn-primary" id="add-job">Add Job</a>
+                <a href="#" class="custom-btn blue-slide-btn" id="menu-toggle"><p>Menu</p></a>
+                <a href="/addjob" class="custom-btn red-slide-btn" id="add-job"><p>Add Job</p></a>
               </div>
               {% block content %}
               {% endblock content %}

@@ -45,23 +45,31 @@ $(document).ready(function(){
 
   post_form(['v-payment-history-p', 'unapprove-p', 'approve-p', 'approve-as-payment-p', 'download-data-p']);
 
-  //submits upload document form when button is clicked
-  var clicks = 0;
-  document.addEventListener('click', function(e){
-    classes = Array.from(e.target.classList); //convert DOMTicketList to array
-    if(classes.includes('upload-document-btn-p')) {
-      clicks += 1;
-      var form = e.target.parentElement.parentElement;
-      var document_upload = form.children[1];
-      if(clicks === 1) {
-        e.preventDefault();
-        document_upload.setAttribute('type', 'file');
-      } else {
-        if(document_upload.value !== '') {
-          form.submit();
+  //submits forms and shows hidden inputs when button is clicked
+  function post_form_with_file_input(class_names, type) {
+    var clicks = 0;
+    document.addEventListener('click', function(e){
+      classes = Array.from(e.target.classList); //convert DOMTicketList to array
+      l = class_names.length;
+      for(var i = 0; i < l; i++) {
+        if(classes.includes(class_names[i])) {
+          clicks += 1;
+          var form = e.target.parentElement.parentElement;
+          var target_input = form.children[1];
+          if(clicks === 1) {
+            e.preventDefault();
+            target_input.setAttribute('type', type);
+          } else {
+            if(target_input.value !== '' && target_input.value !== '0.0') {
+              form.submit();
+            }
+          }
         }
       }
-    }
-  });
+    });
+  }
+
+  post_form_with_file_input(['upload-document-p'], 'file');
+  post_form_with_file_input(['request-payment-p'], 'number');
 
 });
