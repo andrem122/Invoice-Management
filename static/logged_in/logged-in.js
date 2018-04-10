@@ -43,6 +43,6 @@ $(document).ready(function(){
     });
   }
 
-  post_form(['v-payment-history-p']);
+  post_form(['v-payment-history-p', 'unapprove-p']);
 
 });

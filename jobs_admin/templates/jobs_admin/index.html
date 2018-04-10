@@ -70,7 +70,10 @@
               {{payment_history_form}}
               <input type="hidden" name="job_house" value="{{job.house}}">
               <input type="hidden" name="job_id" value="{{job.id}}">
-              <input class="btn btn-primary v-payment-history" type="submit" name="v-payment-history" value="View Payments">
+              <input type="hidden" name="v-payment-history" value="View Payments">
+              <a class="custom-btn unapprove-payment-btn" href="#">
+                <p class="v-payment-history-p">View Payments</p>
+              </a>
             </form>
           </td>
           {% if current_user|in_group:'Customers' %}
@@ -85,7 +88,9 @@
               {{change_job_status_form}}
               <input type="hidden" name="job_house" value="{{job.house}}">
               <input type="hidden" name="job_id" value="{{job.id}}">
-              <input class="btn btn-primary change-job-status" type="submit" name="" value="Unapprove Job">
+              <a class="custom-btn unapprove-btn" href="#">
+                <p class="unapprove-p">Unapprove</p>
+              </a>
             </form>
           </td>
           {% endif %}

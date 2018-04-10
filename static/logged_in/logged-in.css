@@ -322,25 +322,25 @@ form.download-jobs-form {
 }
 /* Unapprove Button */
 /* Before */
-.unapprove-payment-btn {
+.unapprove-btn {
   color: #53d0c099;
 }
 
-.unapprove-payment-btn > p {
+.unapprove-btn > p {
   color: #53d0c099;
   margin: 0;
 }
 
 /* After */
-.unapprove-payment-btn::before {
+.unapprove-btn::before {
   background-color: #53d0c0;
 }
 
-.unapprove-payment-btn:hover {
+.unapprove-btn:hover {
   color: #53d0c0;
 }
 
-.unapprove-payment-btn:hover > p {
+.unapprove-btn:hover > p {
   color: #fff;
 }
 
