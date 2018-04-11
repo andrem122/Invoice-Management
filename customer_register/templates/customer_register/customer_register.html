@@ -6,6 +6,10 @@
 {% endblock scripts %}
 {% block body_class %}customer-register{% endblock body_class %}
 {% block content %}
+{% comment %}
+  IMPORTANT: Paths to files on production server need the folder's name they are in prepended
+	to them. Ex: 'logged-in.js' becomes 'login/logged-in.js'
+{% endcomment %}
 <div class="container">
       <div class="row">
       <h2 id="signup-title">Sign Up For Free Invoice Software</h2>
