@@ -1,4 +1,5 @@
 from jobs.models import Job, Current_Worker, House, Request_Payment
+from django.contrib.auth.models import User
 import datetime
 import pytz
 
@@ -16,7 +17,15 @@ class Customer:
     today = today.replace(tzinfo=utc)
 
     def __init__(self, customer):
-        self.customer = customer
+        #get customer user object if current user is a worker or staff
+        if customer.groups.filter(name__in=['Customers Staff', 'Workers']).exists():
+            customer_id = customer.groups.values_list('name', flat=True)[1]
+            if customer_id == 'Customers Staff' or customer_id == 'Workers':
+                customer_id = customer.groups.values_list('name', flat=True)[0]
+            customer_id = int(customer_id)
+            self.customer = User.objects.get(pk=customer_id)
+        else:
+            self.customer = customer
         self.houses = self.houses()
 
     #gets attributes of objects up to two levels down
@@ -48,7 +57,6 @@ class Customer:
     def current_two_week_results(self, houses, queryset, model, update_field={}, **kwargs):
         """fetch current 2 week results, if there are none
         then set the appropriate house attributes to false"""
-        result_queryset = []
         for h in houses.iterator():
             for q in queryset.iterator():
                 if q.house == h:
@@ -56,27 +64,11 @@ class Customer:
                     if query_set_check:
                         setattr(h, list(update_field.keys())[0], list(update_field.values())[0][0])
                         h.save(update_fields=[list(update_field.keys())[0]])
-                        result_queryset.append(h)
+                        yield h
                         break
                     else:
                         setattr(h, list(update_field.keys())[0], list(update_field.values())[0][1])
                         h.save(update_fields=[list(update_field.keys())[0]])
-
-
-        return result_queryset
-
-    #checks the current user to see if they are a customer or customer staff
-    def is_customer_staff(self):
-        #if the user is customer staff
-        if self.customer.groups.filter(name='Customers Staff').exists():
-            customer_id = self.customer.groups.values_list('name', flat=True)[1]
-            if customer_id == 'Customers Staff':
-                customer_id = self.customer.groups.values_list('name', flat=True)[0]
-            self.customer = int(customer_id)
-            return Customer(self.customer)
-
-        return Customer(self.customer)
-
 
     #returns all houses that belong to the customer
     def houses(self):

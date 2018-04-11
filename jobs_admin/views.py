@@ -13,7 +13,6 @@ def index(request):
     current_user = request.user
     #get all customer houses and houses with active jobs
     customer = Customer(current_user)
-    customer = customer.is_customer_staff()
 
     current_houses = customer.current_houses()
     approved_jobs = customer.approved_jobs()
@@ -95,7 +94,6 @@ def proposed_jobs(request):
     #get current user
     current_user = request.user
     customer = Customer(current_user)
-    customer = customer.is_customer_staff()
 
     #get all houses with unapproved jobs for only the customers houses
     houses = customer.proposed_jobs_houses()

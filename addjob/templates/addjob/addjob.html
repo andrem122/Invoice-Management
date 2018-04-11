@@ -24,7 +24,7 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-lg-12">
-                <form id="login-form" action="" method="post" role="form" enctype="multipart/form-data">
+                <form id="login-form" class="add-form" action="" method="post" role="form" enctype="multipart/form-data">
                   {% csrf_token %}
                   {% if messages %}
                   <ul class="messages">
@@ -38,8 +38,18 @@
                     <p>Please enter in all data and try again.</p>
                   </div>
                   {% endif %}
-                  {{form}}
-                  <input class="btn btn-primary" type="submit" value="Submit">
+                  <select id="id_house" name="house" required>
+                    <option selected>
+                      <i class="far fa-handshake"></i>
+                      House
+                    </option>
+                    {% for house in form.fields.house.queryset %}
+                      <option value="{{house.id}}">{{house}}</option>
+                    {% endfor %}
+                  </select>
+                  {{form.start_amount}}
+                  {{form.document_link}}
+                  <input class="form-submit-btn" type="submit" value="Submit">
                 </form>
               </div>
             </div>

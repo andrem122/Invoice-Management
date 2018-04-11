@@ -12,7 +12,6 @@ import csv
 def index(request):
     current_user = request.user
     customer = Customer(current_user)
-    customer = customer.is_customer_staff()
 
     houses = customer.completed_houses
     completed_jobs = customer.completed_jobs()

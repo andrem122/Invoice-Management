@@ -43,7 +43,7 @@ $(document).ready(function(){
     });
   }
 
-  post_form(['v-payment-history-p', 'unapprove-p', 'approve-p', 'approve-as-payment-p', 'download-data-p']);
+  post_form(['submit-p']);
 
   //submits forms and shows hidden inputs when button is clicked
   function post_form_with_file_input(class_names, type) {

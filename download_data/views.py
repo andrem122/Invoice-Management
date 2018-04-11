@@ -11,9 +11,9 @@ def index(request):
     current_user = request.user
     if current_user.is_active and current_user.groups.filter(name__in=['Customers', 'Customers Staff']).exists():
         customer = Customer(current_user)
-        customer = customer.is_customer_staff()
         approved_jobs = customer.approved_jobs()
         proposed_jobs = customer.proposed_jobs()
+        completed_jobs = customer.completed_jobs()
         all_payments = customer.all_payments()
 
         #form logic
@@ -49,6 +49,9 @@ def index(request):
 
                 #proposed jobs
                 write_to_csv(title='ESTIMATES', headers=headers, queryset=proposed_jobs, attributes=attributes)
+
+                #completed jobs
+                write_to_csv(title='COMPLETED JOBS', headers=headers, queryset=completed_jobs, attributes=attributes)
 
                 #all payments
                 headers = ['House', 'Company', 'Submit Date', 'Date Approved', 'Amount', 'Approved']

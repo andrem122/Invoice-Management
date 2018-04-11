@@ -245,6 +245,20 @@ form ul.messages li.success {
 form.download-jobs-form {
   display: inline-block;
 }
+
+form.add-form input:not([type="submit"]):not([type="file"]), form.add-form select {
+  background-color: #fff;
+  border: 0;
+  border-radius: 0;
+  height: 45px;
+  padding: 10px;
+}
+
+form.add-form input[type="file"] {
+  border: 0;
+  padding: 0;
+}
+
 /* Add Job */
 #add-job-heading {
   padding-left: 15px;
@@ -402,4 +416,23 @@ form.download-jobs-form {
 
 .approve-as-payment-btn:hover {
   color: #929292;
+}
+
+.form-submit-btn {
+  background-color: transparent;
+  border: 2px solid #62a9f999;
+  color: #62a9f999;
+  height: 56px;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: bold;
+  display: block;
+  width: 100%;
+  transition: all 1s ease;
+  border-radius: 0;
+}
+
+.form-submit-btn:hover {
+  color: #62a9f9;
+  border-color: #62a9f9;
 }

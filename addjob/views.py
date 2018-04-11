@@ -4,6 +4,7 @@ from jobs.models import Job, Current_Worker, House
 from .forms import AddJob
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from customer_register.customer import Customer
 
 @login_required
 def add_job(request):

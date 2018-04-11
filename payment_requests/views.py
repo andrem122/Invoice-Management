@@ -13,7 +13,7 @@ import datetime
 def approved_payments(request):
     current_user = request.user
     customer = Customer(current_user)
-    customer = customer.is_customer_staff()
+
     #get all houses with a payment history and approved payments for the current week
     houses = customer.payment_history_houses()
     payments = customer.current_payments()
@@ -92,7 +92,6 @@ def unapproved_payments(request):
     #get all houses that have payment requests
     current_user = request.user
     customer = Customer(current_user)
-    customer = customer.is_customer_staff()
 
     #get all unapproved payments and houses with pending payments
     houses = customer.current_payment_requests_houses()
@@ -176,7 +175,7 @@ def unapproved_payments(request):
         form = Change_Payment_Status()
 
     return HttpResponse(template.render(context, request))
-    
+
 @login_required
 def thank_you(request):
     template = loader.get_template('payment_requests/thank_you.html')
