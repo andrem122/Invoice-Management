@@ -137,6 +137,7 @@ body .job-info td:last-child input[type="submit"] {
   padding: 20px;
   border: 2px solid #ddd;
   border-top: 4px solid #546256;
+  margin-bottom: 30px;
 }
 
 .job-container h3 {

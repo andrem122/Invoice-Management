@@ -17,6 +17,9 @@
   </p>
 </div>
 {% endif %}
+{% if current_workers %}
+<h2>Active Jobs</h2>
+{% endif %}
 {% for current_worker in current_workers %}
 <div class="job-container">
   <div class="house">
@@ -32,7 +35,7 @@
         <th>Request Payment</th>
       </tr>
       <tr class="spacer"></tr>
-      {% for job in jobs %}
+      {% for job in approved_jobs %}
       {% if job.house.address == current_worker.house.address %}
       <tr class="job-info">
         <td>{{job.id}}</td>
@@ -61,7 +64,37 @@
   </div>
 </div> <!-- /.job-container -->
 {% endfor %}
+{% if gen_has_results %}
+<h2>Pending Approval Jobs</h2>
+{% endif %}
+{% for house in pending_job_houses %}
+<div class="job-container">
+  <div class="house">
+    <h3 class="house-address">{{house.address}}</h3>
+  </div>
+  <div class="jobs">
+    <table class="job-summary">
+      <tr class="job-headings">
+        <th>Job ID</th>
+        <th>Amount</th>
+        <th>Submit Date</th>
+        <th>Contract Link</th>
+      </tr>
+      <tr class="spacer"></tr>
+      {% for job in unapproved_jobs %}
+      {% if job.house.address == house.address %}
+      <tr class="job-info">
+        <td>{{job.id}}</td>
+        <td>${{job.start_amount|intcomma}}</td>
+        <td>{{job.start_date}}</td>
+        <td><a href="{{job.document_link.url}}">View Contract</a></td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+</div> <!-- /.job-container -->
+{% endfor %}
 {% endblock content %}
 </body>
-
 </html>
