@@ -58,7 +58,7 @@ class Customer:
                     else:
                         yield q
 
-    def current_two_week_results(self, houses, queryset, model, update_field={}, **kwargs):
+    def current_week_results(self, houses, queryset, model, update_field={}, **kwargs):
         """fetch current 2 week results, if there are none
         then set the appropriate house attributes to false"""
         for h in houses.iterator():
@@ -97,16 +97,16 @@ class Customer:
     def completed_houses(self):
         return House.objects.filter(customer=self.customer, completed_jobs=True)
 
-    #returns all completed jobs
+    #returns last 50 completed jobs
     def completed_jobs(self):
         return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0)[:50]
 
     """Current Week Results"""
-    #returns all houses with payment requests for the last 2 weeks
+    #returns all houses with payment requests for the last week
     def current_payment_requests_houses(self):
         houses = House.objects.filter(customer=self.customer)
         payments = Request_Payment.objects.filter(house__customer=self.customer, job__approved=True, approved=False)
-        return self.current_two_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'pending_payments': [True, False]}, approved=False, submit_date__range=[Customer.start_week, Customer.today])
+        return self.current_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'pending_payments': [True, False]}, approved=False, submit_date__range=[Customer.start_week, Customer.today])
 
     #returns all payment requests for the last week for approved jobs
     def current_payment_requests(self):
@@ -117,7 +117,7 @@ class Customer:
     def payment_history_houses(self):
         houses = House.objects.filter(customer=self.customer)
         payments = Request_Payment.objects.filter(house__customer=self.customer, job__approved=True, approved=True)
-        return self.current_two_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'payment_history': [True, False]}, approved=True, approved_date__range=[Customer.start_week, Customer.today])
+        return self.current_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'payment_history': [True, False]}, approved=True, approved_date__range=[Customer.start_week, Customer.today])
 
     def all_payments(self):
         return Request_Payment.objects.filter(house__customer=self.customer)
@@ -131,7 +131,7 @@ class Customer:
     def proposed_jobs_houses(self):
         houses = House.objects.filter(customer=self.customer)
         jobs = Job.objects.filter(house__customer=self.customer, approved=False)
-        return self.current_two_week_results(houses=houses, queryset=jobs, model=Job, update_field={'proposed_jobs': [True, False]}, approved=False, start_date__range=[Customer.start_week, Customer.today])
+        return self.current_week_results(houses=houses, queryset=jobs, model=Job, update_field={'proposed_jobs': [True, False]}, approved=False, start_date__range=[Customer.start_week, Customer.today])
 
     #returns all proposed jobs submitted for the last week
     def proposed_jobs(self):

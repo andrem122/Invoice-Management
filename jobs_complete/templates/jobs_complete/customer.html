@@ -2,6 +2,7 @@
 
 {% load humanize %}
 {% load static %}
+{% load jobs_complete_extras %}
 
 {% block title %}All Completed Jobs{% endblock title %}
 
@@ -62,7 +63,8 @@
         {% endif %}
         {% endfor %}
         <tr class="totals">
-          
+          <td><b>Total Spent:</b></td>
+          <td>${{totals|next_item|intcomma}}</td>
         </tr>
       </tbody>
     </table>
