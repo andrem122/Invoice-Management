@@ -9,7 +9,7 @@ from project_management.decorators import customer_and_staff_check
 import csv
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
-def index(request):
+def customer(request):
     current_user = request.user
     customer = Customer(current_user)
 
@@ -18,8 +18,7 @@ def index(request):
 
     #forms
     payment_history_form = Payment_History_Form()
-
-    template = loader.get_template('jobs_complete/index.html')
+    template = loader.get_template('jobs_complete/customer.html')
 
     context = {
         'houses': houses,

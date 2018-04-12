@@ -4,7 +4,11 @@ import datetime
 import pytz
 
 class Customer:
-
+    """
+    Creates an object for customers to view jobs and houses of different status
+    customer: a User object representing the customer
+    houses: a queryset of all houses that belong to the customer
+    """
     #filter results by the last week
     #note: add 1 day to 'today' because time seems to lag in the server
     today = datetime.datetime.now() + datetime.timedelta(days=2)
