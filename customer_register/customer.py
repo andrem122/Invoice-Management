@@ -4,15 +4,15 @@ import datetime
 import pytz
 
 class Customer:
-    #allow datetime to be aware
-    utc = pytz.UTC
 
-    #filter results by the last 2 weeks
+    #filter results by the last week
     #note: add 1 day to 'today' because time seems to lag in the server
     today = datetime.datetime.now() + datetime.timedelta(days=2)
     start_delta = datetime.timedelta(days=today.weekday()+4)
     start_week = today.replace(hour=17, minute=0, second=0) - start_delta #start week is at 5:00PM one week back
 
+    #allow datetime to be aware
+    utc = pytz.UTC
     start_week = start_week.replace(tzinfo=utc)
     today = today.replace(tzinfo=utc)
 

@@ -1,63 +1,31 @@
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render, redirect
-from .models import House, Job, Current_Worker, Request_Payment
+from .models import House, Job, Request_Payment
 from django.contrib.auth.models import User
 from .forms import Request_Payment_Form
 from django.contrib.auth.decorators import user_passes_test, login_required
 from project_management.decorators import worker_check
 from django.contrib import messages
-import datetime
-import pytz
+from register.worker import Worker
 
 @user_passes_test(worker_check, login_url='/accounts/login/')
 def index(request):
     current_user = request.user
 
-    #get all houses that the contractor is working on for the customer
-    current_workers = Current_Worker.objects.filter(company=current_user, current=True)
-
-    #get all jobs for ONLY the current user that are approved and have a balance > 0
-    approved_jobs = Job.objects.filter(company=current_user, approved=True, balance_amount__gt=0)
-
-    """Pending Jobs"""
-    #get all houses that the contractor has pending jobs for
-    customer_id = current_user.groups.values_list('name', flat=True)[1]
-    if customer_id == 'Workers':
-        customer_id = customer.groups.values_list('name', flat=True)[0]
-    customer_id = int(customer_id)
-    customer = User.objects.get(pk=customer_id)
-
-    customer_proposed_job_houses = House.objects.filter(customer=customer, proposed_jobs=True)
-
-    #dates for filtering of query results
-    today = datetime.datetime.now() + datetime.timedelta(days=2)
-    start_delta = datetime.timedelta(days=today.weekday()+4)
-    start_week = today.replace(hour=17, minute=0, second=0) - start_delta #start week is at 5:00PM one week back
-
-    utc = pytz.UTC
-    start_week = start_week.replace(tzinfo=utc)
-    today = today.replace(tzinfo=utc)
-
-    #get all jobs for ONLY the current user that were submitted in the last week, are unapproved, and have a balance > 0
-    unapproved_jobs = Job.objects.filter(company=current_user, approved=False, balance_amount__gt=0, start_date__range=[start_week, today])
-
-    def generate_queryset(outer_queryset, inner_queryset):
-        for o in outer_queryset:
-            for i in inner_queryset:
-                if getattr(o, 'address') == getattr(getattr(i, 'house'), 'address'):
-                    yield o
-                    break
-
-    worker_proposed_job_houses = generate_queryset(outer_queryset=customer_proposed_job_houses, inner_queryset=unapproved_jobs)
+    worker = Worker(current_user)
+    approved_houses = worker.approved_houses()
+    approved_jobs = worker.approved_jobs()
+    unapproved_jobs = worker.unapproved_jobs()
+    unapproved_houses = worker.unapproved_houses()
 
     template = loader.get_template('jobs/index.html')
     form = Request_Payment_Form()
 
     context = {
-        'current_workers': current_workers,
-        'pending_job_houses': worker_proposed_job_houses,
+        'approved_houses': approved_houses,
         'approved_jobs': approved_jobs,
+        'unapproved_houses': unapproved_houses,
         'unapproved_jobs': unapproved_jobs,
         'current_user': current_user,
         'form': form,
