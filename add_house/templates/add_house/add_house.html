@@ -30,7 +30,7 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-lg-12">
-                <form id="add-house-form" action="" method="post" role="form">
+                <form id="add-house-form" action="" method="post" role="form" enctype="multipart/form-data">
                   {% csrf_token %}
                   {% if messages %}
                   <ul class="messages">

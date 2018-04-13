@@ -2,8 +2,14 @@ from django import forms
 from django.forms import ModelForm
 from jobs.models import House
 
-#a form that has all the attributes of the Job class from the jobs app
 class Add_House(ModelForm, forms.Form):
+    """
+    Allows users to add properties to the database
+    house_list_file: a user uploaded file containing the addresses
+    they want added to the database
+    """
+    house_list_file = forms.FileField()
+    address = forms.CharField(required=False)
     class Meta:
         model = House
         fields = ['address']
