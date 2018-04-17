@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 import logging
+import os
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -18,6 +19,11 @@ class House(models.Model):
 
     def __str__(self):
         return self.address
+
+    def generate_file_path(self, file_name):
+        return os.path.join('customer_uploads', 'add_house', str(file_name))
+
+    house_list_file = models.FileField(null=True, blank=True)
 
 #the class that shows if the current company has at least one job in a house
 class Current_Worker(models.Model):
@@ -39,11 +45,10 @@ class Job(models.Model):
     def __str__(self):
         return str(self.company.get_username()) + '-' + str(self.house.address)
 
-    def generate_filename(self, filename):
-        file_path = 'uploads/{}/{}'.format(str(self.house.address), str(filename))
-        return file_path
+    def generate_file_path(self, file_name):
+        return os.path.join('worker_uploads', str(self.house.address), str(file_name))
 
-    document_link = models.FileField(upload_to=generate_filename)
+    document_link = models.FileField(null=True, blank=True, upload_to=generate_file_path)
 
     #balance is calculated using start_amount and total_paid
     @property
@@ -68,8 +73,7 @@ class Request_Payment(models.Model):
 
         return info[0] + '-' + info[1] + '-' + info[2]
 
-    def generate_filename(self, filename):
-        file_path = 'admin_uploads/{}/{}'.format(str(self.job), str(filename))
-        return file_path
+    def generate_file_path(self, file_name):
+        return os.path.join('customer_uploads', 'documents', str(self.job), str(file_name))
 
-    document_link = models.FileField(upload_to=generate_filename)
+    document_link = models.FileField(null=True, blank=True, upload_to=generate_file_path)

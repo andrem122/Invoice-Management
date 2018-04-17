@@ -236,10 +236,18 @@ form ul.messages {
   padding: 0;
 }
 
+form ul.messages li {
+  padding: 10px;
+}
+
 form ul.messages li.success {
   color: #4BB543;
   background-color: #DAFFD8;
-  padding: 10px;
+}
+
+form ul.messages li.error {
+  color: #B00E0E;
+  background-color: #FEAAAA;
 }
 
 /* Download Data Form */

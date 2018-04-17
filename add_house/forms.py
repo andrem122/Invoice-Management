@@ -8,11 +8,10 @@ class Add_House(ModelForm, forms.Form):
     house_list_file: a user uploaded file containing the addresses
     they want added to the database
     """
-    house_list_file = forms.FileField()
     address = forms.CharField(required=False)
     class Meta:
         model = House
-        fields = ['address']
+        fields = ['address', 'house_list_file']
         widgets = {
             'address': forms.TextInput(attrs={'placeholder': '1234 N Drive Street'})
         }

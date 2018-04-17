@@ -41,7 +41,7 @@
         <td>{{job.id}}</td>
         <td>${{job.start_amount|intcomma}}</td>
         <td>${{job.balance_amount|intcomma}}</td>
-        <td><a href="{{job.document_link.url}}">View Contract</a></td>
+        <td><a rel="noopener noreferrer" target="_blank" href="{{job.document_link.url}}">View Contract</a></td>
         <td>
           <form class="request-payment-form" action="" method="post">
             {% csrf_token %}
