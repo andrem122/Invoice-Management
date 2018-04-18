@@ -14,7 +14,7 @@
 {% block content %}
 <h2>All Completed Jobs</h2>
 {% for h in houses %}
-<div class="job-container">
+<div id="{{h.address|add_dashes}}" class="job-container">
   <div class="house">
     <h3 class="house-address">{{h.address}}</h3>
   </div>

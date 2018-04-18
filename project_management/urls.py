@@ -32,6 +32,7 @@ urlpatterns = [
     path('jobs_complete/', include('jobs_complete.urls')),
     path('add_house/', include('add_house.urls')),
     path('download_data/', include('download_data.urls')),
+    path('projects/', include('projects.urls')),
 ]
 
 if settings.DEBUG:

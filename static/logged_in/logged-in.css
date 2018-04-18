@@ -145,11 +145,83 @@ body .job-info td:last-child input[type="submit"] {
   color: #4A87B6;
 }
 
-.job-headings th {
+div.house-container {
+  background-color: #fff;
+  padding: 27px 0;
+  border: 1px solid #ddd;
+  border-radius: 0;
+  box-shadow: 0 1px 1px #ccc;
+  margin-bottom: 10px;
+}
+
+div.house-container .status {
+  padding: 5px 30px;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-right: 20px;
+  width: auto;
+}
+
+div.house-container .status.open {
+  background-color: #05C280;
+}
+
+div.house-container .status.active {
+  background-color: #303B57;
+}
+
+div.house-container ul {
+  padding: 0;
+  list-style: none;
+  margin-bottom: 0;
+}
+
+div.house-container ul li {
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+div.house-container ul li > a {
+  display: inline-block;
+}
+
+div.house-container ul li:first-child > a {
+  margin-left: 11%;
+  margin-right: 50%;
+}
+
+div.house-container ul li:nth-child(2) > a {
+  margin-right: 67.3%;
+}
+
+div.house-container ul li.address {
+  width: 160px;
+}
+
+.job-headings th, .house-headings li {
   padding: 7px 10px;
   color: #4b4747;
   font-weight: normal;
   white-space: nowrap;
+}
+
+ul.house-headings {
+  padding: 0;
+  margin-bottom: 5px;
+}
+
+.house-headings li {
+  display: inline-block;
+}
+
+.house-headings .col-6 li:first-child {
+  margin-right: 45px;
 }
 
 .job-summary {

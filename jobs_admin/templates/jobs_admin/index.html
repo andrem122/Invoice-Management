@@ -28,7 +28,7 @@
 {% endif %}
 <h2>Active Jobs</h2>
 {% for w in current_workers %}
-<div class="job-container">
+<div id="{{w.house.address|add_dashes}}" class="job-container">
   <div class="house">
     <h3 class="house-address">{{w.house.address}}</h3>
   </div>

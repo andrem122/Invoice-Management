@@ -15,23 +15,9 @@ def customer(request):
 
     houses = customer.completed_houses()
     completed_jobs = customer.completed_jobs()
+    totals = customer.house_totals(houses=houses)
 
-    #get total amount paid for each house
-    def house_total(houses):
-        for house in houses:
-            #get all jobs for the current house
-            jobs = Job.objects.filter(house=house, house__completed_jobs=True, approved=True, balance_amount__lte=0)
-
-            #add total_paid to total for each job
-            total = 0
-            for job in jobs:
-                total += job.total_paid
-
-            yield total
-
-    totals = house_total(houses=houses)
-
-    #forms
+    #forms and templates
     payment_history_form = Payment_History_Form()
     template = loader.get_template('jobs_complete/customer.html')
 

@@ -74,9 +74,33 @@ class Customer:
                         setattr(h, list(update_field.keys())[0], list(update_field.values())[0][1])
                         h.save(update_fields=[list(update_field.keys())[0]])
 
+    """Attributes of Houses"""
     #returns all houses that belong to the customer
     def houses(self):
         return House.objects.filter(customer=self.customer)
+
+    #get total amount paid for each house
+    def house_totals(self, houses):
+        for house in houses:
+            #get all jobs for the current house
+            jobs = Job.objects.filter(house=house, house__completed_jobs=True, approved=True, balance_amount__lte=0)
+
+            #add total_paid to total for each job
+            total = 0
+            for job in jobs:
+                total += job.total_paid
+
+            yield total
+
+    def num_active_jobs(self):
+        for house in self.houses:
+            #get all active jobs for the each house
+            yield Job.objects.filter(house=house, house__customer=self.customer, approved=True, balance_amount__gt=0).count()
+
+    def num_completed_jobs(self):
+        for house in self.houses:
+            #get all active jobs for the each house
+            yield Job.objects.filter(house=house, house__customer=self.customer, approved=True, balance_amount__lte=0).count()
 
     """Current(Active) Houses"""
     #returns houses that are activley being worked on by workers

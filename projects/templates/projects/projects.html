@@ -1,0 +1,65 @@
+{% extends 'base_login_admin.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load payment_requests_group_check %}
+{% load projects_extras %}
+
+{% block title %}Projects{% endblock title %}
+
+{% block scripts %}
+{% endblock scripts %}
+
+{% block content %}
+<div class="container">
+  <h2>Projects</h2>
+  <div class="house-headings-wrapper">
+    <ul class="house-headings row">
+      <div class="col-6">
+        <li>Status</li>
+        <li>Project</li>
+      </div>
+      <div class="col-auto">
+        <li>Active Jobs</li>
+        <li>Completed Jobs</li>
+      </div>
+      <div class="col">
+        <li>Total Spent</li>
+      </div>
+    </ul>
+  </div>
+  {% for house, num_active_jobs, num_completed_jobs in zipped %}
+  <div class="house-container">
+    <div class="row">
+      <div class="info-group col-6">
+        <ul>
+          <li>
+            {% if num_active_jobs > 0 %}
+            <div class="status active">Active</div>
+            {% else %}
+            <div class="status open">Open</div>
+            {% endif %}
+          </li>
+          <li class="address">{{house.address}}</li>
+        </ul>
+      </div>
+      <div class="info-group col-auto">
+        <ul>
+          <li class="num_active_jobs">
+            <a{% if num_active_jobs > 0 %} href="/jobs_admin#{{house.address|add_dashes}}"{% endif %}>{{num_active_jobs}} Jobs</a>
+          </li>
+          <li class="num_completed_jobs">
+            <a{% if num_completed_jobs > 0 %} href="/jobs_complete#{{house.address|add_dashes}}"{% endif %}>{{num_completed_jobs}} Jobs</a>
+          </li>
+        </ul>
+      </div>
+      <div class="info-group col">
+        <ul>
+          <li class="total_spent">${{totals|next_item|intcomma}}</li>
+        </ul>
+      </div>
+    </div>
+  </div> <!-- /.house-container -->
+{% endfor %}
+</div>
+{% endblock content %}
