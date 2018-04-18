@@ -321,6 +321,10 @@ div.house-container ul .info-title {
   div.house-container ul li.num_completed_jobs > a {
     margin: 0;
   }
+
+  a#add-project-btn {
+    float: none;
+  }
 }
 
 .job-summary {
@@ -497,8 +501,15 @@ form.add-form input[type="file"] {
   padding: 0 25px;
 }
 
-.custom-btn:hover > p {
+.custom-btn:hover > p, .custom-btn:hover > svg {
   color: #fff;
+}
+
+.custom-btn > svg {
+  position: absolute;
+  top: 36%;
+  left: 87%;
+  transition: all 1s ease;
 }
 
 .upload-document-btn {
@@ -615,4 +626,8 @@ form.add-form input[type="file"] {
 .form-submit-btn:hover {
   color: #62a9f9;
   border-color: #62a9f9;
+}
+
+#add-project-btn {
+  float: right;
 }

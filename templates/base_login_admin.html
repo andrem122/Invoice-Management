@@ -67,9 +67,9 @@
                 </a>
               </li>
               <li>
-                <a{% if request.path == '/add_house/' %} class="active"{% endif %} href="/add_house">
+                <a{% if request.path == '/projects/' %} class="active"{% endif %} href="/projects">
                   <i class="fas fa-home"></i>
-                  Add House
+                  Projects
                 </a>
               </li>
           </ul>
@@ -79,7 +79,7 @@
       <!-- Page Content -->
       <div id="page-content-wrapper">
           <div class="container-fluid">
-              <div class="btn-options-container">
+              <div class="btn-options-container container-fluid">
                 <a href="#" class="custom-btn blue-slide-btn" id="menu-toggle"><p>Menu</p></a>
                 <form class="download-jobs-form" action="/download_data/" method="post">
                   {% csrf_token %}
@@ -94,6 +94,9 @@
                     <p class="submit-p">Download Data</p>
                   </a>
                 </form>
+								{% if request.path == '/projects/' %}
+								<a href="/add_house" class="custom-btn blue-slide-btn" id="add-project-btn"><p>Add Project</p><i class="fas fa-plus"></i></a>
+								{% endif %}
               </div>
               {% block content %}
               {% endblock content %}

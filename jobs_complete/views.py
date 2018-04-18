@@ -15,7 +15,7 @@ def customer(request):
 
     houses = customer.completed_houses()
     completed_jobs = customer.completed_jobs()
-    totals = customer.house_totals(houses=houses)
+    totals = customer.house_totals(houses=houses, house__completed_jobs=True, approved=True, balance_amount__lte=0)
 
     #forms and templates
     payment_history_form = Payment_History_Form()

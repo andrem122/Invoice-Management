@@ -19,7 +19,7 @@ def projects(request):
     num_active_jobs = customer.num_active_jobs()
     num_completed_jobs = customer.num_completed_jobs()
     zipped = zip(houses, num_active_jobs, num_completed_jobs)
-    totals = customer.house_totals(houses=houses)
+    totals = customer.house_totals(houses=houses, approved=True)
     template = loader.get_template('projects/projects.html')
 
     context = {

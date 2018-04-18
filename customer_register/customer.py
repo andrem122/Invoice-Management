@@ -80,10 +80,10 @@ class Customer:
         return House.objects.filter(customer=self.customer)
 
     #get total amount paid for each house
-    def house_totals(self, houses):
+    def house_totals(self, houses, **kwargs):
         for house in houses:
             #get all jobs for the current house
-            jobs = Job.objects.filter(house=house, house__completed_jobs=True, approved=True, balance_amount__lte=0)
+            jobs = Job.objects.filter(house=house, **kwargs)
 
             #add total_paid to total for each job
             total = 0
