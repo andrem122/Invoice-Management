@@ -15,15 +15,15 @@
   <h2>Projects</h2>
   <div class="house-headings-wrapper">
     <ul class="house-headings row">
-      <div class="col-6">
+      <div class="col-sm-6">
         <li>Status</li>
         <li>Project</li>
       </div>
-      <div class="col-auto">
+      <div class="col-sm-auto">
         <li>Active Jobs</li>
         <li>Completed Jobs</li>
       </div>
-      <div class="col">
+      <div class="col-sm">
         <li>Total Spent</li>
       </div>
     </ul>
@@ -31,7 +31,7 @@
   {% for house, num_active_jobs, num_completed_jobs in zipped %}
   <div class="house-container">
     <div class="row">
-      <div class="info-group col-6">
+      <div class="info-group col col-sm-6">
         <ul>
           <li>
             {% if num_active_jobs > 0 %}
@@ -43,7 +43,7 @@
           <li class="address">{{house.address}}</li>
         </ul>
       </div>
-      <div class="info-group col-auto">
+      <div class="info-group col-sm-auto">
         <ul>
           <li class="num_active_jobs">
             <a{% if num_active_jobs > 0 %} href="/jobs_admin#{{house.address|add_dashes}}"{% endif %}>{{num_active_jobs}} Jobs</a>
@@ -53,7 +53,7 @@
           </li>
         </ul>
       </div>
-      <div class="info-group col">
+      <div class="info-group col col-sm">
         <ul>
           <li class="total_spent">${{totals|next_item|intcomma}}</li>
         </ul>
