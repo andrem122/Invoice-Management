@@ -118,6 +118,12 @@ body .job-info td:last-child input[type="submit"] {
   background: none;
 }
 
+@media (min-width: 1125px) {
+  .mobile-display-none {
+    display: none !important;
+  }
+}
+
 /* Close Nav Btn */
 .close-nav {
   font-size: 28px;
@@ -140,6 +146,7 @@ body .job-info td:last-child input[type="submit"] {
 ul.house-headings {
   padding: 0;
   margin-bottom: 5px;
+  max-width: 1400px;
 }
 
 .house-headings li {
@@ -176,6 +183,7 @@ div.house-container {
   border-radius: 0;
   box-shadow: 0 1px 1px #ccc;
   margin-bottom: 10px;
+  max-width: 1400px;
 }
 
 div.house-container .status {
@@ -204,6 +212,10 @@ div.house-container ul {
   margin-bottom: 0;
 }
 
+div.house-container ul hr {
+  display: none;
+}
+
 div.house-container ul li {
   display: inline-block;
   text-overflow: ellipsis;
@@ -215,17 +227,21 @@ div.house-container ul li > a {
   display: inline-block;
 }
 
-div.house-container ul li:first-child > a {
-  margin-left: 11%;
-  margin-right: 50%;
+div.house-container ul li.num_active_jobs > a {
+  margin-right: 50.3%;
+  margin-left: 9.6%;
 }
 
-div.house-container ul li:nth-child(2) > a {
-  margin-right: 67.3%;
+div.house-container ul li.num_completed_jobs > a {
+  margin-right: 67.5%;
 }
 
 div.house-container ul li.address {
   width: 160px;
+}
+
+div.house-container ul .info-title {
+  display: none;
 }
 
 @media (max-width: 1124px) {
@@ -238,21 +254,71 @@ div.house-container ul li.address {
     max-width: 100%;
   }
 
+  h2.page-title {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
   div.house-container {
     padding: 0;
+    text-align: center;
+  }
+
+  div.house-container .status, div.house-container ul li.address {
+    width: 100%;
+    margin: 0;
   }
 
   div.house-container .status {
-    width: 100%;
+    padding: 20px 0;
+    font-size: 16px;
+  }
+
+  div.house-container .info-group:first-child li:first-child {
+    padding: 0;
+  }
+
+  div.house-container ul li.address {
+    padding-top: 20px;
   }
 
   div.house-container ul li {
     display: block;
     width: 100%;
+    padding: 10px;
   }
 
-  div.house-container ul li:first-child > a {
-    padding: 0;
+  div.house-container ul li.num_active_jobs span, div.house-container ul li.num_completed_jobs span {
+    font-weight: bold;
+  }
+
+  div.house-container ul hr {
+    display: block;
+    width: 80%;
+  }
+
+  div.house-container ul .info-title {
+    display: block;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #979AA6;
+  }
+
+  div.house-container .info-group:first-child .info-title {
+    margin-top: 21px;
+  }
+
+  div.house-container ul li.total_spent {
+    padding-bottom: 20px;
+  }
+
+  div.house-container ul li.num_active_jobs > a {
+    margin: 0;
+  }
+
+  div.house-container ul li.num_completed_jobs > a {
     margin: 0;
   }
 }
