@@ -1,9 +1,5 @@
-{% extends 'base_login_admin.html' %}
-
-{ # allow static resources to be loaded from each app's 'static' folder #}
+{% extends 'logged_in_customer.html' %}
 {% load static %}
-
-{ # text that goes to the <title> tag #}
 {% block title %}Add Houses{% endblock title %}
 
 {% block content %}
