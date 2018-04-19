@@ -371,6 +371,9 @@ tr.spacer {
 }
 
 /* Forms */
+.form-wrapper {
+  max-width: 500px; 
+}
 
 form label {
   display: block;
@@ -441,17 +444,6 @@ form.add-form input:not([type="submit"]):not([type="file"]), form.add-form selec
 form.add-form input[type="file"] {
   border: 0;
   padding: 0;
-}
-
-/* Add Job */
-#add-job-heading {
-  padding-left: 15px;
-}
-
-/* Add Heading */
-
-#add-job-desc {
-  padding-left: 13px;
 }
 
 /* Buttons */
