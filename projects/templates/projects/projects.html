@@ -11,62 +11,60 @@
 {% endblock scripts %}
 
 {% block content %}
-<div class="container-fluid">
-  <h2 class="page-title">Projects</h2>
-  <div class="house-headings-wrapper">
-    <ul class="house-headings row">
-      <div class="col-sm-6">
-        <li>Status</li>
-        <li>Project</li>
-      </div>
-      <div class="col-sm-auto">
-        <li>Active Jobs</li>
-        <li>Completed Jobs</li>
-      </div>
-      <div class="col-sm">
-        <li>Total Spent</li>
-      </div>
-    </ul>
-  </div>
-  {% for house, num_active_jobs, num_completed_jobs in zipped %}
-  <div class="house-container">
-    <div class="row">
-      <div class="info-group col col-sm-6">
-        <ul>
-          <li>
-            {% if num_active_jobs > 0 %}
-            <div class="status active">Active</div>
-            {% else %}
-            <div class="status open">Open</div>
-            {% endif %}
-          </li>
-          <span class="info-title">Project</span>
-          <li class="address">{{house.address}}</li>
-          <hr>
-        </ul>
-      </div>
-      <div class="info-group col-sm-auto">
-        <ul>
-          <span class="info-title">Active Jobs</span>
-          <li class="num_active_jobs">
-            <a{% if num_active_jobs > 0 %} href="/jobs_admin#{{house.address|add_dashes}}"{% endif %}><span>{{num_active_jobs}}</span> Jobs</a>
-          </li>
-          <hr>
-          <span class="info-title">Completed Jobs</span>
-          <li class="num_completed_jobs">
-            <a{% if num_completed_jobs > 0 %} href="/jobs_complete#{{house.address|add_dashes}}"{% endif %}><span>{{num_completed_jobs}}</span> Jobs</a>
-          </li>
-          <hr>
-        </ul>
-      </div>
-      <div class="info-group col col-sm">
-        <ul>
-          <span class="info-title">Total Spent</span>
-          <li class="total_spent">${{totals|next_item|intcomma}}</li>
-        </ul>
-      </div>
+<h2 class="page-title">Projects</h2>
+<div class="house-headings-wrapper">
+  <ul class="house-headings row">
+    <div class="col-sm-6">
+      <li>Status</li>
+      <li>Project</li>
     </div>
-  </div> <!-- /.house-container -->
-{% endfor %}
+    <div class="col-sm-auto">
+      <li>Active Jobs</li>
+      <li>Completed Jobs</li>
+    </div>
+    <div class="col-sm">
+      <li>Total Spent</li>
+    </div>
+  </ul>
 </div>
+{% for house, num_active_jobs, num_completed_jobs in zipped %}
+<div class="house-container">
+  <div class="row">
+    <div class="info-group col col-sm-6">
+      <ul>
+        <li>
+          {% if num_active_jobs > 0 %}
+          <div class="status active">Active</div>
+          {% else %}
+          <div class="status open">Open</div>
+          {% endif %}
+        </li>
+        <span class="info-title">Project</span>
+        <li class="address">{{house.address}}</li>
+        <hr>
+      </ul>
+    </div>
+    <div class="info-group col-sm-auto">
+      <ul>
+        <span class="info-title">Active Jobs</span>
+        <li class="num_active_jobs">
+          <a{% if num_active_jobs > 0 %} href="/jobs_admin#{{house.address|add_dashes}}"{% endif %}><span>{{num_active_jobs}}</span> Jobs</a>
+        </li>
+        <hr>
+        <span class="info-title">Completed Jobs</span>
+        <li class="num_completed_jobs">
+          <a{% if num_completed_jobs > 0 %} href="/jobs_complete#{{house.address|add_dashes}}"{% endif %}><span>{{num_completed_jobs}}</span> Jobs</a>
+        </li>
+        <hr>
+      </ul>
+    </div>
+    <div class="info-group col col-sm">
+      <ul>
+        <span class="info-title">Total Spent</span>
+        <li class="total_spent">${{totals|next_item|intcomma}}</li>
+      </ul>
+    </div>
+  </div>
+</div> <!-- /.house-container -->
+{% endfor %}
 {% endblock content %}

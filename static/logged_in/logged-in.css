@@ -372,7 +372,7 @@ tr.spacer {
 
 /* Forms */
 .form-wrapper {
-  max-width: 500px; 
+  max-width: 500px;
 }
 
 form label {
@@ -618,8 +618,4 @@ form.add-form input[type="file"] {
 .form-submit-btn:hover {
   color: #62a9f9;
   border-color: #62a9f9;
-}
-
-#add-project-btn {
-  float: right;
 }
