@@ -138,10 +138,13 @@ body .job-info td:last-child input[type="submit"] {
 /* Table Headings */
 
 .job-headings th, .house-headings li {
-  padding: 7px 10px;
   color: #4b4747;
   font-weight: normal;
   white-space: nowrap;
+}
+
+.job-headings th {
+  padding: 7px 10px;
 }
 
 ul.house-headings {
@@ -154,8 +157,12 @@ ul.house-headings {
   display: inline-block;
 }
 
-.house-headings .col-sm-6 li:first-child {
-  margin-right: 54px;
+.house-headings .col:first-child li:first-child {
+  margin-right: 68px;
+}
+
+.house-headings .col:nth-child(2) li:first-child {
+  margin-right: 2%;
 }
 
 /* Job Container */
@@ -229,17 +236,16 @@ div.house-container ul li > a {
   display: inline-block;
 }
 
-div.house-container ul li.num_active_jobs > a {
-  margin-right: 50.3%;
-  margin-left: 9.6%;
-}
-
-div.house-container ul li.num_completed_jobs > a {
-  margin-right: 67.5%;
+div.house-container ul li.num_active_jobs {
+  margin-right: 43px;
 }
 
 div.house-container ul li.address {
   width: 160px;
+}
+
+div.house-container .info-group:first-child li:first-child {
+  margin-left: -15px;
 }
 
 div.house-container ul .info-title {
@@ -278,6 +284,14 @@ div.house-container ul .info-title {
 
   div.house-container .info-group:first-child li:first-child {
     padding: 0;
+  }
+
+  div.house-container .info-group:first-child ul {
+    margin: 0 -15px 0 -15px;
+  }
+
+  div.house-container .info-group:first-child li:first-child {
+    margin: 0;
   }
 
   div.house-container ul li.address {
