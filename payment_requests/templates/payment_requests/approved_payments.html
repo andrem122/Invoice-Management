@@ -6,10 +6,6 @@
 
 {% block title %}All Approved Payments{% endblock title %}
 
-{% block scripts %}
-<script type="text/javascript" src="{% static 'payment_requests/payment_requests.js' %}" defer></script>
-{% endblock scripts %}
-
 {% block content %}
 <h2>Payments for This Week From {{start_week}} To {{today}}</h2>
 {% for house in houses %}

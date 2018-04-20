@@ -1,3 +1,10 @@
+//loader
+window.addEventListener("load", function(event) {
+  var loader = document.getElementById('loader');
+  loader.style.display = 'none';
+  console.log("All resources finished loading!");
+});
+
 $(document).ready(function(){
   var $menuToggle = $('#menu-toggle');
   var $wrapper = $('#wrapper');
