@@ -2,7 +2,6 @@
 body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow: hidden;
 }
 body .vertical-centered-box {
   z-index: 999;

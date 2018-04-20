@@ -1,6 +1,8 @@
 //loader
 window.addEventListener("load", function(event) {
+  var wrapper = document.getElementById('wrapper');
   var loader = document.getElementById('loader');
+  wrapper.style.display = 'block';
   loader.style.display = 'none';
   console.log("All resources finished loading!");
 });
