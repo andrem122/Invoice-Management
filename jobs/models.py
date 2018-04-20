@@ -41,6 +41,7 @@ class Job(models.Model):
     start_date = models.DateTimeField(auto_now_add=True, blank=True)
     total_paid = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     approved = models.BooleanField(default=False)
+    rejected = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.company.get_username()) + '-' + str(self.house.address)

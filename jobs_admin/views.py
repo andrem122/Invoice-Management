@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import redirect
 from jobs.models import Job, Current_Worker, House, Request_Payment
-from .forms import Change_Job_Status, Approve_As_Payment
+from .forms import Change_Job_Status, Approve_As_Payment, Reject_Estimate
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
@@ -104,7 +104,8 @@ def proposed_jobs(request):
     #get forms and template
     change_job_status_form = Change_Job_Status()
     approve_as_payment_form = Approve_As_Payment()
-    template = loader.get_template('jobs_admin/proposed_jobs.html')
+    reject_estimate_form = Reject_Estimate()
+    template = loader.get_template('jobs_admin/estimates.html')
 
     context = {
         'houses': houses,
@@ -112,6 +113,7 @@ def proposed_jobs(request):
         'current_user': current_user,
         'change_job_status_form': change_job_status_form,
         'approve_as_payment_form': approve_as_payment_form,
+        'reject_estimate_form': reject_estimate_form,
         'start_week': start_week,
         'today': today,
     }
@@ -187,7 +189,18 @@ def proposed_jobs(request):
                     house.completed_jobs = True
                     house.save()
 
-                return redirect('/jobs_admin/proposed_jobs')
+        elif request.POST.get('reject-estimate'):
+            reject_estimate_form = Reject_Estimate(request.POST)
+            if reject_estimate_form.is_valid():
+                #get POST data
+                job_id = int(request.POST.get('job_id'))
+
+                #get the job
+                job = Job.objects.get(pk=job_id)
+
+                #set rejected equal to True for the estimate/job
+                job.rejected = True
+                job.save(update_fields=['rejected'])
 
     # if a GET (or any other method) we'll create a blank form
     else:

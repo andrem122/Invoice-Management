@@ -45,7 +45,7 @@ class Worker:
     #gets all houses the worker has pending jobs for
     def unapproved_houses(self):
         houses = House.objects.filter(customer=self.customer, proposed_jobs=True)
-        jobs = Job.objects.filter(company=self.worker, approved=False, balance_amount__gt=0, start_date__range=[Worker.start_week, Worker.today])
+        jobs = Job.objects.filter(company=self.worker, approved=False, rejected=False, balance_amount__gt=0, start_date__range=[Worker.start_week, Worker.today])
         return self.generate_queryset(outer_queryset=houses, inner_queryset=jobs)
 
     #gets all houses the worker has completed jobs for
@@ -61,7 +61,7 @@ class Worker:
 
     #gets all unapproved jobs for the worker
     def unapproved_jobs(self):
-        return Job.objects.filter(company=self.worker, approved=False, balance_amount__gt=0, start_date__range=[Worker.start_week, Worker.today])
+        return Job.objects.filter(company=self.worker, approved=False, rejected=False, balance_amount__gt=0, start_date__range=[Worker.start_week, Worker.today])
 
     #gets all completed jobs for the worker
     def completed_jobs(self):

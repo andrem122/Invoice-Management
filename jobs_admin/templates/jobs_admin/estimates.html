@@ -28,8 +28,9 @@
       <th>Amount</th>
       <th>Contract Link</th>
       {% if current_user|in_group:'Customers' %}
-      <th>Approve Job</th>
-      <th>Approve As Payment</th>
+      <th>Approve Estimate</th>
+      <th>Approve Payment</th>
+      <th>Reject Estimate</th>
       {% endif %}
     </tr>
     <tr class="spacer"></tr>
@@ -74,7 +75,23 @@
           <input type="hidden" name="amount" value="{{job.start_amount}}">
           <input type="hidden" name="approve-as-payment" value="approve-as-payment">
           <a class="custom-btn approve-as-payment-btn" href="#">
-            <p class="submit-p">Approve As Payment</p>
+            <p class="submit-p">Approve Payment</p>
+          </a>
+        </form>
+      </td>
+      <td>
+        <form class="reject-form" action="" method="post">
+          {% csrf_token %}
+          {% if reject_estimate_form.errors %}
+          <div class="form-messages">
+            <p>Please try again.</p>
+          </div>
+          {% endif %}
+          {{reject_estimate_form}}
+          <input type="hidden" name="job_id" value="{{job.id}}">
+          <input type="hidden" name="reject-estimate" value="reject-estimate">
+          <a class="custom-btn red-slide-btn" href="#">
+            <p class="submit-p">Reject</p>
           </a>
         </form>
       </td>
