@@ -65,6 +65,11 @@
                 <div class="btn-options-container">
                   {% block button_options %}
                   {% endblock button_options %}
+                  <form id="form" role="form" action="{% url 'search' %}" method="post">
+                  	{% csrf_token %}
+                  	<input name="search" id="search" type="search" placeholder="Search"/>
+                  	<button type="submit">Submit</button>
+                  </form>
                 </div>
                 {% block content %}
                 {% endblock content %}

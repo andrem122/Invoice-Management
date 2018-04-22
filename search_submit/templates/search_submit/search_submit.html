@@ -1,0 +1,27 @@
+{% extends 'logged_in_customer.html' %}
+
+{% load humanize %}
+{% load static %}
+
+{% block title %}Search{% endblock title %}
+
+{% block scripts %}
+<script defer src="https://intercoolerreleases-leaddynocom.netdna-ssl.com/intercooler-1.1.1.min.js"></script>
+{% endblock scripts %}
+{% block content %}
+{% if query %}
+	<h3>You searched for: <i>{{ query }}</i></h3>
+	<p>{{ title }}</p>
+	{% if items %}
+		<ul>
+		{% for item in items %}
+			{% for q in item %}
+			<li>{{ q.company }}-{{q.house.address}}</li>
+			{% endfor %}
+		{% endfor %}
+		</ul>
+	{% endif %}
+{% else %}
+<h1 class="h3">Nothing found. <br>Try entering an actual search term.</h1>
+{% endif %}
+{% endblock content %}
