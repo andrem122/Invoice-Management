@@ -44,7 +44,7 @@ class Job(models.Model):
     rejected = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.company.get_username()) + '-' + str(self.house.address)
+        return str(self.company.get_username()) + '-' + str(self.house.address + '-' + str(self.start_amount))
 
     def generate_file_path(self, file_name):
         return os.path.join('worker_uploads', str(self.house.address), str(file_name))

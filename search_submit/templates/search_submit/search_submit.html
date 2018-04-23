@@ -15,9 +15,7 @@
 	{% if items %}
 		<ul>
 		{% for item in items %}
-			{% for q in item %}
-			<li>{{ q.company }}-{{q.house.address}}</li>
-			{% endfor %}
+			<li>{{item.id}}-{{ item.company }}-{{item.house.address}}-{{item.start_amount}}</li>
 		{% endfor %}
 		</ul>
 	{% endif %}
