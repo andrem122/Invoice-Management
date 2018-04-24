@@ -55,17 +55,22 @@
 	{% if request.path == '/projects/' %}
 	<a href="/add_house" class="custom-btn blue-slide-btn" id="add-project-btn"><p>Add Project</p><i class="fas fa-plus"></i></a>
 	{% endif %}
-	<form id="form" role="form" action="{% url 'search' %}" method="post">
+	<form id="search-form" role="form" action="{% url 'search' %}" method="post">
 		{% csrf_token %}
-		<input name="search"
-	       id="search"
-	       type="search"
-	       placeholder="Start typing here"
-	       ic-post-to="{% url 'search-ajax' %}"
-	       ic-trigger-on="keyup changed"
-	       ic-trigger-delay="300ms"
-	       ic-target="#search-result-container"/>
-		<button type="submit">Submit</button>
+		<div id="search-wrap">
+			<i class="fas fa-search"></i>
+			<input name="search"
+		       id="search"
+		       type="search"
+		       placeholder="Search"
+		       ic-post-to="{% url 'search-ajax' %}"
+		       ic-trigger-on="keyup changed"
+		       ic-trigger-delay="300ms"
+		       ic-target="#search-result-container"/>
+		</div>
+		<button class="custom-btn approve-btn" type="submit">
+			<p>Submit</p>
+		</button>
 	</form>
-	<span id="search-result-container"></span>
+	<div id="search-result-container"></div>
 {% endblock button_options %}

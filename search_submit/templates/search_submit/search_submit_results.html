@@ -1,103 +1,108 @@
 {% load humanize %}
 {% load static %}
 {% if jobs %}
-<h3>{{count}} Results for: <i>{{query}}</i></h3>
-<div class="job-container">
-  <div class="house">
-    <h3 class="house-address">Jobs</h3>
-  </div>
-  <div class="jobs">
-    <table class="job-summary">
-      <tbody>
-        <tr class="job-headings">
-          <th>House</th>
-          <th>Timestamp</th>
-          <th>Company</th>
-          <th>Amount</th>
-          <th>Total Paid</th>
-          <th>Balance</th>
-          <th>Contract Link</th>
-          <th>Payment History</th>
-        </tr>
-        <tr class="spacer"></tr>
-        {% for job in jobs %}
-        <tr class="job-info">
-          <td>{{job.house.address}}</td>
-          <td>{{job.start_date}}</td>
-          <td>{{job.company}}</td>
-          <td>${{job.start_amount|intcomma}}</td>
-          <td>${{job.total_paid}}</td>
-          <td>${{job.balance_amount|intcomma}}</td>
-          <td><a rel="noopener noreferrer" target="_blank" href="{{job.document_link.url}}">View Contract</a></td>
-          <td>
-            <form class="payment-history-form" action="/payment_history/p_history_job" method="post">
-              {% csrf_token %}
-              {% if payment_history_form.errors %}
-              <div class="form-messages">
-                <p>{{payment_history_form.errors}}</p>
-              </div>
-              {% endif %}
-              {{payment_history_form}}
-              <input type="hidden" name="job_house" value="{{job.house}}">
-              <input type="hidden" name="job_id" value="{{job.id}}">
-              <input type="hidden" name="v-payment-history" value="v-payment-history">
-              <a class="custom-btn blue-slide-btn" href="#">
-                <p class="submit-p">View Payments</p>
-              </a>
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div> <!-- /.jobs -->
-</div> <!-- /.job-container -->
-{% endif %}
-{% if payments %}
-<div class="job-container">
-  <div class="house">
-    <h3 class="payments-title">Payments</h3>
-  </div>
-  <div class="jobs">
+<span{% if request.path == '/search/'%} class="no-ajax-search-results"{% endif %}>
+  <h3>{{count}} Results for: <i>{{query}}</i></h3>
+  <div class="job-container">
+    <div class="house">
+      <h3 class="house-address">Jobs</h3>
+    </div>
+    <div class="jobs">
+      <table class="job-summary">
+        <tbody>
+          <tr class="job-headings">
+            <th>House</th>
+            <th>Timestamp</th>
+            <th>Company</th>
+            <th>Amount</th>
+            <th>Total Paid</th>
+            <th>Balance</th>
+            <th>Contract Link</th>
+            <th>Payment History</th>
+          </tr>
+          <tr class="spacer"></tr>
+          {% for job in jobs %}
+          <tr class="job-info">
+            <td>{{job.house.address}}</td>
+            <td>{{job.start_date}}</td>
+            <td>{{job.company}}</td>
+            <td>${{job.start_amount|intcomma}}</td>
+            <td>${{job.total_paid}}</td>
+            <td>${{job.balance_amount|intcomma}}</td>
+            <td><a rel="noopener noreferrer" target="_blank" href="{{job.document_link.url}}">View Contract</a></td>
+            <td>
+              <form class="payment-history-form" action="/payment_history/p_history_job" method="post">
+                {% csrf_token %}
+                {% if payment_history_form.errors %}
+                <div class="form-messages">
+                  <p>{{payment_history_form.errors}}</p>
+                </div>
+                {% endif %}
+                {{payment_history_form}}
+                <input type="hidden" name="job_house" value="{{job.house}}">
+                <input type="hidden" name="job_id" value="{{job.id}}">
+                <input type="hidden" name="v-payment-history" value="v-payment-history">
+                <a class="custom-btn blue-slide-btn" href="#">
+                  <p class="submit-p">View Payments</p>
+                </a>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div> <!-- /.jobs -->
+  </div> <!-- /.job-container -->
+  {% endif %}
+  {% if payments %}
+  <div class="job-container">
+    <div class="house">
+      <h3 class="payments-title">Payments</h3>
+    </div>
+    <div class="jobs">
 
-  </div>
-  <table class="job-summary">
-    <tr class="job-headings">
-      <th>House</th>
-      <th>Timestamp</th>
-      <th>Company</th>
-      <th>Amount</th>
-      <th>Document Link</th>
-      <th>Upload Document</th>
-    </tr>
-    <tr class="spacer"></tr>
-    {% for p in payments %}
-    <tr class="job-info">
-      <td>{{p.job.house.address}}</td>
-      <td>{{p.approved_date}}</td>
-      <td>{{p.job.company}}</td>
-      <td>${{p.amount|intcomma}}</td>
-      <td><a rel="noopener noreferrer" target="_blank" href="{% if p.document_link.url != None %}{{p.document_link.url}}{% else %}#{% endif %}">View Document</a></td>
-      <td>
-        <form class="upload-document-form" action="{% url 'p_history_job' %}" method="post" role="form" enctype="multipart/form-data">
-          {% csrf_token %}
-          {% if upload_document_form.errors %}
-          <div class="form-messages">
-            <p>{{upload_document_form.errors}}</p>
-          </div>
-          {% endif %}
-          {{upload_document_form}}
-          <input type="hidden" name="upload-document-file" value="upload-document">
-          <input type="hidden" name="job_id" value="{{p.job.id}}">
-          <input type="hidden" name="p_id" value="{{p.id}}">
-          <input type="hidden" name="upload-document" value="upload-document">
-          <a class="custom-btn upload-document-btn" href="#">
-            <p class="upload-document-p">Upload</p>
-          </a>
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
-</div> <!-- /.job-container -->
-{% endif %}
+    </div>
+    <table class="job-summary">
+      <tr class="job-headings">
+        <th>House</th>
+        <th>Timestamp</th>
+        <th>Company</th>
+        <th>Amount</th>
+        <th>Document Link</th>
+        <th>Upload Document</th>
+      </tr>
+      <tr class="spacer"></tr>
+      {% for p in payments %}
+      <tr class="job-info">
+        <td>{{p.job.house.address}}</td>
+        <td>{{p.approved_date}}</td>
+        <td>{{p.job.company}}</td>
+        <td>${{p.amount|intcomma}}</td>
+        <td><a rel="noopener noreferrer" target="_blank" href="{% if p.document_link.url != None %}{{p.document_link.url}}{% else %}#{% endif %}">View Document</a></td>
+        <td>
+          <form class="upload-document-form" action="{% url 'p_history_job' %}" method="post" role="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if upload_document_form.errors %}
+            <div class="form-messages">
+              <p>{{upload_document_form.errors}}</p>
+            </div>
+            {% endif %}
+            {{upload_document_form}}
+            <input type="hidden" name="upload-document-file" value="upload-document">
+            <input type="hidden" name="job_id" value="{{p.job.id}}">
+            <input type="hidden" name="p_id" value="{{p.id}}">
+            <input type="hidden" name="upload-document" value="upload-document">
+            <a class="custom-btn upload-document-btn" href="#">
+              <p class="upload-document-p">Upload</p>
+            </a>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div> <!-- /.job-container -->
+  {% endif %}
+  {% if no_search_results %}
+    <h3>{{no_search_results}}</h3>
+  {% endif %}
+</span>

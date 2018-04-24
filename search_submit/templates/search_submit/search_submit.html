@@ -1,14 +1,17 @@
 {% extends 'logged_in_customer.html' %}
 
+{% load static %}
+
 {% block title %}Search{% endblock title %}
 
 {% block scripts %}
 <script defer src="https://intercoolerreleases-leaddynocom.netdna-ssl.com/intercooler-1.1.1.min.js"></script>
+<script defer src="{% static 'search_submit/search_submit.js' %}?v=1.0"></script>
 {% endblock scripts %}
 {% block content %}
 {% if query %}
 	{% include 'search_submit/search_submit_results.html' %}
 {% else %}
-	<h1 class="h3">Nothing found. <br>Try entering a different search term.</h1>
+	<h2 class="no-ajax-search-results">Search For Jobs And Payments</h2>
 {% endif %}
 {% endblock content %}

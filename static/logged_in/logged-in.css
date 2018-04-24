@@ -59,6 +59,7 @@ body .job-info td:last-child input[type="submit"] {
 /* Dynamic Search */
 #search-result-container {
   transition: all 0.3s ease-in-out;
+  margin-top: 30px;
 }
 
 /* Buttons in Options Container */
@@ -150,6 +151,7 @@ body .job-info td:last-child input[type="submit"] {
 
 .job-headings th {
   padding: 7px 10px;
+  text-align: left;
 }
 
 ul.house-headings {
@@ -429,6 +431,7 @@ form input[type="submit"], form input[type="file"], form input[type="number"] {
 
 .btn-options-container {
   margin-bottom: 30px;
+  max-width: 2000px;
 }
 
 form ul.messages {
@@ -466,6 +469,50 @@ form.add-form input:not([type="submit"]):not([type="file"]), form.add-form selec
 form.add-form input[type="file"] {
   border: 0;
   padding: 0;
+}
+
+/* Search Form */
+#search-form {
+  display: block;
+  float: right;
+}
+
+#search-form > button[type="submit"] {
+  margin-left: -4px;
+}
+
+#search-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+#search-wrap > svg {
+  position: absolute;
+  top: 21px;
+  left: 12px;
+  font-size: 15px;
+  color: #51515199;
+}
+
+#search-wrap > input#search {
+  padding: 15px 10px 11px 33px;
+  display: inline-block;
+  margin: 0;
+  background-color: #fff;
+  height: 50px;
+  border-radius: 0;
+}
+
+@media (max-width: 1015px) {
+  #search-form > button[type="submit"] {
+    display: none;
+  }
+}
+
+@media (max-width: 885px) {
+  #search-form {
+    float: none;
+  }
 }
 
 /* Buttons */

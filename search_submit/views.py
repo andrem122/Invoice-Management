@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from jobs.models import Job, Request_Payment
 from django.db.models import Q
+from django.shortcuts import redirect
 from customer_register.customer import Customer
 from payment_history.forms import Upload_Document_Form
 from django.utils.decorators import method_decorator
@@ -16,7 +17,7 @@ class Search_Submit_View(View):
     template_name = 'search_submit/search_submit.html'
 
     @method_decorator(user_passes_test(customer_and_staff_check, login_url='/accounts/login/'))
-    def get(self,request):
+    def get(self, request):
         template = loader.get_template(self.template_name)
         upload_document_form = Upload_Document_Form()
         customer = Customer(request.user)
@@ -74,10 +75,14 @@ class Search_Submit_View(View):
                 payments = Request_Payment.objects.filter(queryset_payments, job__house__customer=customer.customer)
                 count = int(jobs.count()) + int(payments.count())
 
-                context['query'] = query
-                context['jobs'] = jobs
-                context['payments'] = payments
-                context['count'] = count
+                #if query results
+                if jobs and payments:
+                    context['query'] = query
+                    context['jobs'] = jobs
+                    context['payments'] = payments
+                    context['count'] = count
+                else:
+                    context['no_search_results'] = 'No Results For: ' + query
             else:
                 upload_document_form = Upload_Document_Form()
 
@@ -85,3 +90,6 @@ class Search_Submit_View(View):
 
 class Search_Ajax_Submit_View(Search_Submit_View):
     template_name = 'search_submit/search_submit_results.html'
+
+    def get(self, request):
+        return redirect('/search')
