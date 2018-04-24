@@ -479,6 +479,7 @@ form.add-form input[type="file"] {
 
 #search-form > button[type="submit"] {
   margin-left: -4px;
+  background-color: transparent;
 }
 
 #search-wrap {
