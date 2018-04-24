@@ -4,12 +4,27 @@ from django.template import loader
 from jobs.models import Job, Request_Payment
 from django.db.models import Q
 from customer_register.customer import Customer
+from payment_history.forms import Upload_Document_Form
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import user_passes_test
+from project_management.decorators import customer_and_staff_check
 import operator
 import functools
 import re
 
 class Search_Submit_View(View):
     template_name = 'search_submit/search_submit.html'
+
+    @method_decorator(user_passes_test(customer_and_staff_check, login_url='/accounts/login/'))
+    def get(self,request):
+        template = loader.get_template(self.template_name)
+        upload_document_form = Upload_Document_Form()
+        customer = Customer(request.user)
+        context = {'upload_document_form': upload_document_form}
+
+        return HttpResponse(template.render(context, request))
+
+    @method_decorator(user_passes_test(customer_and_staff_check, login_url='/accounts/login/'))
     def post(self, request):
         def normalize_query(query_string,
             findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
@@ -26,38 +41,47 @@ class Search_Submit_View(View):
 
 
         template = loader.get_template(self.template_name)
-        query = request.POST.get('search')
-        query_terms = normalize_query(query)
+        upload_document_form = Upload_Document_Form()
         customer = Customer(request.user)
-        queryset_jobs, queryset_payments = [], []
-        context = {'query': query}
+        context = {'upload_document_form': upload_document_form}
 
-        if query != '':
-            #search jobs table
-            queryset_jobs = functools.reduce(operator.__or__, (
-                Q(company__username__icontains=term) |
-                Q(house__address__icontains=term) |
-                Q(house__address__startswith=term) |
-                Q(house__address__endswith=term) |
-                Q(start_amount__startswith=term)
-                for term in query_terms)
-            )
+        if request.method == 'POST':
+            query = request.POST.get('search')
+            query_terms = normalize_query(query)
+            queryset_jobs, queryset_payments = [], []
+            if query != '':
+                #search jobs table
+                queryset_jobs = functools.reduce(operator.__or__, (
+                    Q(company__username__icontains=term) |
+                    Q(house__address__icontains=term) |
+                    Q(house__address__startswith=term) |
+                    Q(house__address__endswith=term) |
+                    Q(start_amount__startswith=term)
+                    for term in query_terms)
+                )
 
-            #search payments table
-            queryset_payments = functools.reduce(operator.__or__, (
-                Q(job__company__username__icontains=term) |
-                Q(job__house__address__icontains=term) |
-                Q(job__house__address__startswith=term) |
-                Q(job__house__address__endswith=term) |
-                Q(amount__startswith=term)
-                for term in query_terms)
-            )
+                #search payments table
+                queryset_payments = functools.reduce(operator.__or__, (
+                    Q(job__company__username__icontains=term) |
+                    Q(job__house__address__icontains=term) |
+                    Q(job__house__address__startswith=term) |
+                    Q(job__house__address__endswith=term) |
+                    Q(amount__startswith=term)
+                    for term in query_terms)
+                )
 
-            jobs = Job.objects.filter(queryset_jobs, house__customer=customer.customer)
-            payments = Request_Payment.objects.filter(queryset_payments, job__house__customer=customer.customer)
-            count = int(jobs.count()) + int(payments.count())
-            context['jobs'] = jobs
-            context['payments'] = payments
-            context['count'] = count
+                jobs = Job.objects.filter(queryset_jobs, house__customer=customer.customer)
+                payments = Request_Payment.objects.filter(queryset_payments, job__house__customer=customer.customer)
+                count = int(jobs.count()) + int(payments.count())
+
+                context['query'] = query
+                context['jobs'] = jobs
+                context['payments'] = payments
+                context['count'] = count
+            else:
+                upload_document_form = Upload_Document_Form()
 
         return HttpResponse(template.render(context, request))
+
+class Search_Ajax_Submit_View(Search_Submit_View):
+    template_name = 'search_submit/search_submit_results.html'

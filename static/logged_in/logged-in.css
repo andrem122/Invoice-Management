@@ -56,6 +56,11 @@ body .job-info td:last-child input[type="submit"] {
   margin-right: -250px;
 }
 
+/* Dynamic Search */
+#search-result-container {
+  transition: all 0.3s ease-in-out;
+}
+
 /* Buttons in Options Container */
 @media all and (max-width: 385px) {
   .btn-options-container .btn {
@@ -176,6 +181,7 @@ ul.house-headings {
   border-top: 4px solid #546256;
   margin-bottom: 30px;
   max-width: 2000px;
+  transition: all 0.3s ease-in-out;
 }
 
 .job-container h3 {

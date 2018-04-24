@@ -20,7 +20,7 @@ def p_history_job(request):
 
     #form logic
     if request.method == 'POST':
-        #get job and payment ID from POST
+        #get job ID from POST
         job_id = int(request.POST.get('job_id'))
 
         #for payment history form
