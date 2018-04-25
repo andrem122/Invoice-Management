@@ -4,13 +4,21 @@ from jobs.models import House, Job
 
 #a form that has all the attributes of the Job class from the jobs app
 class AddJob(ModelForm, forms.Form):
+    """
+    Allows users to add jobs to the database
+    house: the property the job is at
+    start_amount: the amount of money for the job
+    document_link: the invoice document for the job
+    """
     class Meta:
         model = Job
         fields = ['house', 'start_amount', 'document_link']
 
         #custom labels for each input
         labels = {
-            'start_amount': 'Amount($)'
+            'house': 'House Address',
+            'start_amount': 'Job Amount',
+            'document_link': 'Job Document',
         }
 
     def __init__(self, user, *args, **kwargs):

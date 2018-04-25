@@ -56,12 +56,6 @@ body .job-info td:last-child input[type="submit"] {
   margin-right: -250px;
 }
 
-/* Dynamic Search */
-#search-result-container {
-  transition: all 0.3s ease-in-out;
-  margin-top: 30px;
-}
-
 /* Buttons in Options Container */
 @media all and (max-width: 385px) {
   .btn-options-container .btn {
@@ -151,7 +145,6 @@ body .job-info td:last-child input[type="submit"] {
 
 .job-headings th {
   padding: 7px 10px;
-  text-align: left;
 }
 
 ul.house-headings {
@@ -401,8 +394,8 @@ tr.spacer {
 
 form label {
   display: block;
-  font-weight: 900;
-  font-size: 18px;
+  font-weight: normal;
+  font-size: 17px;
 }
 
 form select, form input {
@@ -471,7 +464,25 @@ form.add-form input[type="file"] {
   padding: 0;
 }
 
-/* Search Form */
+div.input-wrap {
+  position: relative;
+}
+
+div.input-wrap > svg {
+  position: absolute;
+  top: 15px;
+  left: 10px;
+}
+
+div.input-wrap input, div.input-wrap select {
+  padding-left: 30px !important;
+}
+
+/* Search */
+#search-result-container {
+  transition: all 0.3s ease-in-out;
+  margin-top: 30px;
+}
 #search-form {
   display: block;
   float: right;
@@ -502,6 +513,18 @@ form.add-form input[type="file"] {
   background-color: #fff;
   height: 50px;
   border-radius: 0;
+}
+
+.no-ajax-search-results .job-headings th,
+.no-ajax-search-results .job-summary td,
+#search-result-container .job-headings th,
+#search-result-container .job-summary td {
+  text-align: left;
+}
+
+.no-ajax-search-results h3.table-title,
+#search-result-container h3.table-title {
+  padding-left: 9px;
 }
 
 @media (max-width: 1015px) {

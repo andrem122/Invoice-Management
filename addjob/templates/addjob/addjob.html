@@ -29,18 +29,24 @@
         <p>Please enter in all data and try again.</p>
       </div>
       {% endif %}
-      <select id="id_house" name="house" required>
-        <option selected value="">
-          <i class="far fa-handshake"></i>
-          House
-        </option>
-        {% for house in form.fields.house.queryset %}
-          <option value="{{house.id}}">{{house}}</option>
-        {% endfor %}
-      </select>
-      {{form.start_amount}}
+      {{form.house.label_tag}}
+      <div class="input-wrap">
+        <i class="fas fa-home"></i>
+        <select id="id_house" name="house" required>
+          <option selected value="">
+            <i class="far fa-handshake"></i>
+            House
+          </option>
+          {% for house in form.fields.house.queryset %}
+            <option value="{{house.id}}">{{house}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {{form.start_amount.label_tag}}
+      <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{form.start_amount}}</div>
+      {{form.document_link.label_tag}}
       {{form.document_link}}
-      <input class="form-submit-btn" type="submit" value="Submit">
+      <input class="form-submit-btn" type="submit" value="Add Job">
     </form>
   </div>
 </div>
