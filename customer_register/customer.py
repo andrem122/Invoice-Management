@@ -59,8 +59,10 @@ class Customer:
                         yield q
 
     def current_week_results(self, houses, queryset, model, update_field={}, **kwargs):
-        """fetch current 2 week results, if there are none
-        then set the appropriate house attributes to false"""
+        """
+        fetches current week results, if there are none
+        then set the appropriate house attributes to false
+        """
         for h in houses.iterator():
             for q in queryset.iterator():
                 if q.house == h:

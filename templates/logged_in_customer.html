@@ -1,5 +1,7 @@
 {% extends 'base_logged_in.html' %}
+{% load jobs_admin_group_check %}
 {% block menu_options %}
+{% if current_user|in_group:'Customers' %}
 	<li>
 		<a{% if request.path == '/jobs_admin/' %} class="active"{% endif %} href="/jobs_admin">
 			<i class="far fa-handshake"></i>
@@ -36,6 +38,14 @@
 			Projects
 		</a>
 	</li>
+{% else %}
+<li>
+	<a{% if request.path == '/payment_requests/approved_payments' %} class="active"{% endif %} href="/payment_requests/approved_payments">
+		<i class="far fa-credit-card"></i>
+		Payments for This Week
+	</a>
+</li>
+{% endif %}
 {% endblock menu_options %}
 	{% block button_options %}
 	<a href="#" class="custom-btn blue-slide-btn" id="menu-toggle"><p>Menu</p></a>

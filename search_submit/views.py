@@ -20,8 +20,13 @@ class Search_Submit_View(View):
     def get(self, request):
         template = loader.get_template(self.template_name)
         upload_document_form = Upload_Document_Form()
-        customer = Customer(request.user)
-        context = {'upload_document_form': upload_document_form}
+
+        current_user = request.user
+        customer = Customer(current_user)
+        context = {
+            'current_user': current_user,
+            'upload_document_form': upload_document_form,
+        }
 
         return HttpResponse(template.render(context, request))
 
@@ -43,8 +48,13 @@ class Search_Submit_View(View):
 
         template = loader.get_template(self.template_name)
         upload_document_form = Upload_Document_Form()
-        customer = Customer(request.user)
-        context = {'upload_document_form': upload_document_form}
+
+        current_user = request.user
+        customer = Customer(current_user)
+        context = {
+            'current_user': current_user,
+            'upload_document_form': upload_document_form,
+        }
 
         if request.method == 'POST':
             query = request.POST.get('search')

@@ -121,4 +121,4 @@ def add_house(request):
     else:
         form = Add_House()
 
-    return render(request, 'add_house/add_house.html', {'form': form})
+    return render(request, 'add_house/add_house.html', {'current_user': current_user, 'form': form})
