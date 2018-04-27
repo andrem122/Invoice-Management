@@ -712,3 +712,22 @@ div.input-wrap input, div.input-wrap select {
   color: #62a9f9;
   border-color: #62a9f9;
 }
+
+/* Intro Js */
+a.introjs-button {
+  padding: 10px;
+}
+
+a.introjs-skipbutton {
+  display: none;
+}
+
+a.introjs-skipbutton.introjs-donebutton {
+  display: inline-block;
+}
+
+/* Fix for disableInteraction */
+.introjs-tooltipReferenceLayer {
+  position: absolute;
+  z-index: 10000000;
+}

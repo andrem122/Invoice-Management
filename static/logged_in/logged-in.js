@@ -4,7 +4,26 @@ window.addEventListener("load", function(event) {
   var loader = document.getElementById('loader');
   wrapper.style.display = 'block';
   loader.style.display = 'none';
-  console.log("All resources finished loading!");
+  //activate intro js if it is a new user
+  if (document.documentURI.indexOf('new_user=True') != -1) {
+    var addJobBtn = document.getElementById('add-job');
+    var href = addJobBtn.href;
+    addJobBtn.setAttribute("href", "#");
+    var intro = introJs();
+    intro.oncomplete(function(){
+      var jobExample = document.getElementsByClassName('job-container')[0];
+      jobExample.parentElement.removeChild(jobExample);
+      addJobBtn.setAttribute('href', href);
+    });
+    intro.setOptions(
+      {'exitOnOverlayClick': false,
+      'showProgress': true,
+      'showBullets': false,
+      'hidePrev': true,
+      'hideNext': true,
+      'disableInteraction': true,
+      }).start();
+  }
 });
 
 $(document).ready(function(){

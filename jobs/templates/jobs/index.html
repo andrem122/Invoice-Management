@@ -4,17 +4,57 @@
 
 {% block title %}Jobs{% endblock title %}
 
+{% block scripts %}
+  {% if new_user %}
+  <!-- intro.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.min.css" integrity="sha256-/oZ7h/Jkj6AfibN/zTWrCoba0L+QhP9Tf/ZSgyZJCnY=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs-rtl.min.css" integrity="sha256-LzU+b0N2MG8UjW3gfRasKsbHqhi3DG7l89N/ohnkXQc=" crossorigin="anonymous" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.min.js" integrity="sha256-fOPHmaamqkHPv4QYGxkiSKm7O/3GAJ4554pQXYleoLo=" crossorigin="anonymous"></script>
+  {% endif %}
+{% endblock scripts %}
+
 {% block body_class %}jobs{% endblock body_class %}
+
 {% block content %}
 {% if new_user %}
 <div class="welcome-message">
-  <h3>Welcome to Your Job Dashboard!</h3>
-  <p>
-    Here is where you can add new jobs and request payments for
-    existing jobs. Click the blue button above titled 'Add Job' to
-    add your first job.
-  </p>
+  <h3 data-step="1" data-intro="Here is where you can view your jobs and request payments for
+  existing ones">Welcome to Your Job Dashboard!</h3>
+  <a data-step="4" data-intro="Log back in through this link" href="https://genuwine12.pythonanywhere.com/accounts/login/">https://genuwine12.pythonanywhere.com/accounts/login/</a>
 </div>
+<!--Example for Intro Js-->
+<div class="job-container">
+  <div class="house">
+    <h3 class="house-address">{{approved_house.house.address}}</h3>
+  </div>
+  <div class="jobs">
+    <table class="job-summary">
+      <tr class="job-headings">
+        <th>Job ID</th>
+        <th>Amount</th>
+        <th>Balance</th>
+        <th>Contract Link</th>
+        <th>Request Payment</th>
+      </tr>
+      <tr class="spacer"></tr>
+      <tr class="job-info">
+        <td>1</td>
+        <td>$5,000.00</td>
+        <td>$5,000.00</td>
+        <td><a rel="noopener noreferrer" target="_blank" href="#">View Contract</a></td>
+        <td>
+          <form class="request-payment-form">
+            <a class="custom-btn blue-slide-btn" href="#"
+            data-step="2" data-intro="If you need to get a bit of money
+            for an active job, you can click this button to get it">
+              <p class="request-payment-p-example">Request Payment</p>
+            </a>
+          </form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div> <!-- /.job-container -->
 {% endif %}
 {% if approved_houses %}
 <h2>Active Jobs</h2>
