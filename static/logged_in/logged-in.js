@@ -19,19 +19,19 @@ window.addEventListener("load", function(event) {
     $wrapper.removeClass('toggled');
   });
 
-  //if window is less than or equal to 800px, remove .toggled class from #wrapper
-  if (window.innerWidth <= 800) {
-    $wrapper.removeClass('toggled');
-  } else {
+  //if window is greater than or equal to 800px, add toggled class to #wrapper
+  if (window.innerWidth >= 800) {
     $wrapper.addClass('toggled');
+  } else {
+    $wrapper.removeClass('toggled');
   }
 
-  //remove toggled class when window resizes below 800px
+  //add toggled class when window resizes above 800px
   window.addEventListener('resize', function() {
-    if (window.innerWidth <= 800) {
-      $wrapper.removeClass('toggled');
-    } else {
+    if (window.innerWidth >= 800) {
       $wrapper.addClass('toggled');
+    } else {
+      $wrapper.removeClass('toggled');
     }
   });
 
