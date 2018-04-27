@@ -1,32 +1,10 @@
-//loader
+//loader and intro js
 window.addEventListener("load", function(event) {
   var wrapper = document.getElementById('wrapper');
   var loader = document.getElementById('loader');
   wrapper.style.display = 'block';
   loader.style.display = 'none';
-  //activate intro js if it is a new user
-  if (document.documentURI.indexOf('new_user=True') != -1) {
-    var addJobBtn = document.getElementById('add-job');
-    var href = addJobBtn.href;
-    addJobBtn.setAttribute("href", "#");
-    var intro = introJs();
-    intro.oncomplete(function(){
-      var jobExample = document.getElementsByClassName('job-container')[0];
-      jobExample.parentElement.removeChild(jobExample);
-      addJobBtn.setAttribute('href', href);
-    });
-    intro.setOptions(
-      {'exitOnOverlayClick': false,
-      'showProgress': true,
-      'showBullets': false,
-      'hidePrev': true,
-      'hideNext': true,
-      'disableInteraction': true,
-      }).start();
-  }
-});
 
-$(document).ready(function(){
   var $menuToggle = $('#menu-toggle');
   var $wrapper = $('#wrapper');
   var $pageContent = $('#page-content-wrapper');
@@ -100,4 +78,40 @@ $(document).ready(function(){
   post_form_with_file_input(['upload-document-p'], 'file');
   post_form_with_file_input(['request-payment-p'], 'number');
 
+  //activate intro js if it is a new user
+  if (document.documentURI.indexOf('new_user=True') !== -1) {
+    //disable add job button
+    var addJobBtn = document.getElementById('add-job');
+    var href = addJobBtn.href;
+    addJobBtn.setAttribute('href', '#');
+
+    //get request payment button for cacheing
+    var requestBtn = document.getElementById('step-2');
+
+    var intro = introJs();
+    intro.oncomplete(function(){
+      var jobExample = document.getElementsByClassName('job-container')[0];
+      jobExample.parentElement.removeChild(jobExample);
+      addJobBtn.setAttribute('href', href);
+    });
+
+    //scroll request button into view on step 2
+    intro.onchange(function(targetElement) {
+      console.log(targetElement.id);
+      switch (targetElement.id) {
+        case 'step-2':
+          requestBtn.scrollIntoView();
+          break;
+      }
+    });
+
+    intro.setOptions(
+      {'exitOnOverlayClick': false,
+      'showProgress': true,
+      'showBullets': false,
+      'hidePrev': true,
+      'hideNext': true,
+      'disableInteraction': true,
+      }).start();
+  }
 });
