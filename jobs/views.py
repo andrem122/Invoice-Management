@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render, redirect
 from .models import House, Job, Request_Payment
-from django.contrib.auth.models import User
 from .forms import Request_Payment_Form
 from django.contrib.auth.decorators import user_passes_test, login_required
 from project_management.decorators import worker_check

@@ -6,6 +6,8 @@ from .forms import Change_Job_Status, Approve_As_Payment, Reject_Estimate
 from payment_history.forms import Payment_History_Form
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from customer_register.customer import Customer
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
@@ -159,6 +161,19 @@ def proposed_jobs(request):
                     house.pending_payments=True
                     house.save(update_fields=['pending_payments'])
 
+                message = """Hi {},\n\nYour job at {} for ${} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems
+                """.format(job.company.get_username(), job.house.address, job.start_amount)
+                try:
+                    send_mail(
+                        'Job Approved!',
+                        message,
+                        current_user.email,
+                        [job.company.email],
+                        fail_silently=False,
+                    )
+                except:
+                    print('Email has failed')
+
                 return redirect('/jobs_admin/proposed_jobs')
 
         elif request.POST.get('approve-as-payment'):
@@ -192,6 +207,20 @@ def proposed_jobs(request):
                     house.completed_jobs = True
 
                 house.save()
+
+                #send approval email to worker
+                message = """Hi {},\n\nA payment of ${} for your job at {} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems
+                """.format(job.company.get_username(), job.start_amount, job.house.address)
+                try:
+                    send_mail(
+                        'Payment Approved!',
+                        message,
+                        current_user.email,
+                        [job.company.email],
+                        fail_silently=False,
+                    )
+                except:
+                    print('Email has failed')
 
         elif request.POST.get('reject-estimate'):
             reject_estimate_form = Reject_Estimate(request.POST)
