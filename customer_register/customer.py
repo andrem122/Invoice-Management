@@ -125,7 +125,7 @@ class Customer:
 
     #returns last 50 completed jobs
     def completed_jobs(self):
-        return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0)[:50]
+        return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0)
 
     """Current Week Results"""
     #returns all houses with payment requests for the last week
