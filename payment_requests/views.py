@@ -6,6 +6,7 @@ from .forms import Change_Payment_Status
 from django.contrib.auth.decorators import user_passes_test, login_required
 from project_management.decorators import customer_and_staff_check
 from customer_register.customer import Customer
+from django.core.mail import send_mail
 from payment_history.forms import Upload_Document_Form
 import datetime
 
@@ -167,6 +168,20 @@ def unapproved_payments(request):
             if not flags[1]:
                 worker = Current_Worker.objects.filter(company=job[0].company, house=job[0].house)
                 worker.delete()
+
+            #send approval email to worker
+            message = """Hi {},\n\nA payment of ${} for your job at {} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems
+            """.format(job[0].company.get_username(), job[0].start_amount, job[0].house.address)
+            try:
+                send_mail(
+                    'Payment Approved!',
+                    message,
+                    current_user.email,
+                    [job[0].company.email],
+                    fail_silently=False,
+                )
+            except:
+                print('Email has failed')
 
             return redirect('/payment_requests/unapproved_payments')
 
