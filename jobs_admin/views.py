@@ -184,10 +184,14 @@ def proposed_jobs(request):
                 job.approved = True
                 job.save()
 
+                #update house to have a payment history
+                house.payment_history = True
+
                 #update house to have completed jobs if balance is <= 0
                 if job.balance <= 0:
                     house.completed_jobs = True
-                    house.save()
+
+                house.save()
 
         elif request.POST.get('reject-estimate'):
             reject_estimate_form = Reject_Estimate(request.POST)

@@ -58,23 +58,20 @@ class Customer:
                     else:
                         yield q
 
-    def current_week_results(self, houses, queryset, model, update_field={}, **kwargs):
+    def current_week_results(self, houses, model, update_field={}, **kwargs):
         """
         fetches current week results, if there are none
         then set the appropriate house attributes to false
         """
-        for h in houses.iterator():
-            for q in queryset.iterator():
-                if q.house == h:
-                    query_set_check = model.objects.filter(house=h, **kwargs)
-                    if query_set_check:
-                        setattr(h, list(update_field.keys())[0], list(update_field.values())[0][0])
-                        h.save(update_fields=[list(update_field.keys())[0]])
-                        yield h
-                        break
-                    else:
-                        setattr(h, list(update_field.keys())[0], list(update_field.values())[0][1])
-                        h.save(update_fields=[list(update_field.keys())[0]])
+        for house in houses.iterator():
+            query_set_check = model.objects.filter(house=house, **kwargs)
+            if query_set_check:
+                setattr(house, list(update_field.keys())[0], list(update_field.values())[0][0])
+                house.save(update_fields=[list(update_field.keys())[0]])
+                yield house
+            else:
+                setattr(house, list(update_field.keys())[0], list(update_field.values())[0][1])
+                house.save(update_fields=[list(update_field.keys())[0]])
 
     """Attributes of Houses"""
     #returns all houses that belong to the customer
@@ -123,16 +120,19 @@ class Customer:
     def completed_houses(self):
         return House.objects.filter(customer=self.customer, completed_jobs=True)
 
-    #returns last 50 completed jobs
+    #returns completed jobs
     def completed_jobs(self):
         return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0)
 
     """Current Week Results"""
     #returns all houses with payment requests for the last week
     def current_payment_requests_houses(self):
-        houses = House.objects.filter(customer=self.customer)
-        payments = Request_Payment.objects.filter(house__customer=self.customer, job__approved=True, approved=False)
-        return self.current_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'pending_payments': [True, False]}, approved=False, submit_date__range=[Customer.start_week, Customer.today])
+        """
+        Note: House pending_payments attribute will NOT update
+        if you filter houses by pending_payments=True in the queryset below
+        """
+        houses = House.objects.filter(customer=self.customer, pending_payments=True)
+        return self.current_week_results(houses=houses, model=Request_Payment, update_field={'pending_payments': [True, False]}, job__approved=True, approved=False, submit_date__range=[Customer.start_week, Customer.today])
 
     #returns all payment requests for the last week for approved jobs
     def current_payment_requests(self):
@@ -141,9 +141,12 @@ class Customer:
     """Payment History"""
     #returns all houses with a payment history for the last week
     def payment_history_houses(self):
-        houses = House.objects.filter(customer=self.customer)
-        payments = Request_Payment.objects.filter(house__customer=self.customer, job__approved=True, approved=True)
-        return self.current_week_results(houses=houses, queryset=payments, model=Request_Payment, update_field={'payment_history': [True, False]}, approved=True, approved_date__range=[Customer.start_week, Customer.today])
+        """
+        Note: House payment_history attribute will NOT update
+        if you filter houses by payment_history=True in the queryset below
+        """
+        houses = House.objects.filter(customer=self.customer, payment_history=True)
+        return self.current_week_results(houses=houses, model=Request_Payment, update_field={'payment_history': [True, False]}, job__approved=True, approved=True, approved_date__range=[Customer.start_week, Customer.today])
 
     def all_payments(self):
         return Request_Payment.objects.filter(house__customer=self.customer)
@@ -155,9 +158,8 @@ class Customer:
     """Proposed Jobs"""
     #returns all houses with proposed jobs for the last week
     def proposed_jobs_houses(self):
-        houses = House.objects.filter(customer=self.customer)
-        jobs = Job.objects.filter(house__customer=self.customer, approved=False, rejected=False)
-        return self.current_week_results(houses=houses, queryset=jobs, model=Job, update_field={'proposed_jobs': [True, False]}, approved=False, start_date__range=[Customer.start_week, Customer.today])
+        houses = House.objects.filter(customer=self.customer, proposed_jobs=True)
+        return self.current_week_results(houses=houses, model=Job, update_field={'proposed_jobs': [True, False]}, approved=False, rejected=False, start_date__range=[Customer.start_week, Customer.today])
 
     #returns all proposed jobs submitted for the last week
     def proposed_jobs(self):
