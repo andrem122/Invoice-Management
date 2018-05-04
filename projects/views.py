@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from send_data.forms import Send_Data
 from customer_register.customer import Customer
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
@@ -25,11 +26,13 @@ def projects(request):
     zipped = zip(houses, num_active_jobs, num_completed_jobs)
     totals = customer.house_totals(houses=houses, approved=True)
     template = loader.get_template('projects/projects.html')
+    send_data_form = Send_Data()
 
     context = {
         'zipped': zipped,
         'totals': totals,
         'current_user': current_user,
+        'send_data_form': send_data_form,
     }
 
     return HttpResponse(template.render(context, request))

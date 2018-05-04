@@ -8,6 +8,7 @@ from project_management.decorators import customer_and_staff_check
 from customer_register.customer import Customer
 from django.core.mail import send_mail
 from payment_history.forms import Upload_Document_Form
+from send_data.forms import Send_Data
 import datetime
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
@@ -26,6 +27,7 @@ def approved_payments(request):
     template = loader.get_template('payment_requests/approved_payments.html')
     start_week = str(Customer.start_week.date())
     today = str(Customer.today.date())
+    send_data_form = Send_Data()
 
     context = {
         'houses': houses,
@@ -34,7 +36,8 @@ def approved_payments(request):
         'form': form,
         'upload_document_form': upload_document_form,
         'start_week': start_week,
-        'today': today
+        'today': today,
+        'send_data_form': send_data_form,
     }
 
     #form logic for unapproving payments
@@ -102,6 +105,7 @@ def unapproved_payments(request):
 
     #get an empty form
     form = Change_Payment_Status()
+    send_data_form = Send_Data()
 
     template = loader.get_template('payment_requests/unapproved_payments.html')
 
@@ -111,7 +115,8 @@ def unapproved_payments(request):
         'current_user': current_user,
         'form': form,
         'start_week': start_week,
-        'today': today
+        'today': today,
+        'send_data_form': send_data_form,
     }
 
     #form logic

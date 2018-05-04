@@ -9,6 +9,7 @@ from payment_history.forms import Upload_Document_Form
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
+from send_data.forms import Send_Data
 import operator
 import functools
 import re
@@ -20,12 +21,14 @@ class Search_Submit_View(View):
     def get(self, request):
         template = loader.get_template(self.template_name)
         upload_document_form = Upload_Document_Form()
+        send_data_form = Send_Data()
 
         current_user = request.user
         customer = Customer(current_user)
         context = {
             'current_user': current_user,
             'upload_document_form': upload_document_form,
+            'send_data_form': send_data_form,
         }
 
         return HttpResponse(template.render(context, request))

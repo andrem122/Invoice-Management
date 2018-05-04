@@ -24,7 +24,7 @@ def index(request):
             if download_data_form.is_valid():
                 #write to csv
                 response = HttpResponse(content_type='text/csv')
-                response['Content-Disposition'] = 'attachment; filename="completed_jobs.csv"'
+                response['Content-Disposition'] = 'attachment; filename="all_data.csv"'
                 writer = csv.writer(response)
 
                 def write_to_csv(title, headers, queryset, attributes):

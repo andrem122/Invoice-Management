@@ -1,11 +1,16 @@
-html {
-  background-color: #f3f3f3;
+html, body {
+  height: 100%;
+  overflow: auto;
 }
 
 body {
   overflow-x: hidden;
+  overflow-y: auto;
   color: #444;
   font-family: 'Open Sans', Helvetica, arial, sans-serif;
+  position: relative;
+  background-color: #f3f3f3;
+  min-height: 100%;
 }
 
 body .job-info td:last-child input[type="submit"] {
@@ -19,6 +24,7 @@ body .job-info td:last-child input[type="submit"] {
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
   display: none;
+  height: 100%;
 }
 
 #wrapper.toggled {
@@ -49,11 +55,39 @@ body .job-info td:last-child input[type="submit"] {
   position: absolute;
   padding: 15px;
   background-color: #f3f3f3;
+  height: 100%;
+  max-width: 2000px;
+  overflow: auto;
 }
 
 #wrapper.toggled #page-content-wrapper {
   position: absolute;
   margin-right: -250px;
+}
+
+.overlay {
+  position: absolute; /* Sit on top of the page content */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 9999;
+  transition: all 0.3s ease-in-out;
+  visibility: hidden;
+  opacity: 0;
+  overflow-y: scroll;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 300px 0;
+}
+
+.visible {
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Buttons in Options Container */
@@ -364,6 +398,67 @@ tr.spacer {
   height: 10px;
 }
 
+/* Drop Down Menus */
+.dropdown-menu {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.3s linear;
+  border-radius: 0;
+}
+
+.dropdown-menu.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.dropdown-item {
+  transition: color 0.3s ease-in-out;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dropdown-item:focus, .dropdown-item:hover,
+.dropdown-item:focus button, .dropdown-item:hover button {
+  background-color: transparent;
+  color: #53d0c0;
+}
+
+.dropdown-menu:before {
+  position: absolute;
+  top: -7px;
+  left: 9px;
+  display: inline-block;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-left: 7px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  content: '';
+}
+
+.dropdown-menu:after {
+  position: absolute;
+  top: -6px;
+  left: 10px;
+  display: inline-block;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #ffffff;
+  border-left: 6px solid transparent;
+  content: '';
+}
+
+/* Options Drop Down Menu */
+#options-dropdown {
+  display: inline-block;
+}
+
+#options-dropdown button {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+}
+
+
 @media(min-width:768px) {
   #wrapper {
     padding-left: 0;
@@ -398,7 +493,7 @@ form label {
   font-size: 17px;
 }
 
-form select, form input {
+form select, form input, form textarea {
   margin-bottom: 20px;
 }
 
@@ -410,12 +505,16 @@ form select {
   width: 100%;
 }
 
-form input {
+form input, form textarea {
   width: 100%;
   background-color: transparent;
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 3px;
+}
+
+form textarea {
+  height: 185px;
 }
 
 form input[type="submit"], form input[type="file"], form input[type="number"] {
@@ -536,6 +635,49 @@ div.input-wrap input, div.input-wrap select {
 @media (max-width: 885px) {
   #search-form {
     float: none;
+  }
+}
+
+/* Send Data */
+#send-data-form {
+  padding: 20px;
+  background-color: #fff;
+  max-width: 300px;
+  position: relative;
+  z-index: 99999999;
+  transition: all 0.3s ease-in-out;
+  visibility: hidden;
+  opacity: 0;
+  overflow-y: auto;
+  display: none;
+}
+
+#send-data-form textarea {
+  height: 70px;
+}
+
+#send-data-form .exit-on-click {
+  position: absolute;
+  top: 19px;
+  right: 10px;
+}
+
+#send-data-form .exit-on-click > svg {
+  font-size: 23px;
+  box-sizing: content-box;
+  padding: 10px 18px;
+}
+
+#send-data-form #send-data-submit {
+  margin: 0;
+}
+
+@media (max-width: 610px) {
+  #send-data-form h2 {
+    font-size: 25px;
+  }
+  #send-data-form .exit-on-click {
+    top: 14px;
   }
 }
 

@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from send_data.forms import Send_Data
 from customer_register.customer import Customer
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
@@ -22,6 +23,7 @@ def index(request):
     #get the empty forms
     payment_history_form = Payment_History_Form()
     change_job_status_form = Change_Job_Status()
+    send_data_form = Send_Data()
 
     #load template
     template = loader.get_template('jobs_admin/index.html')
@@ -32,6 +34,7 @@ def index(request):
         'current_user': current_user,
         'payment_history_form': payment_history_form,
         'change_job_status_form': change_job_status_form,
+        'send_data_form': send_data_form,
     }
 
     #get the register urls if they exist
@@ -106,6 +109,7 @@ def proposed_jobs(request):
     #get forms and template
     change_job_status_form = Change_Job_Status()
     approve_as_payment_form = Approve_As_Payment()
+    send_data_form = Send_Data()
     reject_estimate_form = Reject_Estimate()
     template = loader.get_template('jobs_admin/estimates.html')
 
@@ -114,6 +118,7 @@ def proposed_jobs(request):
         'jobs': jobs,
         'current_user': current_user,
         'change_job_status_form': change_job_status_form,
+        'send_data_form': send_data_form,
         'approve_as_payment_form': approve_as_payment_form,
         'reject_estimate_form': reject_estimate_form,
         'start_week': start_week,

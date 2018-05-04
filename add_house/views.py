@@ -112,7 +112,7 @@ def add_house(request):
                 addresses_added = add_addresses(address)
                 if False not in addresses_added:
                     messages.success(request, 'Thanks! The properties have been added.')
-                if addresses_added[0] == True and addresses_added[1] ==False:
+                if addresses_added[0] == True and addresses_added[1] == False:
                     messages.success(request, 'Thanks! The property has been added.')
 
                 form = Add_House()
