@@ -17,6 +17,21 @@ import re
 class Search_Submit_View(View):
     template_name = 'search_submit/search_submit.html'
 
+    def normalize_query(self, query_string,
+        findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
+        normspace=re.compile(r'\s{2,}').sub):
+
+        '''
+        Splits the query string in invidual keywords, getting rid of unecessary spaces and grouping quoted words together.
+        Example:
+        >>> normalize_query('  some random  words "with   quotes  " and   spaces')
+            ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
+        '''
+        if isinstance(query_string, str) == False:
+            raise ValueError('Value must be a string')
+
+        return [normspace(' ',(t[0] or t[1]).strip()) for t in findterms(query_string)]
+
     @method_decorator(user_passes_test(customer_and_staff_check, login_url='/accounts/login/'))
     def get(self, request):
         template = loader.get_template(self.template_name)
@@ -35,20 +50,6 @@ class Search_Submit_View(View):
 
     @method_decorator(user_passes_test(customer_and_staff_check, login_url='/accounts/login/'))
     def post(self, request):
-        def normalize_query(query_string,
-            findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
-            normspace=re.compile(r'\s{2,}').sub):
-
-            '''
-            Splits the query string in invidual keywords, getting rid of unecessary spaces and grouping quoted words together.
-            Example:
-            >>> normalize_query('  some random  words "with   quotes  " and   spaces')
-                ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
-            '''
-
-            return [normspace(' ',(t[0] or t[1]).strip()) for t in findterms(query_string)]
-
-
         template = loader.get_template(self.template_name)
         upload_document_form = Upload_Document_Form()
 
@@ -61,7 +62,7 @@ class Search_Submit_View(View):
 
         if request.method == 'POST':
             query = request.POST.get('search')
-            query_terms = normalize_query(query)
+            query_terms = self.normalize_query(query)
             queryset_jobs, queryset_payments = [], []
             if query != '':
                 #search jobs table
