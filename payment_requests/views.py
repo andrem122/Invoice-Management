@@ -49,39 +49,49 @@ def approved_payments(request):
             job_id = int(request.POST.get('job_id'))
             address = str(request.POST.get('job_house'))
 
-            house = House.objects.filter(address=address)
-            payment = Request_Payment.objects.filter(id=p_id)
-            request_amount = payment[0].amount
+            house = House.objects.get(address=address)
+            payment = Request_Payment.objects.get(pk=p_id)
+            request_amount = payment.amount
 
             #subtract from the total_paid column in the Job table
-            job = Job.objects.filter(id=job_id)
-            total_paid = job[0].total_paid
+            job = Job.objects.get(pk=job_id)
+            total_paid = job.total_paid
 
             #find new total paid
             new_total_paid = total_paid - request_amount
 
-            #update approved column to False for the specific payment and subtract from the total_paid column
-            job.update(total_paid=new_total_paid)
-            payment.update(approved=False)
-            house.update(pending_payments=True)
+            #update approved column to False for the specific payment and job and subtract from the total_paid column
+            job.total_paid = new_total_paid
+            payment.approved = False
+            house.pending_payments = True
 
             #update the balance_amount column AFTER updating the total_paid column
-            job.update(balance_amount=job[0].balance)
+            job.balance_amount = job.balance
 
-            #if job balance greater than zero, set completed_jobs=False and add as current worker
-            if job[0].balance_amount > 0:
-                house.update(completed_jobs=False)
-                if not Current_Worker.objects.filter(company=job[0].company, house=job[0].house).exists():
-                    worker = Current_Worker(company=job[0].company, house=job[0].house, current=True)
-                    worker.save()
+            #if job balance greater than zero, add as current worker
+            if job.balance_amount > 0:
+                worker, created = Current_Worker.objects.get_or_create(
+                    company=job.company,
+                    house=house,
+                    current=True,
+                )
+
+            job.save()
+            payment.save()
+
+            """
+            if no more completed jobs for the house, set completed_jobs=False
+            """
+            if not Job.objects.filter(house=house, approved=True, balance_amount__lte=0).exists():
+                house.completed_jobs = False
 
             """if there are no more approved payments for a house,
-            set payment_history=False for that specific house
+            set payment_history=False for the house
             """
-            payments = Request_Payment.objects.filter(house=house[0], approved=True)
+            if not Request_Payment.objects.filter(house=house, approved=True).exists():
+                house.payment_history = False
 
-            if not payments:
-                house.update(payment_history=False)
+            house.save()
 
             return redirect('/payment_requests/approved_payments')
 
