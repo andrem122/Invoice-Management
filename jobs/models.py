@@ -67,6 +67,7 @@ class Request_Payment(models.Model):
     house = models.ForeignKey(House, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     approved = models.BooleanField(default=False)
+    requested_by_worker = models.BooleanField(default=False)
 
     def __str__(self):
         info = [self.job.company, self.amount, self.approved]

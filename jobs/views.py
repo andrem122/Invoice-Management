@@ -49,23 +49,24 @@ def index(request):
             job_id = int(request.POST.get('job_id'))
 
             #clean the form data and store into variables
-            job = Job.objects.filter(id=job_id)
+            job = Job.objects.get(pk=job_id)
+            house = House.objects.get(pk=job.house.id)
             amount = form.cleaned_data['amount']
 
             """if the current company already has a pending request for payment for a job for a house,
             do NOT write to the Request_Payment table"""
-            house = House.objects.filter(address=job[0].house.address)
-            flags = [
-                Request_Payment.objects.filter(job=job[0], house=house[0], amount=amount, approved=False),
-                House.objects.filter(address=job[0].house.address, pending_payments=True)
-            ]
+            # create an instance of the Request_Payment Class and populate it with the form data and default values
+            payment, created = Request_Payment.objects.get_or_create(
+                job=job,
+                house=house,
+                amount=amount,
+                approved=False,
+                requested_by_worker=True,
+            )
+            if not House.objects.filter(pk=house.id, pending_payments=True).exists():
+                house.pending_payments = True
+                house.save()
 
-            if not flags[0]:
-                # create an instance of the Request_Payment Class and populate it with the form data and default values
-                payment = Request_Payment(job=job[0], house=house[0], amount=amount, approved=False)
-                payment.save()
-            if not flags[1]:
-                house.update(pending_payments=True)
 
             return redirect('/jobs/thank_you')
 

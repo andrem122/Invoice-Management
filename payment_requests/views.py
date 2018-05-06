@@ -45,39 +45,39 @@ def approved_payments(request):
         form = Change_Payment_Status(request.POST)
 
         if form.is_valid():
+            #get POST data
             p_id = int(request.POST.get('p_id'))
             job_id = int(request.POST.get('job_id'))
-            address = str(request.POST.get('job_house'))
 
-            house = House.objects.get(address=address)
+            #get objects
+            job = Job.objects.get(pk=job_id)
+            house = House.objects.get(pk=int(job.house.id))
             payment = Request_Payment.objects.get(pk=p_id)
             request_amount = payment.amount
 
-            #subtract from the total_paid column in the Job table
-            job = Job.objects.get(pk=job_id)
-            total_paid = job.total_paid
-
             #find new total paid
-            new_total_paid = total_paid - request_amount
-
-            #update approved column to False for the specific payment and job and subtract from the total_paid column
+            total_paid = job.total_paid
+            new_total_paid = float(total_paid) - float(request_amount)
             job.total_paid = new_total_paid
-            payment.approved = False
-            house.pending_payments = True
+            job.save(update_fields=['total_paid']) #update database value so the balance can be calculated
+            job.balance_amount = job.balance #update the balance
 
-            #update the balance_amount column AFTER updating the total_paid column
-            job.balance_amount = job.balance
+            if payment.requested_by_worker == False:
+                payment.delete()
+                job.approved = False
+                house.proposed_jobs = True
+            else:
+                payment.approved = False
+                house.pending_payments = True
 
             #if job balance greater than zero, add as current worker
-            if job.balance_amount > 0:
+            if job.balance_amount > 0 and payment.requested_by_worker == True:
                 worker, created = Current_Worker.objects.get_or_create(
                     company=job.company,
                     house=house,
                     current=True,
                 )
-
-            job.save()
-            payment.save()
+            job.save(update_fields=['balance_amount', 'approved'])
 
             """
             if no more completed jobs for the house, set completed_jobs=False
@@ -91,7 +91,9 @@ def approved_payments(request):
             if not Request_Payment.objects.filter(house=house, approved=True).exists():
                 house.payment_history = False
 
-            house.save()
+            house.save(update_fields=['pending_payments', 'payment_history', 'completed_jobs', 'proposed_jobs'])
+            if payment.requested_by_worker == True:
+                payment.save(update_fields=['approved'])
 
             return redirect('/payment_requests/approved_payments')
 
@@ -138,61 +140,57 @@ def unapproved_payments(request):
             #get job ID from POST
             p_id = int(request.POST.get('p_id'))
             job_id = int(request.POST.get('job_id'))
-            address = str(request.POST.get('job_house'))
 
-            house = House.objects.filter(address=address)
+            job = Job.objects.get(pk=job_id)
+            house = House.objects.get(pk=int(job.house.id))
+            payment = Request_Payment.objects.get(id=p_id)
+            request_amount = payment.amount
 
-            payment = Request_Payment.objects.filter(id=p_id)
-            request_amount = payment[0].amount
-
-            #add to the total_paid column in the Job table
-            job = Job.objects.filter(id=job_id)
-            total_paid = job[0].total_paid
-
-            #find new total paid
+            #add to the total_paid column for the job
+            total_paid = job.total_paid
             new_total_paid = total_paid + request_amount
 
             """update approved column to True and set approved_date to the time the payment was
             approved and update the total_paid column for the job"""
-            job.update(total_paid=new_total_paid)
-            payment.update(approved=True, approved_date=datetime.datetime.now())
-
-            #update the balance_amount column AFTER updating the total_paid column
-            job.update(balance_amount=job[0].balance)
+            job.total_paid = new_total_paid
+            payment.approved = True
+            payment.approved_date = datetime.datetime.now()
+            job.save(update_fields=['total_paid'])
+            job.balance_amount = job.balance #update the balance
 
             #since a payment was approved, set payment history to true
-            house.update(payment_history=True)
+            house.payment_history = True
 
             #if balance is less than or equal to zero, set completed_jobs=True
-            if job[0].balance <= 0:
-                house.update(completed_jobs=True)
+            if job.balance_amount <= 0:
+                house.completed_jobs = True
 
+            job.save(update_fields=['balance_amount'])
+            payment.save(update_fields=['approved', 'approved_date'])
 
             """if there are no more unapproved payments for a house,
             set pending_payments=False for that specific house
             AND if a company has no more jobs for a house with a balance greater than zero,
             then delete them as a current_worker
             """
-            flags = [
-                        Request_Payment.objects.filter(house=house[0], approved=False),
-                        Job.objects.filter(company=job[0].company, house=job[0].house, balance_amount__gt=0),
-                    ]
 
-            if not flags[0]:
-                house.update(pending_payments=False, payment_history=True)
-            if not flags[1]:
-                worker = Current_Worker.objects.filter(company=job[0].company, house=job[0].house)
+            if not Request_Payment.objects.filter(house=house, approved=False).exists():
+                house.pending_payments = False
+            if not Job.objects.filter(company=job.company, house=job.house, balance_amount__gt=0).exists():
+                worker = Current_Worker.objects.get(company=job.company, house=job.house)
                 worker.delete()
 
-            #send approval email to worker
+            house.save(update_fields=['pending_payments', 'payment_history', 'completed_jobs'])
+
+             #send approval email to worker
             message = """Hi {},\n\nA payment of ${} for your job at {} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems
-            """.format(job[0].company.get_username(), job[0].start_amount, job[0].house.address)
+            """.format(job.company.get_username(), job.start_amount, job.house.address)
             try:
                 send_mail(
                     'Payment Approved!',
                     message,
                     current_user.email,
-                    [job[0].company.email],
+                    [job.company.email],
                     fail_silently=False,
                 )
             except:
