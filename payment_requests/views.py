@@ -78,6 +78,8 @@ def approved_payments(request):
                     current=True,
                 )
             job.save(update_fields=['balance_amount', 'approved'])
+            if payment.requested_by_worker == True:
+                payment.save(update_fields=['approved'])
 
             """
             if no more completed jobs for the house, set completed_jobs=False
@@ -92,8 +94,6 @@ def approved_payments(request):
                 house.payment_history = False
 
             house.save(update_fields=['pending_payments', 'payment_history', 'completed_jobs', 'proposed_jobs'])
-            if payment.requested_by_worker == True:
-                payment.save(update_fields=['approved'])
 
             return redirect('/payment_requests/approved_payments')
 
