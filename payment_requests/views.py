@@ -61,6 +61,7 @@ def approved_payments(request):
             job.total_paid = new_total_paid
             job.save(update_fields=['total_paid']) #update database value so the balance can be calculated
             job.balance_amount = job.balance #update the balance
+            job.save(update_fields=['balance_amount'])
 
             if payment.requested_by_worker == False:
                 payment.delete()
@@ -70,14 +71,14 @@ def approved_payments(request):
                 payment.approved = False
                 house.pending_payments = True
 
-            #if job balance greater than zero, add as current worker
+            #if job balance greater than zero after unapproval, add as current worker
             if job.balance_amount > 0 and payment.requested_by_worker == True:
                 worker, created = Current_Worker.objects.get_or_create(
                     company=job.company,
                     house=house,
                     current=True,
                 )
-            job.save(update_fields=['balance_amount', 'approved'])
+            job.save(update_fields=['approved'])
             if payment.requested_by_worker == True:
                 payment.save(update_fields=['approved'])
 
