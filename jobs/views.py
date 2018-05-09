@@ -65,7 +65,7 @@ def index(request):
             )
             if not House.objects.filter(pk=house.id, pending_payments=True).exists():
                 house.pending_payments = True
-                house.save()
+                house.save(update_fields=['pending_payments'])
 
 
             return redirect('/jobs/thank_you')

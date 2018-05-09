@@ -1,10 +1,8 @@
 from django.test import TestCase
 from django.test import Client
 from .views import approved_payments
-from django.conf import settings
 from django.contrib.auth.models import User, Group
 from jobs.models import Job, House, Request_Payment, Current_Worker
-import datetime
 
 class Test_Payment_Requests(TestCase):
     def setUp(self):

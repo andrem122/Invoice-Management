@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.template import loader
 from customer_register.customer import Customer
+from jobs.models import Job
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
@@ -8,6 +9,8 @@ from send_data.forms import Send_Data
 from django.contrib import messages
 import csv
 import io
+import os
+import zipfile
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def send_data(request):
@@ -23,7 +26,12 @@ def send_data(request):
             writer = csv.writer(csv_file, delimiter=',')
             writer.writerow([title])
             writer.writerow(headers)
-            for q in queryset:
+            document_links = []
+            for q in queryset.iterator():
+                if hasattr(q, 'document_link') and isinstance(q, Job):
+                    document_links.append(str(q.document_link))
+                else:
+                    document_links.append(str(q.job.document_link))
                 atts = []
                 for attribute in attributes:
                     if isinstance(attribute, list):
@@ -40,9 +48,33 @@ def send_data(request):
                     atts.append(a)
                 writer.writerow(atts)
 
-            #send email
+            #create email
             email = EmailMessage(subject, message, current_user.email, [send_to])
             email.attach('data.csv', csv_file.getvalue(), 'text/csv')
+
+            #generate zip file
+            if len(document_links) != 0:
+                zip_file = io.BytesIO()
+                zf = zipfile.ZipFile(zip_file, "w")
+                base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                prev_arcnames = []
+                for counter, fpath in enumerate(document_links):
+                    absname = os.path.abspath(os.path.join(base_dir, 'media', *fpath.split('/')))
+                    arcname = os.path.split(absname)[1]
+
+                    #do not overwrite files with the same name
+                    if arcname in prev_arcnames:
+                        fname, ext = os.path.splitext(arcname)
+                        arcname = '{fname}-{counter}{ext}'.format(fname=fname, counter=counter, ext=ext)
+                        
+                    prev_arcnames.append(arcname)
+
+                    zf.write(absname, arcname)
+
+                zf.close()
+                email.attach('files.zip', zip_file.getvalue(), 'application/x-zip-compressed')
+
+            #send email
             email.send(fail_silently=False)
 
     if request.method == 'POST':
@@ -82,7 +114,7 @@ def send_data(request):
                     headers = ['House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Contract Link']
                     attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', 'approved_date', ['job', 'document_link']]
                     send_data(title='PAYMENTS FOR THIS WEEK', headers=headers, queryset=payments, attributes=attributes)
-                    
+
                 elif path == '/jobs_complete/':
                     jobs = customer.completed_jobs()
                     headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid']

@@ -878,3 +878,8 @@ a#step-4 {
   word-wrap: break-word; /* IE */
   word-break: break-all;
 }
+
+/* Drop Down Toggle */
+.dropdown-toggle::after {
+  display: none;
+}

@@ -22,16 +22,9 @@ def add_job(request):
             house = form.cleaned_data['house']
             start_amount = form.cleaned_data['start_amount']
 
-            """if the house already has proposed jobs, do NOT write to the House table"""
-            flags = [
-                        House.objects.filter(address=house.address, proposed_jobs=True),
-                    ]
-
-            if not flags[0]:
-                #the house now has a proposed job, so set proposed_jobs=True
-                house = House.objects.get(address=house.address)
-                house.proposed_jobs=True
-                house.save(update_fields=['proposed_jobs'])
+            #the house now has a proposed job, so set proposed_jobs=True
+            house.proposed_jobs=True
+            house.save(update_fields=['proposed_jobs'])
 
             #save the uploaded file and the job
             job = form.save(commit=False)
