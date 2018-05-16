@@ -21,14 +21,14 @@ class Test_Payment_Requests(TestCase):
         self.c.force_login(self.customer)
     def check_queryset(self, instance, attributes=(), asserts=()):
         """eliminates repetition of comparison code"""
-        if instance and attributes and asserts:
+        try:
             for attribute, assert_type in zip(attributes, asserts):
                 if assert_type[0] == 'assertEqual':
                     self.assertEqual(getattr(instance, attribute), assert_type[1])
                 elif assert_type[0] == 'assertTrue':
                     self.assertTrue(getattr(instance, attribute))
-        else:
-            raise TypeError('instance, attributes, and asserts are required arguments')
+        except TypeError as e:
+            print(e)
     def test_payment_history_get(self):
         response = self.c.get('/payment_history/p_history_job')
         self.assertEqual(response.status_code, 200)

@@ -2,7 +2,7 @@
 {% load jobs_admin_group_check %}
 
 {% block after_loader %}
-{% if request.path != '/projects/' and request.path != '/search/' %}
+{% if request.path != '/projects/' and request.path != '/search/' and request.path != '/add_house/' %}
 <div id="overlay_id" class="overlay">
 	{# Send Data Form #}
 	<form id="send-data-form" action="{% url 'send_data' %}" method="post">
@@ -91,7 +91,7 @@
 			<a class="dropdown-item" href="#">
 				<button form="download-jobs-form" type="submit">Download Data</button>
 			</a>
-			{% if request.path != '/projects/' and request.path != '/search/' %}
+			{% if request.path != '/projects/' and request.path != '/search/' and request.path != '/add_house/' %}
 			<a  id="send-data-btn" class="dropdown-item" href="#">Send Data</a>
 			{% endif %}
 		</div>
