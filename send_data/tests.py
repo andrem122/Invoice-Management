@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.test import Client
 from jobs.models import House, Job, Request_Payment
-from .views import send_data, send_data_email
+from .views import send_data
+from .send_data_extras import send_data_email
 from django.core import mail
 from django.contrib.auth.models import User, Group
 
@@ -13,6 +14,7 @@ class Test_Send_Data(TestCase):
 
         #create users
         self.customer = User.objects.get_or_create(username='customer', )[0]
+        self.customer.email = 'am3141@live.com'
         self.customer.groups.add(customer_group)
         self.worker = User.objects.get_or_create(username='worker', )[0]
         self.worker.groups.add(worker_group)
@@ -20,11 +22,11 @@ class Test_Send_Data(TestCase):
         #create client and log customer in
         self.c = Client()
         self.c.force_login(self.customer)
-    def send_data_email_test(self, headers, queryset, attributes, user, title='TEST'):
+    def send_data_email_test(self, host, headers, queryset, attributes, user_email, title='TEST'):
         """Tests if the email in the 'send_data' view sends successfully"""
 
-        email_vals={'send_to': 'andre.mashraghi@gmail.com', 'subject': 'Test Subject', 'message': 'This is a test.'}
-        send_data_email(user=user, title=title, headers=headers, queryset=queryset, attributes=attributes, email_vals=email_vals)
+        form_vals={'send_to': 'andre.mashraghi@gmail.com', 'subject': 'Test Subject', 'message': 'This is a test.'}
+        send_data_email(user_email=user_email, title=title, headers=headers, queryset=queryset, attributes=attributes, form_vals=form_vals, host=host)
 
         msg = mail.outbox[0]
         self.assertEqual(len(msg.attachments), 2)
@@ -76,15 +78,17 @@ class Test_Send_Data(TestCase):
         job.save()
 
         #test send_data_email function
+        host = '127.000.001'
+
         jobs = Job.objects.filter(pk=1) #test for job querysets
         headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid']
         attributes = ['house', 'company', 'start_amount', 'balance', 'start_date', 'total_paid']
-        self.send_data_email_test(user=self.customer, title='Test Send Data Jobs', headers=headers, queryset=jobs, attributes=attributes)
+        self.send_data_email_test(user_email=self.customer.email, title='Test Send Data Jobs', headers=headers, queryset=jobs, attributes=attributes, host=host)
 
         payments = Request_Payment.objects.filter(pk=1) #test for payment querysets
         headers = ['House', 'Company', 'Amount', 'Submit Date', 'Contract Link']
         attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', ['job', 'document_link']]
-        self.send_data_email_test(user=self.customer, title='Test Send Data Payments', headers=headers, queryset=payments, attributes=attributes)
+        self.send_data_email_test(user_email=self.customer.email, title='Test Send Data Payments', headers=headers, queryset=payments, attributes=attributes, host=host)
 
         #check if two emails were sent: one for jobs and one for payments
         self.assertEqual(len(mail.outbox), 2)
@@ -92,16 +96,17 @@ class Test_Send_Data(TestCase):
         response = self.c.post(
             '/send_data/',
             {
-                'path': '/jobs_admin/',
+                'path': '/jobs_complete/',
                 'send_to': 'andre.mashraghi@gmail.com',
                 'subject': 'Test Subject',
                 'message': 'Test message',
+                'frequency': 1,
             }
         )
 
         #post
         self.assertEqual(response.status_code, 302)
-        self.assertRaises(AttributeError)
+        self.assertRaises(AttributeError) #job objects have no 'job' attribute
 
         #job
         job = Job.objects.get(pk=1)
