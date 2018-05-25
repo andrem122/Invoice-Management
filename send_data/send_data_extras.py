@@ -137,4 +137,5 @@ def setup_cron_job(frequency, user, path, host, form_vals={}):
         job.day.on(today.day)
         print(job.frequency_per_year())
 
-    print(cron.write())
+    cron.write()
+    return True

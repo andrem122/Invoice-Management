@@ -45,8 +45,10 @@ window.addEventListener("load", function(event) {
     document.addEventListener('click', function(e){
       var classes = Array.from(e.target.classList); //convert DOMTicketList to array
       l = class_names.length;
+      var clicked = false; //prevent multiple submissions of forms
       for (var i = 0; i < l; i++) {
-        if(classes.includes(class_names[i])) {
+        if(classes.includes(class_names[i]) && clicked === false) {
+          clicked = true;
           var form = e.target.parentElement.parentElement;
           form.submit();
         }

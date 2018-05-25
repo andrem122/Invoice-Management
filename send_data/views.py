@@ -25,7 +25,7 @@ def send_data(request):
             send_to = str(send_data_form.cleaned_data['send_to'])
             subject = str(send_data_form.cleaned_data['subject'])
             message = str(send_data_form.cleaned_data['message'])
-            frequency = int(send_data_form.cleaned_data['frequency'])
+            #frequency = int(send_data_form.cleaned_data['frequency'])
 
             form_vals = {
                 'send_to': send_to,
@@ -35,42 +35,40 @@ def send_data(request):
 
             if send_to:
                 host = request.get_host()
-                if frequency > 1:
-                    setup_cron_job(frequency=frequency, user=current_user, path=path, host=host, form_vals=form_vals)
-                else:
-                    #send data based on path
-                    if path == '/jobs_admin/':
-                        #get data to write to csv
-                        jobs = customer.approved_jobs()
+                #send data based on path
+                if path == '/jobs_admin/':
+                    #get data to write to csv
+                    jobs = customer.approved_jobs()
 
-                        #send data
-                        headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid', 'Contract Link']
-                        attributes = [['house', 'address'], 'company', 'start_amount', 'balance', 'start_date', 'total_paid', 'document_link']
-                        send_data_email(user_email=current_user.email, title='ACTIVE JOBS', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
+                    #send data
+                    headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid', 'Contract Link']
+                    attributes = [['house', 'address'], 'company', 'start_amount', 'balance', 'start_date', 'total_paid', 'document_link']
+                    send_data_email(user_email=current_user.email, title='ACTIVE JOBS', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
 
-                    elif path == '/jobs_admin/proposed_jobs':
-                        jobs = customer.proposed_jobs()
-                        headers = ['House', 'Company', 'Start Amount', 'Submit Date', 'Contract Link']
-                        attributes = [['house', 'address'], 'company', 'start_amount', 'start_date', 'document_link']
-                        send_data_email(user_email=current_user.email, title='ESTIMATES', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
+                elif path == '/jobs_admin/proposed_jobs':
+                    jobs = customer.proposed_jobs()
+                    headers = ['House', 'Company', 'Start Amount', 'Submit Date', 'Contract Link']
+                    attributes = [['house', 'address'], 'company', 'start_amount', 'start_date', 'document_link']
+                    send_data_email(user_email=current_user.email, title='ESTIMATES', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
 
-                    elif path == '/payment_requests/unapproved_payments':
-                        payments = customer.current_payment_requests()
-                        headers = ['House', 'Company', 'Amount', 'Submit Date', 'Contract Link']
-                        attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', ['job', 'document_link']]
-                        send_data_email(user_email=current_user.email, title='PAYMENT REQUESTS', headers=headers, queryset=payments, attributes=attributes, form_vals=form_vals, host=host)
+                elif path == '/payment_requests/unapproved_payments':
+                    payments = customer.current_payment_requests()
+                    headers = ['House', 'Company', 'Amount', 'Submit Date', 'Contract Link']
+                    attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', ['job', 'document_link']]
+                    send_data_email(user_email=current_user.email, title='PAYMENT REQUESTS', headers=headers, queryset=payments, attributes=attributes, form_vals=form_vals, host=host)
 
-                    elif path == '/payment_requests/approved_payments':
-                        payments = customer.current_payments()
-                        headers = ['House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Contract Link']
-                        attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', 'approved_date', ['job', 'document_link']]
-                        send_data_email(user_email=current_user.email, title='PAYMENTS FOR THIS WEEK', headers=headers, queryset=payments, attributes=attributes, form_vals=form_vals, host=host)
+                elif path == '/payment_requests/approved_payments':
+                    payments = customer.current_payments()
+                    headers = ['House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Contract Link']
+                    attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', 'approved_date', ['job', 'document_link']]
+                    send_data_email(user_email=current_user.email, title='PAYMENTS FOR THIS WEEK', headers=headers, queryset=payments, attributes=attributes, form_vals=form_vals, host=host)
 
-                    elif path == '/jobs_complete/':
-                        jobs = customer.completed_jobs()
-                        headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid']
-                        attributes = ['house', 'company', 'start_amount', 'balance', 'start_date', 'total_paid']
-                        send_data_email(user_email=current_user.email, title='COMPLETED JOBS', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
+                elif path == '/jobs_complete/':
+                    jobs = customer.completed_jobs()
+                    headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid']
+                    attributes = ['house', 'company', 'start_amount', 'balance', 'start_date', 'total_paid']
+                    send_data_email(user_email=current_user.email, title='COMPLETED JOBS', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
+
             else:
                 messages.error(request, 'Please enter an email address to send the data to.')
                 return redirect(path)

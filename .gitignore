@@ -2,5 +2,6 @@ settings.py
 db.sqlite3
 media/
 __pycache__/
+migrations/
 my.cnf
 secret_key.txt

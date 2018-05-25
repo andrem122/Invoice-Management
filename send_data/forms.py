@@ -6,14 +6,15 @@ class Send_Data(forms.Form):
     subject = forms.CharField(required=False, label='Subject')
     message = forms.CharField(required=False, label='Message', widget=forms.Textarea)
 
-    #frequency of the data sending
-    choices = (
+    #frequency of the data sending (pythonanywhere only supports 20 cron jobs)
+    """choices = (
         (1, 'One time'),
         (2, 'Daily'),
         (3, 'Weekly'),
         (4, 'Monthly'),
     )
     frequency = forms.ChoiceField(choices=choices)
+    """
 
     def __init__(self, *args, **kwargs):
         super(Send_Data, self).__init__(*args, **kwargs)
