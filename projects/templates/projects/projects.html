@@ -1,4 +1,4 @@
-{% extends 'logged_in_customer.html' %}
+{% extends 'items.html' %}
 
 {% load humanize %}
 {% load static %}
@@ -10,63 +10,53 @@
 {% block scripts %}
 {% endblock scripts %}
 
-{% block content %}
-<h2 class="page-title">Projects</h2>
-<div class="house-headings-wrapper container-fluid">
-  <ul class="house-headings row">
-    <div class="col col-sm-6">
-      <li>Status</li>
-      <li>Project</li>
-    </div>
-    <div class="col col-sm-4">
-      <li>Active Jobs</li>
-      <li>Completed Jobs</li>
-    </div>
-    <div class="col col-sm-2">
-      <li>Total Spent</li>
-    </div>
-  </ul>
-</div>
+{% block page_title %}Projects{% endblock page_title %}
+{% block heading_status %}Status{% endblock heading_status %}
+{% block item_heading_1 %}Project{% endblock item_heading_1 %}
+{% block item_heading_2 %}Active Jobs{% endblock item_heading_2 %}
+{% block item_heading_3 %}Completed Jobs{% endblock item_heading_3 %}
+{% block item_heading_4 %}Total Spent{% endblock item_heading_4 %}
+{% block item_loop %}
 {% for house, num_active_jobs, num_completed_jobs in zipped %}
-<div class="house-container">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="info-group col col-sm-6">
-        <ul>
-          <li>
-            {% if num_active_jobs > 0 %}
-            <div class="status active">Active</div>
-            {% else %}
-            <div class="status open">Open</div>
-            {% endif %}
-          </li>
-          <span class="info-title">Project</span>
-          <li class="address">{{house.address}}</li>
-          <hr>
-        </ul>
-      </div>
-      <div class="info-group col col-sm-4">
-        <ul>
-          <span class="info-title">Active Jobs</span>
-          <li class="num_active_jobs">
-            <a{% if num_active_jobs > 0 %} href="/jobs_admin#{{house.address|add_dashes}}"{% endif %}><span>{{num_active_jobs}}</span> Jobs</a>
-          </li>
-          <hr>
-          <span class="info-title">Completed Jobs</span>
-          <li class="num_completed_jobs">
-            <a{% if num_completed_jobs > 0 %} href="/jobs_complete#{{house.address|add_dashes}}"{% endif %}><span>{{num_completed_jobs}}</span> Jobs</a>
-          </li>
-          <hr>
-        </ul>
-      </div>
-      <div class="info-group col col-sm-2">
-        <ul>
-          <span class="info-title">Total Spent</span>
-          <li class="total_spent">${{totals|next_item|intcomma}}</li>
-        </ul>
+  <div class="item-container">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="info-group col col-sm-6">
+          <ul>
+            <li>
+              {% if num_active_jobs > 0 %}
+              <div class="status active">Active</div>
+              {% else %}
+              <div class="status open">Open</div>
+              {% endif %}
+            </li>
+            <span class="info-title">Project</span>
+            <li class="info-1">{{ house.address }}</li>
+            <hr>
+          </ul>
+        </div>
+        <div class="info-group col col-sm-4">
+          <ul>
+            <span class="info-title">Active Jobs</span>
+            <li class="info-2 active_jobs">
+              <a{% if num_active_jobs > 0 %} href="/jobs_admin#{{house.address|add_dashes}}"{% endif %}><span>{{num_active_jobs}}</span> Jobs</a>
+            </li>
+            <hr>
+            <span class="info-title">Completed Jobs</span>
+            <li class="info-3">
+              <a{% if num_completed_jobs > 0 %} href="/jobs_complete#{{house.address|add_dashes}}"{% endif %}><span>{{num_completed_jobs}}</span> Jobs</a>
+            </li>
+            <hr>
+          </ul>
+        </div>
+        <div class="info-group col col-sm-2">
+          <ul>
+            <span class="info-title">Total Spent</span>
+            <li class="info-4">${{totals|next_item|intcomma}}</li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-</div> <!-- /.house-container -->
-{% endfor %}
-{% endblock content %}
+  </div> <!-- /.item-container -->
+  {% endfor %}
+{% endblock item_loop %}

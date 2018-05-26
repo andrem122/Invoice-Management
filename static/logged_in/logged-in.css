@@ -171,7 +171,7 @@ body .job-info td:last-child input[type="submit"] {
 
 /* Table Headings */
 
-.job-headings th, .house-headings li {
+.job-headings th, .item-headings li {
   color: #4b4747;
   font-weight: normal;
   white-space: nowrap;
@@ -181,22 +181,26 @@ body .job-info td:last-child input[type="submit"] {
   padding: 7px 10px;
 }
 
-ul.house-headings {
+ul.item-headings {
   padding: 0;
   margin-bottom: 5px;
   max-width: 1400px;
 }
 
-.house-headings li {
+.item-headings li {
   display: inline-block;
 }
 
-.house-headings .col:first-child li:first-child {
-  margin-right: 68px;
+.item-headings .col:first-child li:first-child {
+  margin-right: 90px;
 }
 
-.house-headings .col:nth-child(2) li:first-child {
+.item-headings .col:nth-child(2) li:first-child {
   margin-right: 2%;
+}
+
+.item-headings .col:nth-child(2) li:first-child.contract_link {
+  margin-right: 24px;
 }
 
 /* Job Container */
@@ -220,7 +224,7 @@ ul.house-headings {
 
 /* House Container */
 
-div.house-container {
+div.item-container {
   background-color: #fff;
   padding: 27px 0;
   border: 1px solid #ddd;
@@ -230,7 +234,7 @@ div.house-container {
   max-width: 1400px;
 }
 
-div.house-container .status {
+div.item-container .status {
   padding: 5px 30px;
   color: #fff;
   text-align: center;
@@ -239,60 +243,84 @@ div.house-container .status {
   font-weight: bold;
   letter-spacing: 1px;
   margin-right: 20px;
-  width: 109px;
+  width: 130px;
 }
 
-div.house-container .status.open {
+div.item-container .status.open {
   background-color: #05C280;
 }
 
-div.house-container .status.active {
+div.item-container .status.approved {
+  background-color: #05C280;
+}
+
+div.item-container .status.rejected {
+  background-color: #ee8a90;
+}
+
+div.item-container .status.new {
+  background-color: #51b5f1;
+}
+
+div.item-container .status.active {
   background-color: #303B57;
 }
 
-div.house-container ul {
+div.item-container ul {
   padding: 0;
   list-style: none;
   margin-bottom: 0;
 }
 
-div.house-container ul hr {
+div.item-container ul hr {
   display: none;
 }
 
-div.house-container ul li {
+div.item-container ul li {
   display: inline-block;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 
-div.house-container ul li > a {
+div.item-container ul li > a {
   display: inline-block;
 }
 
-div.house-container ul li.num_active_jobs {
+div.item-container ul li.info-2.active_jobs {
   margin-right: 43px;
 }
-
-div.house-container ul li.address {
+div.item-container ul li.info-1 {
   width: 160px;
 }
 
-div.house-container .info-group:first-child li:first-child {
+div.item-container ul li.info-2 {
+  margin-right: 19px;
+}
+
+div.item-container ul li.info-4 {
+  margin-right: 28px;
+  width: 75px;
+}
+
+div.item-container .info-group:first-child li:first-child {
   margin-left: -15px;
 }
 
-div.house-container ul .info-title {
+div.item-container ul .info-title {
   display: none;
 }
 
+div.item-container + h3 {
+  margin-top: 30px;
+}
+
 @media (max-width: 1124px) {
-  .house-headings-wrapper {
+  .item-headings-wrapper {
     display: none;
   }
 
-  .house-container .info-group .col, .house-container .info-group {
+  .item-container .info-group .col, .item-container .info-group {
     flex: 0 0 100%;
     max-width: 100%;
   }
@@ -302,53 +330,53 @@ div.house-container ul .info-title {
     margin-bottom: 30px;
   }
 
-  div.house-container {
+  div.item-container {
     padding: 0;
     text-align: center;
   }
 
-  div.house-container .status, div.house-container ul li.address {
+  div.item-container .status, div.item-container ul li.info-1 {
     width: 100%;
     margin: 0;
   }
 
-  div.house-container .status {
+  div.item-container .status {
     padding: 20px 0;
     font-size: 16px;
   }
 
-  div.house-container .info-group:first-child li:first-child {
+  div.item-container .info-group:first-child li:first-child {
     padding: 0;
   }
 
-  div.house-container .info-group:first-child ul {
+  div.item-container .info-group:first-child ul {
     margin: 0 -15px 0 -15px;
   }
 
-  div.house-container .info-group:first-child li:first-child {
+  div.item-container .info-group:first-child li:first-child {
     margin: 0;
   }
 
-  div.house-container ul li.address {
+  div.item-container ul li.info-1 {
     padding-top: 20px;
   }
 
-  div.house-container ul li {
+  div.item-container ul li {
     display: block;
     width: 100%;
     padding: 10px;
   }
 
-  div.house-container ul li.num_active_jobs span, div.house-container ul li.num_completed_jobs span {
+  div.item-container ul li.info-2 span, div.item-container ul li.info-3 span {
     font-weight: bold;
   }
 
-  div.house-container ul hr {
+  div.item-container ul hr {
     display: block;
     width: 80%;
   }
 
-  div.house-container ul .info-title {
+  div.item-container ul .info-title {
     display: block;
     font-weight: bold;
     letter-spacing: 1px;
@@ -357,19 +385,21 @@ div.house-container ul .info-title {
     color: #979AA6;
   }
 
-  div.house-container .info-group:first-child .info-title {
+  div.item-container .info-group:first-child .info-title {
     margin-top: 21px;
   }
 
-  div.house-container ul li.total_spent {
+  div.item-container ul li.info-4 {
     padding-bottom: 20px;
+    margin-right: 0;
+    width: auto;
   }
 
-  div.house-container ul li.num_active_jobs > a {
+  div.item-container ul li.info-2 > a {
     margin: 0;
   }
 
-  div.house-container ul li.num_completed_jobs > a {
+  div.item-container ul li.info-3 > a {
     margin: 0;
   }
 

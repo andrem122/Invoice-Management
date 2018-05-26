@@ -102,7 +102,7 @@ def proposed_jobs(request):
 
     #get all houses with unapproved jobs for only the customers houses
     houses = customer.proposed_jobs_houses()
-    jobs = customer.proposed_jobs()
+    jobs = customer.all_jobs()
     start_week = str(Customer.start_week.date())
     today = str(Customer.today.date())
 

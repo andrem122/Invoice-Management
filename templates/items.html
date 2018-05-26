@@ -1,0 +1,25 @@
+{% extends 'logged_in_customer.html' %}
+
+{% block scripts %}
+{% endblock scripts %}
+
+{% block content %}
+<h2 class="page-title">{% block page_title %}{% endblock page_title %}</h2>
+<div class="item-headings-wrapper container-fluid">
+  <ul class="item-headings row">
+    <div class="col col-sm-6">
+      <li>{% block heading_status %}{% endblock heading_status %}</li>
+      <li>{% block item_heading_1 %}{% endblock item_heading_1 %}</li>
+    </div>
+    <div class="col col-sm-4">
+      <li>{% block item_heading_2 %}{% endblock item_heading_2 %}</li>
+      <li>{% block item_heading_3 %}{% endblock item_heading_3 %}</li>
+    </div>
+    <div class="col col-sm-2">
+      <li>{% block item_heading_4 %}{% endblock item_heading_4 %}</li>
+    </div>
+  </ul>
+</div>
+  {% block item_loop %}
+  {% endblock item_loop %}
+{% endblock content %}

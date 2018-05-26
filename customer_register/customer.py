@@ -164,3 +164,7 @@ class Customer:
     #returns all proposed jobs submitted for the last week
     def proposed_jobs(self):
         return Job.objects.filter(house__customer=self.customer, approved=False, rejected=False, start_date__range=[Customer.start_week, Customer.today])
+
+    """All"""
+    def all_jobs(self):
+        return Job.objects.filter(house__customer=self.customer, start_date__range=[Customer.start_week, Customer.today])
