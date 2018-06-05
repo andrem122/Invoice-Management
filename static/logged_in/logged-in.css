@@ -55,9 +55,10 @@ body .job-info td:last-child input[type="submit"] {
   position: absolute;
   padding: 15px;
   background-color: #f3f3f3;
-  height: 100%;
   max-width: 2000px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 150px;
 }
 
 #wrapper.toggled #page-content-wrapper {
@@ -195,12 +196,16 @@ ul.item-headings {
   margin-right: 90px;
 }
 
+.item-headings .col:first-child li.second-heading {
+  margin-right: 58px;
+}
+
 .item-headings .col:nth-child(2) li:first-child {
   margin-right: 2%;
 }
 
 .item-headings .col:nth-child(2) li:first-child.contract_link {
-  margin-right: 24px;
+  margin-right: 15px;
 }
 
 /* Job Container */
@@ -222,7 +227,7 @@ ul.item-headings {
   color: #4A87B6;
 }
 
-/* House Container */
+/* Item Container */
 
 div.item-container {
   background-color: #fff;
@@ -291,31 +296,60 @@ div.item-container ul li.info-2.active_jobs {
   margin-right: 43px;
 }
 div.item-container ul li.info-1 {
-  width: 160px;
+  width: 130px;
 }
 
 div.item-container ul li.info-2 {
-  margin-right: 19px;
+  margin-right: 10px;
 }
 
 div.item-container ul li.info-4 {
-  margin-right: 28px;
   width: 75px;
+}
+
+div.item-container ul div.item-options-dropdown {
+  float: right;
+  cursor: pointer;
+}
+
+div.item-container ul div.item-options-dropdown .item-options-toggle {
+  padding: 0 15px;
+  display: inline-block;
+}
+
+div.item-container ul div.item-options-dropdown .dropdown-new::after {
+  left: 119px;
+}
+
+div.item-container ul div.item-options-dropdown .dropdown-new::before {
+  left: 118px;
+}
+
+div.item-container ul div.item-options-dropdown .dropdown-approved::after {
+  left: 96px;
+}
+
+div.item-container ul div.item-options-dropdown .dropdown-approved::before {
+  left: 95px;
 }
 
 div.item-container .info-group:first-child li:first-child {
   margin-left: -15px;
 }
 
-div.item-container ul .info-title {
+div.item-container ul .info-title, div.item-container ul.mobile-option-icons {
   display: none;
 }
 
-div.item-container + h3 {
+div.item-container + h3.house-address {
   margin-top: 30px;
 }
 
-@media (max-width: 1124px) {
+@media (max-width: 1178px) {
+  #page-content-wrapper {
+    padding-bottom: 0;
+  }
+
   .item-headings-wrapper {
     display: none;
   }
@@ -361,7 +395,7 @@ div.item-container + h3 {
     padding-top: 20px;
   }
 
-  div.item-container ul li {
+  div.item-container ul li:not(.list-inline-item) {
     display: block;
     width: 100%;
     padding: 10px;
@@ -403,8 +437,39 @@ div.item-container + h3 {
     margin: 0;
   }
 
+  div.item-container ul .item-options-dropdown {
+    display: none;
+  }
+
+  div.item-container ul.mobile-option-icons {
+    display: block;
+  }
+
+  div.item-container ul.mobile-option-icons > li > button {
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 17px;
+    font-size: 29px;
+  }
+
+  div.item-container ul.mobile-option-icons button.approve-job-option-m {
+    color: #62a9f9;
+  }
+
+  div.item-container ul.mobile-option-icons button.approve-payment-option-m {
+    color: #53d0c0;
+  }
+  div.item-container ul.mobile-option-icons button.reject-job-option-m {
+    color: #f76767;
+  }
+
   a#add-project-btn {
     float: none;
+  }
+
+  h3.house-address {
+    text-align: center;
   }
 }
 
@@ -503,7 +568,6 @@ tr.spacer {
     width: 250px;
   }
   #page-content-wrapper {
-    padding: 20px;
     position: relative;
   }
   #wrapper.toggled #page-content-wrapper {

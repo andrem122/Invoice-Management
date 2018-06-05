@@ -11,11 +11,13 @@ logger = logging.getLogger(__name__)
 class House(models.Model):
     address = models.CharField(max_length=250)
     companies = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Current_Worker')
-    proposed_jobs = models.BooleanField(default=False)
-    pending_payments = models.BooleanField(default=False)
-    payment_history = models.BooleanField(default=False)
-    completed_jobs = models.BooleanField(default=False)
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer_house')
+    proposed_jobs = models.BooleanField(default=False)
+    completed_jobs = models.BooleanField(default=False)
+    rejected_jobs = models.BooleanField(default=False)
+    payment_history = models.BooleanField(default=False)
+    pending_payments = models.BooleanField(default=False)
+    rejected_payments = models.BooleanField(default=False)
 
     def __str__(self):
         return self.address
@@ -67,6 +69,7 @@ class Request_Payment(models.Model):
     house = models.ForeignKey(House, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     approved = models.BooleanField(default=False)
+    rejected = models.BooleanField(default=False)
     requested_by_worker = models.BooleanField(default=False)
 
     def __str__(self):

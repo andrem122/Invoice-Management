@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from jobs.models import Job, Request_Payment
 
 #a form that has all the attributes of the Job class from the jobs app
-class Change_Job_Status(ModelForm, forms.Form):
+class Approve_Job(ModelForm, forms.Form):
     class Meta:
         model = Job
         #the attributes from the Job class that we want to exclude in our form

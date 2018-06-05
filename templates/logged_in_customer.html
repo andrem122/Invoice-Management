@@ -35,15 +35,9 @@
 {% block menu_options %}
 {% if current_user|in_group:'Customers' %}
 	<li>
-		<a{% if request.path == '/jobs_admin/' %} class="active"{% endif %} href="/jobs_admin">
-			<i class="far fa-handshake"></i>
-			Active Jobs
-		</a>
-	</li>
-	<li>
-		<a{% if request.path == '/jobs_admin/proposed_jobs' %} class="active"{% endif %} href="/jobs_admin/proposed_jobs">
+		<a{% if request.path == '/jobs_admin/' %} class="active"{% endif %} href="/jobs_admin/">
 			<i class="fas fa-clipboard-list"></i>
-			Estimates
+			Jobs
 		</a>
 	</li>
 	<li>

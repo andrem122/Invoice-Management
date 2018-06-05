@@ -32,40 +32,26 @@ class Customer:
             self.customer = customer
         self.houses = self.houses()
 
-    #gets attributes of objects up to two levels down
-    def attribute_level(self, obj, compare={}):
-        level = list(compare.keys())
-        attribute = list(compare.values())
-
-        if level[0] is not 0:
-            if level[0] is 1:
-                return getattr(obj, attribute[0])
-            elif level[0] is 2:
-                return getattr(getattr(obj, attribute[0][0]), attribute[0][1])
-        else:
-            return obj
-
-    #reduces repetition of looping code to get a query set
-    def get_queryset(self, append_outer=False, houses=[], queryset=[], compare=[]):
-        for h in houses:
-            for q in queryset.iterator():
-                #get attributes to compare
-                a = self.attribute_level(obj=h, compare=compare[0])
-                b = self.attribute_level(obj=q, compare=compare[1])
-                if a == b:
-                    if append_outer == True:
-                        yield h
-                    else:
-                        yield q
-
     def current_week_results(self, houses, model, update_field={}, **kwargs):
         """
-        fetches current week results, if there are none
+        Fetches current week results, if there are none
         then set the appropriate house attributes to false
+
+        Args:
+            self: The object instance.
+            houses: A queryset of the House class.
+            model: A model class.
+            update_field: A dictionary representing the attributes
+            of the model class.
+
+        Returns:
+            A generator object consisting of House objects of the customer.
+
+        Raises:
+            None.
         """
         for house in houses.iterator():
-            query_set_check = model.objects.filter(house=house, **kwargs)
-            if query_set_check:
+            if model.objects.filter(house=house, **kwargs).exists():
                 setattr(house, list(update_field.keys())[0], list(update_field.values())[0][0])
                 house.save(update_fields=[list(update_field.keys())[0]])
                 yield house
@@ -74,12 +60,35 @@ class Customer:
                 house.save(update_fields=[list(update_field.keys())[0]])
 
     """Attributes of Houses"""
-    #returns all houses that belong to the customer
     def houses(self):
+        """
+        Returns all houses that belong to the customer.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A queryset of the House class.
+
+        Raises:
+            None.
+        """
         return House.objects.filter(customer=self.customer)
 
-    #get total amount paid for each house
     def house_totals(self, houses, **kwargs):
+        """
+        Gets total amount paid for each house.
+
+        Args:
+            self: The object instance.
+            houses: Queryset of the House class.
+
+        Returns:
+            The total amount spent as a float type.
+
+        Raises:
+            None.
+        """
         for house in houses:
             #get all jobs for the current house
             jobs = Job.objects.filter(house=house, **kwargs)
@@ -92,24 +101,52 @@ class Customer:
             yield total
 
     def num_active_jobs(self):
+        """
+        Gets the number of active jobs for each house of the customer.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A generator object with integers representing the number
+            of active jobs for each house.
+
+        Raises:
+            None.
+        """
         for house in self.houses:
             #get all active jobs for the each house
             yield Job.objects.filter(house=house, house__customer=self.customer, approved=True, balance_amount__gt=0).count()
 
     def num_completed_jobs(self):
+        """
+        Gets the number of completed jobs for each house of the customer.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A generator object with integers representing the number
+            of completed jobs for each house.
+
+        Raises:
+            None.
+        """
         for house in self.houses:
             #get all active jobs for the each house
             yield Job.objects.filter(house=house, house__customer=self.customer, approved=True, balance_amount__lte=0).count()
 
     """Current(Active) Houses"""
     #returns houses that are activley being worked on by workers
-    def current_houses(self):
-        """compare house with active jobs to customer house
+    def active_houses(self):
+        """compare house with active jobs to customer house.
         if the houses are the same, then it is a current customer house"""
         sql = 'SELECT * FROM jobs_current_worker WHERE current=1 GROUP BY house_id'
-        current_houses = Current_Worker.objects.raw(sql)
+        all_current_workers = Current_Worker.objects.raw(sql)
 
-        return self.get_queryset(append_outer=True, houses=current_houses, queryset=self.houses, compare=[{1: 'house'}, {0: 0}])
+        for current_worker in all_current_workers:
+            if current_worker.house in self.houses:
+                yield current_worker.house
 
     #returns all approved jobs for houses for each customer
     def approved_jobs(self):
@@ -121,10 +158,25 @@ class Customer:
         return House.objects.filter(customer=self.customer, completed_jobs=True)
 
     #returns completed jobs
-    def completed_jobs(self):
-        return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0)
+    def completed_jobs(self, **kwargs):
+        return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0, **kwargs)
 
     """Current Week Results"""
+    def current_week_payments_all(self, **kwargs):
+        """
+        Gets all payments for the current week.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A generator.
+
+        Raises:
+            None.
+        """
+        return Request_Payment.objects.filter(house__customer=self.customer, job__approved=True, submit_date__range=[Customer.start_week, Customer.today], **kwargs)
+
     #returns all houses with payment requests for the last week
     def current_payment_requests_houses(self):
         """
@@ -135,10 +187,119 @@ class Customer:
         return self.current_week_results(houses=houses, model=Request_Payment, update_field={'pending_payments': [True, False]}, job__approved=True, approved=False, submit_date__range=[Customer.start_week, Customer.today])
 
     #returns all payment requests for the last week for approved jobs
-    def current_payment_requests(self):
-        return Request_Payment.objects.filter(job__approved=True, approved=False, submit_date__range=[Customer.start_week, Customer.today])
+    def current_payment_requests(self, **kwargs):
+        return Request_Payment.objects.filter(job__approved=True, approved=False, submit_date__range=[Customer.start_week, Customer.today], **kwargs)
 
-    """Payment History"""
+    def current_week_completed_houses(self):
+        """
+        Gets completed houses for the current week.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A generator.
+
+        Raises:
+            None.
+        """
+        houses = House.objects.filter(customer=self.customer, completed_jobs=True)
+        return self.current_week_results(houses=houses, model=Job, update_field={'completed_jobs': [True, False]}, house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0, start_date__range=[Customer.start_week, Customer.today])
+
+    def current_week_completed_jobs(self, **kwargs):
+        """
+        Gets completed jobs for the current week.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A queryset.
+
+        Raises:
+            None.
+        """
+        return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0, start_date__range=[Customer.start_week, Customer.today], **kwargs)
+
+    def current_week_rejected_job_houses(self):
+        """
+        Gets houses with rejected jobs for the current week.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A generator.
+
+        Raises:
+            None.
+        """
+        houses = House.objects.filter(customer=self.customer, rejected_jobs=True)
+        return self.current_week_results(houses=houses, model=Job, update_field={'rejected_jobs': [True, False]}, house__customer=self.customer, approved=False, rejected=True, start_date__range=[Customer.start_week, Customer.today])
+
+    def current_week_rejected_jobs(self, **kwargs):
+        """
+        Gets rejected jobs for the current week.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A queryset.
+
+        Raises:
+            None.
+        """
+        return Job.objects.filter(house__customer=self.customer, approved=False, rejected=True, start_date__range=[Customer.start_week, Customer.today], **kwargs)
+
+    def current_week_rejected_job_houses(self):
+        """
+        Gets houses with rejected payments for the current week.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A generator.
+
+        Raises:
+            None.
+        """
+        houses = House.objects.filter(customer=self.customer, rejected_payments=True)
+        return self.current_week_results(houses=houses, model=Job, update_field={'rejected_jobs': [True, False]}, house__customer=self.customer, approved=False, rejected=True, start_date__range=[Customer.start_week, Customer.today])
+
+    def current_week_rejected_payments_houses(self):
+        """
+        Gets all houses with rejected payments for the current week.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A generator.
+
+        Raises:
+            None.
+        """
+        houses = House.objects.filter(customer=self.customer, rejected_payments=True)
+        return self.current_week_results(houses=houses, model=Request_Payment, update_field={'rejected_payments': [True, False]}, house__customer=self.customer, approved=False, rejected=True, submit_date__range=[Customer.start_week, Customer.today])
+
+    def current_week_rejected_payments(self, **kwargs):
+        """
+        Gets rejected payments for the current week.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A queryset.
+
+        Raises:
+            None.
+        """
+        return Request_Payment.objects.filter(house__customer=self.customer, approved=False, rejected=True, submit_date__range=[Customer.start_week, Customer.today], **kwargs)
+
+    """Payments"""
     #returns all houses with a payment history for the last week
     def payment_history_houses(self):
         """
@@ -162,9 +323,5 @@ class Customer:
         return self.current_week_results(houses=houses, model=Job, update_field={'proposed_jobs': [True, False]}, approved=False, rejected=False, start_date__range=[Customer.start_week, Customer.today])
 
     #returns all proposed jobs submitted for the last week
-    def proposed_jobs(self):
-        return Job.objects.filter(house__customer=self.customer, approved=False, rejected=False, start_date__range=[Customer.start_week, Customer.today])
-
-    """All"""
-    def all_jobs(self):
-        return Job.objects.filter(house__customer=self.customer, start_date__range=[Customer.start_week, Customer.today])
+    def proposed_jobs(self, **kwargs):
+        return Job.objects.filter(house__customer=self.customer, approved=False, rejected=False, start_date__range=[Customer.start_week, Customer.today], **kwargs)
