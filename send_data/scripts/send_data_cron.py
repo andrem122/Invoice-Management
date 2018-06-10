@@ -43,7 +43,7 @@ def run():
         send_data_email(user_email=user.email, title='PAYMENT REQUESTS', headers=headers, queryset=payments, attributes=attributes, form_vals=form_vals, host=host)
         print('Email Sent')
 
-    elif path == '/payment_requests/approved_payments':
+    elif path == '/payments/':
         payments = customer.current_payments()
         headers = ['House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Contract Link']
         attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', 'approved_date', ['job', 'document_link']]

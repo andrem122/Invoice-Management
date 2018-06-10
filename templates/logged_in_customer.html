@@ -41,13 +41,7 @@
 		</a>
 	</li>
 	<li>
-		<a{% if request.path == '/payment_requests/unapproved_payments' %} class="active"{% endif %} href="/payment_requests/unapproved_payments">
-			<i class="fas fa-hand-holding-usd"></i>
-			Payment Requests
-		</a>
-	</li>
-	<li>
-		<a{% if request.path == '/payment_requests/approved_payments' %} class="active"{% endif %} href="/payment_requests/approved_payments">
+		<a{% if request.path == '/payments/' %} class="active"{% endif %} href="/payments">
 			<i class="far fa-credit-card"></i>
 			Payments for This Week
 		</a>
@@ -66,7 +60,7 @@
 	</li>
 {% else %}
 <li>
-	<a{% if request.path == '/payment_requests/approved_payments' %} class="active"{% endif %} href="/payment_requests/approved_payments">
+	<a{% if request.path == '/payments/' %} class="active"{% endif %} href="/payments">
 		<i class="far fa-credit-card"></i>
 		Payments for This Week
 	</a>

@@ -64,7 +64,7 @@ def register(request):
 
                 #redirect
                 if user_type is not None:
-                    return redirect('/payment_requests/approved_payments?new_user=True')
+                    return redirect('/payments?new_user=True')
                 else:
                     return redirect('/jobs?new_user=True')
 

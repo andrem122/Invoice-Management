@@ -71,7 +71,7 @@
                 <p>{{upload_document_form.errors}}</p>
               </div>
               {% endif %}
-              <input name="thank_you" value="/payment_requests/thank_you" type="hidden">
+              <input name="thank_you" value="/payments/thank_you" type="hidden">
               <input name="p_id" value="{{ payment.id }}" type="hidden">
               <input type="hidden" name="upload-document" value="upload-document">
             </form>
@@ -101,7 +101,7 @@
                     <span class="info-title">Company</span>
                     <li class="info-1">{{ payment.job.company }}</li>
                     <hr>
-                    {% if payment.document_link.url != None %}
+                    {% if payment.document_link.url != None and payment.rejected == False %}
                     <span class="info-title">Paid Link</span>
                     <li class="info-1">
                       <a rel="noopener noreferrer" target="_blank" href="{{ payment.document_link.url }}">

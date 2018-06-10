@@ -20,7 +20,7 @@ class Test_Payment_Requests(TestCase):
         self.c = Client()
         self.c.force_login(self.customer)
     def test_approved_payments_get(self):
-        response = self.c.get('/payment_requests/approved_payments')
+        response = self.c.get('/payments')
         self.assertEqual(response.status_code, 200)
     def test_approved_payments_by_worker(self):
         """
@@ -64,7 +64,7 @@ class Test_Payment_Requests(TestCase):
         job.save()
         payment.save()
 
-        response = self.c.post('/payment_requests/approved_payments', {'job_id': '1', 'p_id': '1'})
+        response = self.c.post('/payments', {'job_id': '1', 'p_id': '1'})
         #check if values are correct after POST request
         house = House.objects.get(pk=1)
         self.assertTrue(house.pending_payments)
@@ -95,7 +95,7 @@ class Test_Payment_Requests(TestCase):
         self.assertTrue(worker.current)
 
         #check redirection after POST request is successful
-        self.assertRedirects(response, '/payment_requests/approved_payments')
+        self.assertRedirects(response, '/payments')
 
     def test_approved_payments_by_code(self):
         """
@@ -139,7 +139,7 @@ class Test_Payment_Requests(TestCase):
         job.save()
         payment.save()
 
-        response = self.c.post('/payment_requests/approved_payments', {'job_id': '1', 'p_id': '1'})
+        response = self.c.post('/payments', {'job_id': '1', 'p_id': '1'})
         #check if values are correct after POST request
         house = House.objects.get(pk=1)
         self.assertFalse(house.pending_payments)
@@ -164,7 +164,7 @@ class Test_Payment_Requests(TestCase):
         self.assertFalse(worker)
 
         #check redirection after POST request is successful
-        self.assertRedirects(response, '/payment_requests/approved_payments')
+        self.assertRedirects(response, '/payments')
     def test_approved_payments_multiple_payments(self):
         """
         Test if values for house, job, payment, and current_worker
@@ -228,7 +228,7 @@ class Test_Payment_Requests(TestCase):
         house.save()
         job.save()
 
-        response = self.c.post('/payment_requests/approved_payments', {'job_id': '1', 'p_id': '2'})
+        response = self.c.post('/payments', {'job_id': '1', 'p_id': '2'})
         #check if values are correct after POST request
         house = House.objects.get(pk=1)
         self.assertTrue(house.pending_payments)
@@ -269,4 +269,4 @@ class Test_Payment_Requests(TestCase):
         self.assertTrue(worker.current)
 
         #check redirection after POST request is successful
-        self.assertRedirects(response, '/payment_requests/approved_payments')
+        self.assertRedirects(response, '/payments')
