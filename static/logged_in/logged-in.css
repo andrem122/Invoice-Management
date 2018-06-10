@@ -227,6 +227,12 @@ ul.item-headings {
   color: #4A87B6;
 }
 
+/* Option Forms */
+
+div.option-forms {
+  display: none;
+}
+
 /* Item Container */
 
 div.item-container {
@@ -331,6 +337,22 @@ div.item-container ul div.item-options-dropdown .dropdown-approved::after {
 
 div.item-container ul div.item-options-dropdown .dropdown-approved::before {
   left: 95px;
+}
+
+div.item-container ul div.item-options-dropdown .document_link_upload {
+  position: absolute;
+  top: 48px;
+  opacity: 0;
+  padding: 15px 0;
+}
+
+div.item-container ul.mobile-option-icons .document_link_upload-m {
+  position: absolute;
+  top: 103px;
+  padding: 30px 0;
+  width: 80px;
+  overflow: hidden;
+  opacity: 0;
 }
 
 div.item-container .info-group:first-child li:first-child {
@@ -453,14 +475,15 @@ div.item-container + h3.house-address {
     font-size: 29px;
   }
 
-  div.item-container ul.mobile-option-icons button.approve-job-option-m {
+  div.item-container ul.mobile-option-icons button.approve-option-m {
     color: #62a9f9;
   }
 
   div.item-container ul.mobile-option-icons button.approve-payment-option-m {
     color: #53d0c0;
   }
-  div.item-container ul.mobile-option-icons button.reject-job-option-m {
+
+  div.item-container ul.mobile-option-icons button.reject-option-m {
     color: #f76767;
   }
 

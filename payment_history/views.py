@@ -23,8 +23,6 @@ def p_history_job(request):
 
     #form logic
     if request.method == 'POST':
-        #get job ID from POST
-        job_id = int(request.POST.get('job_id'))
 
         #for payment history form
         if request.POST.get('v-payment-history'):
@@ -32,6 +30,9 @@ def p_history_job(request):
             payment_history_form = Payment_History_Form(request.POST)
 
             if payment_history_form.is_valid():
+
+                #get job ID from POST
+                job_id = int(request.POST.get('job_id'))
 
                 #get the job and house address associated with the payment
                 job = Job.objects.get(pk=job_id)
@@ -52,17 +53,15 @@ def p_history_job(request):
             payment = Request_Payment.objects.get(pk=p_id)
 
             #put the instance you want to update when the form saves into the form object
-            upload_document_form = Upload_Document_Form(data=request.FILES, instance=payment)
+            upload_document_form = Upload_Document_Form(request.POST, request.FILES, instance=payment)
 
             if upload_document_form.is_valid():
-                #get the form data
-                document_link = upload_document_form.cleaned_data['document_link']
 
                 #update the document_link for the specific payment instance
                 upload_document_form.save()
 
                 redirect_url = request.POST.get('thank_you', None)
-                if redirect_url is not None:
+                if redirect_url != None:
                     return redirect(redirect_url)
                 else:
                     return redirect('/payment_history/thank_you')

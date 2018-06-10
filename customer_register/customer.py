@@ -235,7 +235,15 @@ class Customer:
             None.
         """
         houses = House.objects.filter(customer=self.customer, rejected_jobs=True)
-        return self.current_week_results(houses=houses, model=Job, update_field={'rejected_jobs': [True, False]}, house__customer=self.customer, approved=False, rejected=True, start_date__range=[Customer.start_week, Customer.today])
+        return self.current_week_results(
+            houses=houses,
+            model=Job,
+            update_field={'rejected_jobs': [True, False]},
+            house__customer=self.customer,
+            approved=False,
+            rejected=True,
+            start_date__range=[Customer.start_week, Customer.today]
+        )
 
     def current_week_rejected_jobs(self, **kwargs):
         """
@@ -250,25 +258,15 @@ class Customer:
         Raises:
             None.
         """
-        return Job.objects.filter(house__customer=self.customer, approved=False, rejected=True, start_date__range=[Customer.start_week, Customer.today], **kwargs)
+        return Job.objects.filter(
+            house__customer=self.customer,
+            approved=False,
+            rejected=True,
+            start_date__range=[Customer.start_week, Customer.today],
+            **kwargs
+        )
 
-    def current_week_rejected_job_houses(self):
-        """
-        Gets houses with rejected payments for the current week.
-
-        Args:
-            self: The object instance.
-
-        Returns:
-            A generator.
-
-        Raises:
-            None.
-        """
-        houses = House.objects.filter(customer=self.customer, rejected_payments=True)
-        return self.current_week_results(houses=houses, model=Job, update_field={'rejected_jobs': [True, False]}, house__customer=self.customer, approved=False, rejected=True, start_date__range=[Customer.start_week, Customer.today])
-
-    def current_week_rejected_payments_houses(self):
+    def current_week_rejected_payment_houses(self):
         """
         Gets all houses with rejected payments for the current week.
 
@@ -282,7 +280,14 @@ class Customer:
             None.
         """
         houses = House.objects.filter(customer=self.customer, rejected_payments=True)
-        return self.current_week_results(houses=houses, model=Request_Payment, update_field={'rejected_payments': [True, False]}, house__customer=self.customer, approved=False, rejected=True, submit_date__range=[Customer.start_week, Customer.today])
+        return self.current_week_results(houses=houses,
+            model=Request_Payment,
+            update_field={'rejected_payments': [True, False]},
+            house__customer=self.customer,
+            approved=False,
+            rejected=True,
+            submit_date__range=[Customer.start_week, Customer.today]
+        )
 
     def current_week_rejected_payments(self, **kwargs):
         """
@@ -313,7 +318,7 @@ class Customer:
         return Request_Payment.objects.filter(house__customer=self.customer)
 
     #returns all approved payments for the last week
-    def current_payments(self):
+    def current_week_approved_payments(self):
         return Request_Payment.objects.filter(house__customer=self.customer, job__approved=True, approved=True, approved_date__range=[Customer.start_week, Customer.today])
 
     """Proposed Jobs"""
@@ -323,5 +328,5 @@ class Customer:
         return self.current_week_results(houses=houses, model=Job, update_field={'proposed_jobs': [True, False]}, approved=False, rejected=False, start_date__range=[Customer.start_week, Customer.today])
 
     #returns all proposed jobs submitted for the last week
-    def proposed_jobs(self, **kwargs):
+    def current_week_proposed_jobs(self, **kwargs):
         return Job.objects.filter(house__customer=self.customer, approved=False, rejected=False, start_date__range=[Customer.start_week, Customer.today], **kwargs)

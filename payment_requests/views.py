@@ -8,6 +8,7 @@ from project_management.decorators import customer_and_staff_check
 from customer_register.customer import Customer
 from django.core.mail import send_mail
 from payment_history.forms import Upload_Document_Form
+from django.core.exceptions import ObjectDoesNotExist
 from send_data.forms import Send_Data
 from itertools import chain
 import datetime
@@ -20,7 +21,7 @@ def approved_payments(request):
     #get all rejected houses, houses with a payment history, and pending payments for the current week
     payment_history_houses = customer.payment_history_houses()
     payment_request_houses = customer.current_payment_requests_houses()
-    rejected_payment_houses = customer.current_week_rejected_payments_houses()
+    rejected_payment_houses = customer.current_week_rejected_payment_houses()
 
     #get all payments for current week
     payments = customer.current_week_payments_all()
@@ -61,14 +62,10 @@ def approved_payments(request):
                 payment = Request_Payment.objects.get(pk=p_id)
                 job = payment.job
                 house = job.house
-                request_amount = payment.amount
-
-                #add to the total_paid column for the job
-                new_total_paid = job.total_paid + request_amount
 
                 """update approved column to True and set approved_date to the time the payment was
                 approved and update the total_paid column for the job"""
-                job.total_paid = new_total_paid
+                job.total_paid = job.total_paid + payment.amount
                 job.save(update_fields=['total_paid'])
                 job.balance_amount = job.balance #update the balance
                 job.save(update_fields=['balance_amount'])
@@ -95,8 +92,10 @@ def approved_payments(request):
                 if not Request_Payment.objects.filter(house=house, approved=False).exists():
                     house.pending_payments = False
                 if not Job.objects.filter(company=job.company, house=job.house, balance_amount__gt=0).exists():
-                    worker = Current_Worker.objects.get(company=job.company, house=job.house)
-                    worker.delete()
+                    try:
+                        Current_Worker.objects.get(company=job.company, house=job.house)
+                    except ObjectDoesNotExist as e:
+                        print(e)
 
                 house.save(update_fields=['pending_payments', 'payment_history', 'completed_jobs'])
 
@@ -126,16 +125,15 @@ def approved_payments(request):
                 #get objects
                 payment = Request_Payment.objects.get(pk=p_id)
                 job = payment.job
-                house = House.objects.get(pk=int(job.house.id))
-                request_amount = payment.amount
+                house = job.house
 
                 #find new total paid for job
-                total_paid = job.total_paid
-                new_total_paid = float(total_paid) - float(request_amount)
-                job.total_paid = new_total_paid
-                job.save(update_fields=['total_paid']) #update database value so the balance can be calculated
-                job.balance_amount = job.balance #update the balance
-                job.save(update_fields=['balance_amount'])
+
+                if job.balance_amount < job.start_amount:
+                    job.total_paid = job.total_paid - payment.amount
+                    job.save(update_fields=['total_paid']) #update database value so the balance can be calculated
+                    job.balance_amount = job.balance #update the balance
+                    job.save(update_fields=['balance_amount'])
 
                 if payment.requested_by_worker == False:
                     payment.delete()
@@ -146,6 +144,7 @@ def approved_payments(request):
                     payment.approved = False
                     payment.rejected = True
                     house.pending_payments = True
+                    house.rejected_payments = True
 
                 #if job balance greater than zero after rejection, add as current worker
                 if job.balance_amount > 0 and payment.requested_by_worker == True:
@@ -157,7 +156,7 @@ def approved_payments(request):
                 job.save(update_fields=['approved', 'rejected'])
 
                 if payment.requested_by_worker == True:
-                    payment.save(update_fields=['approved'])
+                    payment.save(update_fields=['approved', 'rejected'])
 
                 """
                 if no more completed jobs for the house, set completed_jobs=False
@@ -165,13 +164,17 @@ def approved_payments(request):
                 if not Job.objects.filter(house=house, approved=True, balance_amount__lte=0).exists():
                     house.completed_jobs = False
 
-                """if there are no more approved payments for a house,
-                set payment_history=False for the house
+                """if there are no more rejected or approved payments for the house,
+                set payment_history/rejected_payments=False for the house
                 """
                 if not Request_Payment.objects.filter(house=house, approved=True).exists():
                     house.payment_history = False
 
-                house.save(update_fields=['pending_payments', 'payment_history', 'completed_jobs', 'proposed_jobs'])
+                if not customer.current_week_rejected_payments(house=house).exists():
+                    house.rejected_payments = False
+                    house.save(update_fields=['rejected_payments'])
+
+                house.save()
 
                 return redirect('/payment_requests/approved_payments')
 

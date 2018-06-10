@@ -12,6 +12,20 @@ from django.core.exceptions import ObjectDoesNotExist
 from customer_register.customer import Customer
 from itertools import chain
 
+def send_approval_mail(user, job_object, subject):
+    message = """Hi {},\n\nYour job at {} for ${} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems
+    """.format(job_object.company.get_username(), job_object.house.address, job_object.start_amount)
+    try:
+        send_mail(
+            subject,
+            message,
+            user.email,
+            [job_object.company.email],
+            fail_silently=False,
+        )
+    except:
+        print('Email has failed')
+
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def index(request):
     #get current user
@@ -25,7 +39,7 @@ def index(request):
     rejected_houses = customer.current_week_rejected_job_houses()
 
     #get estimates, approved, completed, and rejected jobs
-    estimates = customer.proposed_jobs()
+    estimates = customer.current_week_proposed_jobs()
     approved_jobs = customer.approved_jobs()
     completed_jobs = customer.current_week_completed_jobs()
     rejected_jobs = customer.current_week_rejected_jobs()
@@ -85,46 +99,23 @@ def index(request):
                 job.rejected = False
                 job.save(update_fields=['approved', 'rejected'])
 
-                """add the user as a current worker on the house OR update current to True if they
-                were a current worker OR do nothing if they are already active"""
-                was_current = Current_Worker.objects.filter(house=house, company=job.company, current=False)
-                is_current = Current_Worker.objects.filter(house=house, company=job.company, current=True)
-                if was_current:
-                    was_current[0].update(current=True)
-                elif is_current:
-                    pass
-                else:
-                    Current_Worker(house=house, company=job.company, current=True).save()
+                #add the user as a current worker on the house OR do nothing if they are already active
+                Current_Worker.objects.get_or_create(house=house, company=job.company, current=True)
 
-                """If the house has no more proposed jobs for the current week,
-                set proposed_jobs=False
-                AND if there were any requested payments because the job was previously approved,
-                set pending=payments=True for the house"""
-
-                if not Job.objects.filter(house=house, approved=False, start_date__range=[Customer.start_week, Customer.today]).exists():
-                    house.proposed_jobs = False
-                    house.save(update_fields=['proposed_jobs'])
-                if Request_Payment.objects.filter(house=house, job=job, approved=False).exists():
+                if customer.current_payment_requests().exists(): #check if house has payment requests for current week
                     house.pending_payments = True
                     house.save(update_fields=['pending_payments'])
-                if not customer.proposed_jobs(house=house).exists():
+
+                if customer.current_week_approved_payments().exists(): #check if house has approved payments for current week
+                    house.payment_history = True
+                    house.save(update_fields=['payment_history'])
+
+                if not customer.current_week_proposed_jobs(house=house).exists(): #check if house has estimates for current week
                     house.proposed_jobs = False
                     house.save(update_fields=['proposed_jobs'])
 
                 #send approval email
-                message = """Hi {},\n\nYour job at {} for ${} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems
-                """.format(job.company.get_username(), job.house.address, job.start_amount)
-                try:
-                    send_mail(
-                        'Job Approved!',
-                        message,
-                        current_user.email,
-                        [job.company.email],
-                        fail_silently=False,
-                    )
-                except:
-                    print('Email has failed')
-
+                send_approval_mail(current_user, job, 'Job Approved!')
                 return redirect('/jobs_admin/')
 
         elif request.POST.get('approve-as-payment'):
@@ -157,23 +148,12 @@ def index(request):
                 if job.balance <= 0:
                     house.completed_jobs = True
                     house.save(update_fields=['completed_jobs'])
-                if not customer.proposed_jobs(house=house).exists():
+                if not customer.current_week_proposed_jobs(house=house).exists():
                     house.proposed_jobs = False
                     house.save(update_fields=['proposed_jobs'])
 
                 #send approval email to worker
-                message = """Hi {},\n\nA payment of ${} for your job at {} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems
-                """.format(job.company.get_username(), job.start_amount, job.house.address)
-                try:
-                    send_mail(
-                        'Payment Approved!',
-                        message,
-                        current_user.email,
-                        [job.company.email],
-                        fail_silently=False,
-                    )
-                except:
-                    print('Email has failed')
+                send_approval_mail(current_user, job, 'Payment Approved!')
 
         elif request.POST.get('reject_estimate'):
             reject_estimate_form = Reject_Estimate(request.POST)
@@ -210,7 +190,7 @@ def index(request):
                     except ObjectDoesNotExist as e:
                         print(e)
 
-                if not customer.proposed_jobs(house=house).exists():
+                if not customer.current_week_proposed_jobs(house=house).exists():
                     house.proposed_jobs = False
                     house.save(update_fields=['proposed_jobs'])
                 if not customer.completed_jobs(house=house).exists():
