@@ -161,7 +161,7 @@ class Customer:
 
     #returns completed jobs
     def completed_jobs(self, **kwargs):
-        return Job.objects.filter(house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0, **kwargs)
+        return Job.objects.filter(house__customer=self.customer, approved=True, balance_amount__lte=0, **kwargs)
 
     """Current Week Results"""
     def current_week_payments_all(self, **kwargs):
