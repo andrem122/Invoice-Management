@@ -50,7 +50,7 @@
     </div>
     {% endif %}
     {% for job in jobs %}
-      {% if job.house.address == house.address %}
+      {% if job.house == house %}
         {# Item Options Forms #}
         {% if current_user|in_group:'Customers' %}
         <div class="option-forms">

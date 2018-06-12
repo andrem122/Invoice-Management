@@ -47,7 +47,7 @@ def index(request):
 
     #combine querysets and keep unique values for houses
     houses = set(chain(active_houses, estimate_houses, completed_houses, rejected_houses))
-    jobs = chain(estimates, approved_jobs, completed_jobs, rejected_jobs)
+    jobs = list(chain(estimates, approved_jobs, completed_jobs, rejected_jobs))
 
     start_week = str(Customer.start_week.date())
     today = str(Customer.today.date())
