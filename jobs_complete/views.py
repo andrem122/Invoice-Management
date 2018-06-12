@@ -16,7 +16,6 @@ def customer(request):
 
     houses = customer.completed_houses()
     completed_jobs = customer.completed_jobs()
-    totals = customer.house_totals(houses=houses, house__completed_jobs=True, approved=True, balance_amount__lte=0)
 
     #forms and templates
     payment_history_form = Payment_History_Form()
@@ -26,7 +25,6 @@ def customer(request):
     context = {
         'houses': houses,
         'completed_jobs': completed_jobs,
-        'totals': totals,
         'current_user': current_user,
         'payment_history_form': payment_history_form,
         'send_data_form': send_data_form,

@@ -155,7 +155,9 @@ class Customer:
     """Completed"""
     #returns all houses with completed jobs
     def completed_houses(self):
-        return House.objects.filter(customer=self.customer, completed_jobs=True)
+        for house in self.houses:
+            if Job.objects.filter(house=house, approved=True, balance_amount__lte=0).exists():
+                yield house
 
     #returns completed jobs
     def completed_jobs(self, **kwargs):
