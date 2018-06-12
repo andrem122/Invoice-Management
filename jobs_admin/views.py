@@ -154,6 +154,7 @@ def index(request):
 
                 #send approval email to worker
                 send_approval_mail(current_user, job, 'Payment Approved!')
+                return redirect('/jobs_admin/')
 
         elif request.POST.get('reject_estimate'):
             reject_estimate_form = Reject_Estimate(request.POST)
@@ -196,6 +197,8 @@ def index(request):
                 if not customer.completed_jobs(house=house).exists():
                     house.completed_jobs = False
                     house.save(update_fields=['completed_jobs'])
+
+                return redirect('/jobs_admin/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
