@@ -52,7 +52,7 @@ def send_data(request):
                     send_data_email(user_email=current_user.email, title='ESTIMATES', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
 
                 elif path == '/payment_requests/unapproved_payments':
-                    payments = customer.current_payment_requests()
+                    payments = customer.current_week_payment_requests()
                     headers = ['House', 'Company', 'Amount', 'Submit Date', 'Contract Link']
                     attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', ['job', 'document_link']]
                     send_data_email(user_email=current_user.email, title='PAYMENT REQUESTS', headers=headers, queryset=payments, attributes=attributes, form_vals=form_vals, host=host)

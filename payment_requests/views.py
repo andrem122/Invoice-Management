@@ -18,8 +18,8 @@ def payments(request):
     customer = Customer(current_user)
 
     #get all rejected houses, houses with a payment history, and pending payments for the current week
-    payment_history_houses = customer.payment_history_houses()
-    payment_request_houses = customer.current_payment_requests_houses()
+    payment_history_houses = customer.current_week_payment_history_houses()
+    payment_request_houses = customer.current_week_payment_requests_houses()
     rejected_payment_houses = customer.current_week_rejected_payment_houses()
 
     #get all payments for current week

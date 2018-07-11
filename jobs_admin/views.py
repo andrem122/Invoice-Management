@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import redirect
 from jobs.models import Job, Current_Worker, House, Request_Payment
-from payment_history.forms import Payment_History_Form
 from .forms import Approve_Job, Approve_As_Payment, Reject_Estimate
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
@@ -102,7 +101,7 @@ def index(request):
                 #add the user as a current worker on the house OR do nothing if they are already active
                 Current_Worker.objects.get_or_create(house=house, company=job.company, current=True)
 
-                if customer.current_payment_requests().exists(): #check if house has payment requests for current week
+                if customer.current_week_payment_requests().exists(): #check if house has payment requests for current week
                     house.pending_payments = True
                     house.save(update_fields=['pending_payments'])
 
@@ -128,9 +127,10 @@ def index(request):
                 job = Job.objects.get(pk=job_id)
                 house = job.house
 
+                #amount requested for payment of job
                 amount = float(job.start_amount)
 
-                #add payment to database
+                #add payment object to database
                 Request_Payment.objects.create(job=job, house=house, amount=amount, approved=True)
 
                 #update total paid for job
