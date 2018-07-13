@@ -92,6 +92,10 @@ body .job-info td:last-child input[type="submit"] {
   opacity: 1 !important;
 }
 
+.display-none {
+  display: none !important;
+}
+
 /* Buttons in Options Container */
 @media all and (max-width: 385px) {
   .btn-options-container .btn {
