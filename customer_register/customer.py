@@ -517,3 +517,22 @@ class Customer:
             start_date__range=[Customer.start_week, Customer.today],
             **kwargs
         )
+
+    """Expenses"""
+    def expenses_houses(self):
+        """
+        Gets all houses with expenses.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A queryset.
+
+        Raises:
+            None.
+        """
+        return House.objects.filter(
+            customer=self.customer,
+            expenses=True
+        )

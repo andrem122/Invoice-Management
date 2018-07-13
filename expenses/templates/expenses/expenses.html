@@ -33,48 +33,36 @@
       </ul>
     </div>
     {% endif %}
-    {% for job in jobs %}
-      {% if job.house == house %}
+    {% for expense in expenses %}
+      {% if expense.house == house %}
         {# Item Options Forms #}
         {% if current_user|in_group:'Customers' %}
         <div class="option-forms">
-          {# Approve Job Form #}
-          <form id="approve-job-form-{{job.id}}" class="approve-job-form" action="" method="post">
+
+          {# Change Expense Amount #}
+          <form id="change_exp_form_{{expense.id}}" class="change_exp_form" action="" method="post">
             {% csrf_token %}
-            {% if approve_form.errors %}
+            {% if change_exp_form.errors %}
             <div class="form-messages">
               <p>Please try again.</p>
             </div>
             {% endif %}
-            {{approve_form}}
-            <input type="hidden" name="job_id" value="{{job.id}}">
-            <input type="hidden" name="approve_job" value="approve_job">
+            {{change_exp_form}}
+            <input type="hidden" name="expense_id" value="{{expense.id}}">
+            <input type="hidden" name="change_exp_form" value="change_exp_form">
           </form>
 
-          {# Approve As Payment Form #}
-          <form id="approve-as-payment-form-{{job.id}}" class="approve-as-payment-form" action="" method="post">
+          {# Delete Expense #}
+          <form id="delete_exp_form_{{job.id}}" class="delete_exp_form" action="" method="post">
             {% csrf_token %}
-            {% if approve_as_payment_form.errors %}
+            {% if delete_exp_form.errors %}
             <div class="form-messages">
               <p>Please try again.</p>
             </div>
             {% endif %}
-            {{approve_as_payment_form}}
-            <input type="hidden" name="job_id" value="{{job.id}}">
-            <input type="hidden" name="approve-as-payment" value="approve-as-payment">
-          </form>
-
-          {# Reject Form #}
-          <form id="reject-form-{{job.id}}" class="reject-form" action="" method="post">
-            {% csrf_token %}
-            {% if reject_estimate_form.errors %}
-            <div class="form-messages">
-              <p>Please try again.</p>
-            </div>
-            {% endif %}
-            {{reject_estimate_form}}
-            <input type="hidden" name="job_id" value="{{job.id}}">
-            <input type="hidden" name="reject_estimate" value="reject_estimate">
+            {{delete_exp_form}}
+            <input type="hidden" name="expense_id" value="{{expense.id}}">
+            <input type="hidden" name="delete_exp_form" value="delete_exp_form">
           </form>
         </div>
         {% endif %}
