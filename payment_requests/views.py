@@ -17,15 +17,20 @@ def payments(request):
     current_user = request.user
     customer = Customer(current_user)
 
-    #get all rejected houses, houses with a payment history, and pending payments for the current week
+    """
+    get all rejected houses, houses with a payment history, pending payments,
+    and expenses for the current week
+    """
     payment_history_houses = customer.current_week_payment_history_houses()
     payment_request_houses = customer.current_week_payment_requests_houses()
     rejected_payment_houses = customer.current_week_rejected_payment_houses()
+    expenses_houses = customer.expenses_houses()
 
-    #get all payments for current week
+    #get all payments and expenses for current week
     payments = customer.current_week_payments_all()
+    expenses = customer.current_week_expenses()
 
-    #combine querysets and keep unique houses
+    #combine querysets and keep unique items
     houses = set(chain(payment_history_houses, payment_request_houses, rejected_payment_houses))
 
     #get an empty form
@@ -40,6 +45,8 @@ def payments(request):
     context = {
         'houses': houses,
         'payments': payments,
+        'expenses': expenses,
+        'expenses_houses': expenses_houses,
         'current_user': current_user,
         'change_payment_status_form': change_payment_status_form,
         'upload_document_form': upload_document_form,

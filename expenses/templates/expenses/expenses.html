@@ -6,11 +6,7 @@
 
 {% block title %}Estimates{% endblock title %}
 
-{% block scripts %}
-<script type="text/javascript" src="{% static 'jobs_admin/jobs_admin.js' %}" defer></script>
-{% endblock scripts %}
-
-{% block page_title %}Jobs{% endblock page_title %}
+{% block page_title %}Expenses{% endblock page_title %}
 
 {% block item_loop %}
   {% for house in houses %}
@@ -20,12 +16,11 @@
       <ul class="item-headings row">
         <div class="col col-sm-6">
           <li>Status</li>
-          <li class="second-heading">Company</li>
-          <li>Balance</li>
+          <li class="second-heading">Type</li>
         </div>
         <div class="col col-sm-4">
           <li class="contract_link">Contract Link</li>
-          <li>Submitted</li>
+          <li>Date Added</li>
         </div>
         <div class="col col-sm-2">
           <li>Amount</li>
@@ -38,22 +33,8 @@
         {# Item Options Forms #}
         {% if current_user|in_group:'Customers' %}
         <div class="option-forms">
-
-          {# Change Expense Amount #}
-          <form id="change_exp_form_{{expense.id}}" class="change_exp_form" action="" method="post">
-            {% csrf_token %}
-            {% if change_exp_form.errors %}
-            <div class="form-messages">
-              <p>Please try again.</p>
-            </div>
-            {% endif %}
-            {{change_exp_form}}
-            <input type="hidden" name="expense_id" value="{{expense.id}}">
-            <input type="hidden" name="change_exp_form" value="change_exp_form">
-          </form>
-
           {# Delete Expense #}
-          <form id="delete_exp_form_{{job.id}}" class="delete_exp_form" action="" method="post">
+          <form id="delete_exp_form_{{ expense.id }}" class="delete_exp_form" action="" method="post">
             {% csrf_token %}
             {% if delete_exp_form.errors %}
             <div class="form-messages">
@@ -61,7 +42,7 @@
             </div>
             {% endif %}
             {{delete_exp_form}}
-            <input type="hidden" name="expense_id" value="{{expense.id}}">
+            <input type="hidden" name="expense_id" value="{{ expense.id }}">
             <input type="hidden" name="delete_exp_form" value="delete_exp_form">
           </form>
         </div>
@@ -73,37 +54,24 @@
               <div class="info-group col col-sm-6">
                 <ul>
                   <li>
-                    {# Job Status #}
-                    {% if job.approved == False and job.rejected == False %}
-                    <div class="status new">New</div>
-                    {% elif job.approved == True and job.balance > 0 %}
-                    <div class="status active">Active</div>
-                    {% elif job.approved == True %}
-                    <div class="status approved">Approved</div>
-                    {% elif job.rejected == True %}
-                    <div class="status rejected">Rejected</div>
-                    {% endif %}
+                    {# Status #}
+                    <div class="status expense">Expense</div>
                   </li>
-                  <span class="info-title">Company</span>
-                  <li class="info-1">{{ job.company }}</li>
+                  <span class="info-title">Expense Type</span>
+                  <li class="info-1">{{ expense.expense_type }}</li>
                   <hr>
-                  {% if job.approved == True %}
-                  <span class="info-title">Balance</span>
-                  <li class="info-1">${{ job.balance_amount|intcomma }}</li>
-                  <hr>
-                  {% endif %}
                 </ul>
               </div>
               <div class="info-group col col-sm-4">
                 <ul>
                   <span class="info-title">Contract</span>
                   <li class="info-2">
-                    <a rel="noopener noreferrer" target="_blank" href="{{ job.document_link.url }}">View Contract</a>
+                    <a rel="noopener noreferrer" target="_blank" href="{{ expense.document_link.url }}">View Contract</a>
                   </li>
                   <hr>
                   <span class="info-title">Submitted</span>
                   <li class="info-3">
-                    {{ job.start_date|date:'M j, g:i a' }}
+                    {{ expense.submit_date|date:'M j, g:i a' }}
                   </li>
                   <hr>
                 </ul>
@@ -112,44 +80,17 @@
                 {% if current_user|in_group:'Customers' %}
                 <ul>
                   <span class="info-title">Amount</span>
-                  <li class="info-4">${{ job.start_amount|intcomma }}</li>
+                  <li class="info-4">${{ expense.amount|intcomma }}</li>
                   <hr>
                   {# Mobile Option Buttons #}
                   <ul class="list-inline mobile-option-icons">
-                    {% if job.approved == True %}
+
                     <li class="list-inline-item">
-                      <button type="submit" form="reject-form-{{job.id}}" class="reject-option-m">
-                        <i class="fas fa-times"></i>
+                      <button type="submit" form="delete_exp_form_{{ expense.id }}" class="delete-option-m">
+                        <i class="far fa-trash-alt"></i>
                       </button>
                     </li>
-                    {% elif job.rejected == True %}
-                    <li class="list-inline-item approve-payment-option-m">
-                      <button type="submit" form="approve-as-payment-form-{{job.id}}" class="approve-payment-option-m">
-                        <i class="far fa-money-bill-alt"></i>
-                      </button>
-                    </li>
-                    <li class="list-inline-item">
-                      <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-option-m">
-                        <i class="fas fa-check"></i>
-                      </button>
-                    </li>
-                    {% else %}
-                    <li class="list-inline-item">
-                      <button type="submit" form="reject-form-{{job.id}}" class="reject-option-m">
-                        <i class="fas fa-times"></i>
-                      </button>
-                    </li>
-                    <li class="list-inline-item">
-                      <button type="submit" form="approve-as-payment-form-{{job.id}}" class="approve-payment-option-m">
-                        <i class="far fa-money-bill-alt"></i>
-                      </button>
-                    </li>
-                    <li class="list-inline-item">
-                      <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-option-m">
-                        <i class="fas fa-check"></i>
-                      </button>
-                    </li>
-                    {% endif %}
+
                   </ul>
                   {# Desktop Options #}
                   <div class="item-options-dropdown dropdown">
@@ -158,17 +99,8 @@
                       <i class="fas fa-ellipsis-v"></i>
                     </a>
 
-                    <div class="dropdown-menu{% if job.approved == True %} dropdown-approved{% else %} dropdown-new{% endif %}">
-                      {% if job.approved == True %}
-                			<button type="submit" form="reject-form-{{job.id}}" class="dropdown-item reject-btn">Reject</button>
-                      {% elif job.rejected == True %}
-                      <button type="submit" form="approve-as-payment-form-{{job.id}}" class="dropdown-item approve-payment-option">Approve Payment</button>
-                      <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-job-option">Approve Job</button>
-                      {% else %}
-                      <button type="submit" form="approve-as-payment-form-{{job.id}}" class="dropdown-item approve-payment-option">Approve Payment</button>
-                      <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-job-option">Approve Job</button>
-                      <button type="submit" form="reject-form-{{job.id}}" class="dropdown-item reject-job-option">Reject</button>
-                      {% endif %}
+                    <div class="dropdown-menu">
+                      <button type="submit" form="delete_exp_form_{{ expense.id }}" class="dropdown-item delete-exp-option">Delete</button>
                 		</div>
 
                   </div>

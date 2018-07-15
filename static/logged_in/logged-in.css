@@ -282,6 +282,10 @@ div.item-container .status.active {
   background-color: #303B57;
 }
 
+div.item-container .status.expense {
+  background-color: #8e52fd;
+}
+
 div.item-container ul {
   padding: 0;
   list-style: none;

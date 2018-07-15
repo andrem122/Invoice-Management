@@ -15,6 +15,7 @@ def index(request):
         proposed_jobs = customer.proposed_jobs()
         completed_jobs = customer.completed_jobs()
         all_payments = customer.all_payments()
+        expenses = customer.all_expenses()
 
         #form logic
         if request.method == 'POST':
@@ -57,6 +58,11 @@ def index(request):
                 headers = ['House', 'Company', 'Submit Date', 'Date Approved', 'Amount', 'Approved']
                 attributes = ['house', ['job', 'company'], 'submit_date', 'approved_date', 'amount', 'approved']
                 write_to_csv(title='ALL PAYMENTS', headers=headers, queryset=all_payments, attributes=attributes)
+
+                #expenses
+                headers = ['House', 'Expense Type', 'Amount',  'Date Added']
+                attributes = ['house', 'expense_type', 'amount', 'submit_date']
+                write_to_csv(title='EXPENSES', headers=headers, queryset=expenses, attributes=attributes)
 
                 return response
 

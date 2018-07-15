@@ -1,0 +1,38 @@
+{% extends 'logged_in_customer.html' %}
+{% load static %}
+{% block title %}Add Expenses{% endblock title %}
+{% block body_class %}add_house{% endblock body_class %}
+{% block content %}
+<div class="form-wrapper">
+  <div class="panel-heading">
+    <h3 id="add-expense-heading">Add Expense</h3>
+    <p id="add-expense-desc">
+      Add expenses by inputing an amount,
+      choosing a type, and uploading a file.
+    </p>
+    <hr>
+  </div>
+  <div class="panel-body">
+    <form id="add-expense-form" action="" method="post" role="form" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message}}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if add_expense_form.errors %}
+      <div class="form-messages">
+        <p>{{add_expense_form.errors}}</p>
+      </div>
+      {% endif %}
+
+      {{add_expense_form}}
+      <input class="btn btn-primary" type="submit" value="Add Expense">
+    </form>
+  </div>
+</div>
+{% endblock content %}

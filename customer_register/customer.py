@@ -1,4 +1,5 @@
 from jobs.models import Job, Current_Worker, House, Request_Payment
+from expenses.models import Expenses
 from django.contrib.auth.models import User
 import datetime
 import pytz
@@ -77,7 +78,7 @@ class Customer:
 
     def house_totals(self, houses, **kwargs):
         """
-        Gets total amount paid for each house.
+        Gets total amount paid in jobs and expenses for each house.
 
         Args:
             self: The object instance.
@@ -92,11 +93,15 @@ class Customer:
         for house in houses:
             #get all jobs for the current house
             jobs = Job.objects.filter(house=house, **kwargs)
+            expenses = Expenses.objects.filter(house=house)
 
             #add total_paid to total for each job
             total = 0
             for job in jobs:
                 total += job.total_paid
+
+            for expense in expenses:
+                total += expense.amount
 
             yield total
 
@@ -535,4 +540,40 @@ class Customer:
         return House.objects.filter(
             customer=self.customer,
             expenses=True
+        )
+
+    def all_expenses(self):
+        """
+        Gets all expenses.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A queryset.
+
+        Raises:
+            None.
+        """
+        return Expenses.objects.filter(
+            customer=self.customer,
+        )
+
+    def current_week_expenses(self, **kwargs):
+        """
+        Gets all expenses submitted in the current week.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A queryset.
+
+        Raises:
+            None.
+        """
+        return Expenses.objects.filter(
+            house__customer=self.customer,
+            submit_date__range=[Customer.start_week, Customer.today],
+            **kwargs
         )

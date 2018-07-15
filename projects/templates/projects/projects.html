@@ -39,12 +39,12 @@
           <ul>
             <span class="info-title">Active Jobs</span>
             <li class="info-2 active_jobs">
-              <a{% if num_active_jobs > 0 %} href="/jobs_admin#{{house.address|add_dashes}}"{% endif %}><span>{{num_active_jobs}}</span> Jobs</a>
+              <a{% if num_active_jobs > 0 %} href="/jobs-admin#{{house.address|add_dashes}}"{% endif %}><span>{{num_active_jobs}}</span> Jobs</a>
             </li>
             <hr>
             <span class="info-title">Completed Jobs</span>
             <li class="info-3">
-              <a{% if num_completed_jobs > 0 %} href="/jobs_complete#{{house.address|add_dashes}}"{% endif %}><span>{{num_completed_jobs}}</span> Jobs</a>
+              <a{% if num_completed_jobs > 0 %} href="/jobs-complete#{{house.address|add_dashes}}"{% endif %}><span>{{num_completed_jobs}}</span> Jobs</a>
             </li>
             <hr>
           </ul>

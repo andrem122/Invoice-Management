@@ -35,7 +35,7 @@
 {% block menu_options %}
 {% if current_user|in_group:'Customers' %}
 	<li>
-		<a{% if request.path == '/jobs_admin/' %} class="active"{% endif %} href="/jobs_admin/">
+		<a{% if request.path == '/jobs-admin/' %} class="active"{% endif %} href="/jobs-admin/">
 			<i class="fas fa-clipboard-list"></i>
 			Jobs
 		</a>
@@ -47,9 +47,15 @@
 		</a>
 	</li>
 	<li>
-		<a{% if request.path == '/jobs_complete/' %} class="active"{% endif %} href="/jobs_complete">
+		<a{% if request.path == '/jobs-complete/' %} class="active"{% endif %} href="/jobs-complete">
 			<i class="fas fa-check"></i>
 			Completed Jobs
+		</a>
+	</li>
+	<li>
+		<a{% if request.path == '/expenses/' %} class="active"{% endif %} href="/expenses">
+			<i class="fas fa-file-invoice-dollar"></i>
+			Expenses
 		</a>
 	</li>
 	<li>
@@ -77,16 +83,21 @@
 		<a href="#" class="custom-btn red-slide-btn dropdown-toggle" id="options" data-toggle="dropdown"><p><i class="fas fa-ellipsis-h"></i></p></a>
 		<div class="dropdown-menu">
 			<a class="dropdown-item" href="#">
-				<button form="download-jobs-form" type="submit">Download Data</button>
+				<button form="download-data-form" type="submit">Download Data</button>
 			</a>
+
 			{% if request.path != '/projects/' and request.path != '/search/' and request.path != '/add_house/' %}
 			<a  id="send-data-btn" class="dropdown-item" href="#">Send Data</a>
+			{% endif %}
+
+			{% if request.path == '/expenses/' %}
+			<a  id="expenses-btn" class="dropdown-item" href="/add-expense/">Add Expense</a>
 			{% endif %}
 		</div>
 	</div>
 
 	{# Download Data Form #}
-	<form id="download-jobs-form" class="download-jobs-form" action="/download_data/" method="post">
+	<form id="download-data-form" class="download-data-form" action="/download-data/" method="post">
 		{% csrf_token %}
 		{% if download_data_form.errors %}
 		<div class="form-messages">
@@ -99,7 +110,7 @@
 
 	{# Add Project Button #}
 	{% if request.path == '/projects/' %}
-	<a href="/add_house" class="custom-btn blue-slide-btn" id="add-project-btn"><p>Add Project</p><i class="fas fa-plus"></i></a>
+	<a href="/add-house" class="custom-btn blue-slide-btn" id="add-project-btn"><p>Add Project</p><i class="fas fa-plus"></i></a>
 	{% endif %}
 	<form id="search-form" role="form" action="{% url 'search' %}" method="post">
 		{% csrf_token %}

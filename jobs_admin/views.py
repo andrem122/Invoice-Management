@@ -115,7 +115,7 @@ def index(request):
 
                 #send approval email
                 send_approval_mail(current_user, job, 'Job Approved!')
-                return redirect('/jobs_admin/')
+                return redirect('/jobs-admin/')
 
         elif request.POST.get('approve-as-payment'):
             approve_as_payment_form = Approve_As_Payment(request.POST)
@@ -154,7 +154,7 @@ def index(request):
 
                 #send approval email to worker
                 send_approval_mail(current_user, job, 'Payment Approved!')
-                return redirect('/jobs_admin/')
+                return redirect('/jobs-admin/')
 
         elif request.POST.get('reject_estimate'):
             reject_estimate_form = Reject_Estimate(request.POST)
@@ -198,7 +198,7 @@ def index(request):
                     house.completed_jobs = False
                     house.save(update_fields=['completed_jobs'])
 
-                return redirect('/jobs_admin/')
+                return redirect('/jobs-admin/')
 
     # if a GET (or any other method) we'll create a blank form
     else:

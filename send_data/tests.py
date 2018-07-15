@@ -42,7 +42,7 @@ class Test_Send_Data(TestCase):
         self.assertEqual(msg.body, 'This is a test.')
     def test_send_data_get(self):
         response = self.c.get('/send_data/')
-        self.assertRedirects(response, '/payment_history/thank_you')
+        self.assertRedirects(response, '/payment-history/thank_you')
     def test_send_data_post(self):
         #create test data
         house = House.objects.create(
@@ -130,4 +130,4 @@ class Test_Send_Data(TestCase):
         self.assertFalse(payment.requested_by_worker)
         self.assertTrue(payment.approved)
 
-        self.assertRedirects(response, '/payment_history/thank_you')
+        self.assertRedirects(response, '/payment-history/thank_you')

@@ -50,7 +50,7 @@ def register(request):
                 return [worker_url, staff_url]
 
             urls = generate_urls(request=request, user=user)
-            redirect_url = '/jobs_admin/?worker_url=' + urls[0] + '&staff_url=' + urls[1]
+            redirect_url = '/jobs-admin/?worker_url=' + urls[0] + '&staff_url=' + urls[1]
 
             #login new user
             new_user = authenticate(username=username, password=password)

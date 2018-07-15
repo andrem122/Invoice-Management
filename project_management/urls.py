@@ -22,19 +22,21 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('jobs/', include('jobs.urls')),
-    path('jobs_admin/', include('jobs_admin.urls')),
+    path('jobs-admin/', include('jobs_admin.urls')),
     path('addjob/', include('addjob.urls')),
-    path('payment_history/', include('payment_history.urls')),
+    path('payment-history/', include('payment_history.urls')),
     path('payments/', include('payment_requests.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', include('register.urls')),
-    path('customer_register/', include('customer_register.urls')),
-    path('jobs_complete/', include('jobs_complete.urls')),
-    path('add_house/', include('add_house.urls')),
-    path('download_data/', include('download_data.urls')),
+    path('customer-register/', include('customer_register.urls')),
+    path('jobs-complete/', include('jobs_complete.urls')),
+    path('add-house/', include('add_house.urls')),
+    path('add-expense/', include('add_expense.urls')),
+    path('expenses/', include('expenses.urls')),
+    path('download-data/', include('download_data.urls')),
     path('projects/', include('projects.urls')),
     path('search/', include('search_submit.urls')),
-    path('send_data/', include('send_data.urls')),
+    path('send-data/', include('send_data.urls')),
 ]
 
 if settings.DEBUG:

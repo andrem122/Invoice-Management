@@ -84,7 +84,7 @@ def thank_you(request):
 #redirect a user after successful login
 def redirect_user(request):
     if request.user.groups.filter(name='Customers').exists(): #if the user is a customer
-        return redirect('/jobs_admin/')
+        return redirect('/jobs-admin/')
     elif request.user.groups.filter(name='Customers Staff').exists(): #if the user is customer's staff
         return redirect('/payments')
     elif request.user.is_superuser:
