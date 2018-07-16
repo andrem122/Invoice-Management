@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from django.template import loader
 from customer_register.customer import Customer
-from jobs.models import Job
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
 from send_data.forms import Send_Data
 from django.contrib import messages
-from .send_data_extras import send_data_email, setup_cron_job
-
+from .send_data_extras import send_data_email, generate_csv, generate_zip
+from django.core.mail import EmailMessage
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def send_data(request):
@@ -46,10 +45,35 @@ def send_data(request):
                     send_data_email(user_email=current_user.email, title='ACTIVE JOBS', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
 
                 elif path == '/payments/':
+                    #get querysets
                     payments = customer.current_week_approved_payments()
+                    expenses = customer.current_week_expenses(pay_this_week=True)
+
+                    #generate csvs
+                    title = 'PAYMENTS FOR THE WEEK'
                     headers = ['House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Contract Link']
                     attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', 'approved_date', ['job', 'document_link']]
-                    send_data_email(user_email=current_user.email, title='PAYMENTS FOR THIS WEEK', headers=headers, queryset=payments, attributes=attributes, form_vals=form_vals, host=host)
+                    payments_result = generate_csv(title, headers, payments, attributes, host)
+
+                    title = 'EXPENSES FOR THE WEEK'
+                    headers = ['House', 'Expense Type', 'Amount',  'Date Added']
+                    attributes = ['house', 'expense_type', 'amount', 'submit_date']
+                    expenses_result = generate_csv(title, headers, expenses, attributes, host)
+
+                    #generate zip
+                    zip_file = generate_zip(payments_result[0] + expenses_result[0])
+
+
+                    #create email
+                    email = EmailMessage(form_vals['subject'], form_vals['message'], current_user.email, [form_vals['send_to']])
+
+                    #attach files
+                    email.attach('payments.csv', payments_result[1], 'text/csv')
+                    email.attach('expenses.csv', expenses_result[1], 'text/csv')
+                    email.attach('files.zip', zip_file, 'application/x-zip-compressed')
+
+                    #send email
+                    email.send(fail_silently=False)
 
                 elif path == '/jobs-complete/':
                     jobs = customer.completed_jobs()
@@ -59,8 +83,8 @@ def send_data(request):
 
                 elif path == '/expenses/':
                     expenses = customer.all_expenses()
-                    headers = ['House', 'Expense Type', 'Amount',  'Date Added']
-                    attributes = ['house', 'expense_type', 'amount', 'submit_date']
+                    headers = ['House', 'Expense Type', 'Amount',  'Date Added', 'Document Link']
+                    attributes = ['house', 'expense_type', 'amount', 'submit_date', 'document_link']
                     send_data_email(user_email=current_user.email, title='EXPENSES', headers=headers, queryset=expenses, attributes=attributes, form_vals=form_vals, host=host)
 
             else:

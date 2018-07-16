@@ -193,6 +193,10 @@ ul.item-headings {
   max-width: 1400px;
 }
 
+.page-title {
+  margin-bottom: 30px;
+}
+
 .item-headings li {
   display: inline-block;
 }
@@ -236,6 +240,11 @@ ul.item-headings {
 
 div.option-forms {
   display: none;
+}
+
+/* Seperate Items Container */
+#sep-container-1 {
+  margin-bottom: 30px;
 }
 
 /* Item Container */
@@ -609,6 +618,10 @@ tr.spacer {
 }
 
 /* Forms */
+#download-data-form {
+  display: none;
+}
+
 .form-wrapper {
   max-width: 500px;
 }

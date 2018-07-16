@@ -8,4 +8,14 @@ class Add_Expense(ModelForm, forms.Form):
     """
     class Meta:
         model = Expenses
-        fields = ['house', 'amount', 'expense_type', 'document_link']
+        fields = [
+            'house',
+            'amount',
+            'expense_type',
+            'document_link',
+            'pay_this_week',
+        ]
+
+        labels = {
+            'pay_this_week': 'Pay this Week?'
+        }

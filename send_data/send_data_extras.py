@@ -14,22 +14,26 @@ def send_data_email(user_email, title, headers, queryset, attributes, host, form
     email = EmailMessage(form_vals['subject'], form_vals['message'], user_email, [form_vals['send_to']])
 
     #generate csv
-    document_links = generate_csv(email, title, headers, queryset, attributes, host, form_vals)
+    result = generate_csv(title, headers, queryset, attributes, host)
+    email.attach('data.csv', result[1], 'text/csv')
 
     #generate zip
-    generate_zip(email=email, document_links=document_links)
+    zip_file = generate_zip(document_links=result[0])
+    email.attach('files.zip', zip_file, 'application/x-zip-compressed')
 
     #send email
     email.send(fail_silently=False)
 
-def generate_csv(email, title, headers, queryset, attributes, host, form_vals={}):
+def generate_csv(title, headers, queryset, attributes, host):
     if queryset:
+
         #generate csv file
         csv_file = io.StringIO()
         writer = csv.writer(csv_file, delimiter=',')
         writer.writerow([title])
         writer.writerow(headers)
         document_links = []
+
         for q in queryset.iterator():
             try:
                 document_links.append(str(q.job.document_link))
@@ -37,7 +41,10 @@ def generate_csv(email, title, headers, queryset, attributes, host, form_vals={}
                 print('This is a Job object and thus has no attribute "job"')
                 document_links.append(str(q.document_link))
             atts = []
+
+            #loop through attributes
             for attribute in attributes:
+                #if the attribute is a list
                 if isinstance(attribute, list):
                     if attribute[1] == 'document_link':
                         try:
@@ -49,8 +56,8 @@ def generate_csv(email, title, headers, queryset, attributes, host, form_vals={}
                             print('Request object is missing in tests')
                     else:
                         a = str(getattr(getattr(q, attribute[0]), attribute[1]))
+                #if the attribute is NOT a list
                 else:
-                    #generate document url path
                     if attribute == 'document_link':
                         try:
                             a = 'http://{host}/media/{document_path}'.format(
@@ -64,10 +71,9 @@ def generate_csv(email, title, headers, queryset, attributes, host, form_vals={}
                 atts.append(a)
             writer.writerow(atts)
 
-        email.attach('data.csv', csv_file.getvalue(), 'text/csv')
-        return document_links
+        return (document_links, csv_file.getvalue())
 
-def generate_zip(email, document_links=[]):
+def generate_zip(document_links=[]):
     """generates zip file"""
     if len(document_links) != 0:
         zip_file = io.BytesIO()
@@ -88,7 +94,7 @@ def generate_zip(email, document_links=[]):
             zf.write(absname, arcname)
 
         zf.close()
-        email.attach('files.zip', zip_file.getvalue(), 'application/x-zip-compressed')
+        return zip_file.getvalue()
 
 def setup_cron_job(frequency, user, path, host, form_vals={}):
     """sets up a cron job to send automated emails with data"""

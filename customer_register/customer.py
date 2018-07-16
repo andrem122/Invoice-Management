@@ -542,6 +542,34 @@ class Customer:
             expenses=True
         )
 
+    def expenses_houses_pay(self):
+        """
+        Gets all houses with expenses
+        that have 'pay_this_week' set to true.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A queryset.
+
+        Raises:
+            None.
+        """
+        houses = House.objects.filter(
+            customer=self.customer,
+            expenses=True
+        )
+
+        for house in houses:
+            if Expenses.objects.filter(
+                house=house,
+                house__customer=self.customer,
+                submit_date__range=[Customer.start_week, Customer.today],
+                pay_this_week=True,
+            ).exists():
+                yield house
+
     def all_expenses(self):
         """
         Gets all expenses.

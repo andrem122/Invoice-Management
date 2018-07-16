@@ -8,6 +8,7 @@ class Expenses(models.Model):
     house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='expense_house')
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     submit_date = models.DateTimeField(auto_now_add=True, blank=True)
+    pay_this_week = models.BooleanField(default=False)
 
     materials = 'Materials'
     no_1099 = 'No 1099'
