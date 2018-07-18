@@ -21,10 +21,11 @@ def projects(request):
     get number of active jobs, completed jobs,
     and total amount spent for each property
     """
+    num_expenses = customer.num_expenses()
     num_active_jobs = customer.num_active_jobs()
     num_completed_jobs = customer.num_completed_jobs()
-    zipped = zip(houses, num_active_jobs, num_completed_jobs)
     totals = customer.house_totals(houses=houses, approved=True)
+    zipped = zip(houses, num_expenses, num_active_jobs, num_completed_jobs, totals)
     template = loader.get_template('projects/projects.html')
     send_data_form = Send_Data()
 

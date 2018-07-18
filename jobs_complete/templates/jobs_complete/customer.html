@@ -43,7 +43,7 @@
           <td>${{job.balance_amount|intcomma}}</td>
           <td><a href="{{job.document_link.url}}">View Contract</a></td>
           <td>
-            <form class="payment-history-form" action="/payment_history/p_history_job" method="post">
+            <form class="payment-history-form" action="/payment-history/p-history-job" method="post">
               {% csrf_token %}
               {% if payment_history_form.errors %}
               <div class="form-messages">

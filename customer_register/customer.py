@@ -141,6 +141,27 @@ class Customer:
             #get all active jobs for the each house
             yield Job.objects.filter(house=house, house__customer=self.customer, approved=True, balance_amount__lte=0).count()
 
+    def num_expenses(self):
+        """
+        Gets the number of expenses for each house of the customer.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A generator object with integers representing the number
+            of completed jobs for each house.
+
+        Raises:
+            None.
+        """
+        for house in self.houses:
+            #get all expenses for the each house
+            yield Expenses.objects.filter(
+                house=house,
+                house__customer=self.customer,
+            ).count()
+
     """Current (Active) Houses"""
     def active_houses(self):
         """

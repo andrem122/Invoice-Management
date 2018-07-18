@@ -329,6 +329,8 @@ div.item-container ul li.info-2 {
 
 div.item-container ul li.info-4 {
   width: 75px;
+  text-overflow: unset;
+  overflow: visible;
 }
 
 div.item-container ul div.item-options-dropdown {
