@@ -249,6 +249,11 @@ div.option-forms {
 
 /* Item Container */
 
+.item-title {
+  margin-top: 37px;
+  margin-bottom: 23px;
+}
+
 div.item-container {
   background-color: #fff;
   padding: 27px 0;

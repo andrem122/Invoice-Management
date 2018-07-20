@@ -2,6 +2,7 @@ from django.views.generic.base import View
 from django.http import HttpResponse
 from django.template import loader
 from jobs.models import Job, Request_Payment
+from expenses.models import Expenses
 from django.db.models import Q
 from django.shortcuts import redirect
 from customer_register.customer import Customer
@@ -85,15 +86,29 @@ class Search_Submit_View(View):
                     for term in query_terms)
                 )
 
+                #search expenses table
+                queryset_expenses = functools.reduce(operator.__or__, (
+                    Q(house__address__icontains=term) |
+                    Q(house__address__startswith=term) |
+                    Q(house__address__endswith=term) |
+                    Q(amount__startswith=term) |
+                    Q(expense_type__icontains=term) |
+                    Q(expense_type__startswith=term) |
+                    Q(expense_type__endswith=term)
+                    for term in query_terms)
+                )
+
                 jobs = Job.objects.filter(queryset_jobs, house__customer=customer.customer)
                 payments = Request_Payment.objects.filter(queryset_payments, job__house__customer=customer.customer)
-                count = int(jobs.count()) + int(payments.count())
+                expenses = Expenses.objects.filter(queryset_expenses, house__customer=customer.customer)
+                count = int(jobs.count()) + int(payments.count()) + int(expenses.count())
 
                 #if query results
                 if jobs and payments:
                     context['query'] = query
                     context['jobs'] = jobs
                     context['payments'] = payments
+                    context['expenses'] = expenses
                     context['count'] = count
                 else:
                     context['no_search_results'] = 'No Results For: ' + query
