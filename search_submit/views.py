@@ -101,17 +101,22 @@ class Search_Submit_View(View):
                 jobs = Job.objects.filter(queryset_jobs, house__customer=customer.customer)
                 payments = Request_Payment.objects.filter(queryset_payments, job__house__customer=customer.customer)
                 expenses = Expenses.objects.filter(queryset_expenses, house__customer=customer.customer)
-                count = int(jobs.count()) + int(payments.count()) + int(expenses.count())
+                count = 0
+
+                context['query'] = query
+                context['count'] = count
 
                 #if query results
-                if jobs and payments:
-                    context['query'] = query
+                if jobs.exists():
                     context['jobs'] = jobs
+                    context['count'] += int(jobs.count())
+                if payments.exists():
                     context['payments'] = payments
+                    context['count'] += int(payments.count())
+                if expenses.exists():
                     context['expenses'] = expenses
-                    context['count'] = count
-                else:
-                    context['no_search_results'] = 'No Results For: ' + query
+                    context['count'] += int(expenses.count())
+                    
             else:
                 upload_document_form = Upload_Document_Form()
 

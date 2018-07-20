@@ -2,10 +2,10 @@
 {% load static %}
 {% load jobs_admin_group_check %}
 
-{% if jobs %}
   <span{% if request.path == '/search/'%} class="no-ajax-search-results"{% endif %}>
     <h3>{{count}} Results for: <i>{{query}}</i></h3>
     {# Headings for jobs #}
+    {% if jobs %}
     <h4 class="item-title">Jobs</h4>
     <div class="item-headings-wrapper container-fluid">
       <ul class="item-headings row">
@@ -23,168 +23,168 @@
         </div>
       </ul>
     </div>
-  {% for job in jobs %}
-    {# Item Options Forms #}
-    {% if current_user|in_group:'Customers' %}
-    <div class="option-forms">
-      {# Approve Job Form #}
-      <form id="approve-job-form-{{job.id}}" class="approve-job-form" action="{% url 'jobs_admin:index' %}" method="post">
-        {% csrf_token %}
-        {% if approve_form.errors %}
-        <div class="form-messages">
-          <p>Please try again.</p>
-        </div>
-        {% endif %}
-        {{approve_form}}
-        <input type="hidden" name="job_id" value="{{job.id}}">
-        <input type="hidden" name="approve_job" value="approve_job">
-      </form>
-
-      {# Approve As Payment Form #}
-      <form id="approve-as-payment-form-{{job.id}}" class="approve-as-payment-form" action="{% url 'jobs_admin:index' %}" method="post">
-        {% csrf_token %}
-        {% if approve_as_payment_form.errors %}
-        <div class="form-messages">
-          <p>Please try again.</p>
-        </div>
-        {% endif %}
-        {{approve_as_payment_form}}
-        <input type="hidden" name="job_id" value="{{job.id}}">
-        <input type="hidden" name="approve-as-payment" value="approve-as-payment">
-      </form>
-
-      {# Reject Form #}
-      <form id="reject-form-{{job.id}}" class="reject-form" action="{% url 'jobs_admin:index' %}" method="post">
-        {% csrf_token %}
-        {% if reject_estimate_form.errors %}
-        <div class="form-messages">
-          <p>Please try again.</p>
-        </div>
-        {% endif %}
-        {{reject_estimate_form}}
-        <input type="hidden" name="job_id" value="{{job.id}}">
-        <input type="hidden" name="reject_estimate" value="reject_estimate">
-      </form>
-    </div>
-    {% endif %}
-
-    <div class="item-container">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="info-group col col-sm-6">
-            <ul>
-              <li>
-                {# Job Status #}
-                {% if job.approved == False and job.rejected == False %}
-                <div class="status new">New</div>
-                {% elif job.approved == True and job.balance > 0 %}
-                <div class="status active">Active</div>
-                {% elif job.approved == True %}
-                <div class="status approved">Approved</div>
-                {% elif job.rejected == True %}
-                <div class="status rejected">Rejected</div>
-                {% endif %}
-              </li>
-              <span class="info-title">Company</span>
-              <li class="info-1">{{ job.company }}</li>
-              <hr>
-              {% if job.approved == True %}
-              <span class="info-title">Balance</span>
-              <li class="info-1">${{ job.balance_amount|intcomma }}</li>
-              <hr>
-              {% endif %}
-            </ul>
+    {% for job in jobs %}
+      {# Item Options Forms #}
+      {% if current_user|in_group:'Customers' %}
+      <div class="option-forms">
+        {# Approve Job Form #}
+        <form id="approve-job-form-{{job.id}}" class="approve-job-form" action="{% url 'jobs_admin:index' %}" method="post">
+          {% csrf_token %}
+          {% if approve_form.errors %}
+          <div class="form-messages">
+            <p>Please try again.</p>
           </div>
-          <div class="info-group col col-sm-4">
-            <ul>
-              <span class="info-title">Contract</span>
-              <li class="info-2">
-                <a rel="noopener noreferrer" target="_blank" href="{{ job.document_link.url }}">View Contract</a>
-              </li>
-              <hr>
-              <span class="info-title">Submitted</span>
-              <li class="info-3">
-                {{ job.start_date|date:'M j, g:i a' }}
-              </li>
-              <hr>
-            </ul>
+          {% endif %}
+          {{approve_form}}
+          <input type="hidden" name="job_id" value="{{job.id}}">
+          <input type="hidden" name="approve_job" value="approve_job">
+        </form>
+
+        {# Approve As Payment Form #}
+        <form id="approve-as-payment-form-{{job.id}}" class="approve-as-payment-form" action="{% url 'jobs_admin:index' %}" method="post">
+          {% csrf_token %}
+          {% if approve_as_payment_form.errors %}
+          <div class="form-messages">
+            <p>Please try again.</p>
           </div>
-          <div class="info-group col col-sm-2">
-            {% if current_user|in_group:'Customers' %}
-            <ul>
-              <span class="info-title">Amount</span>
-              <li class="info-4">${{ job.start_amount|intcomma }}</li>
-              <hr>
-              {# Mobile Option Buttons #}
-              <ul class="list-inline mobile-option-icons">
+          {% endif %}
+          {{approve_as_payment_form}}
+          <input type="hidden" name="job_id" value="{{job.id}}">
+          <input type="hidden" name="approve-as-payment" value="approve-as-payment">
+        </form>
+
+        {# Reject Form #}
+        <form id="reject-form-{{job.id}}" class="reject-form" action="{% url 'jobs_admin:index' %}" method="post">
+          {% csrf_token %}
+          {% if reject_estimate_form.errors %}
+          <div class="form-messages">
+            <p>Please try again.</p>
+          </div>
+          {% endif %}
+          {{reject_estimate_form}}
+          <input type="hidden" name="job_id" value="{{job.id}}">
+          <input type="hidden" name="reject_estimate" value="reject_estimate">
+        </form>
+      </div>
+      {% endif %}
+
+      <div class="item-container">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="info-group col col-sm-6">
+              <ul>
+                <li>
+                  {# Job Status #}
+                  {% if job.approved == False and job.rejected == False %}
+                  <div class="status new">New</div>
+                  {% elif job.approved == True and job.balance > 0 %}
+                  <div class="status active">Active</div>
+                  {% elif job.approved == True %}
+                  <div class="status approved">Approved</div>
+                  {% elif job.rejected == True %}
+                  <div class="status rejected">Rejected</div>
+                  {% endif %}
+                </li>
+                <span class="info-title">Company</span>
+                <li class="info-1">{{ job.company }}</li>
+                <hr>
                 {% if job.approved == True %}
-                <li class="list-inline-item">
-                  <button type="submit" form="reject-form-{{job.id}}" class="reject-option-m">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </li>
-                {% elif job.rejected == True %}
-                <li class="list-inline-item approve-payment-option-m">
-                  <button type="submit" form="approve-as-payment-form-{{job.id}}" class="approve-payment-option-m">
-                    <i class="far fa-money-bill-alt"></i>
-                  </button>
-                </li>
-                <li class="list-inline-item">
-                  <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-option-m">
-                    <i class="fas fa-check"></i>
-                  </button>
-                </li>
-                {% else %}
-                <li class="list-inline-item">
-                  <button type="submit" form="reject-form-{{job.id}}" class="reject-option-m">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </li>
-                <li class="list-inline-item">
-                  <button type="submit" form="approve-as-payment-form-{{job.id}}" class="approve-payment-option-m">
-                    <i class="far fa-money-bill-alt"></i>
-                  </button>
-                </li>
-                <li class="list-inline-item">
-                  <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-option-m">
-                    <i class="fas fa-check"></i>
-                  </button>
-                </li>
+                <span class="info-title">Balance</span>
+                <li class="info-1">${{ job.balance_amount|intcomma }}</li>
+                <hr>
                 {% endif %}
               </ul>
-              {# Desktop Options #}
-              <div class="item-options-dropdown dropdown">
-
-                <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fas fa-ellipsis-v"></i>
-                </a>
-
-                <div class="dropdown-menu{% if job.approved == True %} dropdown-approved{% else %} dropdown-new{% endif %}">
+            </div>
+            <div class="info-group col col-sm-4">
+              <ul>
+                <span class="info-title">Contract</span>
+                <li class="info-2">
+                  <a rel="noopener noreferrer" target="_blank" href="{{ job.document_link.url }}">View Contract</a>
+                </li>
+                <hr>
+                <span class="info-title">Submitted</span>
+                <li class="info-3">
+                  {{ job.start_date|date:'M j, g:i a' }}
+                </li>
+                <hr>
+              </ul>
+            </div>
+            <div class="info-group col col-sm-2">
+              {% if current_user|in_group:'Customers' %}
+              <ul>
+                <span class="info-title">Amount</span>
+                <li class="info-4">${{ job.start_amount|intcomma }}</li>
+                <hr>
+                {# Mobile Option Buttons #}
+                <ul class="list-inline mobile-option-icons">
                   {% if job.approved == True %}
-            			<button type="submit" form="reject-form-{{job.id}}" class="dropdown-item reject-btn">Reject</button>
+                  <li class="list-inline-item">
+                    <button type="submit" form="reject-form-{{job.id}}" class="reject-option-m">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </li>
                   {% elif job.rejected == True %}
-                  <button type="submit" form="approve-as-payment-form-{{job.id}}" class="dropdown-item approve-payment-option">Approve Payment</button>
-                  <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-job-option">Approve Job</button>
+                  <li class="list-inline-item approve-payment-option-m">
+                    <button type="submit" form="approve-as-payment-form-{{job.id}}" class="approve-payment-option-m">
+                      <i class="far fa-money-bill-alt"></i>
+                    </button>
+                  </li>
+                  <li class="list-inline-item">
+                    <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-option-m">
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </li>
                   {% else %}
-                  <button type="submit" form="approve-as-payment-form-{{job.id}}" class="dropdown-item approve-payment-option">Approve Payment</button>
-                  <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-job-option">Approve Job</button>
-                  <button type="submit" form="reject-form-{{job.id}}" class="dropdown-item reject-job-option">Reject</button>
+                  <li class="list-inline-item">
+                    <button type="submit" form="reject-form-{{job.id}}" class="reject-option-m">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </li>
+                  <li class="list-inline-item">
+                    <button type="submit" form="approve-as-payment-form-{{job.id}}" class="approve-payment-option-m">
+                      <i class="far fa-money-bill-alt"></i>
+                    </button>
+                  </li>
+                  <li class="list-inline-item">
+                    <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-option-m">
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </li>
                   {% endif %}
-            		</div>
+                </ul>
+                {# Desktop Options #}
+                <div class="item-options-dropdown dropdown">
 
-              </div>
-            </ul>
-            {% endif %}
+                  <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </a>
+
+                  <div class="dropdown-menu{% if job.approved == True %} dropdown-approved{% else %} dropdown-new{% endif %}">
+                    {% if job.approved == True %}
+              			<button type="submit" form="reject-form-{{job.id}}" class="dropdown-item reject-btn">Reject</button>
+                    {% elif job.rejected == True %}
+                    <button type="submit" form="approve-as-payment-form-{{job.id}}" class="dropdown-item approve-payment-option">Approve Payment</button>
+                    <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-job-option">Approve Job</button>
+                    {% else %}
+                    <button type="submit" form="approve-as-payment-form-{{job.id}}" class="dropdown-item approve-payment-option">Approve Payment</button>
+                    <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-job-option">Approve Job</button>
+                    <button type="submit" form="reject-form-{{job.id}}" class="dropdown-item reject-job-option">Reject</button>
+                    {% endif %}
+              		</div>
+
+                </div>
+              </ul>
+              {% endif %}
+            </div>
           </div>
         </div>
-      </div>
-    </div> <!-- /.item-container -->
-  {% endfor %}
+      </div> <!-- /.item-container -->
+    {% endfor %}
+  {% endif %}
 
   {# Payments #}
   {% if payments %}
   <h4 class="item-title">Payments</h4>
-  {% endif %}
     <div class="item-headings-wrapper container-fluid">
       <ul class="item-headings row">
         <div class="col col-sm-6">
@@ -368,115 +368,115 @@
           </div>
         </div> <!-- /.item-container -->
     {% endfor %}
-  </span>
-{% endif %}
+  {% endif %}
 
-{# Expenses #}
+    {# Expenses #}
 
-{% if expenses %}
-  <h4 class="item-title">Expenses</h4>
-  <div class="item-headings-wrapper container-fluid">
-    <ul class="item-headings row">
-      <div class="col col-sm-6">
-        <li>Status</li>
-        <li class="second-heading">Type</li>
+    {% if expenses %}
+      <h4 class="item-title">Expenses</h4>
+      <div class="item-headings-wrapper container-fluid">
+        <ul class="item-headings row">
+          <div class="col col-sm-6">
+            <li>Status</li>
+            <li class="second-heading">Type</li>
+          </div>
+          <div class="col col-sm-4">
+            <li class="contract_link">Contract Link</li>
+            <li>Date Added</li>
+          </div>
+          <div class="col col-sm-2">
+            <li>Amount</li>
+          </div>
+        </ul>
       </div>
-      <div class="col col-sm-4">
-        <li class="contract_link">Contract Link</li>
-        <li>Date Added</li>
-      </div>
-      <div class="col col-sm-2">
-        <li>Amount</li>
-      </div>
-    </ul>
-  </div>
-  {% for expense in expenses %}
+      {% for expense in expenses %}
 
-    {# Item Options Forms #}
-    {% if current_user|in_group:'Customers' %}
-    <div class="option-forms">
-      {# Delete Expense #}
-      <form id="delete_exp_form_{{ expense.id }}" class="delete_exp_form" action="/expenses/" method="post">
-        {% csrf_token %}
-        {% if delete_exp_form.errors %}
-        <div class="form-messages">
-          <p>Please try again.</p>
+        {# Item Options Forms #}
+        {% if current_user|in_group:'Customers' %}
+        <div class="option-forms">
+          {# Delete Expense #}
+          <form id="delete_exp_form_{{ expense.id }}" class="delete_exp_form" action="/expenses/" method="post">
+            {% csrf_token %}
+            {% if delete_exp_form.errors %}
+            <div class="form-messages">
+              <p>Please try again.</p>
+            </div>
+            {% endif %}
+            {{delete_exp_form}}
+            <input type="hidden" name="expense_id" value="{{ expense.id }}">
+            <input type="hidden" name="delete_exp_form" value="delete_exp_form">
+          </form>
         </div>
         {% endif %}
-        {{delete_exp_form}}
-        <input type="hidden" name="expense_id" value="{{ expense.id }}">
-        <input type="hidden" name="delete_exp_form" value="delete_exp_form">
-      </form>
-    </div>
+
+        <div class="item-container">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="info-group col col-sm-6">
+                <ul>
+                  <li>
+                    {# Status #}
+                    <div class="status expense">Expense</div>
+                  </li>
+                  <span class="info-title">Expense Type</span>
+                  <li class="info-1">{{ expense.expense_type }}</li>
+                  <hr>
+                </ul>
+              </div>
+              <div class="info-group col col-sm-4">
+                <ul>
+                  <span class="info-title">Contract</span>
+                  <li class="info-2">
+                    <a rel="noopener noreferrer" target="_blank" href="{{ expense.document_link.url }}">View Contract</a>
+                  </li>
+                  <hr>
+                  <span class="info-title">Submitted</span>
+                  <li class="info-3">
+                    {{ expense.submit_date|date:'M j, g:i a' }}
+                  </li>
+                  <hr>
+                </ul>
+              </div>
+              <div class="info-group col col-sm-2">
+                {% if current_user|in_group:'Customers' %}
+                <ul>
+                  <span class="info-title">Amount</span>
+                  <li class="info-4">${{ expense.amount|intcomma }}</li>
+                  <hr>
+                  {# Mobile Option Buttons #}
+                  <ul class="list-inline mobile-option-icons">
+
+                    <li class="list-inline-item">
+                      <button type="submit" form="delete_exp_form_{{ expense.id }}" class="delete-option-m">
+                        <i class="far fa-trash-alt"></i>
+                      </button>
+                    </li>
+
+                  </ul>
+                  {# Desktop Options #}
+                  <div class="item-options-dropdown dropdown">
+
+                    <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </a>
+
+                    <div class="dropdown-menu">
+                      <button type="submit" form="delete_exp_form_{{ expense.id }}" class="dropdown-item delete-exp-option">Delete</button>
+                    </div>
+
+                  </div>
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div> <!-- /.item-container -->
+
+      {% endfor %}
     {% endif %}
 
-    <div class="item-container">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="info-group col col-sm-6">
-            <ul>
-              <li>
-                {# Status #}
-                <div class="status expense">Expense</div>
-              </li>
-              <span class="info-title">Expense Type</span>
-              <li class="info-1">{{ expense.expense_type }}</li>
-              <hr>
-            </ul>
-          </div>
-          <div class="info-group col col-sm-4">
-            <ul>
-              <span class="info-title">Contract</span>
-              <li class="info-2">
-                <a rel="noopener noreferrer" target="_blank" href="{{ expense.document_link.url }}">View Contract</a>
-              </li>
-              <hr>
-              <span class="info-title">Submitted</span>
-              <li class="info-3">
-                {{ expense.submit_date|date:'M j, g:i a' }}
-              </li>
-              <hr>
-            </ul>
-          </div>
-          <div class="info-group col col-sm-2">
-            {% if current_user|in_group:'Customers' %}
-            <ul>
-              <span class="info-title">Amount</span>
-              <li class="info-4">${{ expense.amount|intcomma }}</li>
-              <hr>
-              {# Mobile Option Buttons #}
-              <ul class="list-inline mobile-option-icons">
+    {% if no_search_results %}
+      <h3>{{no_search_results}}</h3>
+    {% endif %}
 
-                <li class="list-inline-item">
-                  <button type="submit" form="delete_exp_form_{{ expense.id }}" class="delete-option-m">
-                    <i class="far fa-trash-alt"></i>
-                  </button>
-                </li>
-
-              </ul>
-              {# Desktop Options #}
-              <div class="item-options-dropdown dropdown">
-
-                <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fas fa-ellipsis-v"></i>
-                </a>
-
-                <div class="dropdown-menu">
-                  <button type="submit" form="delete_exp_form_{{ expense.id }}" class="dropdown-item delete-exp-option">Delete</button>
-                </div>
-
-              </div>
-            </ul>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </div> <!-- /.item-container -->
-
-  {% endfor %}
-
-{% endif %}
-
-{% if no_search_results %}
-  <h3>{{no_search_results}}</h3>
-{% endif %}
+  </span>
