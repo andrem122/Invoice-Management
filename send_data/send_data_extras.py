@@ -15,7 +15,9 @@ def send_data_email(user_email, title, headers, queryset, attributes, host, form
 
     #generate csv
     result = generate_csv(title, headers, queryset, attributes, host)
+
     email.attach('data.csv', result[1], 'text/csv')
+
 
     #generate zip
     zip_file = generate_zip(document_links=result[0])
@@ -34,10 +36,10 @@ def generate_csv(title, headers, queryset, attributes, host):
         writer.writerow(headers)
         document_links = []
 
-        for q in queryset.iterator():
-            try:
+        for q in queryset:
+            try: #for payment objects
                 document_links.append(str(q.job.document_link))
-            except AttributeError:
+            except AttributeError: #for job objects
                 print('This is a Job object and thus has no attribute "job"')
                 document_links.append(str(q.document_link))
             atts = []

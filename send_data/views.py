@@ -7,6 +7,7 @@ from send_data.forms import Send_Data
 from django.contrib import messages
 from .send_data_extras import send_data_email, generate_csv, generate_zip
 from django.core.mail import EmailMessage
+from itertools import chain
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def send_data(request):
@@ -37,7 +38,12 @@ def send_data(request):
                 #send data based on path
                 if path == '/jobs-admin/':
                     #get data to write to csv
-                    jobs = customer.approved_jobs()
+                    estimates = customer.current_week_proposed_jobs()
+                    approved_jobs = customer.approved_jobs()
+                    completed_jobs = customer.current_week_completed_jobs()
+                    rejected_jobs = customer.current_week_rejected_jobs()
+
+                    jobs = list(chain(estimates, approved_jobs, completed_jobs, rejected_jobs))
 
                     #send data
                     headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid', 'Contract Link']
@@ -61,15 +67,31 @@ def send_data(request):
                     expenses_result = generate_csv(title, headers, expenses, attributes, host)
 
                     #generate zip
-                    zip_file = generate_zip(payments_result[0] + expenses_result[0])
+                    try:
+                        zip_file = generate_zip(payments_result[0] + expenses_result[0])
+                    except TypeError as e:
+                        print('There are no query results for either payments or expenses')
+                        try:
+                            zip_file = generate_zip(payments_result[0])
+                        except TypeError as e:
+                            print('There are no query results for payments')
+                            zip_file = generate_zip(expenses_result[0])
 
 
                     #create email
                     email = EmailMessage(form_vals['subject'], form_vals['message'], current_user.email, [form_vals['send_to']])
 
                     #attach files
-                    email.attach('payments.csv', payments_result[1], 'text/csv')
-                    email.attach('expenses.csv', expenses_result[1], 'text/csv')
+                    try:
+                        email.attach('payments.csv', payments_result[1], 'text/csv')
+                    except TypeError as e:
+                        print('No query results for payments, and therefore a CSV file could not be generated')
+
+                    try:
+                        email.attach('expenses.csv', expenses_result[1], 'text/csv')
+                    except TypeError as e:
+                        print('No query results for expenses, and therefore a CSV file could not be generated')
+
                     email.attach('files.zip', zip_file, 'application/x-zip-compressed')
 
                     #send email

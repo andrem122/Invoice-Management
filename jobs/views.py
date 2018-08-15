@@ -14,9 +14,10 @@ def index(request):
 
     worker = Worker(current_user)
     approved_houses = worker.approved_houses()
+    unapproved_houses = worker.unapproved_houses()
+
     approved_jobs = worker.approved_jobs()
     unapproved_jobs = worker.unapproved_jobs()
-    unapproved_houses = worker.unapproved_houses()
 
     template = loader.get_template('jobs/index.html')
     form = Request_Payment_Form()
