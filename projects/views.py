@@ -14,8 +14,8 @@ def projects(request):
     Show all projects the customer currently has including
     completed projects and open ones
     """
-    #get all properties of the customer
-    houses = customer.houses
+    #get all houses/projects of the customer
+    houses = customer._houses(archived=False)
 
     """
     get number of active jobs, completed jobs,

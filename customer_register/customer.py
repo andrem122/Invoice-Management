@@ -31,7 +31,7 @@ class Customer:
             self.customer = User.objects.get(pk=customer_id)
         else:
             self.customer = customer
-        self.houses = self.houses()
+        self.houses = self._houses()
 
     def current_week_results(self, houses, model, update_field={}, **kwargs):
         """
@@ -61,7 +61,7 @@ class Customer:
                 house.save(update_fields=[list(update_field.keys())[0]])
 
     """Attributes of Houses"""
-    def houses(self):
+    def _houses(self, **kwargs):
         """
         Returns all houses that belong to the customer.
 
@@ -74,7 +74,7 @@ class Customer:
         Raises:
             None.
         """
-        return House.objects.filter(customer=self.customer)
+        return House.objects.filter(customer=self.customer, **kwargs)
 
     def house_totals(self, houses, **kwargs):
         """

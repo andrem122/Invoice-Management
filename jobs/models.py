@@ -18,6 +18,7 @@ class House(models.Model):
     pending_payments = models.BooleanField(default=False)
     rejected_payments = models.BooleanField(default=False)
     expenses = models.BooleanField(default=False)
+    archived = models.BooleanField(default=False)
 
     def __str__(self):
         return self.address

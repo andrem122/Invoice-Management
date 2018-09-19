@@ -51,7 +51,7 @@ def index(request):
 
             #clean the form data and store into variables
             job = Job.objects.get(pk=job_id)
-            house = House.objects.get(pk=job.house.id)
+            house = job.house
             amount = form.cleaned_data['amount']
 
             """if the current company already has a pending request for payment for a job for a house,
