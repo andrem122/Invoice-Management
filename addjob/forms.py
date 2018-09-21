@@ -28,4 +28,4 @@ class AddJob(ModelForm, forms.Form):
         if customer_id == 'Workers':
             customer_id = int(user.groups.values_list('name', flat=True)[1])
         #filter house by customer id
-        self.fields['house'].queryset = House.objects.filter(customer=customer_id)
+        self.fields['house'].queryset = House.objects.filter(customer=customer_id, archived=False)

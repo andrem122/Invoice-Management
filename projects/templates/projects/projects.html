@@ -17,7 +17,25 @@
 {% block item_heading_3 %}Completed Jobs{% endblock item_heading_3 %}
 {% block item_heading_4 %}Total Spent{% endblock item_heading_4 %}
 {% block item_loop %}
-{% for house, num_expenses, num_active_jobs, num_completed_jobs, total in zipped %}
+  {% for house, num_expenses, num_active_jobs, num_completed_jobs, total in zipped_narchived %}
+
+  {# Item Options Forms #}
+  {% if current_user|in_group:'Customers' %}
+  <div class="option-forms">
+    {# Archive House #}
+    <form id="narchive_house_form_{{ house.id }}" class="narchive_house_form" action="" method="post">
+      {% csrf_token %}
+      {% if archive_house_form.errors %}
+      <div class="form-messages">
+        <p>Please try again.</p>
+      </div>
+      {% endif %}
+      {{archive_house_form}}
+      <input type="hidden" name="house_id" value="{{ house.id }}">
+    </form>
+  </div>
+
+  {% endif %}
   <div class="item-container">
     <div class="container-fluid">
       <div class="row">
@@ -65,10 +83,162 @@
           <ul>
             <span class="info-title">Total Spent</span>
             <li class="info-4">${{total|intcomma}}</li>
+            <hr>
+
+            {% if current_user|in_group:'Customers' %}
+            {# Mobile Option Buttons #}
+            <ul class="list-inline mobile-option-icons">
+
+              <li class="list-inline-item">
+                <button type="submit" form="narchive_house_form_{{ house.id }}" class="archive-option-m">
+                  {% if house.archived == False %}
+                    <i class="fas fa-archive"></i>
+                  {% else %}
+                    <i class="fas fa-undo"></i>
+                  {% endif %}
+                </button>
+              </li>
+
+            </ul>
+
+            {# Desktop Options #}
+            <div class="item-options-dropdown dropdown">
+
+              <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-ellipsis-v"></i>
+              </a>
+
+              <div class="dropdown-menu">
+                <button type="submit" form="narchive_house_form_{{ house.id }}" class="dropdown-item archive-house-option">
+                  {% if house.archived == False %}
+                    Archive
+                  {% else %}
+                    Unarchive
+                  {% endif %}
+                </button>
+              </div>
+
+            </div>
+
+            {% endif %}
           </ul>
         </div>
       </div>
     </div>
   </div> <!-- /.item-container -->
   {% endfor %}
+
+  {# Archived Houses #}
+
+  {% if archived_houses %}
+    <h2 class="secondary-title">Archived Projects</h2>
+  {% endif %}
+
+  {% for house, num_expenses, num_active_jobs, num_completed_jobs, total in zipped_archived %}
+
+  {# Item Options Forms #}
+  {% if current_user|in_group:'Customers' %}
+  <div class="option-forms">
+    {# Archive House #}
+    <form id="archive_house_form_{{ house.id }}" class="archive_house_form" action="" method="post">
+      {% csrf_token %}
+      {% if archive_house_form.errors %}
+      <div class="form-messages">
+        <p>Please try again.</p>
+      </div>
+      {% endif %}
+      {{archive_house_form}}
+      <input type="hidden" name="house_id" value="{{ house.id }}">
+    </form>
+  </div>
+
+  {% endif %}
+  <div class="item-container">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="info-group col col-sm-6">
+          <ul>
+            <li>
+              <div class="status completed">Completed</div>
+            </li>
+            <span class="info-title">Project</span>
+            <li class="info-1">{{ house.address }}</li>
+            <hr>
+          </ul>
+        </div>
+        <div class="info-group col col-sm-4">
+          <ul>
+            <span class="info-title">Expenses</span>
+            <li class="info-2 active_jobs">
+              <a{% if num_expenses > 0 %} href="/expenses#{{house.address|add_dashes}}"{% endif %}>
+
+                {% if num_expenses > 1 %}
+                <span>{{ num_expenses }}</span> Expenses
+
+                {% elif num_expenses == 1 %}
+                <span>{{ num_expenses }}</span> Expense
+
+                {% else %}
+                <span>{{ num_expenses }}</span> Expenses
+                {% endif %}
+
+              </a>
+            </li>
+            <hr>
+            <span class="info-title">Completed Jobs</span>
+            <li class="info-3">
+              <a{% if num_completed_jobs > 0 %} href="/jobs-complete#{{house.address|add_dashes}}"{% endif %}><span>{{num_completed_jobs}}</span> Jobs</a>
+            </li>
+            <hr>
+          </ul>
+        </div>
+        <div class="info-group col col-sm-2">
+          <ul>
+            <span class="info-title">Total Spent</span>
+            <li class="info-4">${{total|intcomma}}</li>
+            <hr>
+
+            {% if current_user|in_group:'Customers' %}
+            {# Mobile Option Buttons #}
+            <ul class="list-inline mobile-option-icons">
+
+              <li class="list-inline-item">
+                <button type="submit" form="archive_house_form_{{ house.id }}" class="archive-option-m">
+                  {% if house.archived == False %}
+                    <i class="fas fa-archive"></i>
+                  {% else %}
+                    <i class="fas fa-undo"></i>
+                  {% endif %}
+                </button>
+              </li>
+
+            </ul>
+
+            {# Desktop Options #}
+            <div class="item-options-dropdown dropdown">
+
+              <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-ellipsis-v"></i>
+              </a>
+
+              <div class="dropdown-menu">
+                <button type="submit" form="archive_house_form_{{ house.id }}" class="dropdown-item archive-house-option">
+                  {% if house.archived == False %}
+                    Archive
+                  {% else %}
+                    Unarchive
+                  {% endif %}
+                </button>
+              </div>
+
+            </div>
+
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div> <!-- /.item-container -->
+  {% endfor %}
+
 {% endblock item_loop %}

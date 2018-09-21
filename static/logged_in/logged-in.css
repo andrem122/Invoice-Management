@@ -197,6 +197,10 @@ ul.item-headings {
   margin-bottom: 30px;
 }
 
+.secondary-title {
+  margin-top: 40px;
+}
+
 .item-headings li {
   display: inline-block;
 }
@@ -294,6 +298,10 @@ div.item-container .status.new {
 
 div.item-container .status.active {
   background-color: #303B57;
+}
+
+div.item-container .status.completed {
+  background-color: #8e52fd;
 }
 
 div.item-container .status.expense {
