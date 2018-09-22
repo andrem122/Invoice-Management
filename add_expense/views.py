@@ -18,8 +18,15 @@ def add_expense(request):
             house.expenses = True
             house.save(update_fields=['expenses'])
 
+            pay_this_week = request.POST.get('pay_this_week')
+            if pay_this_week == 'on':
+                pay_this_week = True
+            else:
+                pay_this_week = False
+
             expense = add_expense_form.save(commit=False)
             expense.customer = current_user
+            expense.pay_this_week = pay_this_week
             expense.save()
 
             add_expense_form = Add_Expense()

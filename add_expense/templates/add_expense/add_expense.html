@@ -13,7 +13,7 @@
     <hr>
   </div>
   <div class="panel-body">
-    <form id="add-expense-form" action="" method="post" role="form" enctype="multipart/form-data">
+    <form id="add-expense-form" class="add-form" action="" method="post" role="form" enctype="multipart/form-data">
       {% csrf_token %}
 
       {% if messages %}
@@ -31,7 +31,12 @@
       {% endif %}
 
       {{add_expense_form}}
-      <input class="btn btn-primary" type="submit" value="Add Expense">
+      <div class="inputGroup">
+        <input name="pay_this_week" id="id_pay_this_week" type="checkbox">
+        <label for="id_pay_this_week">Pay This Week?</label>
+      </div>
+
+      <input class="form-submit-btn" type="submit" value="Add Expense">
     </form>
   </div>
 </div>

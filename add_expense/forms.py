@@ -13,9 +13,4 @@ class Add_Expense(ModelForm, forms.Form):
             'amount',
             'expense_type',
             'document_link',
-            'pay_this_week',
         ]
-
-        labels = {
-            'pay_this_week': 'Pay this Week?'
-        }
