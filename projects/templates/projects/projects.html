@@ -10,7 +10,7 @@
 {% block scripts %}
 {% endblock scripts %}
 
-{% block page_title %}Projects{% endblock page_title %}
+{% block page_title %}{{ narchived_count }} Projects{% endblock page_title %}
 {% block heading_status %}Status{% endblock heading_status %}
 {% block item_heading_1 %}Project{% endblock item_heading_1 %}
 {% block item_heading_2 %}Expenses{% endblock item_heading_2 %}
@@ -131,7 +131,7 @@
   {# Archived Houses #}
 
   {% if archived_houses %}
-    <h2 class="secondary-title">Archived Projects</h2>
+    <h2 class="secondary-title">{{ archived_count }} Archived Projects</h2>
   {% endif %}
 
   {% for house, num_expenses, num_active_jobs, num_completed_jobs, total in zipped_archived %}

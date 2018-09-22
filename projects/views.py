@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from send_data.forms import Send_Data
@@ -19,6 +21,9 @@ def projects(request):
     #get all houses/projects of the customer
     narchived_houses = customer._houses(archived=False)
     archived_houses = customer._houses(archived=True)
+
+    narchived_count = narchived_houses.count()
+    archived_count = archived_houses.count()
 
     """
     get number of active jobs, completed jobs,
@@ -45,6 +50,8 @@ def projects(request):
         'zipped_narchived': zipped_narchived,
         'zipped_archived': zipped_archived,
         'archived_houses': archived_houses,
+        'narchived_count': narchived_count,
+        'archived_count': archived_count,
         'current_user': current_user,
         'send_data_form': send_data_form,
         'archive_house_form': archive_house_form,
