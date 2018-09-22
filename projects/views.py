@@ -24,14 +24,16 @@ def projects(request):
     get number of active jobs, completed jobs,
     and total amount spent for each property
     """
-    num_expenses = customer.num_expenses()
-    num_active_jobs = customer.num_active_jobs()
-    num_completed_jobs = customer.num_completed_jobs()
-
+    num_expenses = customer.num_expenses(archived=False)
+    num_active_jobs = customer.num_active_jobs(archived=False)
+    num_completed_jobs = customer.num_completed_jobs(archived=False)
     narchived_totals = customer.house_totals(houses=narchived_houses, approved=True)
-    archived_totals = customer.house_totals(houses=archived_houses, approved=True)
-
     zipped_narchived = zip(narchived_houses, num_expenses, num_active_jobs, num_completed_jobs, narchived_totals)
+
+    num_expenses = customer.num_expenses(archived=True)
+    num_active_jobs = customer.num_active_jobs(archived=True)
+    num_completed_jobs = customer.num_completed_jobs(archived=True)
+    archived_totals = customer.house_totals(houses=archived_houses, approved=True)
     zipped_archived = zip(archived_houses, num_expenses, num_active_jobs, num_completed_jobs, archived_totals)
 
 

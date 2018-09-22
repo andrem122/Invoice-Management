@@ -105,7 +105,7 @@ class Customer:
 
             yield total
 
-    def num_active_jobs(self):
+    def num_active_jobs(self, **kwargs):
         """
         Gets the number of active jobs for each house of the customer.
 
@@ -119,11 +119,11 @@ class Customer:
         Raises:
             None.
         """
-        for house in self.houses:
+        for house in self._houses(**kwargs):
             #get all active jobs for the each house
             yield Job.objects.filter(house=house, house__customer=self.customer, approved=True, balance_amount__gt=0).count()
 
-    def num_completed_jobs(self):
+    def num_completed_jobs(self, **kwargs):
         """
         Gets the number of completed jobs for each house of the customer.
 
@@ -137,11 +137,11 @@ class Customer:
         Raises:
             None.
         """
-        for house in self.houses:
+        for house in self._houses(**kwargs):
             #get all active jobs for the each house
             yield Job.objects.filter(house=house, house__customer=self.customer, approved=True, balance_amount__lte=0).count()
 
-    def num_expenses(self):
+    def num_expenses(self, **kwargs):
         """
         Gets the number of expenses for each house of the customer.
 
@@ -155,7 +155,7 @@ class Customer:
         Raises:
             None.
         """
-        for house in self.houses:
+        for house in self._houses(**kwargs):
             #get all expenses for the each house
             yield Expenses.objects.filter(
                 house=house,
