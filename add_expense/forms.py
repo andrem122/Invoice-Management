@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from expenses.models import Expenses
+from jobs.models import House
 
 class Add_Expense(ModelForm, forms.Form):
     """
@@ -14,3 +15,9 @@ class Add_Expense(ModelForm, forms.Form):
             'expense_type',
             'document_link',
         ]
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        #filter house by customer id
+        self.fields['house'].queryset = House.objects.filter(customer=user, archived=False)

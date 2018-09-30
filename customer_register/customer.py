@@ -214,7 +214,7 @@ class Customer:
         Raises:
             None.
         """
-        for house in self.houses:
+        for house in self._houses(archived=False):
             if Job.objects.filter(house=house, approved=True, balance_amount__lte=0).exists():
                 yield house
 
@@ -235,6 +235,7 @@ class Customer:
             house__customer=self.customer,
             approved=True,
             balance_amount__lte=0,
+            house__archived=False,
             **kwargs
         )
 
@@ -252,7 +253,12 @@ class Customer:
         Raises:
             None.
         """
-        return Request_Payment.objects.filter(house__customer=self.customer, job__approved=True, submit_date__range=[Customer.start_week, Customer.today], **kwargs)
+        return Request_Payment.objects.filter(
+            house__customer=self.customer,
+            job__approved=True,
+            submit_date__range=[Customer.start_week, Customer.today],
+            **kwargs
+        )
 
     def current_week_payment_requests_houses(self):
         """
@@ -560,7 +566,8 @@ class Customer:
         """
         return House.objects.filter(
             customer=self.customer,
-            expenses=True
+            expenses=True,
+            archived=False,
         )
 
     def expenses_houses_pay(self):
@@ -606,6 +613,7 @@ class Customer:
         """
         return Expenses.objects.filter(
             customer=self.customer,
+            house__archived=False,
         )
 
     def current_week_expenses(self, **kwargs):

@@ -22,7 +22,7 @@ class AddJob(ModelForm, forms.Form):
         }
 
     def __init__(self, user, *args, **kwargs):
-        super(AddJob, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         #get customer id
         customer_id = user.groups.values_list('name', flat=True)[0]
         if customer_id == 'Workers':

@@ -7,10 +7,10 @@ from django.contrib import messages
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def add_expense(request):
     current_user = request.user
-    add_expense_form = Add_Expense()
+    add_expense_form = Add_Expense(user=current_user)
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        add_expense_form = Add_Expense(data=request.POST, files=request.FILES)
+        add_expense_form = Add_Expense(data=request.POST, files=request.FILES, user=current_user)
 
         if add_expense_form.is_valid():
 
@@ -29,14 +29,14 @@ def add_expense(request):
             expense.pay_this_week = pay_this_week
             expense.save()
 
-            add_expense_form = Add_Expense()
+            add_expense_form = Add_Expense(user=current_user)
             messages.success(request, 'Thanks! The expense has been added.')
         else:
             messages.error(request, 'Something went wrong. Please try again.')
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = Add_Expense()
+        add_expense_form = Add_Expense(user=current_user)
 
     return render(
         request,
