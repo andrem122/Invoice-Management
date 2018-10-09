@@ -151,4 +151,23 @@ window.addEventListener("load", function(event) {
       'disableInteraction': true,
       }).start();
   }
+
+  /*Scroll to top when arrow up clicked BEGIN*/
+  $scroll_btn = $('#scroll');
+  $('body').scroll(function(){
+    console.log('scrolling body...');
+    if ($(this).scrollTop() > 2) {
+      $scroll_btn.removeClass('hidden');
+      $scroll_btn.addClass('visible');
+    } else {
+      $scroll_btn.removeClass('visible');
+      $scroll_btn.addClass('hidden');
+    }
+  });
+
+  $('#scroll').click(function(){
+    $("html, body").animate({ scrollTop: 0 }, 600);
+    return false;
+  });
+
 });
