@@ -9,7 +9,9 @@ from django.core.mail import send_mail
 from send_data.forms import Send_Data
 from django.core.exceptions import ObjectDoesNotExist
 from customer_register.customer import Customer
+from django.template.loader import render_to_string
 from itertools import chain
+from django.views.decorators.csrf import csrf_exempt
 
 def send_approval_mail(user, job_object, subject):
     message = """Hi {},\n\nYour job at {} for ${} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems
@@ -25,6 +27,35 @@ def send_approval_mail(user, job_object, subject):
     except:
         print('Email has failed')
 
+def load_ajax_results(user):
+    customer = Customer(user)
+
+    #get active houses and houses with estimates
+    active_houses = customer.active_houses()
+    estimate_houses = customer.proposed_jobs_houses()
+    completed_houses = customer.current_week_completed_houses()
+    rejected_houses = customer.current_week_rejected_job_houses()
+
+    #get estimates, approved, completed, and rejected jobs
+    estimates = customer.current_week_proposed_jobs()
+    approved_jobs = customer.approved_jobs()
+    completed_jobs = customer.current_week_completed_jobs()
+    rejected_jobs = customer.current_week_rejected_jobs()
+
+
+    #combine querysets and keep unique values for houses
+    houses = set(chain(active_houses, estimate_houses, completed_houses, rejected_houses))
+    jobs = list(chain(estimates, approved_jobs, completed_jobs, rejected_jobs))
+
+    job_results_context = {
+        'houses': houses,
+        'jobs': jobs,
+        'current_user': user,
+    }
+
+    return render_to_string('jobs_admin/jobs_admin_results.html', job_results_context)
+
+@csrf_exempt
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def index(request):
     #get current user
@@ -57,6 +88,7 @@ def index(request):
     send_data_form = Send_Data()
     reject_estimate_form = Reject_Estimate()
     template = loader.get_template('jobs_admin/jobs_admin.html')
+    job_results = loader.get_template('jobs_admin/jobs_admin_results.html')
 
     context = {
         'houses': houses,
@@ -115,7 +147,11 @@ def index(request):
 
                 #send approval email
                 send_approval_mail(current_user, job, 'Job Approved!')
-                return redirect('/jobs-admin/')
+                if request.is_ajax():
+                    html = load_ajax_results(current_user)
+                    return HttpResponse(html)
+                else:
+                    return redirect('/jobs-admin/')
 
         elif request.POST.get('approve-as-payment'):
             approve_as_payment_form = Approve_As_Payment(request.POST)
@@ -154,7 +190,11 @@ def index(request):
 
                 #send approval email to worker
                 send_approval_mail(current_user, job, 'Payment Approved!')
-                return redirect('/jobs-admin/')
+                if request.is_ajax():
+                    html = load_ajax_results(current_user)
+                    return HttpResponse(html)
+                else:
+                    return redirect('/jobs-admin/')
 
         elif request.POST.get('reject_estimate'):
             reject_estimate_form = Reject_Estimate(request.POST)
@@ -198,7 +238,11 @@ def index(request):
                     house.completed_jobs = False
                     house.save(update_fields=['completed_jobs'])
 
-                return redirect('/jobs-admin/')
+                if request.is_ajax():
+                    html = load_ajax_results(current_user)
+                    return HttpResponse(html)
+                else:
+                    return redirect('/jobs-admin/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
