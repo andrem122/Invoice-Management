@@ -13,48 +13,44 @@
 
 {# Forms #}
 {% block option_forms %}
-  {% if current_user|in_group:'Customers' %}
-  <div class="option-forms">
-    {# Approve Job Form #}
-    <form id="approve-job-form-{{item.id}}" class="approve-job-form" action="" method="post">
-      {% csrf_token %}
-      {% if approve_form.errors %}
-      <div class="form-messages">
-        <p>Please try again.</p>
-      </div>
-      {% endif %}
-      {{approve_form}}
-      <input type="hidden" name="job_id" value="{{item.id}}">
-      <input type="hidden" name="approve_job" value="approve_job">
-    </form>
+  {# Approve Job Form #}
+  <form id="approve-job-form-{{item.id}}" class="approve-job-form" action="" method="post">
+    {% csrf_token %}
+    {% if approve_form.errors %}
+    <div class="form-messages">
+      <p>Please try again.</p>
+    </div>
+    {% endif %}
+    {{approve_form}}
+    <input type="hidden" name="job_id" value="{{item.id}}">
+    <input type="hidden" name="approve_job" value="approve_job">
+  </form>
 
-    {# Approve As Payment Form #}
-    <form id="approve-as-payment-form-{{item.id}}" class="approve-as-payment-form" action="" method="post">
-      {% csrf_token %}
-      {% if approve_as_payment_form.errors %}
-      <div class="form-messages">
-        <p>Please try again.</p>
-      </div>
-      {% endif %}
-      {{approve_as_payment_form}}
-      <input type="hidden" name="job_id" value="{{item.id}}">
-      <input type="hidden" name="approve-as-payment" value="approve-as-payment">
-    </form>
+  {# Approve As Payment Form #}
+  <form id="approve-as-payment-form-{{item.id}}" class="approve-as-payment-form" action="" method="post">
+    {% csrf_token %}
+    {% if approve_as_payment_form.errors %}
+    <div class="form-messages">
+      <p>Please try again.</p>
+    </div>
+    {% endif %}
+    {{approve_as_payment_form}}
+    <input type="hidden" name="job_id" value="{{item.id}}">
+    <input type="hidden" name="approve-as-payment" value="approve-as-payment">
+  </form>
 
-    {# Reject Form #}
-    <form id="reject-form-{{item.id}}" class="reject-form" action="" method="post">
-      {% csrf_token %}
-      {% if reject_estimate_form.errors %}
-      <div class="form-messages">
-        <p>Please try again.</p>
-      </div>
-      {% endif %}
-      {{reject_estimate_form}}
-      <input type="hidden" name="job_id" value="{{item.id}}">
-      <input type="hidden" name="reject_estimate" value="reject_estimate">
-    </form>
-  </div>
-  {% endif %}
+  {# Reject Form #}
+  <form id="reject-form-{{item.id}}" class="reject-form" action="" method="post">
+    {% csrf_token %}
+    {% if reject_estimate_form.errors %}
+    <div class="form-messages">
+      <p>Please try again.</p>
+    </div>
+    {% endif %}
+    {{reject_estimate_form}}
+    <input type="hidden" name="job_id" value="{{item.id}}">
+    <input type="hidden" name="reject_estimate" value="reject_estimate">
+  </form>
 {% endblock option_forms %}
 
 {# Item Status #}
@@ -74,8 +70,15 @@
 {% block item_heading_1_m %}Company{% endblock item_heading_1_m %}
 {% block item_heading_1_m_v %}{{ item.company }}{% endblock item_heading_1_m_v %}
 
-{% block item_heading_2_m %}Balance{% endblock item_heading_2_m %}
-{% block item_heading_2_m_v %}${{ item.balance_amount|intcomma }}{% endblock item_heading_2_m_v %}
+{% block item_2_m %}
+  {% if item.approved == True %}
+  <span class="info-title">Balance</span>
+  <li class="info-1">
+    ${{ item.balance_amount|intcomma }}
+  </li>
+  <hr>
+  {% endif %}
+{% endblock item_2_m %}
 
 {% block item_heading_3_m %}Contract Link{% endblock item_heading_3_m %}
 {% block item_heading_3_m_v %}<a rel="noopener noreferrer" target="_blank" href="{{ item.document_link.url }}">View Contract</a>{% endblock item_heading_3_m_v %}

@@ -31,12 +31,12 @@ def load_ajax_results(user):
 
     results_context = {
         'houses': houses,
-        'payments': payments,
+        'items': payments,
         'current_user': user,
     }
 
     return render_to_string('payment_requests/payments_results.html', results_context)
-    
+
 @csrf_exempt
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def payments(request):
@@ -70,7 +70,7 @@ def payments(request):
 
     context = {
         'houses': houses,
-        'payments': payments,
+        'items': payments,
         'expenses': expenses,
         'expenses_houses': expenses_houses,
         'current_user': current_user,

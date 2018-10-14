@@ -1,0 +1,199 @@
+{% load humanize %}
+{% load payment_requests_group_check %}
+
+{% if payments %}
+  {% for house in houses %}
+    <h3 class="house-address">{{ house.address }}</h3>
+    {% if forloop.first %}
+    <div class="item-headings-wrapper container-fluid">
+      <ul class="item-headings row">
+        <div class="col col-sm-6">
+          <li>Status</li>
+          <li class="second-heading">Company</li>
+          <li>Paid Link</li>
+        </div>
+        <div class="col col-sm-4">
+          <li class="contract_link">Contract Link</li>
+          <li>Submitted</li>
+        </div>
+        <div class="col col-sm-2">
+          <li>Amount</li>
+        </div>
+      </ul>
+    </div>
+    {% endif %}
+    {% for payment in payments %}
+      {% if payment.house == house %}
+
+        {# Item Options Forms #}
+        {% if current_user|in_group:'Customers' %}
+        <div class="option-forms">
+
+          {# Reject Payment Form #}
+          <form id="reject-payment-form-{{ payment.id }}" class="reject-payment-form" action="" method="post">
+            {% csrf_token %}
+            {% if change_payment_status_form.errors %}
+            <div class="form-messages">
+              <p>{{change_payment_status_form.errors}}</p>
+            </div>
+            {% endif %}
+            {{change_payment_status_form}}
+            <input type="hidden" name="p_id" value="{{ payment.id }}">
+            <input name="reject_payment" type="hidden" value="reject_payment">
+          </form>
+
+          {# Approve Payment Form #}
+          <form id="approve-payment-form-{{ payment.id }}" class="approve-payment-form" action="" method="post">
+            {% csrf_token %}
+            {% if change_payment_status_form.errors %}
+            <div class="form-messages">
+              <p>Please try again.</p>
+            </div>
+            {% endif %}
+            {{change_payment_status_form}}
+            <input type="hidden" name="p_id" value="{{ payment.id }}">
+            <input type="hidden" name="approve_payment" value="approve_payment">
+          </form>
+
+          {# Upload Form #}
+          <form id="upload-document-form-{{ payment.id }}" class="upload-document-form" action="/payment-history/p-history-job" method="post" role="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if upload_document_form.errors %}
+            <div class="form-messages">
+              <p>{{upload_document_form.errors}}</p>
+            </div>
+            {% endif %}
+            <input name="thank_you" value="/payments/thank_you" type="hidden">
+            <input name="p_id" value="{{ payment.id }}" type="hidden">
+            <input type="hidden" name="upload-document" value="upload-document">
+          </form>
+
+        </div>
+        {% endif %}
+
+        <div class="item-container">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="info-group col col-sm-6">
+                <ul>
+                  <li>
+                    {# Payment Status #}
+
+                    {% if payment.approved == True and payment.rejected == False %}
+                    <div class="status approved">Approved</div>
+
+                    {% elif payment.approved == False and payment.rejected == False %}
+                    <div class="status new">New</div>
+
+                    {% else %}
+                    <div class="status rejected">Rejected</div>
+
+                    {% endif %}
+                  </li>
+                  <span class="info-title">Company</span>
+                  <li class="info-1">{{ payment.job.company }}</li>
+                  <hr>
+                  {% if payment.document_link.url != None and payment.rejected == False %}
+                  <span class="info-title">Paid Link</span>
+                  <li class="info-1">
+                    <a rel="noopener noreferrer" target="_blank" href="{{ payment.document_link.url }}">
+                      Paid Link
+                    </a>
+                  </li>
+                  <hr>
+                  {% endif %}
+                </ul>
+              </div>
+              <div class="info-group col col-sm-4">
+                <ul>
+                  <span class="info-title">Contract</span>
+                  <li class="info-2">
+                    <a rel="noopener noreferrer" target="_blank" href="{{ payment.job.document_link.url }}">View Contract</a>
+                  </li>
+                  <hr>
+                  <span class="info-title">Submitted</span>
+                  <li class="info-3">
+                    {{ payment.approved_date|date:'M j, g:i a' }}
+                  </li>
+                  <hr>
+                </ul>
+              </div>
+              <div class="info-group col col-sm-2">
+                {% if current_user|in_group:'Customers' %}
+                <ul>
+                  <span class="info-title">Amount</span>
+                  <li class="info-4">${{ payment.amount|intcomma }}</li>
+                  <hr>
+                  {# Mobile Option Buttons #}
+                  <ul class="list-inline mobile-option-icons">
+
+                    {# New #}
+                    {% if payment.approved == False and payment.rejected == False %}
+                    <li class="list-inline-item">
+                      <button type="submit" form="approve-payment-form-{{ payment.id }}" class="mobile-option approve-option-m">
+                        <i class="fas fa-check"></i>
+                      </button>
+                    </li>
+
+                    {# Approved #}
+                    {% elif payment.approved == True and payment.rejected == False %}
+                    <li class="list-inline-item">
+                      <button type="submit" form="reject-payment-form-{{ payment.id }}" class="mobile-option reject-option-m">
+                        <i class=" mobile-option fas fa-times"></i>
+                      </button>
+                    </li>
+                    <li class="list-inline-item">
+                      <input class="document_link_upload-m" name="document_link" form="upload-document-form-{{ payment.id }}" id="document_link-{{ payment.id }}-m" type="file">
+                      <button type="submit" form="upload-document-form-{{ payment.id }}" class="dropdown-item upload-btn">
+                        <i class="fas fa-upload"></i>
+                      </button>
+                    </li>
+
+                    {# Rejected #}
+                    {% elif payment.rejected == True %}
+                    <li class="list-inline-item">
+                      <button type="submit" form="approve-payment-form-{{ payment.id }}" class="mobile-option approve-option-m">
+                        <i class="mobile-option fas fa-check"></i>
+                      </button>
+                    </li>
+                    {% endif %}
+
+                  </ul>
+                  {# Desktop Options #}
+                  <div class="item-options-dropdown dropdown">
+
+                    <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </a>
+
+                    {# Dropdown Menu Desktop #}.
+                    <div class="dropdown-menu{% if job.approved == True %} dropdown-approved{% else %} dropdown-new{% endif %}">
+
+                      {# New #}
+                      {% if payment.approved == False and payment.rejected == False %}
+                      <button type="submit" form="approve-payment-form-{{ payment.id }}" class="dropdown-item approve-btn">Approve</button>
+                      <button type="submit" form="reject-payment-form-{{ payment.id }}" class="dropdown-item reject-btn">Reject</button>
+
+                      {# Approved #}
+                      {% elif payment.approved == True and payment.rejected == False %}
+                      <button type="submit" form="reject-payment-form-{{ payment.id }}" class="dropdown-item reject-btn">Reject</button>
+                      <input class="document_link_upload" name="document_link" form="upload-document-form-{{ payment.id }}" id="document_link-{{ payment.id }}" required type="file">
+                      <button type="submit" form="upload-document-form-{{ payment.id }}" class="dropdown-item upload-btn">Upload Document</button>
+
+                      {# Rejected #}
+                      {% elif payment.rejected == True %}
+                      <button type="submit" form="approve-payment-form-{{ payment.id }}" class="dropdown-item approve-btn">Approve</button>
+                      {% endif %}
+                    </div>
+
+                  </div>
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div> <!-- /.item-container -->
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+{% endif %}

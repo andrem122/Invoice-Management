@@ -441,10 +441,12 @@ class Customer:
             None.
         """
         houses = House.objects.filter(customer=self.customer, rejected_payments=True)
-        return self.current_week_results(houses=houses,
+        return self.current_week_results(
+            houses=houses,
             model=Request_Payment,
             update_field={'rejected_payments': [True, False]},
             house__customer=self.customer,
+            job__approved=True,
             approved=False,
             rejected=True,
             submit_date__range=[Customer.start_week, Customer.today]
