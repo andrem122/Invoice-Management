@@ -10,8 +10,8 @@ from send_data.forms import Send_Data
 from django.core.exceptions import ObjectDoesNotExist
 from customer_register.customer import Customer
 from django.template.loader import render_to_string
-from itertools import chain
 from django.views.decorators.csrf import csrf_exempt
+from itertools import chain
 
 def send_approval_mail(user, job_object, subject):
     message = """Hi {},\n\nYour job at {} for ${} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems
@@ -49,7 +49,7 @@ def load_ajax_results(user):
 
     job_results_context = {
         'houses': houses,
-        'jobs': jobs,
+        'items': jobs,
         'current_user': user,
     }
 
@@ -92,7 +92,7 @@ def index(request):
 
     context = {
         'houses': houses,
-        'jobs': jobs,
+        'items': jobs,
         'current_user': current_user,
         'approve_form': approve_form,
         'send_data_form': send_data_form,

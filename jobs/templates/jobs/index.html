@@ -16,13 +16,14 @@
 {% block body_class %}jobs{% endblock body_class %}
 
 {% block content %}
+
 {% if new_user %}
 <div class="welcome-message">
   <h3 data-step="1" data-intro="Here is where you can view your jobs and request payments for
   existing ones">Welcome to Your Job Dashboard!</h3>
   <a id="step-4" data-step="4" data-intro="Log back in through this link" href="https://genuwine12.pythonanywhere.com/accounts/login/">https://genuwine12.pythonanywhere.com/accounts/login/</a>
 </div>
-<!--Example for Intro Js-->
+{# Example for Intro Js #}
 <div class="job-container">
   <div class="house">
     <h3 class="house-address">1234 Example Way</h3>
@@ -45,7 +46,7 @@
         <td>
           <form class="request-payment-form">
             <a id="step-2" class="custom-btn blue-slide-btn" href="#"
-            data-step="2" data-intro="If you need to get a partial payment 
+            data-step="2" data-intro="If you need to get a partial payment
             for an active job, you can click this button to get it">
               <p class="request-payment-p-example">Request Payment</p>
             </a>
@@ -56,6 +57,8 @@
   </div>
 </div> <!-- /.job-container -->
 {% endif %}
+
+{# Active Jobs #}
 {% if approved_houses %}
 <h2>Active Jobs</h2>
 {% endif %}
@@ -103,6 +106,9 @@
   </div>
 </div> <!-- /.job-container -->
 {% endfor %}
+{# End Active Jobs #}
+
+{# Pending Jobs #}
 {% if gen_has_results %}
 <h2>Pending Approval Jobs</h2>
 {% endif %}
@@ -134,4 +140,5 @@
   </div>
 </div> <!-- /.job-container -->
 {% endfor %}
+{# End Pending Jobs #}
 {% endblock content %}

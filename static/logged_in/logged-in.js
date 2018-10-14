@@ -155,7 +155,6 @@ window.addEventListener("load", function(event) {
   /*Scroll to top when arrow up clicked BEGIN*/
   $scroll_btn = $('#scroll');
   $('body').scroll(function(){
-    console.log('scrolling body...');
     if ($(this).scrollTop() > 2) {
       $scroll_btn.removeClass('hidden');
       $scroll_btn.addClass('visible');

@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
-from jobs.models import Job, House, Request_Payment, Current_Worker
+from jobs.models import Job, Request_Payment, Current_Worker
 from .forms import Change_Payment_Status
 from django.contrib.auth.decorators import user_passes_test, login_required
 from project_management.decorators import customer_and_staff_check
@@ -9,9 +9,35 @@ from django.core.mail import send_mail
 from payment_history.forms import Upload_Document_Form
 from django.core.exceptions import ObjectDoesNotExist
 from send_data.forms import Send_Data
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
 from itertools import chain
 import datetime
 
+def load_ajax_results(user):
+    customer = Customer(user)
+
+    payment_history_houses = customer.current_week_payment_history_houses()
+    payment_request_houses = customer.current_week_payment_requests_houses()
+    rejected_payment_houses = customer.current_week_rejected_payment_houses()
+    expenses_houses = customer.expenses_houses_pay()
+
+    #get all payments and expenses for current week
+    payments = customer.current_week_payments_all()
+    #expenses = customer.current_week_expenses(pay_this_week=True)
+
+    #combine querysets and keep unique items
+    houses = set(chain(payment_history_houses, payment_request_houses, rejected_payment_houses))
+
+    results_context = {
+        'houses': houses,
+        'payments': payments,
+        'current_user': user,
+    }
+
+    return render_to_string('payment_requests/payments_results.html', results_context)
+    
+@csrf_exempt
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def payments(request):
     current_user = request.user
@@ -38,8 +64,8 @@ def payments(request):
     upload_document_form = Upload_Document_Form()
 
     template = loader.get_template('payment_requests/payments.html')
-    start_week = str(Customer.start_week.date())
-    today = str(Customer.today.date())
+    start_week = str(Customer.start_week.strftime('%b %d'))
+    today = str(Customer.today.strftime('%b %d'))
     send_data_form = Send_Data()
 
     context = {
@@ -119,6 +145,12 @@ def payments(request):
                 except:
                     print('Email has failed')
 
+                if request.is_ajax():
+                    html = load_ajax_results(current_user)
+                    return HttpResponse(html)
+                else:
+                    return redirect('/payments/')
+
         elif request.POST.get('reject_payment'):
             change_payment_status_form = Change_Payment_Status(request.POST)
 
@@ -179,6 +211,12 @@ def payments(request):
                     house.save(update_fields=['rejected_payments'])
 
                 house.save()
+
+                if request.is_ajax():
+                    html = load_ajax_results(current_user)
+                    return HttpResponse(html)
+                else:
+                    return redirect('/payments/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
