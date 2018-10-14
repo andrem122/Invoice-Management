@@ -507,9 +507,10 @@ class Customer:
             houses=houses,
             model=Job,
             update_field={'proposed_jobs': [True, False]},
+            house__customer=self.customer,
             approved=False,
             rejected=False,
-            start_date__range=[Customer.start_week, Customer.today]
+            start_date__range=[Customer.start_week, Customer.today],
         )
 
     def proposed_jobs(self, **kwargs):
