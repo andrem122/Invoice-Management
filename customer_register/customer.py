@@ -502,7 +502,7 @@ class Customer:
         Raises:
             None.
         """
-        houses = House.objects.filter(customer=self.customer, proposed_jobs=True)
+        houses = House.objects.filter(customer=self.customer)
         return self.current_week_results(
             houses=houses,
             model=Job,
