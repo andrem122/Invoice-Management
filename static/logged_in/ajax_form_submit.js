@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 
   //for jobs_admin
-  var btn_cls = 'dropdown-item';
+  var btn_cls = 'option-item';
   var url = window.location.pathname;
   ajax_post(btn_cls, url);
 

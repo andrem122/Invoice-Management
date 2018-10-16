@@ -130,14 +130,14 @@
 {% block desktop_option_btns %}
   <div class="dropdown-menu{% if item.approved == True %} dropdown-approved{% else %} dropdown-new{% endif %}">
     {% if item.approved == True %}
-    <button type="submit" form="reject-form-{{item.id}}" class="dropdown-item reject-btn">Reject</button>
+    <button type="submit" form="reject-form-{{item.id}}" class="dropdown-item reject-btn option-item">Reject</button>
     {% elif item.rejected == True %}
-    <button type="submit" form="approve-as-payment-form-{{item.id}}" class="dropdown-item approve-payment-option">Approve Payment</button>
-    <button type="submit" form="approve-job-form-{{item.id}}" class="dropdown-item approve-job-option">Approve Job</button>
+    <button type="submit" form="approve-as-payment-form-{{item.id}}" class="dropdown-item approve-payment-option option-item">Approve Payment</button>
+    <button type="submit" form="approve-job-form-{{item.id}}" class="dropdown-item approve-job-option option-item">Approve Job</button>
     {% else %}
-    <button type="submit" form="approve-as-payment-form-{{item.id}}" class="dropdown-item approve-payment-option">Approve Payment</button>
-    <button type="submit" form="approve-job-form-{{item.id}}" class="dropdown-item approve-job-option">Approve Job</button>
-    <button type="submit" form="reject-form-{{item.id}}" class="dropdown-item reject-job-option">Reject</button>
+    <button type="submit" form="approve-as-payment-form-{{item.id}}" class="dropdown-item approve-payment-option option-item">Approve Payment</button>
+    <button type="submit" form="approve-job-form-{{item.id}}" class="dropdown-item approve-job-option option-item">Approve Job</button>
+    <button type="submit" form="reject-form-{{item.id}}" class="dropdown-item reject-job-option option-item">Reject</button>
     {% endif %}
   </div>
 {% endblock desktop_option_btns %}
