@@ -28,7 +28,8 @@ def is_image(img_names=()):
         else:
             return False
 
-def generate_file_path(house, user, img_names=(), upload_folder=''):
+MISSING = object()
+def generate_file_path(house, user=MISSING, img_names=(), upload_folder=''):
     """
     generates file path for uploaded files
     """
@@ -36,6 +37,7 @@ def generate_file_path(house, user, img_names=(), upload_folder=''):
     for img_name in img_names:
         try:
             img_path = os.path.join(BASE_DIR, 'media', upload_folder, str(user.id) + '-expenses', str(img_name))
-        except NameError:
+        except AttributeError:
+            print('User object is missing and therefore a worker is uploading an image.')
             img_path = os.path.join(BASE_DIR, 'media', upload_folder, str(house.address), str(img_name))
         yield img_path
