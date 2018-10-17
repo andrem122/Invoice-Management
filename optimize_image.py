@@ -21,7 +21,6 @@ def is_image(img_names=()):
     img_exts = ('.jpg', '.jpeg', '.gif', '.png')
     for img_name in img_names:
         filename, ext = os.path.splitext(img_name)
-        print(f'File Name: {filename}, Extension: {ext.lower()}')
 
         if ext.lower() in img_exts:
             return True
