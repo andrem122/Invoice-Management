@@ -7,6 +7,7 @@ from django.contrib import messages
 from customer_register.customer import Customer
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import worker_check
+from optimize_image import optimize_image, is_image, generate_file_path
 
 @user_passes_test(worker_check, login_url='/accounts/login/')
 def add_job(request):
@@ -21,6 +22,8 @@ def add_job(request):
             #variables for the Job instance
             house = form.cleaned_data['house']
             start_amount = form.cleaned_data['start_amount']
+            print(form.cleaned_data['document_link'])
+            img_names = (form.cleaned_data['document_link'].name, )
 
             #the house now has a proposed job, so set proposed_jobs=True
             house.proposed_jobs=True
@@ -33,6 +36,11 @@ def add_job(request):
             job.approved = False
             job.balance_amount = job.balance
             job.save()
+
+            result = is_image(img_names)
+            if result == True:
+                file_paths = generate_file_path(house=house, img_names=img_names, upload_folder='worker_uploads')
+                optimize_image(file_paths)
 
             messages.success(request, 'Thanks! Your job was submitted and is awaiting approval.')
             form = AddJob(user=current_user)
