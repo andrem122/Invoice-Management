@@ -131,7 +131,7 @@ class _House:
         Raises:
             None.
         """
-        budget_balance = self.budget() - self.total_spent()
+        budget_balance = round(self.budget() - self.total_spent(), 2)
         budget_balance_percent = (self.total_spent() / self.budget()) * 100 #get percentage
         budget_balance_degree = round(360 * budget_balance_percent / 100, 4) #convert to degrees and round to four decimal places
         return (budget_balance, budget_balance_degree)
