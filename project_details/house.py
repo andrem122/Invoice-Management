@@ -119,19 +119,22 @@ class _House:
 
     def budget_balance(self):
         """
-        Calculates the balance budget by taking the budget amount
-        and subtracting the total spent amount.
+        Calculates the balance budget and balance budget degree
+        by taking the budget amount and subtracting the total spent amount.
 
         Args:
             self: The object instance.
 
         Returns:
-            A float.
+            A tuple.
 
         Raises:
             None.
         """
-        return self.budget() - self.total_spent()
+        budget_balance = self.budget() - self.total_spent()
+        budget_balance_percent = (self.total_spent() / self.budget()) * 100 #get percentage
+        budget_balance_degree = round(360 * budget_balance_percent / 100, 4) #convert to degrees and round to four decimal places
+        return (budget_balance, budget_balance_degree)
 
     def potential_profit(self):
         potential_profit = (_House.closing_cost*self.vars['after_repair_value']) - self.vars['purchase_price'] - self.total_spent() - _House.broker_fee

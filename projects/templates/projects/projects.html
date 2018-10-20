@@ -33,6 +33,7 @@
       {{archive_house_form}}
       <input type="hidden" name="house_id" value="{{ house.id }}">
     </form>
+
   </div>
 
   {% endif %}
@@ -49,7 +50,7 @@
               {% endif %}
             </li>
             <span class="info-title">Project</span>
-            <li class="info-1">{{ house.address }}</li>
+            <li class="info-1"><a href="/project-details/{{ house.id }}">{{ house.address }}</a></li>
             <hr>
           </ul>
         </div>
@@ -65,8 +66,6 @@
                 {% elif num_expenses == 1 %}
                 <span>{{ num_expenses }}</span> Expense
 
-                {% else %}
-                <span>{{ num_expenses }}</span> Expenses
                 {% endif %}
 
               </a>
@@ -150,6 +149,7 @@
       {{archive_house_form}}
       <input type="hidden" name="house_id" value="{{ house.id }}">
     </form>
+
   </div>
 
   {% endif %}
@@ -162,7 +162,7 @@
               <div class="status completed">Completed</div>
             </li>
             <span class="info-title">Project</span>
-            <li class="info-1">{{ house.address }}</li>
+            <li class="info-1"><a href="/project-details/{{ house.id }}">{{ house.address }}</a></li>
             <hr>
           </ul>
         </div>

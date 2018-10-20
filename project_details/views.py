@@ -14,7 +14,6 @@ def project_details(request, house_id):
 
     #get forms and template
     send_data_form = Send_Data()
-    #view_project_form = View_Project_Details()
     template = loader.get_template('project_details/project_details.html')
 
     context = {
@@ -49,7 +48,8 @@ def project_details(request, house_id):
         context['expenses'] = expenses
         context['completed_jobs'] = completed_jobs
         context['budget'] = budget
-        context['budget_balance'] = budget_balance
+        context['budget_balance'] = budget_balance[0]
+        context['budget_balance_degree'] = budget_balance[1]
         context['total_spent'] = total_spent
         context['purchase_price'] = purchase_price
         context['after_repair_value'] = after_repair_value

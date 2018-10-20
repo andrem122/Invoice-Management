@@ -11,17 +11,26 @@ class House(models.Model):
     address = models.CharField(max_length=250)
     companies = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Current_Worker')
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer_house')
+    purchase_price = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    profit = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    after_repair_value = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+
+    #jobs
     proposed_jobs = models.BooleanField(default=False)
     completed_jobs = models.BooleanField(default=False)
     rejected_jobs = models.BooleanField(default=False)
+
+    #payments
     payment_history = models.BooleanField(default=False)
     pending_payments = models.BooleanField(default=False)
     rejected_payments = models.BooleanField(default=False)
+
     expenses = models.BooleanField(default=False)
     archived = models.BooleanField(default=False)
 
     def __str__(self):
         return self.address
+
 
     def generate_file_path(self, file_name):
         return os.path.join('customer_uploads', 'add_house', str(file_name))

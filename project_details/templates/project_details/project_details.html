@@ -5,31 +5,55 @@
 {% load jobs_admin_group_check %}
 
 {% block scripts %}
+<script type="text/javascript" src="{% static 'project_details/project_details.js' %}" defer></script>
 {% endblock scripts %}
 
 {% block content %}
-<div id="project_details">
-  <h2>{{ address }}</h2>
-  <div class="row margin-bottom">
-    <div class="col">
-      <h6 class="detail-heading">Purchase Price</h6>
-      <span class="detail-value">${{ purchase_price|intcomma }}</span>
+<h2>{{ address }}</h2>
+<div class="white-block" id="project_details">
+
+  <div class="number-circle-container">
+    <h6 class="detail-heading">Budget</h6>
+    <div id="activeBorder" class="active-border">
+        <div id="circle" class="circle">
+            <span class="prec {{ budget_balance_degree }}" id="prec">0%</span>
+        </div>
     </div>
-    <div class="col">
-      <h6 class="detail-heading">Selling Price</h6>
-      <span class="detail-value">${{ after_repair_value|intcomma }}</span>
-    </div>
-  </div>
-  <div class="row margin-bottom">
-    <div class="col">
-      <h6 class="detail-heading">Total Spent</h6>
-      <span class="detail-value">${{ total_spent|intcomma }}</span>
-    </div>
-    <div class="col">
-      <h6 class="detail-heading">Potential Profit</h6>
-      <span class="detail-value">${{ potential_profit|intcomma }}</span>
+    <div class="detail-text-container">
+      <span class="detail-value">${{ budget_balance|intcomma }}</span>
     </div>
   </div>
+
+  <div class="row margin-bottom">
+    <div class="col-lg-6">
+      <div class="col-inner">
+        <h6 class="detail-heading">Purchase Price</h6>
+        <span class="detail-value">${{ purchase_price|intcomma }}</span>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="col-inner">
+        <h6 class="detail-heading">Selling Price</h6>
+        <span class="detail-value">${{ after_repair_value|intcomma }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row margin-bottom">
+    <div class="col-lg-6">
+      <div class="col-inner">
+        <h6 class="detail-heading">Total Spent</h6>
+        <span class="detail-value">${{ total_spent|intcomma }}</span>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="col-inner">
+        <h6 class="detail-heading">Potential Profit</h6>
+        <span class="detail-value">${{ potential_profit|intcomma }}</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <div id="expenses">

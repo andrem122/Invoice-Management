@@ -53,8 +53,8 @@ def projects(request):
         'narchived_count': narchived_count,
         'archived_count': archived_count,
         'current_user': current_user,
-        'send_data_form': send_data_form,
         'archive_house_form': archive_house_form,
+        'send_data_form': send_data_form,
     }
 
     if request.method == 'POST':

@@ -37,6 +37,7 @@ urlpatterns = [
     path('projects/', include('projects.urls')),
     path('search/', include('search_submit.urls')),
     path('send-data/', include('send_data.urls')),
+    path('project-details/', include('project_details.urls')),
 ]
 
 if settings.DEBUG:
