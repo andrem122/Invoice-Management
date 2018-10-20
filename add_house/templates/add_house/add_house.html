@@ -8,14 +8,12 @@
     <h3 id="add-house-heading">Add Property</h3>
     <p id="add-house-desc">
       Add properties here that you have or will
-      have workers working on. You can add multiple
-      properties by seperating them with a semicolon.
-      Ex: 123 Old Walk Way; 21 New Street
+      have workers working on.
     </p>
     <hr>
   </div>
   <div class="panel-body">
-    <form id="add-house-form" action="" method="post" role="form" enctype="multipart/form-data">
+    <form id="add-house-form" class="add-form" action="" method="post" role="form" enctype="multipart/form-data">
       {% csrf_token %}
       {% if messages %}
       <ul class="messages">
@@ -26,11 +24,23 @@
       {% endif %}
       {% if form.errors %}
       <div class="form-messages">
-        <p>{{form.errors}}</p>
+        <p>{{ form.errors }}</p>
       </div>
       {% endif %}
-      {{form}}
-      <input class="btn btn-primary" type="submit" value="Add House">
+
+      {{ form.address.label_tag }}
+      <div class="input-wrap"><i class="fas fa-home"></i>{{ form.address }}</div>
+
+      {{ form.purchase_price.label_tag }}
+      <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.purchase_price }}</div>
+
+      {{ form.profit.label_tag }}
+      <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.profit }}</div>
+
+      {{ form.after_repair_value.label_tag }}
+      <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.after_repair_value }}</div>
+
+      <input class="form-submit-btn" type="submit" value="Add House">
     </form>
   </div>
 </div>
