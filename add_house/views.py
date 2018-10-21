@@ -24,11 +24,11 @@ def add_house(request):
             #form field handling
             if house.address == '':
                 messages.error(request, 'Please enter an address.')
-            elif house.purchase_price == 0:
+            elif round(1 + house.purchase_price) == 1:
                 messages.error(request, 'Please enter a purchase price.')
-            elif house.profit == 0:
+            elif round(1 + house.profit) == 1:
                 messages.error(request, 'Please enter your desired profit.')
-            elif house.after_repair_value == 0:
+            elif round(1 + house.after_repair_value) == 1:
                 messages.error(request, 'Please enter the selling price of the property.')
             else:
                 house.save()
