@@ -37,7 +37,7 @@ def project_details(request, house_id):
 
         #expenses
         expenses = house.expenses()
-        completed_jobs = house.completed_jobs()
+        approved_jobs = house.approved_jobs()
         budget = house.budget()
         total_spent = house.total_spent()
         budget_balance = house.budget_balance()
@@ -46,7 +46,7 @@ def project_details(request, house_id):
         #add info to the context dictionary
         context['address'] = address
         context['expenses'] = expenses
-        context['completed_jobs'] = completed_jobs
+        context['approved_jobs'] = approved_jobs
         context['budget'] = budget
         context['budget_balance'] = budget_balance[0]
         context['budget_balance_degree'] = budget_balance[1]

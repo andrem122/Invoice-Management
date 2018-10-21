@@ -58,7 +58,6 @@
           <ul>
             <span class="info-title">Expenses</span>
             <li class="info-2 active_jobs">
-              <a{% if num_expenses > 0 %} href="/expenses#{{house.address|add_dashes}}"{% endif %}>
 
                 {% if num_expenses > 1 %}
                 <span>{{ num_expenses }}</span> Expenses
@@ -71,12 +70,11 @@
 
                 {% endif %}
 
-              </a>
             </li>
             <hr>
             <span class="info-title">Completed Jobs</span>
             <li class="info-3">
-              <a{% if num_completed_jobs > 0 %} href="/jobs-complete#{{house.address|add_dashes}}"{% endif %}><span>{{num_completed_jobs}}</span> Jobs</a>
+              <span>{{ num_completed_jobs }}</span> Jobs
             </li>
             <hr>
           </ul>
@@ -173,7 +171,6 @@
           <ul>
             <span class="info-title">Expenses</span>
             <li class="info-2 active_jobs">
-              <a{% if num_expenses > 0 %} href="/expenses#{{house.address|add_dashes}}"{% endif %}>
 
                 {% if num_expenses > 1 %}
                 <span>{{ num_expenses }}</span> Expenses
@@ -185,12 +182,11 @@
                 <span>{{ num_expenses }}</span> Expenses
                 {% endif %}
 
-              </a>
             </li>
             <hr>
             <span class="info-title">Completed Jobs</span>
             <li class="info-3">
-              <a{% if num_completed_jobs > 0 %} href="/jobs-complete#{{house.address|add_dashes}}"{% endif %}><span>{{num_completed_jobs}}</span> Jobs</a>
+              <span>{{num_completed_jobs}}</span> Jobs
             </li>
             <hr>
           </ul>

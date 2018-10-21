@@ -41,9 +41,9 @@ class _House:
             house=self.house,
         )
 
-    def completed_jobs(self):
+    def approved_jobs(self):
         """
-        Fetches all completed jobs for the house
+        Fetches all approved jobs for the house
 
         Args:
             self: The object instance.
@@ -59,7 +59,6 @@ class _House:
         return Job.objects.filter(
             house=self.house,
             approved=True,
-            balance_amount__lte=0,
         )
 
     def budget(self):
@@ -96,20 +95,11 @@ class _House:
             None.
         """
 
-        completed_jobs = Job.objects.filter(
-            house=self.house,
-            approved=True,
-            balance_amount__lte=0,
-            house__archived=False,
-        )
-
-        expenses = Expenses.objects.filter(
-            house=self.house,
-        )
+        approved_jobs = self.approved_jobs()
+        expenses = self.expenses()
 
         total = 0
-
-        for job in completed_jobs:
+        for job in approved_jobs:
             total += job.total_paid
 
         for expense in expenses:

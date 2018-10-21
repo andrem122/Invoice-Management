@@ -161,10 +161,10 @@
     {% endfor %}
   </div>
   {% endif %}
-  <div id="completed_jobs">
-    {% if completed_jobs %}
+  <div id="approved_jobs">
+    {% if approved_jobs %}
       <h2>Completed Jobs</h2>
-      {% for job in completed_jobs %}
+      {% for job in approved_jobs %}
         {% if forloop.first %}
         <div class="item-headings-wrapper container-fluid">
           <ul class="item-headings row">
