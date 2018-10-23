@@ -1219,3 +1219,22 @@ a#step-4 {
     margin: 10px auto 100px auto;
   }
 }
+
+/* Job Container */
+
+.job-container {
+  overflow-x: auto;
+  margin-top: 25px;
+  background-color: #fff;
+  padding: 20px;
+  border: 2px solid #ddd;
+  border-top: 4px solid #546256;
+  margin-bottom: 30px;
+  max-width: 2000px;
+  transition: all 0.3s ease-in-out;
+}
+
+.job-container h3 {
+  font-size: 21px;
+  color: #4A87B6;
+}
