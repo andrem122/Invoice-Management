@@ -55,10 +55,8 @@ class Customer:
             if model.objects.filter(house=house, **kwargs).exists():
                 setattr(house, list(update_field.keys())[0], list(update_field.values())[0][0])
                 house.save(update_fields=[list(update_field.keys())[0]])
-                print(f'{model.__name__} items found for {house.address} for this week')
                 yield house
             else:
-                print(f'No {model.__name__} items found for {house.address} for this week')
                 setattr(house, list(update_field.keys())[0], list(update_field.values())[0][1])
                 house.save(update_fields=[list(update_field.keys())[0]])
 
