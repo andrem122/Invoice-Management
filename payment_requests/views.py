@@ -163,8 +163,7 @@ def payments(request):
                 job = payment.job
                 house = job.house
 
-                #find new total paid for job
-
+                #find new total paid and balance for job
                 if job.balance_amount < job.start_amount:
                     job.total_paid = job.total_paid - payment.amount
                     job.save(update_fields=['total_paid']) #update database value so the balance can be calculated
@@ -173,7 +172,12 @@ def payments(request):
 
                 if payment.requested_by_worker == False:
                     payment.delete()
-                    job.approved = False
+
+                    if customer.current_week_approved_payments(job=job): #if there are approved or rejected payments for the job, set job.approved = True
+                        job.approved = True
+                    else:
+                        job.approved = False
+
                     job.rejected = False
                     house.proposed_jobs = True
                 else:
@@ -205,6 +209,8 @@ def payments(request):
                 """
                 if not Request_Payment.objects.filter(house=house, approved=True).exists():
                     house.payment_history = False
+                else:
+                    house.payment_history = True
 
                 if not customer.current_week_rejected_payments(house=house).exists():
                     house.rejected_payments = False

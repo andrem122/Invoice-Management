@@ -55,8 +55,10 @@ class Customer:
             if model.objects.filter(house=house, **kwargs).exists():
                 setattr(house, list(update_field.keys())[0], list(update_field.values())[0][0])
                 house.save(update_fields=[list(update_field.keys())[0]])
+                print(f'{model.__name__} items found for {house.address} for this week')
                 yield house
             else:
+                print(f'No {model.__name__} items found for {house.address} for this week')
                 setattr(house, list(update_field.keys())[0], list(update_field.values())[0][1])
                 house.save(update_fields=[list(update_field.keys())[0]])
 
@@ -123,7 +125,7 @@ class Customer:
             #get all active jobs for the each house
             yield Job.objects.filter(house=house, house__customer=self.customer, approved=True, balance_amount__gt=0).count()
 
-    def num_completed_jobs(self, **kwargs):
+    def num_approved_jobs(self, **kwargs):
         """
         Gets the number of completed jobs for each house of the customer.
 
@@ -139,7 +141,7 @@ class Customer:
         """
         for house in self._houses(**kwargs):
             #get all active jobs for the each house
-            yield Job.objects.filter(house=house, house__customer=self.customer, approved=True, balance_amount__lte=0).count()
+            yield Job.objects.filter(house=house, house__customer=self.customer, approved=True).count()
 
     def num_expenses(self, **kwargs):
         """
@@ -321,10 +323,17 @@ class Customer:
         Notes: House payment_history attribute will NOT update
                if you filter houses by payment_history=True in the queryset below
         """
-        houses = House.objects.filter(customer=self.customer, payment_history=True)
-        return self.current_week_results(houses=houses, model=Request_Payment, update_field={'payment_history': [True, False]}, job__approved=True, approved=True, approved_date__range=[Customer.start_week, Customer.today])
+        houses = House.objects.filter(customer=self.customer)
+        return self.current_week_results(
+            houses=houses,
+            model=Request_Payment,
+            update_field={'payment_history': [True, False]},
+            job__approved=True,
+            approved=True,
+            approved_date__range=[Customer.start_week, Customer.today]
+        )
 
-    def current_week_approved_payments(self):
+    def current_week_approved_payments(self, **kwargs):
         """
         Gets all approved payments for the current week.
 
@@ -342,6 +351,7 @@ class Customer:
             job__approved=True,
             approved=True,
             approved_date__range=[Customer.start_week, Customer.today],
+            **kwargs
         )
 
     def current_week_completed_houses(self):

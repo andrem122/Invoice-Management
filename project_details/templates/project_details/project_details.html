@@ -81,8 +81,9 @@
       {# Item Options Forms #}
       {% if current_user|in_group:'Customers' %}
       <div class="option-forms">
+
         {# Delete Expense #}
-        <form id="delete_exp_form_{{ expense.id }}" class="delete_exp_form" action="" method="post">
+        <form id="delete_exp_form_{{ expense.id }}" class="delete_exp_form" action="/expenses/" method="post">
           {% csrf_token %}
           {% if delete_exp_form.errors %}
           <div class="form-messages">
@@ -91,8 +92,10 @@
           {% endif %}
           {{delete_exp_form}}
           <input type="hidden" name="expense_id" value="{{ expense.id }}">
+          <input type="hidden" name="post_from_url" value="{{ request.build_absolute_uri }}">
           <input type="hidden" name="delete_exp_form" value="delete_exp_form">
         </form>
+
       </div>
       {% endif %}
 

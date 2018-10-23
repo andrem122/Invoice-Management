@@ -14,10 +14,10 @@
 {% block heading_status %}Status{% endblock heading_status %}
 {% block item_heading_1 %}Project{% endblock item_heading_1 %}
 {% block item_heading_2 %}Expenses{% endblock item_heading_2 %}
-{% block item_heading_3 %}Completed Jobs{% endblock item_heading_3 %}
+{% block item_heading_3 %}Approved Jobs{% endblock item_heading_3 %}
 {% block item_heading_4 %}Total Spent{% endblock item_heading_4 %}
 {% block item_loop %}
-  {% for house, num_expenses, num_active_jobs, num_completed_jobs, total in zipped_narchived %}
+  {% for house, num_expenses, num_active_jobs, num_approved_jobs, total in zipped_narchived %}
 
   {# Item Options Forms #}
   {% if current_user|in_group:'Customers' %}
@@ -72,9 +72,9 @@
 
             </li>
             <hr>
-            <span class="info-title">Completed Jobs</span>
+            <span class="info-title">Approved Jobs</span>
             <li class="info-3">
-              <span>{{ num_completed_jobs }}</span> Jobs
+              <span>{{ num_approved_jobs }}</span> Jobs
             </li>
             <hr>
           </ul>
@@ -134,7 +134,7 @@
     <h2 class="secondary-title">{{ archived_count }} Archived Projects</h2>
   {% endif %}
 
-  {% for house, num_expenses, num_active_jobs, num_completed_jobs, total in zipped_archived %}
+  {% for house, num_expenses, num_active_jobs, num_approved_jobs, total in zipped_archived %}
 
   {# Item Options Forms #}
   {% if current_user|in_group:'Customers' %}
@@ -184,9 +184,9 @@
 
             </li>
             <hr>
-            <span class="info-title">Completed Jobs</span>
+            <span class="info-title">Approved Jobs</span>
             <li class="info-3">
-              <span>{{num_completed_jobs}}</span> Jobs
+              <span>{{ num_approved_jobs }}</span> Jobs
             </li>
             <hr>
           </ul>

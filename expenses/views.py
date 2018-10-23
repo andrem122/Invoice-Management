@@ -9,6 +9,7 @@ from project_management.decorators import customer_and_staff_check
 from customer_register.customer import Customer
 from send_data.forms import Send_Data
 
+
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def expenses(request):
     #get current user
@@ -42,6 +43,7 @@ def expenses(request):
 
                 #POST data
                 expense_id = int(request.POST.get('expense_id'))
+                post_from_url = request.POST.get('post_from_url')
 
                 #get expense and house
                 expense = Expenses.objects.get(pk=expense_id)
@@ -53,7 +55,7 @@ def expenses(request):
                     house.expenses = False
                     house.save(update_fields=['expenses'])
 
-                return redirect('/expenses/')
+                return redirect(post_from_url)
     # if a GET (or any other method) we'll create a blank form
 
     return HttpResponse(template.render(context, request))

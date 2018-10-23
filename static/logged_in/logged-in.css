@@ -238,6 +238,10 @@ ul.item-headings {
   max-width: 1400px;
 }
 
+.max-width-container {
+  max-width: 1400px;
+}
+
 .page-title {
   margin-bottom: 30px;
 }
@@ -266,25 +270,6 @@ ul.item-headings {
   margin-right: 15px;
 }
 
-/* Job Container */
-
-.job-container {
-  overflow-x: auto;
-  margin-top: 25px;
-  background-color: #fff;
-  padding: 20px;
-  border: 2px solid #ddd;
-  border-top: 4px solid #546256;
-  margin-bottom: 30px;
-  max-width: 2000px;
-  transition: all 0.3s ease-in-out;
-}
-
-.job-container h3 {
-  font-size: 21px;
-  color: #4A87B6;
-}
-
 /* Option Forms */
 
 div.option-forms {
@@ -310,7 +295,6 @@ div.item-container {
   border-radius: 0;
   box-shadow: 0 1px 1px #ccc;
   margin-bottom: 10px;
-  max-width: 1400px;
 }
 
 div.item-container .status {
@@ -1055,26 +1039,6 @@ div.input-wrap input, div.input-wrap select {
   color: #f76767;
 }
 
-/* Approve Button */
-/* Before Hover */
-.approve-btn {
-  color: #53d0c099;
-}
-
-.approve-btn > p {
-  color: #53d0c099;
-  margin: 0;
-}
-
-/* After Hover */
-.approve-btn::before {
-  background-color: #53d0c0;
-}
-
-.approve-btn:hover {
-  color: #53d0c0;
-}
-
 /* Blue Slide Button */
 /* Before Hover */
 .blue-slide-btn {
@@ -1093,26 +1057,6 @@ div.input-wrap input, div.input-wrap select {
 
 .blue-slide-btn:hover {
   color: #62a9f9;
-}
-
-/* Approve As Payment Button */
-/* Before Hover */
-.approve-as-payment-btn {
-  color: #92929299;
-}
-
-.approve-as-payment-btn > p {
-  color: #92929299;
-  margin: 0;
-}
-
-/* After Hover */
-.approve-as-payment-btn::before {
-  background-color: #929292;
-}
-
-.approve-as-payment-btn:hover {
-  color: #929292;
 }
 
 .form-submit-btn {
@@ -1165,7 +1109,6 @@ a#step-4 {
 
 /* Project Details */
 .white-block {
-  max-width: 1400px;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 0;

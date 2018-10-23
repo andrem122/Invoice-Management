@@ -22,7 +22,7 @@ def project_details(request, house_id):
     }
 
     if house_id:
-        #get House ID from POST
+        #get House ID from url
         house_id = int(house_id)
 
         #get house object
