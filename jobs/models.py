@@ -35,7 +35,7 @@ class House(models.Model):
     def generate_file_path(self, file_name):
         return os.path.join('customer_uploads', 'add_house', str(file_name))
 
-    house_list_file = models.FileField(null=True, blank=True)
+    house_list_file = models.FileField(null=True, blank=False)
 
 #the class that shows if the current company has at least one job in a house
 class Current_Worker(models.Model):
