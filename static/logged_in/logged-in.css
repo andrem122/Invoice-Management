@@ -730,7 +730,6 @@ form.add-form input:not([type="submit"]):not([type="file"]), form.add-form selec
   border: 0;
   border-radius: 0;
   height: 45px;
-  padding: 10px;
 }
 
 /* Input File */
@@ -827,7 +826,7 @@ div.input-wrap > svg {
 }
 
 div.input-wrap input, div.input-wrap select {
-  padding-left: 58px !important;
+  text-indent: 38px;
   font-size: 20px;
 }
 
