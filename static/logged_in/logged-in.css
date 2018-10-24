@@ -734,7 +734,7 @@ form.add-form input:not([type="submit"]):not([type="file"]), form.add-form selec
 
 /* Input File */
 
-form.add-form input[type="file"] {
+form input[type="file"] {
   border: 0;
   padding: 0;
 }
@@ -778,6 +778,7 @@ div.file-wrap > input[type="file"] {
   height: 175px;
   top: 57px;
   left: 0;
+  z-index: 999;
 }
 
 div.file-wrap > svg {
