@@ -13,12 +13,16 @@ class Expenses(models.Model):
     materials = 'Materials'
     no_1099 = 'No 1099'
     permits = 'Permits'
+    water_bill = 'Water Bill'
+    power_bill = 'Power Bill'
     misc = 'Miscellaneous'
 
     expense_choices = (
         (materials, 'Materials'),
         (no_1099, 'No 1099'),
         (permits, 'Permits'),
+        (water_bill, 'Water Bill'),
+        (power_bill, 'Power Bill'),
         (misc, 'Miscellaneous'),
     )
 

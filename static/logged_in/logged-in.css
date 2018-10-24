@@ -676,15 +676,7 @@ form label {
   font-size: 17px;
 }
 
-form select, form input, form textarea {
-  margin-bottom: 20px;
-}
-
 form select {
-  background-color: transparent;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 3px;
   width: 100%;
 }
 
@@ -741,34 +733,117 @@ form.add-form input:not([type="submit"]):not([type="file"]), form.add-form selec
   padding: 10px;
 }
 
+/* Input File */
+
 form.add-form input[type="file"] {
   border: 0;
   padding: 0;
 }
 
+div.input-label-file-wrap {
+  background-color: #fff;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+div.input-label-file-wrap button.file-upload-btn {
+  background-color: transparent;
+  padding: 10px 20px;
+  border: 2px solid rgb(68, 68, 68);
+  color: rgb(68, 68, 68);
+  display: block;
+  margin: 26px auto 0 auto;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 15px;
+  border-radius: 2px;
+}
+
+div.file-wrap {
+  text-align: center;
+  padding: 0 0 36px 0;
+}
+
+div.file-wrap #file-input-message {
+  margin-top: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 50px;
+  display: none;
+}
+
+div.file-wrap > input[type="file"] {
+  opacity: 0;
+  margin: 0;
+  position: absolute;
+  height: 175px;
+  top: 57px;
+  left: 0;
+}
+
+div.file-wrap > svg {
+  display: inline-block;
+  margin-top: 31px;
+  font-size: 35px;
+}
+
+/* All Inputs with Icons */
+
+div.input-label-wrap {
+  background-color: #fff;
+  margin-bottom: 30px;
+}
+
+div.input-label-wrap select, div.input-label-wrap input,
+div.input-label-wrap textarea {
+  margin-bottom: 0;
+}
+
 div.input-wrap {
   position: relative;
+  padding: 21px 0;
+}
+
+div.input-wrap.input-wrap-select {
+  padding: 0;
+}
+
+div.label-wrap {
+  padding: 16px 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+div.label-wrap label {
+  margin: 0;
+  font-weight: bold;
 }
 
 div.input-wrap > svg {
   position: absolute;
-  top: 15px;
-  left: 10px;
+  top: 50%;
+  left: 14px;
+  font-size: 29px;
+  transform: translateY(-50%);
 }
 
 div.input-wrap input, div.input-wrap select {
-  padding-left: 30px !important;
+  padding-left: 58px !important;
+  font-size: 20px;
+}
+
+div.input-wrap select {
+  height: 79px;
 }
 
 /* Check Boxes Styling */
 .inputGroup {
   background-color: #fff;
   display: block;
-  margin: 10px 0;
   position: relative;
+  margin-bottom: 30px;
 }
 .inputGroup label {
-  padding: 12px 30px;
+  padding: 20px 30px;
   width: 100%;
   display: block;
   text-align: left;
@@ -778,7 +853,9 @@ div.input-wrap input, div.input-wrap select {
   z-index: 2;
   transition: color 200ms ease-in;
   overflow: hidden;
+  font-size: 20px;
 }
+
 .inputGroup label:before {
   width: 10px;
   height: 10px;
@@ -794,6 +871,7 @@ div.input-wrap input, div.input-wrap select {
   opacity: 0;
   z-index: -1;
 }
+
 .inputGroup label:after {
   width: 32px;
   height: 32px;
@@ -813,18 +891,22 @@ div.input-wrap input, div.input-wrap select {
   cursor: pointer;
   transition: all 200ms ease-in;
 }
+
 .inputGroup input:checked ~ label {
   color: #fff;
 }
+
 .inputGroup input:checked ~ label:before {
   -webkit-transform: translate(-50%, -50%) scale3d(56, 56, 1);
           transform: translate(-50%, -50%) scale3d(56, 56, 1);
   opacity: 1;
 }
+
 .inputGroup input:checked ~ label:after {
   background-color: #54E0C7;
   border-color: #54E0C7;
 }
+
 .inputGroup input {
   width: 32px;
   height: 32px;
@@ -838,7 +920,6 @@ div.input-wrap input, div.input-wrap select {
   cursor: pointer;
   visibility: hidden;
 }
-
 
 /* Search */
 #search-result-container {

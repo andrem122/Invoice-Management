@@ -29,23 +29,40 @@
         <p>Please enter in all data and try again.</p>
       </div>
       {% endif %}
-      {{form.house.label_tag}}
-      <div class="input-wrap">
-        <i class="fas fa-home"></i>
-        <select id="id_house" name="house" required>
-          <option selected value="">
-            <i class="far fa-handshake"></i>
-            House
-          </option>
-          {% for house in form.fields.house.queryset %}
-            <option value="{{house.id}}">{{house}}</option>
-          {% endfor %}
-        </select>
+
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.house.label_tag }}</div>
+        <div class="input-wrap input-wrap-select">
+          <i class="fas fa-home"></i>
+          <select id="id_house" name="house" required>
+            <option selected value="">
+              <i class="far fa-handshake"></i>
+              House
+            </option>
+            {% for house in form.fields.house.queryset %}
+              <option value="{{house.id}}">{{house}}</option>
+            {% endfor %}
+          </select>
+        </div>
       </div>
-      {{form.start_amount.label_tag}}
-      <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{form.start_amount}}</div>
-      {{form.document_link.label_tag}}
-      {{form.document_link}}
+
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.start_amount.label_tag }}</div>
+        <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.start_amount }}</div>
+      </div>
+
+      <div class="input-label-file-wrap">
+        <div class="label-wrap">
+          {{ form.document_link.label_tag }}
+        </div>
+        <div class="file-wrap">
+          <i class="fas fa-upload"></i>
+          <button type="button" class="file-upload-btn">Upload File</button>
+          {{ form.document_link }}
+          <div id="file-input-message"></div>
+        </div>
+      </div>
+
       <input class="form-submit-btn" type="submit" value="Add Job">
     </form>
   </div>

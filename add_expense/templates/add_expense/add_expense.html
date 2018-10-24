@@ -30,7 +30,33 @@
       </div>
       {% endif %}
 
-      {{ add_expense_form }}
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ add_expense_form.house.label_tag }}</div>
+        <div class="input-wrap input-wrap-select"><i class="fas fa-home"></i>{{ add_expense_form.house }}</div>
+      </div>
+
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ add_expense_form.amount.label_tag }}</div>
+        <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ add_expense_form.amount }}</div>
+      </div>
+
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ add_expense_form.expense_type.label_tag }}</div>
+        <div class="input-wrap input-wrap-select"><i class="fas fa-tags"></i>{{ add_expense_form.expense_type }}</div>
+      </div>
+
+      <div class="input-label-file-wrap">
+        <div class="label-wrap">
+          {{ add_expense_form.document_link.label_tag }}
+        </div>
+        <div class="file-wrap">
+          <i class="fas fa-upload"></i>
+          <button type="button" class="file-upload-btn">Upload File</button>
+          {{ add_expense_form.document_link }}
+          <div id="file-input-message"></div>
+        </div>
+      </div>
+
       <div class="inputGroup">
         <input name="pay_this_week" id="id_pay_this_week" type="checkbox">
         <label for="id_pay_this_week">Pay This Week?</label>

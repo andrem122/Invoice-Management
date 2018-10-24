@@ -28,17 +28,25 @@
       </div>
       {% endif %}
 
-      {{ form.address.label_tag }}
-      <div class="input-wrap"><i class="fas fa-home"></i>{{ form.address }}</div>
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.address.label_tag }}</div>
+        <div class="input-wrap"><i class="fas fa-home"></i>{{ form.address }}</div>
+      </div>
 
-      {{ form.purchase_price.label_tag }}
-      <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.purchase_price }}</div>
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.purchase_price.label_tag }}</div>
+        <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.purchase_price }}</div>
+      </div>
 
-      {{ form.profit.label_tag }}
-      <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.profit }}</div>
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.profit.label_tag }}</div>
+        <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.profit }}</div>
+      </div>
 
-      {{ form.after_repair_value.label_tag }}
-      <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.after_repair_value }}</div>
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.after_repair_value.label_tag }}</div>
+        <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.after_repair_value }}</div>
+      </div>
 
       <input class="form-submit-btn" type="submit" value="Add House">
     </form>
