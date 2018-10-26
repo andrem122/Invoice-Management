@@ -22,15 +22,15 @@
   {# Item Options Forms #}
   {% if current_user|in_group:'Customers' %}
   <div class="option-forms">
+
     {# Archive House #}
-    <form id="narchive_house_form_{{ house.id }}" class="narchive_house_form" action="" method="post">
+    <form id="narchive_house_form_{{ house.id }}" class="narchive_house_form" action="/projects/" method="post">
       {% csrf_token %}
       {% if archive_house_form.errors %}
       <div class="form-messages">
         <p>Please try again.</p>
       </div>
       {% endif %}
-      {{archive_house_form}}
       <input type="hidden" name="house_id" value="{{ house.id }}">
     </form>
 
@@ -110,11 +110,7 @@
 
               <div class="dropdown-menu">
                 <button type="submit" form="narchive_house_form_{{ house.id }}" class="dropdown-item archive-house-option">
-                  {% if house.archived == False %}
-                    Archive
-                  {% else %}
-                    Unarchive
-                  {% endif %}
+                  Archive
                 </button>
               </div>
 
@@ -147,7 +143,6 @@
         <p>Please try again.</p>
       </div>
       {% endif %}
-      {{archive_house_form}}
       <input type="hidden" name="house_id" value="{{ house.id }}">
     </form>
 
@@ -222,11 +217,7 @@
 
               <div class="dropdown-menu">
                 <button type="submit" form="archive_house_form_{{ house.id }}" class="dropdown-item archive-house-option">
-                  {% if house.archived == False %}
-                    Archive
-                  {% else %}
                     Unarchive
-                  {% endif %}
                 </button>
               </div>
 

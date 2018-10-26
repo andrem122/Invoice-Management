@@ -1,7 +1,15 @@
 {% extends 'logged_in_customer.html' %}
+
 {% load static %}
+
 {% block title %}Add Expenses{% endblock title %}
+
+{% block scripts %}
+<script defer src="{% static 'file_upload.js' %}?v=1.0" type="text/javascript"></script>
+{% endblock scripts %}
+
 {% block body_class %}add_house{% endblock body_class %}
+
 {% block content %}
 <div class="form-wrapper">
   <div class="panel-heading">

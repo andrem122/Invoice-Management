@@ -17,4 +17,8 @@ class Archive_House(ModelForm, forms.Form):
                    'rejected_payments',
                    'expenses',
                    'archived',
+                   'purchase_price',
+                   'profit',
+                   'after_repair_value',
+                   'house_list_file',
                   ]

@@ -6,7 +6,9 @@
 { # text that goes to the <title> tag #}
 {% block title %}Add Jobs{% endblock title %}
 
-{ # extra stylesheets and scripts custom to each page #}
+{% block scripts %}
+<script defer src="{% static 'file_upload.js' %}?v=1.0" type="text/javascript"></script>
+{% endblock scripts %}
 
 {% block content %}
 <div class="form-wrapper">

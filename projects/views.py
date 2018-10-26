@@ -77,6 +77,8 @@ def projects(request):
 
 
             return redirect('/projects')
+        else:
+            print(archive_house_form.errors)
 
     # if a GET (or any other method) we'll create a blank form
     else:
