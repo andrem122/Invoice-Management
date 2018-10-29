@@ -5,12 +5,6 @@ window.addEventListener("load", function(event) {
   wrapper.style.display = 'block';
   loader.style.display = 'none';
 
-  var send_data_form = document.getElementById('send-data-form');
-  var overlay = document.getElementById('overlay_id');
-  if(send_data_form !== null) {
-    send_data_form.style.display = 'block';
-  }
-
   var $menu_toggle = $('#menu-toggle');
   var $wrapper = $('#wrapper');
   var $close_nav = $('.close-nav');
@@ -100,20 +94,6 @@ window.addEventListener("load", function(event) {
 
   post_form_with_file_input(['upload-document-p'], 'file');
   post_form_with_file_input(['request-payment-p'], 'number');
-
-  //pop up send data form when button is clicked
-  document.addEventListener('click', function(e){
-
-    if(e.target.id === 'send-data-btn') {
-      overlay.classList.add('visible');
-      send_data_form.classList.add('visible');
-    }
-
-    else if (e.target.id === 'overlay_id' || e.target.nodeName === 'path'|| e.target.id === 'send-data-exit') {
-      overlay.classList.remove('visible');
-      send_data_form.classList.remove('visible');
-    }
-  });
 
   //activate intro js if it is a new user
   if (document.documentURI.indexOf('new_user=True') !== -1) {

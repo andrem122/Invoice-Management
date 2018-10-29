@@ -27,6 +27,10 @@
     <link rel="stylesheet" href="{% static 'logged-in.css' %}?v=1.24">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400|Raleway:300">
     <script defer src="{% static 'logged-in.js' %}?v=1.9" type="text/javascript"></script>
+    {% if request.path == '/add-expense/' or request.path == '/addjob/' or request.path == '/jobs-admin/' or request.path == '/payments/' %}
+    <script defer src="{% static 'form.js' %}?v=1.0" type="text/javascript"></script>
+    {% endif %}
+
     {% block scripts %}
     {% endblock scripts %}
   </head>
