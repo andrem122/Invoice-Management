@@ -1,8 +1,8 @@
 from jobs.models import Job, Current_Worker, House, Request_Payment
 from expenses.models import Expenses
 from django.contrib.auth.models import User
-import datetime
-import pytz
+from django.db.models import Q
+import operator, datetime, pytz
 
 class Customer:
     """
@@ -253,10 +253,11 @@ class Customer:
         Raises:
             None.
         """
+
         return Request_Payment.objects.filter(
-            house__customer=self.customer,
-            job__approved=True,
-            submit_date__range=[Customer.start_week, Customer.today],
+            Q(house__customer=self.customer),
+            Q(job__approved=True),
+            Q(submit_date__range=[Customer.start_week, Customer.today]) | Q(approved_date__range=[Customer.start_week, Customer.today]),
             **kwargs
         )
 

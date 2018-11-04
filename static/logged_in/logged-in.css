@@ -242,8 +242,29 @@ ul.item-headings {
   max-width: 1400px;
 }
 
-.page-title {
+.title-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title-container > h2 {
+  margin: 0;
+}
+
+.title-container + hr {
   margin-bottom: 30px;
+}
+
+@media (max-width: 500px) {
+  .title-container {
+    display: block;
+    text-align: center;
+  }
+
+  .title-container .round-btn {
+    margin-top: 30px;
+    margin-bottom: 12px;
+  }
 }
 
 .secondary-title {
@@ -385,20 +406,12 @@ div.item-container ul div.item-options-dropdown .item-options-toggle {
   display: inline-block;
 }
 
-div.item-container ul div.item-options-dropdown .dropdown-new::after {
-  left: 119px;
+div.item-container ul div.item-options-dropdown .dropdown-new-approved::after {
+  left: 11px;
 }
 
-div.item-container ul div.item-options-dropdown .dropdown-new::before {
-  left: 118px;
-}
-
-div.item-container ul div.item-options-dropdown .dropdown-approved::after {
-  left: 96px;
-}
-
-div.item-container ul div.item-options-dropdown .dropdown-approved::before {
-  left: 95px;
+div.item-container ul div.item-options-dropdown .dropdown-new-approved::before {
+  left: 10px;
 }
 
 div.item-container ul div.item-options-dropdown .document_link_upload {
@@ -441,11 +454,6 @@ div.item-container + h3.house-address {
   .item-container .info-group .col, .item-container .info-group {
     flex: 0 0 100%;
     max-width: 100%;
-  }
-
-  h2.page-title {
-    text-align: center;
-    margin-bottom: 30px;
   }
 
   div.item-container {
@@ -535,22 +543,6 @@ div.item-container + h3.house-address {
     cursor: pointer;
     padding: 17px;
     font-size: 29px;
-  }
-
-  div.item-container ul.mobile-option-icons button.approve-option-m {
-    color: #62a9f9;
-  }
-
-  div.item-container ul.mobile-option-icons button.approve-payment-option-m {
-    color: #53d0c0;
-  }
-
-  div.item-container ul.mobile-option-icons button.reject-option-m {
-    color: #f76767;
-  }
-
-  a#add-project-btn {
-    float: none;
   }
 
   h3.house-address {
@@ -1088,22 +1080,6 @@ div.input-wrap select {
   transition: all 1s ease;
 }
 
-.upload-document-btn {
-  color: #ffa83c99;
-}
-
-.upload-document-btn > p {
-  color: #ffa83c99;
-  margin: 0;
-}
-
-.upload-document-btn::before {
-  background-color: #ffa83c;
-}
-
-.upload-document-btn:hover {
-  color: #ffa83c;
-}
 
 /* Unapprove Button */
 /* Before Hover */
@@ -1145,9 +1121,33 @@ div.input-wrap select {
   color: #62a9f9;
 }
 
+.round-btn {
+  background-color: transparent;
+  border-radius: 33px;
+  padding: 16px 30px;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 1s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+.round-btn.solid-round-btn {
+  border: 2px solid #142032;
+  background-color: #142032;
+  color: #fff !important;
+}
+
+.round-btn.solid-round-btn:hover {
+  text-decoration: none;
+  background-color: #123a75;
+}
+
 .form-submit-btn {
   background-color: transparent;
   border: 2px solid #62a9f999;
+  border-radius: 33px;
   color: #62a9f999;
   height: 56px;
   text-transform: uppercase;
@@ -1156,7 +1156,6 @@ div.input-wrap select {
   display: block;
   width: 100%;
   transition: all 1s ease;
-  border-radius: 0;
 }
 
 .form-submit-btn:hover {

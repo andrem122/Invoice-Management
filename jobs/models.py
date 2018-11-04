@@ -83,12 +83,12 @@ class Request_Payment(models.Model):
     requested_by_worker = models.BooleanField(default=False)
 
     def __str__(self):
-        info = [self.job.company, self.amount, self.approved]
+        info = [self.house.address, self.job.company, self.amount, self.approved]
         info = [str(x) for x in info]
 
-        return info[0] + '-' + info[1] + '-' + info[2]
+        return info[0] + '-' + info[1] + '-' + info[2] + '-' + info[3]
 
     def generate_file_path(self, file_name):
-        return os.path.join('customer_uploads', 'documents', str(self.job), str(file_name))
+        return os.path.join('customer_uploads', 'documents', str(self.house.address), str(file_name))
 
     document_link = models.FileField(null=True, blank=True, upload_to=generate_file_path)

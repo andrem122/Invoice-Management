@@ -29,7 +29,7 @@ class Expenses(models.Model):
     expense_type = models.CharField(max_length=100, choices=expense_choices, default=materials)
 
     def generate_file_path(self, file_name):
-        return os.path.join('customer_uploads', str(self.customer.id) + '-expenses', str(file_name))
+        return os.path.join('customer_uploads', 'expenses', str(self.house.address), str(file_name))
 
     document_link = models.FileField(null=True, upload_to=generate_file_path)
 

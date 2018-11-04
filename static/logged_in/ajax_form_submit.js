@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', function() {
              $('#results_container').html(data);
            },
            error: function(xhr, status, e) {
-             console.log('error'); // provide a bit more info about the error to the console
+             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
            }
          });
       }
@@ -26,9 +26,6 @@ window.addEventListener('DOMContentLoaded', function() {
   var btn_cls = 'option-item';
   var url = window.location.pathname;
   ajax_post(btn_cls, url);
-
-  var m_btn_cls = 'mobile-option';
-  ajax_post(m_btn_cls, url);
 
 
 });

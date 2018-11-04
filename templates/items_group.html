@@ -4,7 +4,9 @@
 {% endblock scripts %}
 
 {% block content %}
-<h2 class="page-title">{% block page_title %}{% endblock page_title %}</h2>
+<div class="title-container">
+  <h2 class="page-title">{% block page_title %}{% endblock page_title %}</h2>
+</div>
 <hr>
   {% block item_loop %}
   {% endblock item_loop %}

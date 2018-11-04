@@ -57,10 +57,13 @@
 {% block item_status %}
   {% if item.approved == False and item.rejected == False %}
   <div class="status new">New</div>
+
   {% elif item.approved == True and item.balance > 0 %}
   <div class="status active">Active</div>
+
   {% elif item.approved == True %}
   <div class="status approved">Approved</div>
+
   {% elif item.rejected == True %}
   <div class="status rejected">Rejected</div>
   {% endif %}
@@ -93,42 +96,55 @@
 {% block mobile_option_btns %}
   {% if item.approved == True %}
   <li class="list-inline-item">
-    <button type="submit" form="reject-form-{{item.id}}" class="mobile-option reject-option-m">
-      <i class="fas fa-times"></i>
+    <button type="submit" form="reject-form-{{item.id}}" class="option-item reject-option-m">
+      <i class="option-item fas fa-times"></i>
     </button>
   </li>
   {% elif item.rejected == True %}
   <li class="list-inline-item approve-payment-option-m">
-    <button type="submit" form="approve-as-payment-form-{{item.id}}" class="mobile-option approve-payment-option-m">
-      <i class="mobile-option far fa-money-bill-alt"></i>
+    <button type="submit" form="approve-as-payment-form-{{item.id}}" class="option-item approve-payment-option-m">
+      <i class="option-item far fa-money-bill-alt"></i>
     </button>
   </li>
   <li class="list-inline-item">
-    <button type="submit" form="approve-job-form-{{item.id}}" class="mobile-option approve-option-m">
-      <i class="mobile-option fas fa-check"></i>
+    <button type="submit" form="approve-job-form-{{item.id}}" class="option-item approve-option-m">
+      <i class="option-item fas fa-check"></i>
     </button>
   </li>
   {% else %}
+
   <li class="list-inline-item">
-    <button type="submit" form="reject-form-{{item.id}}" class="mobile-option reject-option-m">
-      <i class="mobile-option fas fa-times"></i>
+    <button type="submit" form="reject-form-{{item.id}}" class="option-item reject-option-m">
+      <i class="option-item fas fa-times"></i>
     </button>
   </li>
+
   <li class="list-inline-item">
-    <button type="submit" form="approve-as-payment-form-{{item.id}}" class="approve-payment-option-m">
-      <i class="mobile-option far fa-money-bill-alt"></i>
+    <button type="submit" form="approve-as-payment-form-{{item.id}}" class="option-item approve-payment-option-m">
+      <i class="option-item far fa-money-bill-alt"></i>
     </button>
   </li>
+
   <li class="list-inline-item">
-    <button type="submit" form="approve-job-form-{{item.id}}" class="mobile-option approve-option-m">
-      <i class="mobile-option fas fa-check"></i>
+    <button type="submit" form="approve-job-form-{{item.id}}" class="option-item approve-option-m">
+      <i class="option-item fas fa-check"></i>
     </button>
   </li>
   {% endif %}
 {% endblock mobile_option_btns %}
 
 {% block desktop_option_btns %}
-  <div class="dropdown-menu{% if item.approved == True %} dropdown-approved{% else %} dropdown-new{% endif %}">
+  <div class="dropdown-menu
+    {% if item.approved == True and item.balance > 0 %}
+    dropdown-active
+    {% elif item.approved == True %}
+    dropdown-new-approved
+    {% elif item.rejected == True %}
+    dropdown-rejected
+    {% else %}
+    dropdown-new-approved
+    {% endif %}"
+  >
     {% if item.approved == True %}
     <button type="submit" form="reject-form-{{item.id}}" class="dropdown-item reject-btn option-item">Reject</button>
     {% elif item.rejected == True %}

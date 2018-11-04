@@ -66,24 +66,28 @@
 			Jobs
 		</a>
 	</li>
+	
 	<li>
 		<a{% if request.path == '/payments/' %} class="active"{% endif %} href="/payments">
 			<i class="far fa-credit-card"></i>
 			Payments for This Week
 		</a>
 	</li>
+
 	<li>
 		<a{% if request.path == '/add-expense/' %} class="active"{% endif %} href="/add-expense">
 			<i class="fas fa-file-invoice-dollar"></i>
 			Add Expense
 		</a>
 	</li>
+
 	<li>
 		<a{% if request.path == '/add-house/' %} class="active"{% endif %} href="/add-house">
 			<i class="fas fa-folder-plus"></i>
 			Add Project
 		</a>
 	</li>
+
 	<li>
 		<a{% if request.path == '/projects/' %} class="active"{% endif %} href="/projects">
 			<i class="fas fa-home"></i>

@@ -24,7 +24,6 @@ def load_ajax_results(user):
 
     #get all payments and expenses for current week
     payments = customer.current_week_payments_all()
-    #expenses = customer.current_week_expenses(pay_this_week=True)
 
     #combine querysets and keep unique items
     houses = set(chain(payment_history_houses, payment_request_houses, rejected_payment_houses))
