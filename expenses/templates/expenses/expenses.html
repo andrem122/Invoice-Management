@@ -1,4 +1,4 @@
-{% extends 'items_group.html' %}
+{% extends 'logged_in_customer.html' %}
 
 {% load humanize %}
 {% load static %}
@@ -8,7 +8,7 @@
 
 {% block page_title %}Expenses{% endblock page_title %}
 
-{% block item_loop %}
+{% block content %}
   {% for house in houses %}
     <h3 id="{{house.address|add_dashes}}" class="house-address">{{ house.address }}</h3>
     {% if forloop.first %}
@@ -113,4 +113,4 @@
       {% endif %}
     {% endfor %}
   {% endfor %}
-{% endblock item_loop %}
+{% endblock content %}

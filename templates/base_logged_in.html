@@ -74,12 +74,23 @@
         <div id="page-content-wrapper">
           <div class="max-width-container">
             <div class="container-fluid">
+
                 <div class="btn-options-container">
                   {% block button_options %}
                   {% endblock button_options %}
                 </div>
-                {% block content %}
-                {% endblock content %}
+
+                <div class="title-container">
+                  <h2 class="page-title">{% block page_title %}{% endblock page_title %}</h2>
+                  {% block button_with_title %}{% endblock button_with_title %}
+                </div>
+                <hr>
+
+                <div class="content-wrapper">
+                  {% block content %}
+                  {% endblock content %}
+                </div>
+
             </div>
           </div>
         </div><!-- /#page-content-wrapper -->

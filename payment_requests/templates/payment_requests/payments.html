@@ -1,4 +1,4 @@
-{% extends 'items_group.html' %}
+{% extends 'logged_in_customer.html' %}
 
 {% load humanize %}
 {% load static %}
@@ -11,7 +11,7 @@
 
 {% block page_title %}Payments for This Week From {{start_week}} To {{today}}{% endblock page_title %}
 
-{% block item_loop %}
+{% block content %}
 <div id="sep-container-1" class="sep-container">
   <div id="results_container">
     {% include 'payment_requests/payments_results.html' %}
@@ -132,4 +132,4 @@
     {% endfor %}
     {% endif %}
   </div>
-{% endblock item_loop %}
+{% endblock content %}

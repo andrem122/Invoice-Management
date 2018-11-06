@@ -1,4 +1,4 @@
-{% extends 'items.html' %}
+{% extends 'standard_items_customer_5.html' %}
 
 {% load humanize %}
 {% load static %}
@@ -11,6 +11,7 @@
 {% endblock scripts %}
 
 {% block page_title %}{{ narchived_count }} Projects{% endblock page_title %}
+{% block button_with_title %}<a href="/add-house/" class="round-btn solid-round-btn" name="add_project">Add Project</a>{% endblock button_with_title %}
 {% block heading_status %}Status{% endblock heading_status %}
 {% block item_heading_1 %}Project{% endblock item_heading_1 %}
 {% block item_heading_2 %}Expenses{% endblock item_heading_2 %}

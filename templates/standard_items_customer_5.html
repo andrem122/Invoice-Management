@@ -3,14 +3,10 @@
 {% block scripts %}
 {% endblock scripts %}
 
+{% block page_title %}{# In base_logged_in.html #}{% endblock page_title %}
+{% block button_with_title %}{# In base_logged_in.html #}{% endblock button_with_title %}
+
 {% block content %}
-<div class="max-width-container">
-  <div class="title-container">
-    <h2 class="page-title">{% block page_title %}{% endblock page_title %}</h2>
-    <a href="/add-house/" class="round-btn solid-round-btn" name="add_project">Add Project</a>
-  </div>
-  <hr>
-</div>
 <div class="item-headings-wrapper container-fluid">
   <ul class="item-headings row">
     <div class="col col-sm-6">

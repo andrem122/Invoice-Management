@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from project_management.decorators import worker_check
 from django.contrib import messages
 from register.worker import Worker
+from itertools import chain
 
 @user_passes_test(worker_check, login_url='/accounts/login/')
 def index(request):
@@ -19,21 +20,21 @@ def index(request):
     approved_jobs = worker.approved_jobs()
     unapproved_jobs = worker.unapproved_jobs()
 
+    houses = set(chain(approved_houses, unapproved_houses))
+    items = list(chain(approved_jobs, unapproved_jobs))
+
     template = loader.get_template('jobs/index.html')
     form = Request_Payment_Form()
 
     context = {
-        'approved_houses': approved_houses,
-        'approved_jobs': approved_jobs,
-        'unapproved_houses': unapproved_houses,
-        'unapproved_jobs': unapproved_jobs,
+        'houses': houses,
+        'items': items,
         'current_user': current_user,
         'form': form,
     }
 
-    #check if generator 'generate_queryset' will have results
-    if unapproved_jobs:
-        context['gen_has_results'] = True
+    print(houses)
+    print(items)
 
     #check if the user is new to send a welcome message
     new_user = request.GET.get('new_user')

@@ -1,22 +1,28 @@
-{% load jobs_admin_group_check %}
-
 {% comment %}
   Standard item display with 6 item headings.
   You must pass the houses as 'houses', the items as 'items', and the user in
   as 'current_user' for this template to work.
 
   These blocks MUST be filled for the template to look proper:
-  1. item_heading_1   7. option_forms                12. block item_heading_3_m    18. mobile_option_btns
-  2. item_heading_2   8. item_status                 13. block item_heading_3_m_v  19. desktop_option_btns
-  3. item_heading_3   9. block item_heading_1_m      14. block item_heading_4_m
-  4. item_heading_4   10. block item_heading_1_m_v   15. block item_heading_4_m_v
-  5. item_heading_5   11. block item_2               16. block item_heading_5_m
-  6. item_heading_6                                  17. block item_heading_5_m_v
+  1. item_heading_1   7. option_forms                13. block item_heading_3_m    19. mobile_option_btns
+  2. item_heading_2   8. item_status                 14. block item_heading_3_m_v  20. desktop_option_btns
+  3. item_heading_3   9. block item_heading_1_m      15. block item_heading_4_m
+  4. item_heading_4   10. block item_heading_1_m_v   16. block item_heading_4_m_v
+  5. item_heading_5   11. block item_heading_2_m     17. block item_heading_5_m
+  6. item_heading_6   12. block item_heading_2_m_v   18. block item_heading_5_m_v
 {% endcomment %}
 
 {% if items %}
   {% for house in houses %}
-    <h3 class="house-address">{{ house.address }}</h3>
+    <h3 class="house-address">
+
+      {% if house.address %} {# House Object #}
+        {{ house.address }}
+      {% else %}
+        {{ house.house.address }} {# Current_Worker object #}
+      {% endif %}
+
+    </h3>
     {% if forloop.first %}
     <div class="item-headings-wrapper container-fluid">
       <ul class="item-headings row">
@@ -36,15 +42,11 @@
     </div>
     {% endif %}
     {% for item in items %}
-      {% if item.house == house %}
+      {% if item.house == house or item.house == house.house  %} {# Account for Current_Worker object #}
 
         {# Item Options Forms #}
-        {% if current_user|in_group:'Customers' %}
-        <div class="option-forms">
-          {% block option_forms %}
-          {% endblock option_forms %}
-        </div>
-        {% endif %}
+        {% block option_forms %}
+        {% endblock option_forms %}
 
         <div class="item-container">
           <div class="container-fluid">
@@ -59,8 +61,13 @@
                   <span class="info-title">{% block item_heading_1_m %}{% endblock item_heading_1_m %}</span>
                   <li class="info-1">{% block item_heading_1_m_v %}{% endblock item_heading_1_m_v %}</li>
                   <hr>
-                  {% block item_2_m %}
-                  {% endblock item_2_m %}
+                  {% if item.approved == True %}
+                  <span class="info-title">{% block item_heading_2_m %}{% endblock item_heading_2_m %}</span>
+                  <li class="info-1">
+                    {% block item_heading_2_m_v %}{% endblock item_heading_2_m_v %}
+                  </li>
+                  <hr>
+                  {% endif %}
                 </ul>
               </div>
               <div class="info-group col col-sm-4">
@@ -78,7 +85,6 @@
                 </ul>
               </div>
               <div class="info-group col col-sm-2">
-                {% if current_user|in_group:'Customers' %}
                 <ul>
                   <span class="info-title">{% block item_heading_5_m %}{% endblock item_heading_5_m %}</span>
                   <li class="info-4">{% block item_heading_5_m_v %}{% endblock item_heading_5_m_v %}</li>
@@ -100,7 +106,6 @@
 
                   </div>
                 </ul>
-                {% endif %}
               </div>
             </div>
           </div>

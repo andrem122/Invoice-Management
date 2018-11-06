@@ -1,144 +1,37 @@
 {% extends 'logged_in_worker.html' %}
 
-{% load humanize %}
-
 {% block title %}Jobs{% endblock title %}
 
 {% block scripts %}
   {% if new_user %}
   <!-- intro.js -->
+  <!--
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.min.css" integrity="sha256-/oZ7h/Jkj6AfibN/zTWrCoba0L+QhP9Tf/ZSgyZJCnY=" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs-rtl.min.css" integrity="sha256-LzU+b0N2MG8UjW3gfRasKsbHqhi3DG7l89N/ohnkXQc=" crossorigin="anonymous" />
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.min.js" integrity="sha256-fOPHmaamqkHPv4QYGxkiSKm7O/3GAJ4554pQXYleoLo=" crossorigin="anonymous"></script>
+  -->
   {% endif %}
 {% endblock scripts %}
 
 {% block body_class %}jobs{% endblock body_class %}
 
+{% block page_title %}Jobs{% endblock page_title %}
+
 {% block content %}
 
-{% if new_user %}
-<div class="welcome-message">
-  <h3 data-step="1" data-intro="Here is where you can view your jobs and request payments for
-  existing ones">Welcome to Your Job Dashboard!</h3>
-  <a id="step-4" data-step="4" data-intro="Log back in through this link" href="https://genuwine12.pythonanywhere.com/accounts/login/">https://genuwine12.pythonanywhere.com/accounts/login/</a>
-</div>
-{# Example for Intro Js #}
-<div class="job-container">
-  <div class="house">
-    <h3 class="house-address">1234 Example Way</h3>
+  {% if new_user %}
+  <div class="welcome-message">
+    <h3 data-step="1" data-intro="Here is where you can view your jobs and request payments for
+    existing ones">Welcome to Your Job Dashboard!</h3>
+    <a id="step-4" data-step="4" data-intro="Log back in through this link" href="https://genuwine12.pythonanywhere.com/accounts/login/">https://genuwine12.pythonanywhere.com/accounts/login/</a>
   </div>
-  <div class="jobs">
-    <table class="job-summary">
-      <tr class="job-headings">
-        <th>Job ID</th>
-        <th>Amount</th>
-        <th>Balance</th>
-        <th>Contract Link</th>
-        <th>Request Payment</th>
-      </tr>
-      <tr class="spacer"></tr>
-      <tr class="job-info">
-        <td>1</td>
-        <td>$5,000.00</td>
-        <td>$5,000.00</td>
-        <td><a rel="noopener noreferrer" target="_blank" href="#">View Contract</a></td>
-        <td>
-          <form class="request-payment-form">
-            <a id="step-2" class="custom-btn blue-slide-btn" href="#"
-            data-step="2" data-intro="If you need to get a partial payment
-            for an active job, you can click this button to get it">
-              <p class="request-payment-p-example">Request Payment</p>
-            </a>
-          </form>
-        </td>
-      </tr>
-    </table>
-  </div>
-</div> <!-- /.job-container -->
-{% endif %}
 
-{# Active Jobs #}
-{% if approved_houses %}
-<h2>Active Jobs</h2>
-{% endif %}
-{% for approved_house in approved_houses %}
-<div class="job-container">
-  <div class="house">
-    <h3 class="house-address">{{approved_house.house.address}}</h3>
-  </div>
-  <div class="jobs">
-    <table class="job-summary">
-      <tr class="job-headings">
-        <th>Job ID</th>
-        <th>Amount</th>
-        <th>Balance</th>
-        <th>Contract Link</th>
-        <th>Request Payment</th>
-      </tr>
-      <tr class="spacer"></tr>
-      {% for job in approved_jobs %}
-      {% if job.house.address == approved_house.house.address %}
-      <tr class="job-info">
-        <td>{{job.id}}</td>
-        <td>${{job.start_amount|intcomma}}</td>
-        <td>${{job.balance_amount|intcomma}}</td>
-        <td><a rel="noopener noreferrer" target="_blank" href="{{job.document_link.url}}">View Contract</a></td>
-        <td>
-          <form class="request-payment-form" action="" method="post">
-            {% csrf_token %}
-            {% if form.errors %}
-            <div class="form-messages">
-              <p>Please try again.</p>
-            </div>
-            {% endif %}
-            {{form}}
-            <input type="hidden" name="job_id" value="{{job.id}}">
-            <a class="custom-btn blue-slide-btn" href="#">
-              <p class="request-payment-p">Request Payment</p>
-            </a>
-          </form>
-        </td>
-      </tr>
-      {% endif %}
-      {% endfor %}
-    </table>
-  </div>
-</div> <!-- /.job-container -->
-{% endfor %}
-{# End Active Jobs #}
+  {# Example for Intro Js #}
 
-{# Pending Jobs #}
-{% if gen_has_results %}
-<h2>Pending Approval Jobs</h2>
-{% endif %}
-{% for house in unapproved_houses %}
-<div class="job-container">
-  <div class="house">
-    <h3 class="house-address">{{house.address}}</h3>
+  {% endif %}
+
+  <div id="results_container">
+    {% include 'jobs/jobs_results.html' %}
   </div>
-  <div class="jobs">
-    <table class="job-summary">
-      <tr class="job-headings">
-        <th>Job ID</th>
-        <th>Amount</th>
-        <th>Submit Date</th>
-        <th>Contract Link</th>
-      </tr>
-      <tr class="spacer"></tr>
-      {% for job in unapproved_jobs %}
-      {% if job.house.address == house.address %}
-      <tr class="job-info">
-        <td>{{job.id}}</td>
-        <td>${{job.start_amount|intcomma}}</td>
-        <td>{{job.start_date}}</td>
-        <td><a href="{{job.document_link.url}}">View Contract</a></td>
-      </tr>
-      {% endif %}
-      {% endfor %}
-    </table>
-  </div>
-</div> <!-- /.job-container -->
-{% endfor %}
-{# End Pending Jobs #}
+
 {% endblock content %}

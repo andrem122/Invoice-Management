@@ -1,15 +1,15 @@
-{% extends 'items_group.html' %}
+{% extends 'logged_in_customer.html' %}
 
 {% load static %}
 
-{% block title %}Estimates{% endblock title %}
+{% block title %}Jobs{% endblock title %}
 
 {% block scripts %}
 {% endblock scripts %}
 
 {% block page_title %}Jobs{% endblock page_title %}
 
-{% block item_loop %}
+{% block content %}
   {# New Customer Message #}
   {% if worker_url and staff_url %}
   <div class="signup-link">
@@ -30,4 +30,4 @@
     {% include 'jobs_admin/jobs_admin_results.html' %}
   </div>
 
-{% endblock item_loop %}
+{% endblock content %}

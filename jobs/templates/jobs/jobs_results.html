@@ -1,0 +1,84 @@
+{% extends 'standard_items_worker_6.html' %}
+
+{% load humanize %}
+
+{# Item Desktop Headings #}
+{% block item_heading_1 %}Status{% endblock item_heading_1 %}
+{% block item_heading_2 %}Company{% endblock item_heading_2 %}
+{% block item_heading_3 %}Balance{% endblock item_heading_3 %}
+{% block item_heading_4 %}Contract Link{% endblock item_heading_4 %}
+{% block item_heading_5 %}Submitted{% endblock item_heading_5 %}
+{% block item_heading_6 %}Amount{% endblock item_heading_6 %}
+
+{# Forms #}
+{% block option_forms %}
+
+{% endblock option_forms %}
+
+{# Item Status #}
+{% block item_status %}
+  {% if item.approved == False and item.rejected == False %}
+  <div class="status new">Pending</div>
+
+  {% elif item.approved == True and item.balance > 0 %}
+  <div class="status active">Active</div>
+
+  {% elif item.approved == True %}
+  <div class="status approved">Approved</div>
+
+  {% elif item.rejected == True %}
+  <div class="status rejected">Rejected</div>
+  {% endif %}
+{% endblock item_status %}
+
+{# Mobile Item Headings and Values #}
+{% block item_heading_1_m %}Company{% endblock item_heading_1_m %}
+{% block item_heading_1_m_v %}{{ item.company }}{% endblock item_heading_1_m_v %}
+
+{% block item_2_m %}
+  {% if item.approved == True %}
+  <span class="info-title">Balance</span>
+  <li class="info-1">
+    ${{ item.balance_amount|intcomma }}
+  </li>
+  <hr>
+  {% endif %}
+{% endblock item_2_m %}
+
+{% block item_heading_3_m %}Contract Link{% endblock item_heading_3_m %}
+{% block item_heading_3_m_v %}<a rel="noopener noreferrer" target="_blank" href="{{ item.document_link.url }}">View Contract</a>{% endblock item_heading_3_m_v %}
+
+{% block item_heading_4_m %}Submitted{% endblock item_heading_4_m %}
+{% block item_heading_4_m_v %}{{ item.start_date|date:'M j, g:i a' }}{% endblock item_heading_4_m_v %}
+
+{% block item_heading_5_m %}Amount{% endblock item_heading_5_m %}
+{% block item_heading_5_m_v %}${{ item.start_amount|intcomma }}{% endblock item_heading_5_m_v %}
+
+{# Option Buttons #}
+{% block mobile_option_btns %}
+  {% if item.approved == True %}
+  <li class="list-inline-item">
+    <button type="submit" form="reject-form-{{ item.id }}" class="option-item reject-option-m">
+      <i class="option-item fas fa-money-bill-alt"></i>
+    </button>
+  </li>
+  {% endif %}
+{% endblock mobile_option_btns %}
+
+{% block desktop_option_btns %}
+  <div class="dropdown-menu
+    {% if item.approved == True and item.balance > 0 %}
+    dropdown-active
+    {% elif item.approved == True %}
+    dropdown-new-approved
+    {% elif item.rejected == True %}
+    dropdown-rejected
+    {% else %}
+    dropdown-new-approved
+    {% endif %}"
+  >
+    {% if item.approved == True %}
+    <button type="submit" form="reject-form-{{ item.id }}" class="dropdown-item reject-btn option-item">Request Payment</button>
+    {% endif %}
+  </div>
+{% endblock desktop_option_btns %}
