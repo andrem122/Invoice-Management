@@ -12,7 +12,11 @@
 
 {# Forms #}
 {% block option_forms %}
-
+  {# Request Payment #}
+  <form class="request_payment_form popup" action="/addjob/" method="post" enctype="multipart/form-data">
+    {{ request_payment_form }}
+    <input type="hidden" name="job_id" value="{{ item.id }}">
+  </form>
 {% endblock option_forms %}
 
 {# Item Status #}

@@ -45,8 +45,10 @@
       {% if item.house == house or item.house == house.house  %} {# Account for Current_Worker object #}
 
         {# Item Options Forms #}
-        {% block option_forms %}
-        {% endblock option_forms %}
+        <div class="option-forms">
+          {% block option_forms %}
+          {% endblock option_forms %}
+        </div>
 
         <div class="item-container">
           <div class="container-fluid">
@@ -97,9 +99,11 @@
                   {# Desktop Options #}
                   <div class="item-options-dropdown dropdown">
 
+                    {% if item.approved == True %}
                     <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                       <i class="fas fa-ellipsis-v"></i>
                     </a>
+                    {% endif %}
 
                     {% block desktop_option_btns %}
                     {% endblock desktop_option_btns %}

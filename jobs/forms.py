@@ -7,9 +7,9 @@ class Request_Payment_Form(ModelForm, forms.Form):
     class Meta:
         model = Request_Payment
         #the attributes from the Job class that we want to exclude in our form
-        exclude = ['job', 'approved', 'rejected', 'house', 'approved_date', 'document_link', 'requested_by_worker']
+        fields = ['amount', 'document_link']
 
         #widgets for each input element
         widgets = {
-            'amount': forms.HiddenInput(attrs={'step': '0.01'}),
+            'amount': forms.NumberInput(attrs={'step': '0.01'}),
         }

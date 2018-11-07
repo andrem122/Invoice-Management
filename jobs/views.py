@@ -24,17 +24,14 @@ def index(request):
     items = list(chain(approved_jobs, unapproved_jobs))
 
     template = loader.get_template('jobs/index.html')
-    form = Request_Payment_Form()
+    request_payment_form = Request_Payment_Form()
 
     context = {
         'houses': houses,
         'items': items,
         'current_user': current_user,
-        'form': form,
+        'request_payment_form': request_payment_form,
     }
-
-    print(houses)
-    print(items)
 
     #check if the user is new to send a welcome message
     new_user = request.GET.get('new_user')
@@ -44,16 +41,16 @@ def index(request):
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = Request_Payment_Form(request.POST)
+        request_payment_form = Request_Payment_Form(request.POST)
 
-        if form.is_valid():
+        if request_payment_form.is_valid():
             #get job ID from POST
             job_id = int(request.POST.get('job_id'))
 
             #clean the form data and store into variables
             job = Job.objects.get(pk=job_id)
             house = job.house
-            amount = form.cleaned_data['amount']
+            amount = request_payment_form.cleaned_data['amount']
 
             """if the current company already has a pending request for payment for a job for a house,
             do NOT write to the Request_Payment table"""
@@ -65,7 +62,7 @@ def index(request):
                 approved=False,
                 requested_by_worker=True,
             )
-            if not House.objects.filter(pk=house.id, pending_payments=True).exists():
+            if not House.objects.filter(pk=house.pk, pending_payments=True).exists():
                 house.pending_payments = True
                 house.save(update_fields=['pending_payments'])
 
@@ -74,7 +71,7 @@ def index(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = Request_Payment_Form()
+        request_payment_form = Request_Payment_Form()
 
     return HttpResponse(template.render(context, request))
 

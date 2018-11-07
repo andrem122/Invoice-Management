@@ -27,7 +27,7 @@ window.addEventListener("load", function(event) {
   //pops up or removes modal with 'popup' class when trigger is activated
   function alter_popup(event_type, popup_ele, overlay_ele, popup_removable_eles, form) {
 
-    if (event_type === 'click') {
+    if (event_type === 'click') { //for click popups
       document.addEventListener(event_type, function(e){
 
         if(e.target.classList.contains('popup-trigger')) {
@@ -42,12 +42,12 @@ window.addEventListener("load", function(event) {
 
 
       });
-    } else {
+    } else { //for form submit popups
         form.addEventListener('submit', function(e) {
           e.preventDefault();
           form.getElementsByClassName('form-submit-btn')[0].disabled = true;
           overlay_ele.classList.add('visible');
-          popup_ele.classList.add('visible'); //show popup
+          popup_ele.classList.add('visible'); //show loading popup
           form.submit(); //submit form
         });
     }
