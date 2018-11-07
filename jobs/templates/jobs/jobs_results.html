@@ -12,11 +12,13 @@
 
 {# Forms #}
 {% block option_forms %}
+  {% if item.approved == True %}
   {# Request Payment #}
   <form class="request_payment_form popup" action="/addjob/" method="post" enctype="multipart/form-data">
     {{ request_payment_form }}
     <input type="hidden" name="job_id" value="{{ item.id }}">
   </form>
+  {% endif %}
 {% endblock option_forms %}
 
 {# Item Status #}

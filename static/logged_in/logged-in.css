@@ -985,7 +985,6 @@ div.input-wrap select {
   visibility: hidden;
   opacity: 0;
   overflow-y: auto;
-  display: none;
 }
 
 .popup.sending-data {

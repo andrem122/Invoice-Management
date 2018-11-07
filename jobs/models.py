@@ -88,11 +88,11 @@ class Request_Payment(models.Model):
 
         return info[0] + '-' + info[1] + '-' + info[2] + '-' + info[3]
 
-    def generate_file_path(self, file_name, user):
-        if user.groups.filter(name__in=['Customers']).exists(): #if a customer is uploading, upload to a different folder
+    def generate_file_path(self, file_name):
+        if self.user.groups.filter(name__in=['Customers']).exists(): #if a customer is uploading, upload to a different folder
             return os.path.join('customer_uploads', 'documents', str(self.house.address), str(file_name))
         else:
             return os.path.join('worker_uploads', str(self.house.address), str(file_name))
 
-    paid_link = models.FileField(upload_to=generate_file_path)
-    document_link = models.FileField(upload_to=generate_file_path)
+    paid_link = models.FileField(null=True, upload_to=generate_file_path)
+    document_link = models.FileField(null=True, upload_to=generate_file_path)
