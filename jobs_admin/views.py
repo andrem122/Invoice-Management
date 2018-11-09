@@ -131,7 +131,11 @@ def index(request):
                 job.save(update_fields=['approved', 'rejected'])
 
                 #add the user as a current worker on the house OR do nothing if they are already active
-                Current_Worker.objects.get_or_create(house=house, company=job.company, current=True)
+                if job.balance_amount > 0 and job.approved == True:
+                    Current_Worker.objects.get_or_create(house=house, company=job.company, current=True)
+                else: #this job may be complete because payments may have been made previously, so set house.completed_jobs=True
+                    house.completed_jobs = True
+                    house.save(update_fields=['completed_jobs'])
 
                 if customer.current_week_payment_requests().exists(): #check if house has payment requests for current week
                     house.pending_payments = True

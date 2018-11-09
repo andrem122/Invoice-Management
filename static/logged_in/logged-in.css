@@ -671,6 +671,12 @@ tr.spacer {
   max-width: 500px;
 }
 
+@media (max-width:500px)  {
+  .form-wrapper .panel-heading > p {
+    text-align: center;
+  }
+}
+
 form label {
   display: block;
   font-weight: normal;
@@ -1190,6 +1196,7 @@ form.popup .label-wrap {
   display: block;
   width: 100%;
   transition: all 1s ease;
+  margin-bottom: 30px;
 }
 
 .form-submit-btn:hover {

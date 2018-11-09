@@ -8,16 +8,14 @@
 {% endblock scripts %}
 
 {% block body_class %}add_house{% endblock body_class %}
-
+{% block page_title %}Add Expense{% endblock page_title %}
 {% block content %}
 <div class="form-wrapper">
   <div class="panel-heading">
-    <h3 id="add-expense-heading">Add Expense</h3>
     <p id="add-expense-desc">
       Add expenses by inputing an amount,
       choosing a type, and uploading a file.
     </p>
-    <hr>
   </div>
   <div class="panel-body">
     <form id="add-expense-form" class="add-form" action="" method="post" role="form" enctype="multipart/form-data">
