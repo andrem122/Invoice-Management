@@ -16,7 +16,7 @@
   {% if item.approved == True %}
     {# Request Payment #}
 
-      <form class="request_payment_form popup" action="/jobs/" method="post" enctype="multipart/form-data">
+      <form id="request_payment_form_{{ item.id }}" class="request_payment_form popup" action="/jobs/" method="post" enctype="multipart/form-data">
         <div class="exit-on-click">
           <i id="send-data-exit" class="fas fa-times popup_remove_trigger"></i>
         </div>
@@ -96,7 +96,7 @@
 {% block mobile_option_btns %}
   {% if item.approved == True %}
   <li class="list-inline-item">
-    <button type="submit" form="reject-form-{{ item.id }}" class="option-item reject-option-m">
+    <button form="request_payment_form_{{ item.id }}" class="option-item request_payment_form_m">
       <i class="option-item fas fa-money-bill-alt"></i>
     </button>
   </li>
