@@ -29,13 +29,17 @@ window.addEventListener("load", function(event) {
 
     if (event_type === 'click') { //for click popups
       document.addEventListener(event_type, function(e){
-
+        
         if(e.target.classList.contains('popup-trigger')) {
           overlay_ele.classList.add('visible');
           popup_ele.classList.add('visible');
         }
 
-        if (e.target.id === popup_removable_eles[0] || e.target.nodeName === popup_removable_eles[1] || e.target.classList.contains(popup_removable_eles[2])) {
+        if (e.target.id === popup_removable_eles[0] ||
+          e.target.nodeName === popup_removable_eles[1] ||
+          e.target.classList.contains(popup_removable_eles[2]) ||
+          e.target.classList.contains(popup_removable_eles[3])) {
+
           overlay_ele.classList.remove('visible');
           popup_ele.classList.remove('visible');
         }
@@ -56,7 +60,7 @@ window.addEventListener("load", function(event) {
   //for send data form popup
   var path = window.location.pathname;
   if (path === '/jobs-admin/' || path === '/payments/') {
-    alter_popup('click', popup, overlay, ['overlay_id', 'path', 'popup_remove_trigger']);
+    alter_popup('click', popup, overlay, ['overlay_id', 'path', 'popup_remove_trigger', 'exit-on-click']);
   }
 
   if (path === '/add-expense/' || path === '/addjob/') {

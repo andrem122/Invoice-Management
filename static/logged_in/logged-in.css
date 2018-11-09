@@ -554,6 +554,10 @@ div.item-container + h3.house-address {
     font-size: 29px;
   }
 
+  div.item-container ul.mobile-option-icons > li > button.request_payment_form_m {
+    padding: 17px 90px !important;
+  }
+
   h3.house-address {
     text-align: center;
   }
@@ -999,7 +1003,7 @@ div.input-wrap select {
   padding: 20px;
   background-color: #fff;
   max-width: 300px;
-  z-index: 99999999;
+  z-index: 99999999 !important;
   transition: all 0.3s ease-in-out;
   visibility: hidden;
   opacity: 0;

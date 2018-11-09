@@ -96,6 +96,7 @@ window.addEventListener("load", function(event) {
   post_form_with_file_input(['request-payment-p'], 'number');
 
   //activate intro js if it is a new user
+  /*
   if (document.documentURI.indexOf('new_user=True') !== -1) {
     //disable add job button
     var addJobBtn = document.getElementById('add-job');
@@ -131,7 +132,7 @@ window.addEventListener("load", function(event) {
       'disableInteraction': true,
       }).start();
   }
-
+  */
   /*Scroll to top when arrow up clicked BEGIN*/
   $scroll_btn = $('#scroll');
   $('body').scroll(function(){
