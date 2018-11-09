@@ -40,7 +40,10 @@ class Worker:
     """Houses"""
     #gets all houses the worker is approved to work on
     def approved_houses(self):
-        return Current_Worker.objects.filter(company=self.worker, current=True)
+        return Current_Worker.objects.filter(
+            company=self.worker,
+            current=True,
+        )
 
     #gets all houses the worker has pending jobs for
     def unapproved_houses(self):

@@ -164,9 +164,10 @@
     {% endfor %}
   </div>
   {% endif %}
+
   <div id="approved_jobs">
     {% if approved_jobs %}
-      <h2>Completed Jobs</h2>
+      <h2>Approved Jobs</h2>
       {% for job in approved_jobs %}
         {% if forloop.first %}
         <div class="item-headings-wrapper container-fluid">
@@ -200,7 +201,14 @@
                 <ul>
                   <li>
                     {# Status #}
-                    <div class="status approved">Approved</div>
+
+                    {% if job.approved == True and job.balance > 0 %}
+                    <div class="status active">Active</div>
+
+                    {% else %}
+                    <div class="status approved">Completed</div>
+                    {% endif %}
+
                   </li>
                   <span class="info-title">Company</span>
                   <li class="info-1">{{ job.company }}</li>

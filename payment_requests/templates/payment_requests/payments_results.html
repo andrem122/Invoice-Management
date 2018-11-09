@@ -72,10 +72,10 @@
 {% block item_heading_1_m_v %}{{ item.job.company }}{% endblock item_heading_1_m_v %}
 
 {% block item_2_m %}
-  {% if item.document_link.url != None and item.rejected == False %}
+  {% if item.paid_link.url != None and item.rejected == False %}
   <span class="info-title">Paid Link</span>
   <li class="info-1">
-    <a rel="noopener noreferrer" target="_blank" href="{{ item.document_link.url }}">
+    <a rel="noopener noreferrer" target="_blank" href="{{ item.paid_link.url }}">
       Paid Link
     </a>
   </li>
@@ -84,7 +84,16 @@
 {% endblock item_2_m %}
 
 {% block item_heading_3_m %}Contract Link{% endblock item_heading_3_m %}
-{% block item_heading_3_m_v %}<a rel="noopener noreferrer" target="_blank" href="{{ item.job.document_link.url }}">View Contract</a>{% endblock item_heading_3_m_v %}
+{% block item_heading_3_m_v %}
+  <a rel="noopener noreferrer" target="_blank" href="
+    {% if item.document_link.url != None %}
+    {{ item.document_link.url }}
+    {% else %}
+    {{ item.job.document_link.url }}
+    {% endif %}
+    ">View Contract
+  </a>
+{% endblock item_heading_3_m_v %}
 
 {% block item_heading_4_m %}Submitted{% endblock item_heading_4_m %}
 {% block item_heading_4_m_v %}{{ item.approved_date|date:'M j, g:i a' }}{% endblock item_heading_4_m_v %}

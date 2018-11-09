@@ -90,14 +90,16 @@
                 <ul>
                   <span class="info-title">{% block item_heading_5_m %}{% endblock item_heading_5_m %}</span>
                   <li class="info-4">{% block item_heading_5_m_v %}{% endblock item_heading_5_m_v %}</li>
-                  <hr>
-                  {# Mobile Option Buttons #}
-                  <ul class="list-inline mobile-option-icons">
-                    {% block mobile_option_btns %}
-                    {% endblock mobile_option_btns %}
-                  </ul>
-                  {# Desktop Options #}
-                  <div class="item-options-dropdown dropdown">
+
+                  {% if item.approved == True %}
+                    <hr>
+                    {# Mobile Option Buttons #}
+                    <ul class="list-inline mobile-option-icons">
+                      {% block mobile_option_btns %}
+                      {% endblock mobile_option_btns %}
+                    </ul>
+                    {# Desktop Options #}
+                    <div class="item-options-dropdown dropdown">
 
                     {% if item.approved == True %}
                     <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -107,6 +109,7 @@
 
                     {% block desktop_option_btns %}
                     {% endblock desktop_option_btns %}
+                  {% endif %}
 
                   </div>
                 </ul>

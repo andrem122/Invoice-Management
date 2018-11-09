@@ -5,9 +5,9 @@ from .models import House, Job, Request_Payment
 from .forms import Request_Payment_Form
 from django.contrib.auth.decorators import user_passes_test, login_required
 from project_management.decorators import worker_check
-from django.contrib import messages
 from register.worker import Worker
 from itertools import chain
+from optimize_image import optimize_image, is_image, generate_file_path
 
 @user_passes_test(worker_check, login_url='/accounts/login/')
 def index(request):
@@ -41,7 +41,7 @@ def index(request):
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        request_payment_form = Request_Payment_Form(request.POST)
+        request_payment_form = Request_Payment_Form(data=request.POST, files=request.FILES)
 
         if request_payment_form.is_valid():
             #get job ID from POST
@@ -51,23 +51,26 @@ def index(request):
             job = Job.objects.get(pk=job_id)
             house = job.house
             amount = request_payment_form.cleaned_data['amount']
+            img_names = (request_payment_form.cleaned_data['document_link'].name, )
 
-            """if the current company already has a pending request for payment for a job for a house,
-            do NOT write to the Request_Payment table"""
-            # create an instance of the Request_Payment Class and populate it with the form data and default values
-            payment, created = Request_Payment.objects.get_or_create(
-                job=job,
-                house=house,
-                amount=amount,
-                approved=False,
-                requested_by_worker=True,
-            )
+            payment = request_payment_form.save(commit=False)
+            payment.job = job
+            payment.house = house
+            payment.requested_by_worker=True
+            payment.save()
+
             if not House.objects.filter(pk=house.pk, pending_payments=True).exists():
                 house.pending_payments = True
                 house.save(update_fields=['pending_payments'])
 
+            result = is_image(img_names)
+            if result == True:
+                file_paths = generate_file_path(house=house, user=current_user, img_names=img_names, upload_folder='worker_uploads')
+                optimize_image(file_paths)
 
             return redirect('/jobs/thank_you')
+        else:
+            print(request_payment_form.errors)
 
     # if a GET (or any other method) we'll create a blank form
     else:

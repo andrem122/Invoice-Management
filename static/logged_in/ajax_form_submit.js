@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', function() {
 
-  function ajax_post(button_class, url) {
+  function ajax_post(button_class) {
     document.addEventListener('click', function(e){
       if(e.target.classList.contains(button_class)) {
         e.preventDefault(); //prevent form submission
@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', function() {
         //ajax POST
          $.ajax({
            type: 'POST',
-           url: url,
+           url: window.location.pathname,
            data: $form.serialize(),
            success: function(data, textStatus) {
              $('#results_container').html(data);
@@ -24,8 +24,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
   //for jobs_admin
   var btn_cls = 'option-item';
-  var url = window.location.pathname;
-  ajax_post(btn_cls, url);
+  ajax_post(btn_cls);
 
 
 });

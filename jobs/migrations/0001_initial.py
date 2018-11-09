@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
                 ('approved_date', models.DateTimeField(auto_now_add=True)),
                 ('amount', models.DecimalField(decimal_places=2, default=0.0, max_digits=8)),
                 ('approved', models.BooleanField(default=False)),
-                ('document_link', models.FileField(upload_to=jobs.models.Request_Payment.generate_file_path)),
+                ('document_link', models.FileField(upload_to=jobs.models.Request_Payment.generate_file_path_worker)),
                 ('house', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='jobs.House')),
                 ('job', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='jobs.Job')),
             ],

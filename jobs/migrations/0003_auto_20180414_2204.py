@@ -24,6 +24,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='request_payment',
             name='document_link',
-            field=models.FileField(blank=True, null=True, upload_to=jobs.models.Request_Payment.generate_file_path),
+            field=models.FileField(blank=True, null=True, upload_to=jobs.models.Request_Payment.generate_file_path_worker),
         ),
     ]

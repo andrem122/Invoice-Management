@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function(e){
 
     else if(parent_selector_type === '#') { //id
       parent_selector = parent_selector.split('#')[1];
-      console.log(parent_selector);
       while (p.id !== parent_selector) {
           o = p;
           p = o.parentElement;
@@ -33,25 +32,31 @@ document.addEventListener('DOMContentLoaded', function(e){
     return p;
   }
 
-  function item_form_popup(trigger_class, overlay) {
+  function item_form_popup(trigger_classes, overlay) {
     var parent, form = null;
     document.addEventListener('click', function(e) {
+      var l = trigger_classes.length;
+      for(var i = 0; i < l; i++) {
+        if(e.target.classList.contains(trigger_classes[i])) {
 
-      if(e.target.classList.contains(trigger_class)) {
-        console.log('trigger clicked!');
+          parent = get_parent(e.target, '.item-container')
+          .previousElementSibling;
+          parent.classList.add('flex-container');
 
-        parent = get_parent(e.target, '.item-container')
-        .previousElementSibling;
-        parent.style.display = 'block';
+          form = parent.getElementsByTagName('form')[0];
+          form.classList.add('visible');
+          overlay.classList.add('visible');
 
-        form = parent.getElementsByTagName('form')[0];
-        form.classList.add('visible');
-        overlay.classList.add('visible');
-      } else {
-        if(parent !== null && form !== null ) {
-          parent.style.display = 'none';
-          form.classList.remove('visible');
-          overlay.classList.remove('visible');
+          form.scrollIntoView(true);
+
+        } else if (e.target.classList.contains('overlay') || e.target.classList.contains('popup_remove_trigger') ||
+                   e.target.classList.contains('exit-on-click')
+                  ) {
+            if(parent !== null && form !== null) {
+              parent.classList.remove('flex-container');
+              form.classList.remove('visible');
+              overlay.classList.remove('visible');
+            }
         }
       }
 
@@ -59,6 +64,6 @@ document.addEventListener('DOMContentLoaded', function(e){
 
   }
   var overlay = document.getElementById('overlay_id');
-  item_form_popup('option-item', overlay);
+  item_form_popup(['option-item', 'popup'], overlay);
 
 });

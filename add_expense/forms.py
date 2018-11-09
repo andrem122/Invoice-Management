@@ -16,6 +16,10 @@ class Add_Expense(ModelForm, forms.Form):
             'document_link',
         ]
 
+        widgets = {
+            'document_link': forms.FileInput(attrs={'class': 'file_upload'}),
+        }
+
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

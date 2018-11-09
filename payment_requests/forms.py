@@ -6,4 +6,13 @@ from jobs.models import Request_Payment
 class Change_Payment_Status(ModelForm, forms.Form):
     class Meta:
         model = Request_Payment
-        exclude = ['job', 'amount', 'rejected', 'approved', 'house', 'document_link', 'requested_by_worker']
+        exclude = [
+            'job',
+            'amount',
+            'rejected',
+            'approved',
+            'house',
+            'document_link',
+            'requested_by_worker',
+            'paid_link',
+        ]

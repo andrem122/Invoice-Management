@@ -21,6 +21,10 @@ class AddJob(ModelForm, forms.Form):
             'document_link': 'Job Document',
         }
 
+        widgets = {
+            'document_link': forms.FileInput(attrs={'class': 'file_upload'}),
+        }
+
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         #get customer id

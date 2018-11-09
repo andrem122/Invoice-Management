@@ -12,4 +12,5 @@ class Request_Payment_Form(ModelForm, forms.Form):
         #widgets for each input element
         widgets = {
             'amount': forms.NumberInput(attrs={'step': '0.01'}),
+            'document_link': forms.FileInput(attrs={'class': 'file_upload'}),
         }

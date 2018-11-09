@@ -12,13 +12,52 @@
 
 {# Forms #}
 {% block option_forms %}
+
   {% if item.approved == True %}
-  {# Request Payment #}
-  <form class="request_payment_form popup" action="/addjob/" method="post" enctype="multipart/form-data">
-    {{ request_payment_form }}
-    <input type="hidden" name="job_id" value="{{ item.id }}">
-  </form>
+    {# Request Payment #}
+
+      <form class="request_payment_form popup" action="/jobs/" method="post" enctype="multipart/form-data">
+        <div class="exit-on-click">
+          <i id="send-data-exit" class="fas fa-times popup_remove_trigger"></i>
+        </div>
+        <h2>Request Payment</h2>
+        {% csrf_token %}
+
+        {% if request_payment_form.errors %}
+        <div class="form-messages">
+          <p>{{ request_payment_form.errors }}</p>
+        </div>
+        {% endif %}
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message}}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <div class="input-label-wrap">
+          <div class="label-wrap">{{ request_payment_form.amount.label_tag }}</div>
+          <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ request_payment_form.amount }}</div>
+        </div>
+
+        <div class="input-label-file-wrap">
+          <div class="label-wrap">{{ request_payment_form.document_link.label_tag }}</div>
+          <div class="file-wrap">
+            <i class="fas fa-upload"></i>
+            <button type="button" class="file-upload-btn">Upload File</button>
+            {{ request_payment_form.document_link }}
+            <div id="file-input-message"></div>
+          </div>
+        </div>
+
+        <input type="hidden" name="job_id" value="{{ item.id }}">
+        <input class="form-submit-btn" type="submit" value="Request Payment">
+      </form>
+
   {% endif %}
+
 {% endblock option_forms %}
 
 {# Item Status #}
@@ -41,15 +80,8 @@
 {% block item_heading_1_m %}Company{% endblock item_heading_1_m %}
 {% block item_heading_1_m_v %}{{ item.company }}{% endblock item_heading_1_m_v %}
 
-{% block item_2_m %}
-  {% if item.approved == True %}
-  <span class="info-title">Balance</span>
-  <li class="info-1">
-    ${{ item.balance_amount|intcomma }}
-  </li>
-  <hr>
-  {% endif %}
-{% endblock item_2_m %}
+{% block item_heading_2_m %}Balance{% endblock item_heading_2_m %}
+{% block item_heading_2_m_v %}${{ item.balance_amount|intcomma }}{% endblock item_heading_2_m_v %}
 
 {% block item_heading_3_m %}Contract Link{% endblock item_heading_3_m %}
 {% block item_heading_3_m_v %}<a rel="noopener noreferrer" target="_blank" href="{{ item.document_link.url }}">View Contract</a>{% endblock item_heading_3_m_v %}

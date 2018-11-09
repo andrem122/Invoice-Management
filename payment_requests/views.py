@@ -116,15 +116,15 @@ def payments(request):
 
                 """if there are no more unapproved payments for a house,
                 set pending_payments=False for that specific house
-                AND if a company has no more jobs for a house with a balance greater than zero,
+                AND if a company has no more approved jobs for a house with a balance greater than zero,
                 then delete them as a current_worker
                 """
 
                 if not Request_Payment.objects.filter(house=house, approved=False).exists():
                     house.pending_payments = False
-                if not Job.objects.filter(company=job.company, house=job.house, balance_amount__gt=0).exists():
+                if not Job.objects.filter(company=job.company, house=job.house, balance_amount__gt=0, approved=True).exists():
                     try:
-                        Current_Worker.objects.get(company=job.company, house=job.house)
+                        Current_Worker.objects.get(company=job.company, house=job.house).delete()
                     except ObjectDoesNotExist as e:
                         print(e)
 
