@@ -55,7 +55,7 @@ window.addEventListener("load", function(event) {
   function submit_upload_form() {
     document.addEventListener('change', function(e){
       classes = e.target.classList;
-      if(classes.contains('document_link_upload') || classes.contains('document_link_upload-m')) {
+      if(classes.contains('paid_link_upload') || classes.contains('paid_link_upload_m')) {
         //submit upload form when file is uploaded
         console.log(e.target.id);
         e.target.form.submit();

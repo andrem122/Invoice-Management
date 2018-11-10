@@ -44,7 +44,7 @@
     {% csrf_token %}
     {% if upload_document_form.errors %}
     <div class="form-messages">
-      <p>{{upload_document_form.errors}}</p>
+      <p>{{ upload_document_form.errors }}</p>
     </div>
     {% endif %}
     <input name="thank_you" value="/payments/thank_you" type="hidden">
@@ -119,7 +119,7 @@
     </button>
   </li>
   <li class="list-inline-item">
-    <input class="document_link_upload-m" name="document_link" form="upload-document-form-{{ item.id }}" id="document_link-{{ item.id }}-m" type="file">
+    <input class="paid_link_upload_m" name="paid_link" form="upload-document-form-{{ item.id }}" id="paid_link-{{ item.id }}_m" type="file">
     <button type="submit" form="upload-document-form-{{ item.id }}" class="dropdown-item upload-btn">
       <i class="fas fa-upload"></i>
     </button>
@@ -146,7 +146,7 @@
   {# Approved #}
   {% elif item.approved == True and item.rejected == False %}
   <button type="submit" form="reject-payment-form-{{ item.id }}" class="dropdown-item reject-btn option-item">Reject</button>
-  <input class="document_link_upload" name="document_link" form="upload-document-form-{{ item.id }}" id="document_link-{{ item.id }}" required type="file">
+  <input class="paid_link_upload" name="paid_link" form="upload-document-form-{{ item.id }}" id="paid_link_{{ item.id }}" required type="file">
   <button type="submit" form="upload-document-form-{{ item.id }}" class="dropdown-item upload-btn">Upload Document</button>
 
   {# Rejected #}

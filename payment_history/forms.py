@@ -12,4 +12,4 @@ class Payment_History_Form(ModelForm, forms.Form):
 class Upload_Document_Form(ModelForm, forms.Form):
     class Meta:
         model = Request_Payment
-        fields = ['document_link']
+        fields = ['paid_link']

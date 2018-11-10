@@ -423,14 +423,14 @@ div.item-container ul div.item-options-dropdown .dropdown-new-approved::before {
   left: 10px;
 }
 
-div.item-container ul div.item-options-dropdown .document_link_upload {
+div.item-container ul div.item-options-dropdown .paid_link_upload {
   position: absolute;
   top: 48px;
   opacity: 0;
   padding: 15px 0;
 }
 
-div.item-container ul.mobile-option-icons .document_link_upload-m {
+div.item-container ul.mobile-option-icons .paid_link_upload_m {
   position: absolute;
   top: 103px;
   padding: 30px 0;
