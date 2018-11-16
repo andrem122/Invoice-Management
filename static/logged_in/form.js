@@ -2,10 +2,8 @@
 window.addEventListener("load", function(event) {
 
   var popup = document.getElementsByClassName('popup')[0];
-  var overlay = document.getElementById('overlay_id');
-  var form = document.getElementsByClassName('add-form')[0];
 
-  if (popup !== null || popup !== undefined) {
+  if (popup !== undefined) {
     popup.style.display = 'block';
   }
 
@@ -25,22 +23,21 @@ window.addEventListener("load", function(event) {
   file_upload_message();
 
   //pops up or removes modal with 'popup' class when trigger is activated
-  function alter_popup(event_type, popup_ele, overlay_ele, popup_removable_eles, form) {
-
+  function alter_popup(event_type, popup_ele, popup_removable_eles, form) {
+    var overlay_ele = document.getElementById('overlay_id');
     if (event_type === 'click') { //for click popups
       document.addEventListener(event_type, function(e){
 
         console.log('Classes: ' + e.target.classList.toString() + ' Node Name: ' + e.target.nodeName.toString());
 
-        if(e.target.classList.contains('popup-trigger') || e.id === 'search_trigger') {
+        if(e.target.classList.contains('popup-trigger')) {
           overlay_ele.classList.add('visible');
           popup_ele.classList.add('visible');
         }
 
         if (e.target.id === popup_removable_eles[0] ||
-          e.target.nodeName === popup_removable_eles[1] ||
-          e.target.classList.contains(popup_removable_eles[2]) ||
-          e.target.classList.contains(popup_removable_eles[3])) {
+          e.target.classList.contains(popup_removable_eles[1]) ||
+          e.target.classList.contains(popup_removable_eles[2])) {
 
           overlay_ele.classList.remove('visible');
           popup_ele.classList.remove('visible');
@@ -62,16 +59,36 @@ window.addEventListener("load", function(event) {
   //for send data form popup
   var path = window.location.pathname;
   if (path === '/jobs-admin/' || path === '/payments/' && popup !== null) {
-    alter_popup('click', popup, overlay, ['overlay_id', 'path', 'popup_remove_trigger', 'exit-on-click']);
+    alter_popup('click', popup, ['overlay_id', 'popup_remove_trigger', 'exit-on-click']);
   }
 
   if (path === '/add-expense/' || path === '/addjob/' && popup !== null) {
-    alter_popup('submit', popup, overlay, [1, 2, 3], form);
+    var form = document.getElementsByClassName('add-form')[0];
+    alter_popup('submit', popup, [1, 2, 3], form);
   }
 
-  popup = document.getElementById('search-form');
-  if (path !== '/jobs/' || path !== '/addjob/' && popup !== null) {
-      alter_popup('click', popup, overlay, ['overlay_id', 'path', 'popup_remove_trigger', 'exit-on-click']);
+  function search_popup() {
+
+    //elements
+    var overlay_ele = document.getElementById('overlay_id');
+    var search_popup = document.getElementById('search');
+
+    document.addEventListener('click', function(e){
+      console.log('Classes: ' + e.target.classList.toString() + ' Node Name: ' + e.target.nodeName.toString());
+
+      if(e.target.classList.contains('popup-trigger-search') || e.target.id === 'search_trigger' || e.target.id === 'search') {
+        overlay_ele.classList.add('visible');
+        search_popup.classList.add('visible');
+        search_popup.focus();
+      }
+
+      else if (e.target.id === 'overlay_id') {
+        overlay_ele.classList.remove('visible');
+        search_popup.classList.remove('visible');
+      }
+    });
   }
+
+  search_popup();
 
 });
