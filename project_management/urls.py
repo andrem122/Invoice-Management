@@ -29,7 +29,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', include('register.urls')),
     path('customer-register/', include('customer_register.urls')),
-    path('jobs-complete/', include('jobs_complete.urls')),
     path('add-house/', include('add_house.urls')),
     path('add-expense/', include('add_expense.urls')),
     path('expenses/', include('expenses.urls')),

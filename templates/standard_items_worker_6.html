@@ -14,7 +14,7 @@
 
 {% if items %}
   {% for house in houses %}
-    <h3 class="house-address">
+    <h3 class="sub-title">
 
       {% if house.address %} {# House Object #}
         {{ house.address }}
@@ -91,7 +91,6 @@
                   <span class="info-title">{% block item_heading_5_m %}{% endblock item_heading_5_m %}</span>
                   <li class="info-4">{% block item_heading_5_m_v %}{% endblock item_heading_5_m_v %}</li>
 
-                  {% if item.approved == True %}
                     <hr>
                     {# Mobile Option Buttons #}
                     <ul class="list-inline mobile-option-icons">
@@ -99,8 +98,7 @@
                       {% endblock mobile_option_btns %}
                     </ul>
                     {# Desktop Options #}
-                    <div class="item-options-dropdown dropdown">
-
+                  <div class="item-options-dropdown dropdown">
                     {% if item.approved == True %}
                     <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                       <i class="fas fa-ellipsis-v"></i>
@@ -109,7 +107,6 @@
 
                     {% block desktop_option_btns %}
                     {% endblock desktop_option_btns %}
-                  {% endif %}
 
                   </div>
                 </ul>

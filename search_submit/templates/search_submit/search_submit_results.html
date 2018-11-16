@@ -6,7 +6,7 @@
     <h3>{{count}} Results for: <i>{{query}}</i></h3>
     {# Headings for jobs #}
     {% if jobs %}
-    <h4 class="item-title">Jobs</h4>
+    <h4 class="sub-title">Jobs</h4>
     <div class="item-headings-wrapper container-fluid">
       <ul class="item-headings row">
         <div class="col col-sm-6">
@@ -184,7 +184,7 @@
 
   {# Payments #}
   {% if payments %}
-  <h4 class="item-title">Payments</h4>
+  <h4 class="sub-title">Payments</h4>
     <div class="item-headings-wrapper container-fluid">
       <ul class="item-headings row">
         <div class="col col-sm-6">
@@ -270,10 +270,10 @@
                   <span class="info-title">Company</span>
                   <li class="info-1">{{ payment.job.company }}</li>
                   <hr>
-                  {% if payment.document_link.url != None and payment.rejected == False %}
+                  {% if payment.paid_link.url != None and payment.rejected == False %}
                   <span class="info-title">Paid Link</span>
                   <li class="info-1">
-                    <a rel="noopener noreferrer" target="_blank" href="{{ payment.document_link.url }}">
+                    <a rel="noopener noreferrer" target="_blank" href="{{ payment.paid_link.url }}">
                       Paid Link
                     </a>
                   </li>
@@ -285,7 +285,14 @@
                 <ul>
                   <span class="info-title">Contract</span>
                   <li class="info-2">
-                    <a rel="noopener noreferrer" target="_blank" href="{{ payment.job.document_link.url }}">View Contract</a>
+                    <a rel="noopener noreferrer" target="_blank" href="
+                      {% if payment.document_link.url != None %}
+                      {{ payment.document_link.url }}
+                      {% else %}
+                      {{ payment.job.document_link.url }}
+                      {% endif %}
+                      ">View Contract
+                    </a>
                   </li>
                   <hr>
                   <span class="info-title">Submitted</span>
@@ -311,6 +318,7 @@
                         <i class="fas fa-check"></i>
                       </button>
                     </li>
+
                     {# Approved #}
                     {% elif payment.approved == True and payment.rejected == False %}
                     <li class="list-inline-item">
@@ -318,12 +326,14 @@
                         <i class="fas fa-times"></i>
                       </button>
                     </li>
+
                     <li class="list-inline-item">
-                      <input class="document_link_upload-m" name="document_link" form="upload-document-form-{{ payment.id }}" id="document_link-{{ payment.id }}-m" type="file">
+                      <input class="paid_link_upload_m" name="paid_link" form="upload-document-form-{{ payment.id }}" id="paid_link-{{ item.id }}_m" type="file">
                       <button type="submit" form="upload-document-form-{{ payment.id }}" class="dropdown-item upload-btn">
                         <i class="fas fa-upload"></i>
                       </button>
                     </li>
+
                     {# Rejected #}
                     {% elif payment.rejected == True %}
                     <li class="list-inline-item">
@@ -351,7 +361,7 @@
                       {# Approved #}
                       {% elif payment.approved == True and payment.rejected == False %}
                       <button type="submit" form="reject-payment-form-{{ payment.id }}" class="dropdown-item reject-btn">Reject</button>
-                      <input class="document_link_upload" name="document_link" form="upload-document-form-{{ payment.id }}" id="document_link-{{ payment.id }}" required type="file">
+                      <input class="paid_link_upload" name="paid_link" form="upload-document-form-{{ payment.id }}" id="paid_link-{{ payment.id }}" required type="file">
                       <button type="submit" form="upload-document-form-{{ payment.id }}" class="dropdown-item upload-btn">Upload Document</button>
 
                       {# Rejected #}
@@ -373,7 +383,7 @@
     {# Expenses #}
 
     {% if expenses %}
-      <h4 class="item-title">Expenses</h4>
+      <h4 class="sub-title">Expenses</h4>
       <div class="item-headings-wrapper container-fluid">
         <ul class="item-headings row">
           <div class="col col-sm-6">

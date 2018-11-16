@@ -37,12 +37,14 @@
 		View Jobs
 	</a>
 </li>
+
 <li>
 	<a{% if request.path == '/addjob/' %} class="active"{% endif %} href="/addjob">
 		<i class="far fa-plus-square"></i>
 		Add New Job
 	</a>
 </li>
+
 <li>
 		<a href="/accounts/logout">
 			<i class="fas fa-sign-out-alt"></i>
@@ -50,10 +52,9 @@
 		</a>
 </li>
 {% endblock menu_options %}
+
 {% block button_options %}
-<a href="#" class="custom-btn blue-slide-btn" id="menu-toggle"><p>Menu</p></a>
-<a href="/addjob" class="custom-btn red-slide-btn{% if request.path == '/addjob/' %} display-none{% endif %}" id="add-job"
-data-step="3" data-intro="Click this button to add estimates or jobs you have completed">
-	<p>Add Job</p>
-</a>
+<a href="#" class="round-btn solid-round-btn" id="menu-toggle">Menu</a>
+<a href="/addjob" class="round-btn{% if request.path == '/addjob/' %} display-none{% endif %}" id="add-job"
+data-step="3" data-intro="Click this button to add estimates or jobs you have completed">Add Job</a>
 {% endblock button_options %}

@@ -66,7 +66,7 @@
 			Jobs
 		</a>
 	</li>
-	
+
 	<li>
 		<a{% if request.path == '/payments/' %} class="active"{% endif %} href="/payments">
 			<i class="far fa-credit-card"></i>
@@ -105,52 +105,57 @@
 {% endblock menu_options %}
 
 {% block button_options %}
-	{# Menu Button #}
-	<a href="#" class="custom-btn blue-slide-btn" id="menu-toggle"><p>Menu</p></a>
 
-	{# Drop Down Options Menu #}
-	<div id="options-dropdown" class="dropdown">
-		<a href="#" class="custom-btn red-slide-btn dropdown-toggle" id="options" data-toggle="dropdown"><p><i class="fas fa-ellipsis-h"></i></p></a>
-		<div class="dropdown-menu">
-			<a class="dropdown-item" href="#">
-				<button form="download-data-form" type="submit">Download Data</button>
-			</a>
+	<div class="left-options-container">
+		{# Menu Button #}
+		<a href="#" class="round-btn solid-round-btn" id="menu-toggle">Menu</a>
 
-			{% if request.path == '/jobs-admin/' or request.path == '/payments/' %}
-			<a  id="send-data-btn" class="dropdown-item popup-trigger" href="#">Send Data</a>
+		{# Drop Down Options Menu #}
+		<div id="options-dropdown" class="dropdown">
+			<a href="#" class="round-btn dropdown-toggle" id="options" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
+			<div class="dropdown-menu">
+				<a class="dropdown-item" href="#">
+					<button form="download-data-form" type="submit">Download Data</button>
+				</a>
+
+				{% if request.path == '/jobs-admin/' or request.path == '/payments/' %}
+				<a  id="send-data-btn" class="dropdown-item popup-trigger" href="#">Send Data</a>
+				{% endif %}
+
+			</div>
+		</div>
+	</div> <!--/.left-options-container-->
+
+	<div class="right-options-container">
+		{# Download Data Form #}
+		<form id="download-data-form" class="download-data-form" action="/download-data/" method="post">
+			{% csrf_token %}
+			{% if download_data_form.errors %}
+			<div class="form-messages">
+				<p>{{download_data_form.errors}}</p>
+			</div>
 			{% endif %}
+			{{download_data_form}}
+			<input type="hidden" name="job_house" value="{{p.job.house}}">
+		</form>
 
+		<form id="search-form" role="form" action="{% url 'search' %}" method="post">
+			{% csrf_token %}
+			<div id="search-wrap">
+				<i class="fas fa-search"></i>
+				<input name="search"
+						 id="search"
+						 type="search"
+						 placeholder="Search"
+						 ic-post-to="{% url 'search-ajax' %}"
+						 ic-trigger-on="keyup changed"
+						 ic-trigger-delay="300ms"
+						 ic-target="#search-result-container"/>
+			</div>
+			<button class="round-btn" type="submit">Submit</button>
+		</form>
+		<div id="search_trigger">
+			<i class="fas fa-search popup_remove_trigger"></i>
 		</div>
-	</div>
-
-	{# Download Data Form #}
-	<form id="download-data-form" class="download-data-form" action="/download-data/" method="post">
-		{% csrf_token %}
-		{% if download_data_form.errors %}
-		<div class="form-messages">
-			<p>{{download_data_form.errors}}</p>
-		</div>
-		{% endif %}
-		{{download_data_form}}
-		<input type="hidden" name="job_house" value="{{p.job.house}}">
-	</form>
-
-	<form id="search-form" role="form" action="{% url 'search' %}" method="post">
-		{% csrf_token %}
-		<div id="search-wrap">
-			<i class="fas fa-search"></i>
-			<input name="search"
-		       id="search"
-		       type="search"
-		       placeholder="Search"
-		       ic-post-to="{% url 'search-ajax' %}"
-		       ic-trigger-on="keyup changed"
-		       ic-trigger-delay="300ms"
-		       ic-target="#search-result-container"/>
-		</div>
-		<button class="custom-btn approve-btn" type="submit">
-			<p>Submit</p>
-		</button>
-	</form>
-	<div id="search-result-container"></div>
+	</div><!--/.right-options-container-->
 {% endblock button_options %}

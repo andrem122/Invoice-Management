@@ -5,7 +5,7 @@ window.addEventListener("load", function(event) {
   var overlay = document.getElementById('overlay_id');
   var form = document.getElementsByClassName('add-form')[0];
 
-  if (popup !== null) {
+  if (popup !== null || popup !== undefined) {
     popup.style.display = 'block';
   }
 
@@ -29,8 +29,10 @@ window.addEventListener("load", function(event) {
 
     if (event_type === 'click') { //for click popups
       document.addEventListener(event_type, function(e){
-        
-        if(e.target.classList.contains('popup-trigger')) {
+
+        console.log('Classes: ' + e.target.classList.toString() + ' Node Name: ' + e.target.nodeName.toString());
+
+        if(e.target.classList.contains('popup-trigger') || e.id === 'search_trigger') {
           overlay_ele.classList.add('visible');
           popup_ele.classList.add('visible');
         }
@@ -59,12 +61,17 @@ window.addEventListener("load", function(event) {
 
   //for send data form popup
   var path = window.location.pathname;
-  if (path === '/jobs-admin/' || path === '/payments/') {
+  if (path === '/jobs-admin/' || path === '/payments/' && popup !== null) {
     alter_popup('click', popup, overlay, ['overlay_id', 'path', 'popup_remove_trigger', 'exit-on-click']);
   }
 
-  if (path === '/add-expense/' || path === '/addjob/') {
+  if (path === '/add-expense/' || path === '/addjob/' && popup !== null) {
     alter_popup('submit', popup, overlay, [1, 2, 3], form);
+  }
+
+  popup = document.getElementById('search-form');
+  if (path !== '/jobs/' || path !== '/addjob/' && popup !== null) {
+      alter_popup('click', popup, overlay, ['overlay_id', 'path', 'popup_remove_trigger', 'exit-on-click']);
   }
 
 });

@@ -26,7 +26,7 @@
     <hr>
 
     {% for house in expenses_houses %}
-      <h3 id="{{ house.address }}" class="house-address">{{ house.address }}</h3>
+      <h3 id="{{ house.address }}" class="sub-title">{{ house.address }}</h3>
       {% if forloop.first %}
       <div class="item-headings-wrapper container-fluid">
         <ul class="item-headings row">

@@ -12,8 +12,8 @@ class Customer:
     """
     #filter results by the last week
     #note: add 1 day to 'today' because time seems to lag in the server
-    today = datetime.datetime.now() + datetime.timedelta(days=1)
-    start_delta = datetime.timedelta(days=today.weekday()+4)
+    today = datetime.datetime.now() + datetime.timedelta(days=2)
+    start_delta = datetime.timedelta(days=today.weekday()+5)
     start_week = today - start_delta #start week is one week back
 
     #allow datetime to be aware

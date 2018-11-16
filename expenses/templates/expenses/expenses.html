@@ -10,7 +10,7 @@
 
 {% block content %}
   {% for house in houses %}
-    <h3 id="{{house.address|add_dashes}}" class="house-address">{{ house.address }}</h3>
+    <h3 id="{{house.address|add_dashes}}" class="sub-title">{{ house.address }}</h3>
     {% if forloop.first %}
     <div class="item-headings-wrapper container-fluid">
       <ul class="item-headings row">

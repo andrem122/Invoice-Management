@@ -49,10 +49,3 @@ def run():
         attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', 'approved_date', ['job', 'document_link']]
         send_data_email(user_email=user.email, title='PAYMENTS FOR THIS WEEK', headers=headers, queryset=payments, attributes=attributes, form_vals=form_vals, host=host)
         print('Email Sent')
-
-    elif path == '/jobs_complete/':
-        jobs = customer.completed_jobs()
-        headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid']
-        attributes = ['house', 'company', 'start_amount', 'balance', 'start_date', 'total_paid']
-        send_data_email(user_email=user.email, title='COMPLETED JOBS', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
-        print('Email Sent')

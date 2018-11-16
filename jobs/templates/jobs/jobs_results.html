@@ -30,11 +30,11 @@
         {% endif %}
 
         {% if messages %}
-        <ul class="messages">
+          <ul class="messages">
             {% for message in messages %}
             <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message}}</li>
             {% endfor %}
-        </ul>
+          </ul>
         {% endif %}
 
         <div class="input-label-wrap">
@@ -52,8 +52,8 @@
           </div>
         </div>
 
-        <input type="hidden" name="job_id" value="{{ item.id }}">
-        <input class="form-submit-btn" type="submit" value="Request Payment">
+        <input type="hidden" name="job_id" value="{{ item.id }}" />
+        <input class="form-submit-btn" type="submit" value="Request Payment" />
       </form>
 
   {% endif %}
@@ -95,28 +95,24 @@
 {# Option Buttons #}
 {% block mobile_option_btns %}
   {% if item.approved == True %}
-  <li class="list-inline-item">
-    <button form="request_payment_form_{{ item.id }}" class="option-item request_payment_form_m">
-      <i class="option-item fas fa-money-bill-alt"></i>
-    </button>
-  </li>
+    <li class="list-inline-item">
+      <button form="request_payment_form_{{ item.id }}" class="option-item request_payment_form_m">
+        <i class="option-item fas fa-money-bill-alt"></i>
+      </button>
+    </li>
   {% endif %}
 {% endblock mobile_option_btns %}
 
 {% block desktop_option_btns %}
-  <div class="dropdown-menu
-    {% if item.approved == True and item.balance > 0 %}
-    dropdown-active
-    {% elif item.approved == True %}
-    dropdown-new-approved
-    {% elif item.rejected == True %}
-    dropdown-rejected
-    {% else %}
-    dropdown-new-approved
-    {% endif %}"
-  >
-    {% if item.approved == True %}
-    <button type="submit" form="reject-form-{{ item.id }}" class="dropdown-item reject-btn option-item">Request Payment</button>
-    {% endif %}
-  </div>
+  {% if item.approved == True %}
+    <div class="dropdown-menu
+      {% if item.approved == True and item.balance > 0 %}
+      dropdown-active
+      {% else %}
+      dropdown-new-approved
+      {% endif %}"
+    >
+      <button type="submit" form="request_payment_form_{{ item.id }}" class="dropdown-item request-btn option-item">Request Payment</button>
+    </div>
+  {% endif %}
 {% endblock desktop_option_btns %}

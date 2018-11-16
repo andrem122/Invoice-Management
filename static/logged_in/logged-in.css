@@ -148,6 +148,12 @@ body .job-info td:last-child input[type="submit"] {
   transition: visibility 0s 0.5s, opacity 0.5s linear;
 }
 
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+
 /* Sidebar Styles */
 
 .sidebar-nav {
@@ -222,14 +228,10 @@ body .job-info td:last-child input[type="submit"] {
 
 /* Table Headings */
 
-.job-headings th, .item-headings li {
+.item-headings li {
   color: #4b4747;
   font-weight: normal;
   white-space: nowrap;
-}
-
-.job-headings th {
-  padding: 7px 10px;
 }
 
 ul.item-headings {
@@ -336,6 +338,8 @@ div.item-container .status {
   letter-spacing: 1px;
   margin-right: 20px;
   width: 130px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 div.item-container .status.open {
@@ -446,7 +450,7 @@ div.item-container ul .info-title, div.item-container ul.mobile-option-icons {
   display: none;
 }
 
-div.item-container + h3.house-address {
+div.item-container + h3.sub-title {
   margin-top: 30px;
 }
 
@@ -557,7 +561,7 @@ div.item-container + h3.house-address {
     padding: 17px 90px !important;
   }
 
-  h3.house-address {
+  .sub-title {
     text-align: center;
   }
 }
@@ -708,7 +712,12 @@ form input[type="submit"], form input[type="file"], form input[type="number"] {
 
 .btn-options-container {
   margin-bottom: 30px;
-  max-width: 2000px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-options-container.btn-options-container-worker {
+  justify-content: start;
 }
 
 form ul.messages {
@@ -941,14 +950,58 @@ div.input-wrap select {
   transition: all 0.3s ease-in-out;
   margin-top: 30px;
 }
+
 #search-form {
-  display: block;
-  float: right;
+  display: flex;
+  justify-content: end;
+}
+
+#search_trigger {
+  display: none;
+}
+
+#search_trigger > svg {
+  font-size: 36px;
+  margin-top: 12px;
+}
+
+@media (max-width: 545px) {
+  #search-form {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 999;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0s;
+  }
+
+  div#search-wrap > input#search {
+    border: 0;
+    background-color: transparent;
+    font-size: 30px;
+    height: auto;
+    padding: 0;
+    text-align: center;
+  }
+
+  #search-wrap > svg {
+    display: none;
+  }
+
+  #search_trigger {
+    display: block;
+  }
 }
 
 #search-form > button[type="submit"] {
-  margin-left: -4px;
   background-color: transparent;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
 }
 
 #search-wrap {
@@ -958,7 +1011,7 @@ div.input-wrap select {
 
 #search-wrap > svg {
   position: absolute;
-  top: 21px;
+  top: 24px;
   left: 12px;
   font-size: 15px;
   color: #51515199;
@@ -969,31 +1022,13 @@ div.input-wrap select {
   display: inline-block;
   margin: 0;
   background-color: #fff;
-  height: 50px;
-  border-radius: 0;
-}
-
-.no-ajax-search-results .job-headings th,
-.no-ajax-search-results .job-summary td,
-#search-result-container .job-headings th,
-#search-result-container .job-summary td {
-  text-align: left;
-}
-
-.no-ajax-search-results h3.table-title,
-#search-result-container h3.table-title {
-  padding-left: 9px;
+  height: 58px;
+  border-radius: 6px;
 }
 
 @media (max-width: 1015px) {
   #search-form > button[type="submit"] {
     display: none;
-  }
-}
-
-@media (max-width: 885px) {
-  #search-form {
-    float: none;
   }
 }
 
@@ -1067,103 +1102,6 @@ form.popup .label-wrap {
 
 /* Buttons */
 
-.custom-btn {
-  max-width: 250px;
-  height: 50px;
-  line-height: 50px;
-  border: 2px solid currentColor;
-  position: relative;
-  cursor: pointer;
-  transition: all 1s ease;
-  overflow: hidden;
-  display: block;
-  margin: 0;
-  display: inline-block;
-}
-
-.custom-btn:hover {
-  text-decoration: none;
-}
-
-.custom-btn::before {
-  content: "";
-  width: 100%;
-  height: 100%;
-  background-color: currentColor;
-  position: absolute;
-  transition: all 1s ease;
-  top: 0;
-  left: -240px;
-}
-
-.custom-btn:hover:before {
-  left: 0;
-}
-
-.custom-btn > p {
-  text-align: center;
-  text-transform: uppercase;
-  color: currentColor;
-  font-weight: bold;
-  font-size: 16px;
-  position: relative;
-  z-index: 1;
-  transition: all 1s ease;
-  padding: 0 25px;
-}
-
-.custom-btn:hover > p, .custom-btn:hover > svg {
-  color: #fff;
-}
-
-.custom-btn > svg {
-  position: absolute;
-  top: 36%;
-  left: 87%;
-  transition: all 1s ease;
-}
-
-
-/* Unapprove Button */
-/* Before Hover */
-.red-slide-btn {
-  color: #f7676799;
-}
-
-.red-slide-btn > p {
-  color: #f7676799;
-  margin: 0;
-}
-
-/* After Hover */
-.red-slide-btn::before {
-  background-color: #f76767;
-}
-
-.red-slide-btn:hover {
-  color: #f76767;
-}
-
-/* Blue Slide Button */
-/* Before Hover */
-.blue-slide-btn {
-  color: #62a9f999;
-}
-
-.blue-slide-btn > p {
-  color: #62a9f999;
-  margin: 0;
-}
-
-/* After Hover */
-.blue-slide-btn::before {
-  background-color: #62a9f9;
-}
-
-.blue-slide-btn:hover {
-  color: #62a9f9;
-}
-
 .round-btn {
   background-color: transparent;
   border-radius: 33px;
@@ -1171,20 +1109,34 @@ form.popup .label-wrap {
   text-transform: uppercase;
   font-size: 14px;
   font-weight: bold;
-  transition: all 1s ease;
+  transition: all 0.3s ease;
   display: inline-block;
   text-align: center;
+  border: 2px solid #142032;
+  color: #142032;
+}
+
+.round-btn:hover {
+  border-color: #123a75;
+  color: #123a75;
+  text-decoration: none;
 }
 
 .round-btn.solid-round-btn {
   border: 2px solid #142032;
   background-color: #142032;
-  color: #fff !important;
+  color: #fff;
+  border: 2px solid #142032;
 }
 
 .round-btn.solid-round-btn:hover {
   text-decoration: none;
-  background-color: #123a75;
+  background-color: #f3f3f3;
+  color: #142032;
+}
+
+#menu-toggle {
+  margin-right: 10px;
 }
 
 .form-submit-btn {
