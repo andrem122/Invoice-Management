@@ -481,6 +481,8 @@ div.item-container + h3.sub-title {
   div.item-container .status {
     padding: 20px 0;
     font-size: 16px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   div.item-container .info-group:first-child li:first-child {
@@ -1301,25 +1303,6 @@ a#step-4 {
     text-align: center;
     margin: 10px auto 100px auto;
   }
-}
-
-/* Job Container */
-
-.job-container {
-  overflow-x: auto;
-  margin-top: 25px;
-  background-color: #fff;
-  padding: 20px;
-  border: 2px solid #ddd;
-  border-top: 4px solid #546256;
-  margin-bottom: 30px;
-  max-width: 2000px;
-  transition: all 0.3s ease-in-out;
-}
-
-.job-container h3 {
-  font-size: 21px;
-  color: #4A87B6;
 }
 
 /* Sending Data Icon */

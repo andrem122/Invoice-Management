@@ -28,7 +28,7 @@ window.addEventListener("load", function(event) {
     if (event_type === 'click') { //for click popups
       document.addEventListener(event_type, function(e){
 
-        console.log('Classes: ' + e.target.classList.toString() + ' Node Name: ' + e.target.nodeName.toString());
+        //console.log('Classes: ' + e.target.classList.toString() + ' Node Name: ' + e.target.nodeName.toString());
 
         if(e.target.classList.contains('popup-trigger')) {
           overlay_ele.classList.add('visible');
@@ -73,10 +73,27 @@ window.addEventListener("load", function(event) {
     var overlay_ele = document.getElementById('overlay_id');
     var search_popup = document.getElementById('search');
 
-    document.addEventListener('click', function(e){
-      console.log('Classes: ' + e.target.classList.toString() + ' Node Name: ' + e.target.nodeName.toString());
+    //if window is greater than or equal to 800px, add 'search_input_mobile' class to search input
+    if (window.innerWidth <= 545) {
+      search_popup.classList.add('search_input_mobile');
+    } else {
+      search_popup.classList.remove('search_input_mobile');
+    }
 
-      if(e.target.classList.contains('popup-trigger-search') || e.target.id === 'search_trigger' || e.target.id === 'search') {
+    //add toggled class when window resizes above 800px
+    window.addEventListener('resize', function() {
+      if (window.innerWidth <= 545) {
+        //console.log('window width less than 545px!');
+        search_popup.classList.add('search_input_mobile');
+      } else {
+        search_popup.classList.remove('search_input_mobile');
+      }
+    });
+
+    document.addEventListener('click', function(e){
+      //console.log('Classes: ' + e.target.classList.toString() + ' Node Name: ' + e.target.nodeName.toString());
+
+      if(e.target.classList.contains('popup-trigger-search') || e.target.classList.contains('search_input_mobile') || e.target.id === 'search_trigger') {
         overlay_ele.classList.add('visible');
         search_popup.classList.add('visible');
         search_popup.focus();
