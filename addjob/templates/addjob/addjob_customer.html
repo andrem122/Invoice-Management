@@ -1,0 +1,90 @@
+{% extends 'logged_in_customer.html' %}
+
+{ # allow static resources to be loaded from each app's 'static' folder #}
+{% load static %}
+
+{ # text that goes to the <title> tag #}
+{% block title %}Add Jobs{% endblock title %}
+
+{% block scripts %}
+{% endblock scripts %}
+
+{% block page_title %}Add Job{% endblock page_title %}
+
+{% block content %}
+<div class="form-wrapper">
+  <div class="panel-heading">
+    <p>
+      Add a job by choosing a house and company,
+      inputing an amount, and uploading
+      a file.
+    </p>
+  </div>
+  <div class="panel-body">
+    <form id="login-form" class="add-form" action="" method="post" role="form" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+      {% if form.errors %}
+      <div class="form-messages">
+        <p>Please enter in all data and try again.</p>
+      </div>
+      {% endif %}
+
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.house.label_tag }}</div>
+        <div class="input-wrap input-wrap-select">
+          <i class="fas fa-home"></i>
+          <select id="id_house" name="house" required>
+            <option selected value="">
+              House
+            </option>
+            {% for house in form.fields.house.queryset %}
+              <option value="{{house.id}}">{{house}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.company.label_tag }}</div>
+        <div class="input-wrap input-wrap-select">
+          <i class="far fa-building"></i>
+          <select id="id_company" name="company" required>
+            <option selected value="">
+              Company
+            </option>
+            {% for company in form.fields.company.queryset %}
+              <option value="{{company.id}}">{{ company }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.start_amount.label_tag }}</div>
+        <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.start_amount }}</div>
+      </div>
+
+      <div class="input-label-file-wrap">
+        <div class="label-wrap">
+          {{ form.document_link.label_tag }}
+        </div>
+        <div class="file-wrap">
+          <i class="fas fa-upload"></i>
+          <button type="button" class="file-upload-btn">Upload File</button>
+          <input class="file_upload" name="document_link" id="id_document_link" type="file" required>
+          <div id="file-input-message"></div>
+        </div>
+      </div>
+
+      <input class="form-submit-btn" type="submit" value="Add Job">
+    </form>
+  </div>
+</div>
+{% endblock content %}

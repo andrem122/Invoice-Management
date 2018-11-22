@@ -1,26 +1,37 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from jobs.models import Job, Current_Worker, House
-from .forms import AddJob
+from .forms import AddJob, AddJob_Customer
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from customer_register.customer import Customer
-from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import worker_check
 from optimize_image import optimize_image, is_image, generate_file_path
 
-@user_passes_test(worker_check, login_url='/accounts/login/')
+def is_customer(user):
+    """Checks if the current user is a customer"""
+    return user.groups.filter(name='Customers').exists()
+
+@login_required
 def add_job(request):
     current_user = request.user
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = AddJob(data=request.POST, files=request.FILES, user=current_user)
+
+        if is_customer(current_user):
+            form = AddJob_Customer(data=request.POST, files=request.FILES, user=current_user)
+        else:
+            form = AddJob(data=request.POST, files=request.FILES, user=current_user)
 
         if form.is_valid():
 
             #clean the form data and store into variables
             #variables for the Job instance
             house = form.cleaned_data['house']
+
+            if is_customer(current_user):
+                company = form.cleaned_data['company']
+
             start_amount = form.cleaned_data['start_amount']
             print(form.cleaned_data['document_link'])
             img_names = (form.cleaned_data['document_link'].name, )
@@ -31,7 +42,12 @@ def add_job(request):
 
             #save the uploaded file and the job
             job = form.save(commit=False)
-            job.company = current_user
+
+            if is_customer(current_user):
+                job.company = company
+            else:
+                job.company = current_user
+
             job.total_paid = 0.00
             job.approved = False
             job.balance_amount = job.balance
@@ -43,10 +59,19 @@ def add_job(request):
                 optimize_image(file_paths)
 
             messages.success(request, 'Thanks! Your job was submitted and is awaiting approval.')
-            form = AddJob(user=current_user)
+
+            if is_customer(current_user):
+                form = AddJob_Customer(user=current_user)
+                return render(request, 'addjob/addjob_customer.html', {'form': form, 'current_user': current_user})
+            else:
+                form = AddJob(user=current_user)
+                return render(request, 'addjob/addjob.html', {'form': form})
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = AddJob(user=current_user, label_suffix='')
-
-    return render(request, 'addjob/addjob.html', {'form': form})
+        if is_customer(current_user):
+            form = AddJob_Customer(user=current_user)
+            return render(request, 'addjob/addjob_customer.html', {'form': form, 'current_user': current_user})
+        else:
+            form = AddJob(user=current_user)
+            return render(request, 'addjob/addjob.html', {'form': form})

@@ -6,7 +6,6 @@ from django import forms
 class Register(ModelForm):
     class Meta:
         model = User
-        #the attributes from the Job class that we want to exclude in our form
         #widgets for each input element
         fields = ['username', 'email', 'password']
         widgets = {
