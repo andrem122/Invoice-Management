@@ -13,16 +13,23 @@ from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 from itertools import chain
 
-def send_approval_mail(user, job_object, subject):
-    message = """Hi {},\n\nYour job at {} for ${} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems\n\n**This is an automated message. Please do not reply**
+def send_approval_mail(request, job_object, subject, html_title):
+    context = {
+        'job': job_object,
+        'title': html_title,
+        'host_url': request.build_absolute_uri('/'),
+    }
+    html_message = render_to_string('email/approved.html', context)
+    plain_message = """Hi {},\n\nYour job at {} for ${} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems\n\n**This is an automated message. Please do not reply**
     """.format(job_object.company.get_username(), job_object.house.address, job_object.start_amount)
     try:
         send_mail(
             subject,
-            message,
-            user.email,
+            plain_message,
+            request.user.email,
             [job_object.company.email],
             fail_silently=False,
+            html_message=html_message,
         )
     except:
         print('Email has failed')
@@ -150,7 +157,7 @@ def index(request):
                     house.save(update_fields=['proposed_jobs'])
 
                 #send approval email
-                send_approval_mail(current_user, job, 'Job Approved!')
+                send_approval_mail(request, job, 'Job Approved!', 'Job Approved!')
 
                 if request.is_ajax():
                     html = load_ajax_results(current_user)
@@ -194,7 +201,7 @@ def index(request):
                     house.save(update_fields=['proposed_jobs'])
 
                 #send approval email to worker
-                send_approval_mail(current_user, job, 'Payment Approved!')
+                send_approval_mail(request, job, 'Payment Approved!', 'Payment Approved!')
 
                 if request.is_ajax():
                     html = load_ajax_results(current_user)

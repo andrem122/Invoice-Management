@@ -3,6 +3,7 @@ window.addEventListener('DOMContentLoaded', function() {
   function ajax_post(button_class) {
     document.addEventListener('click', function(e){
       if(e.target.classList.contains(button_class)) {
+        e.target.disabled = true;
         e.preventDefault(); //prevent form submission
         form_id = e.target.getAttribute('form');
         $form = $('#' + form_id);
