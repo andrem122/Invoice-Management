@@ -59,7 +59,7 @@
 												<table style="text-align: center; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="fullCenter" width="300" cellspacing="0" cellpadding="0" border="0" align="center">
 													<tbody><tr>
 														<td style="text-align: center; font-family: 'Open Sans', Helvetica, arial, sans-serif; font-size: 22px; color: #ffffff; line-height: 32px; font-weight: 100;" t-style="whiteTextTop" class="fullCenter" mc:edit="9" object="text-editable" width="100%" valign="middle">
-															<multiline><!--[if !mso]><!--><span style="font-family: 'Open Sans', Helvetica, arial, sans-serif; font-weight: normal;"><!--<![endif]-->Hi {{ job.company.username }}! <!--[if !mso]><!--></span><!--<![endif]-->
+															<multiline><!--[if !mso]><!--><span style="font-family: 'Open Sans', Helvetica, arial, sans-serif; font-weight: normal;"><!--<![endif]-->Hi {{ username }}! <!--[if !mso]><!--></span><!--<![endif]-->
 
 
 						<!--[if !mso]><!--><span style="font-family: 'Open Sans', Helvetica, arial, sans-serif; font-weight: normal;"><!--<![endif]--><!--[if !mso]><!--></span><!--<![endif]--></multiline>
@@ -181,7 +181,7 @@
 															<table style="text-align: center; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="fullCenter" width="265" cellspacing="0" cellpadding="0" border="0" align="center">
 																<tbody><tr>
 																	<td style="text-align: center; font-family: Helvetica, Arial, sans-serif; font-size: 19px; color: #ffffff; line-height: 24px;" t-style="whiteTextBody" class="fullCenter" mc:edit="12" object="text-editable" width="100%" valign="middle">
-																		<!--[if !mso]><!--><span style="font-family: 'Open Sans', Helvetica, arial, sans-serif; font-weight: normal;"><!--<![endif]--><singleline>Your job at {{ job.house.address }} for ${{ job.start_amount }} has been approved!</singleline><!--[if !mso]><!--></span><!--<![endif]-->
+																		<!--[if !mso]><!--><span style="font-family: 'Open Sans', Helvetica, arial, sans-serif; font-weight: normal;"><!--<![endif]--><singleline>{{ template_message }}</singleline><!--[if !mso]><!--></span><!--<![endif]-->
 																	</td>
 																</tr>
 															</tbody></table>

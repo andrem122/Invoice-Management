@@ -2,7 +2,8 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import redirect
 from jobs.models import Job, Current_Worker, House, Request_Payment
-from .forms import Approve_Job, Approve_As_Payment, Reject_Estimate
+from project_details.house import _House
+from .forms import Approve_Job, Approve_As_Payment, Reject_Estimate, Edit_Job
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
 from django.core.mail import send_mail
@@ -11,17 +12,21 @@ from django.core.exceptions import ObjectDoesNotExist
 from customer_register.customer import Customer
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
 from itertools import chain
 
 def send_approval_mail(request, job_object, subject, html_title):
+    template_message = 'Your job at {} for ${} has been approved!'.format(job_object.house.address, job_object.start_amount)
+    username = job_object.company.get_username()
     context = {
-        'job': job_object,
+        'username': username,
+        'template_message': template_message,
         'title': html_title,
         'host_url': request.build_absolute_uri('/'),
     }
     html_message = render_to_string('email/approved.html', context)
-    plain_message = """Hi {},\n\nYour job at {} for ${} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems\n\n**This is an automated message. Please do not reply**
-    """.format(job_object.company.get_username(), job_object.house.address, job_object.start_amount)
+    plain_message = """Hi {},\n\nYour job at {} for ${} has been approved!\n\nThanks for your cooperation.\nNecro Software Systems\n\n**This is an automated message. Please do not reply**
+    """.format(username, job_object.house.address, job_object.start_amount)
     try:
         send_mail(
             subject,
@@ -92,8 +97,9 @@ def index(request):
     #get forms and template
     approve_form = Approve_Job()
     approve_as_payment_form = Approve_As_Payment()
-    send_data_form = Send_Data()
     reject_estimate_form = Reject_Estimate()
+    edit_job_form = Edit_Job(user=current_user)
+    send_data_form = Send_Data()
     template = loader.get_template('jobs_admin/jobs_admin.html')
     job_results = loader.get_template('jobs_admin/jobs_admin_results.html')
 
@@ -102,9 +108,10 @@ def index(request):
         'items': jobs,
         'current_user': current_user,
         'approve_form': approve_form,
-        'send_data_form': send_data_form,
         'approve_as_payment_form': approve_as_payment_form,
         'reject_estimate_form': reject_estimate_form,
+        'edit_job_form': edit_job_form,
+        'send_data_form': send_data_form,
         'start_week': start_week,
         'today': today,
     }
@@ -139,7 +146,7 @@ def index(request):
 
                 #add the user as a current worker on the house OR do nothing if they are already active
                 if job.balance_amount > 0 and job.approved == True:
-                    Current_Worker.objects.get_or_create(house=house, company=job.company, current=True)
+                    Current_Worker.objects.get_or_create(house=house, company=job.company, customer=current_user, current=True)
                 else: #this job may be complete because payments may have been made previously, so set house.completed_jobs=True
                     house.completed_jobs = True
                     house.save(update_fields=['completed_jobs'])
@@ -240,7 +247,7 @@ def index(request):
                 #delete current worker object if no active jobs exist for the house
                 if not Job.objects.filter(house=job.house, house__customer=customer.customer, approved=True, balance_amount__gt=0).exists():
                     try:
-                        Current_Worker.objects.get(house=job.house, company=job.company).delete()
+                        Current_Worker.objects.get(house=job.house, company=job.company, customer=current_user).delete()
                     except ObjectDoesNotExist as e:
                         print(e)
 
@@ -256,9 +263,58 @@ def index(request):
                     return HttpResponse(html)
                 else:
                     return redirect('/jobs-admin/')
+        elif request.POST.get('edit_job'):
+            job_id = int(request.POST.get('job_id')) #get job id from POST request
+            job = get_object_or_404(Job, id=job_id) #get job instance
+            payments = Request_Payment.objects.filter(job__pk=job_id) #get payments associated with job instance
 
+            edit_job_form = Edit_Job(data=request.POST, files=request.FILES, user=current_user, instance=job)
+
+            if edit_job_form.is_valid():
+
+                if not _House(job.house).has_active_jobs(): #if the house has no more active jobs, delete the current worker object
+                    try:
+                        Current_Worker.objects.get(house=job.house, company=job.company, customer=current_user).delete()
+                    except ObjectDoesNotExist as e:
+                        print(e)
+
+                if edit_job_form.cleaned_data['house'] != None:
+                    job.house = edit_job_form.cleaned_data['house']
+
+                    #update objects
+                    payments.update(house=edit_job_form.cleaned_data['house'])
+                    job.save(update_fields=['house'])
+
+                if edit_job_form.cleaned_data['company'] != None:
+                    job.company = edit_job_form.cleaned_data['company']
+                    job.save(update_fields=['company'])
+
+                if edit_job_form.cleaned_data['document_link']:
+                    job.document_link = edit_job_form.cleaned_data['document_link']
+                    job.save(update_fields=['document_link'])
+
+                if edit_job_form.cleaned_data['notes']:
+                    job.notes = edit_job_form.cleaned_data['notes']
+                    job.save(update_fields=['notes'])
+
+                if edit_job_form.cleaned_data['start_amount'] and 1 + float(edit_job_form.cleaned_data['start_amount']) != 0: #update balance_amount if start_amount is in the POST data
+                    job.start_amount = edit_job_form.cleaned_data['start_amount']
+                    job.balance_amount = job.balance
+                    print(job.balance_amount)
+                    job.save(update_fields=['start_amount', 'balance_amount'])
+
+            else:
+                print(edit_job_form.errors)
+
+
+            if request.is_ajax():
+                html = load_ajax_results(current_user)
+                return HttpResponse(html)
+            else:
+                return redirect('/jobs-admin/')
     # if a GET (or any other method) we'll create a blank form
     else:
         approve_form = Approve_Job()
         approve_as_payment_form = Approve_As_Payment()
+        edit_job_form = Edit_Job(user=current_user)
     return HttpResponse(template.render(context, request))

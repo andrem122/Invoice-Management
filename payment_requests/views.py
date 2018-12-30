@@ -36,6 +36,30 @@ def load_ajax_results(user):
 
     return render_to_string('payment_requests/payments_results.html', results_context)
 
+def send_approval_mail(request, payment_object, subject, html_title):
+    template_message = 'Your payment request for ${} at {} has been approved!'.format(payment_object.amount, payment_object.job.house.address)
+    username = payment_object.job.company.get_username()
+    context = {
+        'username': username,
+        'template_message': template_message,
+        'title': html_title,
+        'host_url': request.build_absolute_uri('/'),
+    }
+    html_message = render_to_string('email/approved.html', context)
+    plain_message = """Hi {},\n\nYour payment request for ${} at {} has been approved!\n\nThanks for your cooperation.\nNecro Software Systems\n\n**This is an automated message. Please do not reply**
+    """.format(username, payment_object.amount, payment_object.job.house.address)
+    try:
+        send_mail(
+            subject,
+            plain_message,
+            request.user.email,
+            [payment_object.job.company.email],
+            fail_silently=False,
+            html_message=html_message,
+        )
+    except:
+        print('Email has failed')
+
 @csrf_exempt
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def payments(request):
@@ -130,19 +154,8 @@ def payments(request):
 
                 house.save(update_fields=['pending_payments', 'payment_history', 'completed_jobs'])
 
-                 #send approval email to worker
-                message = """Hi {},\n\nA payment of ${} for your job at {} has been approved.\n\nThanks for your cooperation.\nNecro Software Systems
-                """.format(job.company.get_username(), job.start_amount, job.house.address)
-                try:
-                    send_mail(
-                        'Payment Approved!',
-                        message,
-                        current_user.email,
-                        [job.company.email],
-                        fail_silently=False,
-                    )
-                except:
-                    print('Email has failed')
+                #send approval email to worker
+                send_approval_mail(request, payment, 'Payment Approved!', 'Payment Approved!')
 
                 if request.is_ajax():
                     html = load_ajax_results(current_user)

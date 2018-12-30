@@ -16,7 +16,7 @@
 
 {% if items %}
   {% for house in houses %}
-  
+
     <h3 class="sub-title">{{ house.address }}</h3>
 
     {% if forloop.first %}
@@ -37,15 +37,20 @@
       </ul>
     </div>
     {% endif %}
+
     {% for item in items %}
       {% if item.house == house %}
 
         {# Item Options Forms #}
         {% if current_user|in_group:'Customers' %}
-        <div class="option-forms">
-          {% block option_forms %}
-          {% endblock option_forms %}
-        </div>
+          <div class="option-forms">
+            {% block option_forms %}
+            {% endblock option_forms %}
+          </div>
+          <div class="popup-forms">
+            {% block popup_forms %}
+            {% endblock popup_forms %}
+          </div>
         {% endif %}
 
         <div class="item-container">

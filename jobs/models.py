@@ -9,7 +9,11 @@ logger = logging.getLogger(__name__)
 #create database table structure here
 class House(models.Model):
     address = models.CharField(max_length=250)
-    companies = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Current_Worker')
+    companies = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        through='Current_Worker',
+        through_fields=('house', 'company'), #see https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ManyToManyField.through_fields
+    )
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer_house')
     purchase_price = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     profit = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
@@ -41,19 +45,21 @@ class House(models.Model):
 class Current_Worker(models.Model):
     house = models.ForeignKey(House, on_delete=models.CASCADE)
     company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer', null=True)
     current = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.company) + '-' + str(self.house)
 
 class Job(models.Model):
-    house = models.ForeignKey(House, on_delete=models.CASCADE)
-    company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    start_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
-    start_date = models.DateTimeField(auto_now_add=True, blank=True)
+    house = models.ForeignKey(House, on_delete=models.CASCADE, blank=True)
+    company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
+    start_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00, blank=True)
+    start_date = models.DateTimeField(auto_now_add=True)
     total_paid = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)
+    notes = models.TextField(max_length=3000, default='No notes...')
 
     def __str__(self):
         return str(self.company.get_username()) + '-' + str(self.house.address + '-' + str(self.start_amount))

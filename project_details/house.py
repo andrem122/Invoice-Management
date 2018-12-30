@@ -61,6 +61,24 @@ class _House:
             approved=True,
         )
 
+    def has_active_jobs(self):
+        """
+        Checks if the house has any active jobs.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A Boolean.
+
+        Raises:
+            None.
+        """
+        if Job.objects.filter(house=self.house, balance_amount__gt=0, approved=True).exists():
+            return True
+
+        return False
+
     def budget(self):
         """
         Calculates the budget for the house based on three variables

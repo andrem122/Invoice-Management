@@ -64,6 +64,6 @@ document.addEventListener('DOMContentLoaded', function(e){
 
   }
   var overlay = document.getElementById('overlay_id');
-  item_form_popup(['option-item', 'popup'], overlay);
+  item_form_popup(['item-popup', 'popup'], overlay);
 
 });

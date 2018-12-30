@@ -741,6 +741,25 @@ form ul.messages li.error {
   background-color: #FEAAAA;
 }
 
+/* Request Payment Form */
+.request_payment_form {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Edit Job Form */
+
+form.edit-job-form {
+  top: 50%;
+  transform: translateY(-50%);
+  overflow-y: scroll;
+  height: 500px;
+}
+
+form.edit-job-form input.form-submit-btn {
+  margin-bottom: 30px;
+}
+
 /* Download Data Form */
 form.download-jobs-form {
   display: inline-block;
@@ -758,11 +777,6 @@ form.add-form input:not([type="submit"]):not([type="file"]), form.add-form selec
 form input[type="file"] {
   border: 0;
   padding: 0;
-}
-
-.request_payment_form {
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 div.input-label-file-wrap {
@@ -1036,7 +1050,11 @@ div.input-wrap select {
   }
 }
 
-/* Send Data */
+/* Popups */
+.popup-forms {
+  display: none;
+}
+
 .popup {
   padding: 20px;
   background-color: #fff;
@@ -1051,6 +1069,22 @@ div.input-wrap select {
 
 form.popup .label-wrap {
   padding-left: 0;
+}
+
+form.popup div.input-wrap {
+  padding: 0;
+}
+
+form.popup div.label-wrap {
+  padding: 0 0 13px 0;
+}
+
+form.popup textarea {
+  height: 117px;
+}
+
+form.popup div.input-wrap select {
+  height: 69px;
 }
 
 .popup .exit-on-click {

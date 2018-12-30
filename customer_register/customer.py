@@ -165,7 +165,7 @@ class Customer:
     """Current (Active) Houses"""
     def active_houses(self):
         """
-        Gets all active houses.
+        Gets all active houses of the customer.
 
         Args:
             self: The object instance.
@@ -178,10 +178,9 @@ class Customer:
         """
         """compare house with active jobs to customer house.
         if the houses are the same, then it is a current customer house"""
-        sql = 'SELECT * FROM jobs_current_worker WHERE current=1 GROUP BY house_id'
-        all_current_workers = Current_Worker.objects.raw(sql)
+        current_workers = Current_Worker.objects.filter(customer=self.customer).distinct()
 
-        for current_worker in all_current_workers:
+        for current_worker in current_workers:
             if current_worker.house in self.houses:
                 yield current_worker.house
 
@@ -366,8 +365,8 @@ class Customer:
         Raises:
             None.
         """
-        houses = House.objects.filter(customer=self.customer, completed_jobs=True)
-        return self.current_week_results(houses=houses, model=Job, update_field={'completed_jobs': [True, False]}, house__customer=self.customer, house__completed_jobs=True, approved=True, balance_amount__lte=0, start_date__range=[Customer.start_week, Customer.today])
+        houses = House.objects.filter(customer=self.customer)
+        return self.current_week_results(houses=houses, model=Job, update_field={'completed_jobs': [True, False]}, house__customer=self.customer, approved=True, balance_amount__lte=0, start_date__range=[Customer.start_week, Customer.today])
 
     def current_week_completed_jobs(self, **kwargs):
         """

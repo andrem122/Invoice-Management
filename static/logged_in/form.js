@@ -26,7 +26,7 @@ window.addEventListener("load", function(event) {
   function alter_popup(event_type, popup_ele, popup_removable_eles, form) {
     var overlay_ele = document.getElementById('overlay_id');
     if (event_type === 'click') { //for click popups
-      document.addEventListener(event_type, function(e){
+      document.addEventListener(event_type, function(e) {
 
         //console.log('Classes: ' + e.target.classList.toString() + ' Node Name: ' + e.target.nodeName.toString());
 
