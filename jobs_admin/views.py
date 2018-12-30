@@ -279,7 +279,6 @@ def index(request):
                 #update the job instance based on which fields were submitted in the form
                 if edit_job_form.cleaned_data['house']:
                     new_house = edit_job_form.cleaned_data['house']
-                    print(f"New House: {new_house.address}, Previous House: {previous_house.address}")
 
                     job.house = new_house
 
@@ -305,6 +304,7 @@ def index(request):
 
                     new_company = edit_job_form.cleaned_data['company']
                     job.company = new_company
+
                     job.save(update_fields=['company'])
 
                     #when changing the company, set current to false for the previous current worker object and create a new worker object
