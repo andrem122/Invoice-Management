@@ -247,7 +247,9 @@ def index(request):
                 #delete current worker object if no active jobs exist for the house
                 if not Job.objects.filter(house=job.house, house__customer=customer.customer, approved=True, balance_amount__gt=0).exists():
                     try:
-                        Current_Worker.objects.get(house=job.house, company=job.company, customer=current_user).delete()
+                        current_worker = Current_Worker.objects.get(house=job.house, company=job.company, customer=current_user, current=True)
+                        current_worker.current = False
+                        current_worker.save()
                     except ObjectDoesNotExist as e:
                         print(e)
 
@@ -266,28 +268,54 @@ def index(request):
         elif request.POST.get('edit_job'):
             job_id = int(request.POST.get('job_id')) #get job id from POST request
             job = get_object_or_404(Job, id=job_id) #get job instance
-            payments = Request_Payment.objects.filter(job__pk=job_id) #get payments associated with job instance
 
-            edit_job_form = Edit_Job(data=request.POST, files=request.FILES, user=current_user, instance=job)
+            edit_job_form = Edit_Job(data=request.POST, files=request.FILES, user=current_user)
 
             if edit_job_form.is_valid():
 
-                if not _House(job.house).has_active_jobs(): #if the house has no more active jobs, delete the current worker object
-                    try:
-                        Current_Worker.objects.get(house=job.house, company=job.company, customer=current_user).delete()
-                    except ObjectDoesNotExist as e:
-                        print(e)
+                previous_house = job.house #the house the job object belonged to before it is changed
+                previous_company = job.company
 
-                if edit_job_form.cleaned_data['house'] != None:
-                    job.house = edit_job_form.cleaned_data['house']
+                #update the job instance based on which fields were submitted in the form
+                if edit_job_form.cleaned_data['house']:
+                    new_house = edit_job_form.cleaned_data['house']
+                    print(f"New House: {new_house.address}, Previous House: {previous_house.address}")
+
+                    job.house = new_house
 
                     #update objects
-                    payments.update(house=edit_job_form.cleaned_data['house'])
+                    Request_Payment.objects.filter(job__pk=job_id).update(house=new_house) #get payments associated with job instance
                     job.save(update_fields=['house'])
 
-                if edit_job_form.cleaned_data['company'] != None:
-                    job.company = edit_job_form.cleaned_data['company']
+                    #if the previous house has no more active jobs, set current to false on the current worker object
+                    if not _House(previous_house).has_active_jobs():
+                        try:
+                            current_worker = Current_Worker.objects.get(house=previous_house, company=job.company, customer=current_user, current=True)
+                            current_worker.current = False
+                            current_worker.save()
+                            print(current_worker)
+                        except ObjectDoesNotExist as e:
+                            print(e)
+
+                    #if the new house now has an active job, create a current worker object
+                    if _House(new_house).has_active_jobs():
+                        current_worker, created = Current_Worker.objects.get_or_create(house=job.house, company=job.company, customer=current_user, current=True)
+
+                if edit_job_form.cleaned_data['company']:
+
+                    new_company = edit_job_form.cleaned_data['company']
+                    job.company = new_company
                     job.save(update_fields=['company'])
+
+                    #when changing the company, set current to false for the previous current worker object and create a new worker object
+                    try:
+                        current_worker = Current_Worker.objects.get(house=previous_house, company=previous_company, customer=current_user, current=True)
+                        current_worker.current = False
+                        current_worker.save()
+
+                        Current_Worker.objects.get_or_create(house=job.house, company=new_company, customer=current_user, current=True)
+                    except ObjectDoesNotExist as e:
+                        print(e)
 
                 if edit_job_form.cleaned_data['document_link']:
                     job.document_link = edit_job_form.cleaned_data['document_link']

@@ -178,11 +178,11 @@ class Customer:
         """
         """compare house with active jobs to customer house.
         if the houses are the same, then it is a current customer house"""
-        current_workers = Current_Worker.objects.filter(customer=self.customer).distinct()
+        sql = 'SELECT * FROM jobs_current_worker WHERE customer_id={customer_id} AND current=1 GROUP BY house_id'.format(customer_id=self.customer.id)
+        current_workers = Current_Worker.objects.raw(sql)
 
         for current_worker in current_workers:
-            if current_worker.house in self.houses:
-                yield current_worker.house
+            yield current_worker.house
 
     def approved_jobs(self):
         """
