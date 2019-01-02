@@ -50,6 +50,10 @@
           <div class="popup-forms">
             {% block popup_forms %}
             {% endblock popup_forms %}
+            <ul class="mobile-option-icons popup">
+              {% block mobile_option_btns %}
+              {% endblock mobile_option_btns %}
+            </ul>
           </div>
         {% endif %}
 
@@ -91,10 +95,14 @@
                   <li class="info-4">{% block item_heading_5_m_v %}{% endblock item_heading_5_m_v %}</li>
                   <hr>
                   {# Mobile Option Buttons #}
-                  <ul class="list-inline mobile-option-icons">
-                    {% block mobile_option_btns %}
-                    {% endblock mobile_option_btns %}
-                  </ul>
+
+                  <span class="info-title">Options</span>
+                  <div class="item-options-toggle-mobile">
+                    <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                  </div>
+
                   {# Desktop Options #}
                   <div class="item-options-dropdown dropdown">
 

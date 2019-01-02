@@ -167,43 +167,57 @@
 
 {# Option Buttons #}
 {% block mobile_option_btns %}
+  {# Approved Item #}
   {% if item.approved == True %}
-  <li class="list-inline-item">
-    <button type="submit" form="reject-form-{{item.id}}" class="option-item reject-option-m">
-      <i class="option-item fas fa-times"></i>
-    </button>
-  </li>
+
+    <li>
+      <button type="submit" form="reject-form-{{ item.id }}" class="option-item mobile-option-item reject-option-m popup_remove_trigger">
+        <span>Reject</span><i class="option-item fas fa-times"></i>
+      </button>
+    </li>
+
+  {# Rejected Item #}
   {% elif item.rejected == True %}
-  <li class="list-inline-item approve-payment-option-m">
-    <button type="submit" form="approve-as-payment-form-{{item.id}}" class="option-item approve-payment-option-m">
-      <i class="option-item far fa-money-bill-alt"></i>
-    </button>
-  </li>
-  <li class="list-inline-item">
-    <button type="submit" form="approve-job-form-{{item.id}}" class="option-item approve-option-m">
-      <i class="option-item fas fa-check"></i>
-    </button>
-  </li>
+
+    <li class="approve-payment-option-m">
+      <button type="submit" form="approve-as-payment-form-{{ item.id }}" class="option-item mobile-option-item approve-payment-option-m popup_remove_trigger">
+        <span>Payment</span><i class="option-item far fa-money-bill-alt"></i>
+      </button>
+    </li>
+
+    <li>
+      <button type="submit" form="approve-job-form-{{ item.id }}" class="option-item mobile-option-item approve-option-m popup_remove_trigger">
+        <span>Approve</span><i class="option-item fas fa-check"></i>
+      </button>
+    </li>
+
+  {# New Item #}
   {% else %}
 
-  <li class="list-inline-item">
-    <button type="submit" form="reject-form-{{item.id}}" class="option-item reject-option-m">
-      <i class="option-item fas fa-times"></i>
-    </button>
-  </li>
+    <li>
+      <button type="submit" form="approve-as-payment-form-{{ item.id }}" class="option-item mobile-option-item approve-payment-option-m popup_remove_trigger">
+        <span>Payment</span><i class="option-item far fa-money-bill-alt"></i>
+      </button>
+    </li>
 
-  <li class="list-inline-item">
-    <button type="submit" form="approve-as-payment-form-{{item.id}}" class="option-item approve-payment-option-m">
-      <i class="option-item far fa-money-bill-alt"></i>
-    </button>
-  </li>
+    <li>
+      <button type="submit" form="reject-form-{{ item.id }}" class="option-item mobile-option-item reject-option-m popup_remove_trigger">
+        <span>Reject</span><i class="option-item fas fa-times"></i>
+      </button>
+    </li>
 
-  <li class="list-inline-item">
-    <button type="submit" form="approve-job-form-{{item.id}}" class="option-item approve-option-m">
-      <i class="option-item fas fa-check"></i>
-    </button>
-  </li>
+    <li>
+      <button type="submit" form="approve-job-form-{{ item.id }}" class="option-item mobile-option-item approve-option-m popup_remove_trigger">
+        <span>Approve</span><i class="option-item fas fa-check"></i>
+      </button>
+    </li>
+
   {% endif %}
+  <li>
+    <button class="edit-item-popup edit-item-popup-mobile mobile-option-item trigger-within-popup">
+      <span>Edit Job</span><i class="far fa-edit"></i>
+    </button>
+  </li>
 {% endblock mobile_option_btns %}
 
 {% block desktop_option_btns %}
@@ -228,6 +242,6 @@
     <button type="submit" form="approve-job-form-{{item.id}}" class="dropdown-item approve-job-option option-item">Approve Job</button>
     <button type="submit" form="reject-form-{{item.id}}" class="dropdown-item reject-job-option option-item">Reject</button>
     {% endif %}
-    <button class="dropdown-item edit-job-option item-popup">Edit Job</button>
+    <button class="dropdown-item edit-job-option edit-item-popup">Edit Job</button>
   </div>
 {% endblock desktop_option_btns %}

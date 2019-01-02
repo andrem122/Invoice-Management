@@ -32,38 +32,78 @@ document.addEventListener('DOMContentLoaded', function(e){
     return p;
   }
 
-  function item_form_popup(trigger_classes, overlay) {
-    var parent, form = null;
+  function item_form_popup(trigger_classes, element_to_popup_class, overlay) {
+    var popup_forms, form = null;
     document.addEventListener('click', function(e) {
       var l = trigger_classes.length;
       for(var i = 0; i < l; i++) {
         if(e.target.classList.contains(trigger_classes[i])) {
 
-          parent = get_parent(e.target, '.item-container')
-          .previousElementSibling;
-          parent.classList.add('flex-container');
+          //if the parent of the target element is NOT .popup-forms, get it
+          console.log(e.target);
+          if (e.target.classList.contains('edit-item-popup-mobile')) {
+            popup_forms = get_parent(e.target, '.popup-forms');
+          } else {
+            popup_forms = get_parent(e.target, '.item-container').previousElementSibling; //gets .popup-forms
+          }
 
-          form = parent.getElementsByTagName('form')[0];
-          form.classList.add('visible');
+          popup_forms.classList.add('flex-container'); //centers the popup
+
+          //get the popup and make it visible
+          popup_element = popup_forms.getElementsByClassName(element_to_popup_class)[0];
+          console.log("Popup Element: " + popup_element.className);
+          popup_element.classList.add('visible');
           overlay.classList.add('visible');
 
-          form.scrollIntoView(true);
+          popup_element.scrollIntoView(true);
+
+          if(e.target.classList.contains('trigger-within-popup')) {
+
+            //remove the class 'visible' from all other popups except the wanted popup
+            console.log('Detected a trigger element within a popup element. Class name of wanted popup is ' + popup_element.className + '.');
+            var len = popup_forms.childElementCount;
+            var wanted_popup_class = popup_element.className;
+
+            for(var j = 0; j < len; j++) {
+
+              var popup = popup_forms.children[j];
+              console.log(popup.className);
+              if(popup.className !== wanted_popup_class) {
+
+                popup.classList.remove('visible');
+                console.log("Popup " + popup.className + " is no longer visible.");
+
+              }
+
+            }
+
+          }
 
         } else if (e.target.classList.contains('overlay') || e.target.classList.contains('popup_remove_trigger') ||
                    e.target.classList.contains('exit-on-click')
-                  ) {
-            if(parent !== null && form !== null) {
-              parent.classList.remove('flex-container');
-              form.classList.remove('visible');
+                 ) { //remove all forms from view
+            console.log("All popups will be removed from visibility.");
+            if(popup_forms !== null && popup_element !== null) {
+
+              popup_forms.classList.remove('flex-container');
+              popup_element.classList.remove('visible');
               overlay.classList.remove('visible');
+
             }
+
         }
+
       }
 
     });
 
   }
   var overlay = document.getElementById('overlay_id');
-  item_form_popup(['item-popup', 'popup'], overlay);
+  item_form_popup(['edit-item-popup'], 'edit-job-form', overlay);
+  item_form_popup(['item-options-toggle-mobile-btn'], 'mobile-option-icons', overlay);
+
+  if(document.location.pathname === '/jobs/') {
+    item_form_popup(['request-money-popup', 'popup'], 'request_payment_form', overlay);
+  }
 
 });

@@ -96,8 +96,8 @@
 {% block mobile_option_btns %}
   {% if item.approved == True %}
     <li class="list-inline-item">
-      <button form="request_payment_form_{{ item.id }}" class="item-popup request_payment_form_m">
-        <i class="item-popup fas fa-money-bill-alt"></i>
+      <button form="request_payment_form_{{ item.id }}" class="request-money-popup request_payment_form_m">
+        <i class="request-money-popup fas fa-money-bill-alt"></i>
       </button>
     </li>
   {% endif %}
@@ -112,7 +112,7 @@
       dropdown-new-approved
       {% endif %}"
     >
-      <button type="submit" form="request_payment_form_{{ item.id }}" class="dropdown-item request-btn item-popup">Request Payment</button>
+      <button type="submit" form="request_payment_form_{{ item.id }}" class="dropdown-item request-btn request-money-popup">Request Payment</button>
     </div>
   {% endif %}
 {% endblock desktop_option_btns %}
