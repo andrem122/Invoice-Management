@@ -41,7 +41,7 @@
     {% for item in items %}
       {% if item.house == house %}
 
-        {# Item Options Forms #}
+        {# Forms #}
         {% if current_user|in_group:'Customers' %}
           <div class="option-forms">
             {% block option_forms %}
@@ -50,7 +50,7 @@
           <div class="popup-forms">
             {% block popup_forms %}
             {% endblock popup_forms %}
-            <ul class="mobile-option-icons popup">
+            <ul class="mobile-option-icons popup animated bounceInUp">
               {% block mobile_option_btns %}
               {% endblock mobile_option_btns %}
             </ul>
@@ -89,8 +89,10 @@
                 </ul>
               </div>
               <div class="info-group col col-sm-2">
+
                 {% if current_user|in_group:'Customers' %}
                 <ul>
+                  
                   <span class="info-title">{% block item_heading_5_m %}{% endblock item_heading_5_m %}</span>
                   <li class="info-4">{% block item_heading_5_m_v %}{% endblock item_heading_5_m_v %}</li>
                   <hr>
@@ -114,8 +116,10 @@
                     {% endblock desktop_option_btns %}
 
                   </div>
+
                 </ul>
                 {% endif %}
+
               </div>
             </div>
           </div>

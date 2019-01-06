@@ -13,44 +13,13 @@
 
 {# Forms #}
 {% block option_forms %}
-  {# Reject Payment Form #}
-  <form id="reject-payment-form-{{ item.id }}" class="reject-payment-form" action="" method="post">
-    {% csrf_token %}
-    {% if change_payment_status_form.errors %}
-    <div class="form-messages">
-      <p>{{change_payment_status_form.errors}}</p>
-    </div>
-    {% endif %}
-    {{change_payment_status_form}}
-    <input type="hidden" name="p_id" value="{{ item.id }}">
-    <input name="reject_payment" type="hidden" value="reject_payment">
-  </form>
 
-  {# Approve Payment Form #}
-  <form id="approve-payment-form-{{ item.id }}" class="approve-payment-form" action="" method="post">
-    {% csrf_token %}
-    {% if change_payment_status_form.errors %}
-    <div class="form-messages">
-      <p>Please try again.</p>
-    </div>
-    {% endif %}
-    {{change_payment_status_form}}
-    <input type="hidden" name="p_id" value="{{ item.id }}">
-    <input type="hidden" name="approve_payment" value="approve_payment">
-  </form>
+  {% include 'includes/forms/reject_payment.html' %}
 
-  {# Upload Form #}
-  <form id="upload-document-form-{{ item.id }}" class="upload-document-form" action="{% url 'payment_history:p_history_job' %}" method="post" role="form" enctype="multipart/form-data">
-    {% csrf_token %}
-    {% if upload_document_form.errors %}
-    <div class="form-messages">
-      <p>{{ upload_document_form.errors }}</p>
-    </div>
-    {% endif %}
-    <input name="thank_you" value="/payments/thank_you" type="hidden">
-    <input name="p_id" value="{{ item.id }}" type="hidden">
-    <input type="hidden" name="upload-document" value="upload-document">
-  </form>
+  {% include 'includes/forms/reject_payment.html' %}
+
+  {% include 'includes/forms/upload_document_payment.html' %}
+
 {% endblock option_forms %}
 
 {# Item Status #}
@@ -103,55 +72,13 @@
 
 {# Option Buttons #}
 {% block mobile_option_btns %}
-  {# New #}
-  {% if item.approved == False and item.rejected == False %}
-  <li class="list-inline-item">
-    <button type="submit" form="approve-payment-form-{{ item.id }}" class="mobile-option approve-option-m">
-      <i class="fas fa-check"></i>
-    </button>
-  </li>
 
-  {# Approved #}
-  {% elif item.approved == True and item.rejected == False %}
-  <li class="list-inline-item">
-    <button type="submit" form="reject-payment-form-{{ item.id }}" class="mobile-option reject-option-m">
-      <i class=" mobile-option fas fa-times"></i>
-    </button>
-  </li>
-  <li class="list-inline-item">
-    <input class="paid_link_upload_m" name="paid_link" form="upload-document-form-{{ item.id }}" id="paid_link-{{ item.id }}_m" type="file">
-    <button type="submit" form="upload-document-form-{{ item.id }}" class="dropdown-item upload-btn">
-      <i class="fas fa-upload"></i>
-    </button>
-  </li>
+  {% include 'includes/option_items/mobile_options_payment.html' %}
 
-  {# Rejected #}
-  {% elif item.rejected == True %}
-  <li class="list-inline-item">
-    <button type="submit" form="approve-payment-form-{{ item.id }}" class="mobile-option approve-option-m">
-      <i class="mobile-option fas fa-check"></i>
-    </button>
-  </li>
-  {% endif %}
 {% endblock mobile_option_btns %}
 
 {% block desktop_option_btns %}
-<div class="dropdown-menu{% if item.approved == True %} dropdown-approved{% else %} dropdown-new{% endif %}">
 
-  {# New #}
-  {% if item.approved == False and item.rejected == False %}
-  <button type="submit" form="approve-payment-form-{{ item.id }}" class="dropdown-item approve-btn option-item">Approve</button>
-  <button type="submit" form="reject-payment-form-{{ item.id }}" class="dropdown-item reject-btn option-item">Reject</button>
+  {% include 'includes/option_items/desktop_options_payment.html' %}
 
-  {# Approved #}
-  {% elif item.approved == True and item.rejected == False %}
-  <button type="submit" form="reject-payment-form-{{ item.id }}" class="dropdown-item reject-btn option-item">Reject</button>
-  <input class="paid_link_upload" name="paid_link" form="upload-document-form-{{ item.id }}" id="paid_link_{{ item.id }}" required type="file">
-  <button type="submit" form="upload-document-form-{{ item.id }}" class="dropdown-item upload-btn">Upload Document</button>
-
-  {# Rejected #}
-  {% elif item.rejected == True %}
-  <button type="submit" form="approve-payment-form-{{ item.id }}" class="dropdown-item approve-btn option-item">Approve</button>
-  {% endif %}
-</div>
 {% endblock desktop_option_btns %}

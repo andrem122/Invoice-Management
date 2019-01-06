@@ -47,15 +47,24 @@ document.addEventListener('DOMContentLoaded', function(e){
             popup_forms = get_parent(e.target, '.item-container').previousElementSibling; //gets .popup-forms
           }
 
-          popup_forms.classList.add('flex-container'); //centers the popup
-
           //get the popup and make it visible
           popup_element = popup_forms.getElementsByClassName(element_to_popup_class)[0];
-          console.log("Popup Element: " + popup_element.className);
-          popup_element.classList.add('visible');
-          overlay.classList.add('visible');
 
-          popup_element.scrollIntoView(true);
+          if(popup_element !== undefined) {
+
+            console.log("Popup Element: " + popup_element.className);
+            popup_element.classList.add('visible');
+            overlay.classList.add('visible');
+
+            popup_element.scrollIntoView(true);
+
+          }
+
+          if(popup_forms !== undefined) {
+
+            popup_forms.classList.add('flex-container'); //centers the popup
+
+          }
 
           if(e.target.classList.contains('trigger-within-popup')) {
 
@@ -82,9 +91,9 @@ document.addEventListener('DOMContentLoaded', function(e){
         } else if (e.target.classList.contains('overlay') || e.target.classList.contains('popup_remove_trigger') ||
                    e.target.classList.contains('exit-on-click')
                  ) { //remove all forms from view
-            console.log("All popups will be removed from visibility.");
-            if(popup_forms !== null && popup_element !== null) {
+            if(popup_forms !== undefined && popup_element !== undefined) {
 
+              console.log("All popups will be removed from visibility.");
               popup_forms.classList.remove('flex-container');
               popup_element.classList.remove('visible');
               overlay.classList.remove('visible');

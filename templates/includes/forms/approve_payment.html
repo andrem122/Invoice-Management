@@ -1,0 +1,12 @@
+{# Approve Payment Form #}
+<form id="approve-payment-form-{{ item.id }}{{ payment.id }}" class="approve-payment-form" action="" method="post">
+  {% csrf_token %}
+  {% if change_payment_status_form.errors %}
+  <div class="form-messages">
+    <p>Please try again.</p>
+  </div>
+  {% endif %}
+  {{change_payment_status_form}}
+  <input type="hidden" name="p_id" value="{{ item.id }}{{ payment.id }}">
+  <input type="hidden" name="approve_payment" value="approve_payment">
+</form>

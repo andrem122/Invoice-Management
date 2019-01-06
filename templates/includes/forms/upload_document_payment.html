@@ -1,0 +1,12 @@
+{# Upload Form #}
+<form id="upload-document-form-{{ item.id }}{{ payment.id }}" class="upload-document-form" action="{% url 'payment_history:p_history_job' %}" method="post" role="form" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% if upload_document_form.errors %}
+  <div class="form-messages">
+    <p>{{ upload_document_form.errors }}</p>
+  </div>
+  {% endif %}
+  <input name="thank_you" value="/payments/thank_you" type="hidden">
+  <input name="p_id" value="{{ item.id }}{{ payment.id }}" type="hidden">
+  <input type="hidden" name="upload-document" value="upload-document">
+</form>

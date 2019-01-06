@@ -54,6 +54,9 @@ def load_ajax_results(user):
     completed_jobs = customer.current_week_completed_jobs()
     rejected_jobs = customer.current_week_rejected_jobs()
 
+    #get forms
+    edit_job_form = Edit_Job(user=user)
+
 
     #combine querysets and keep unique values for houses
     houses = set(chain(active_houses, estimate_houses, completed_houses, rejected_houses))
@@ -63,6 +66,7 @@ def load_ajax_results(user):
         'houses': houses,
         'items': jobs,
         'current_user': user,
+        'edit_job_form': edit_job_form,
     }
 
     return render_to_string('jobs_admin/jobs_admin_results.html', job_results_context)
@@ -265,6 +269,7 @@ def index(request):
                     return HttpResponse(html)
                 else:
                     return redirect('/jobs-admin/')
+
         elif request.POST.get('edit_job'):
             job_id = int(request.POST.get('job_id')) #get job id from POST request
             job = get_object_or_404(Job, id=job_id) #get job instance
@@ -277,9 +282,8 @@ def index(request):
                 previous_company = job.company
 
                 #update the job instance based on which fields were submitted in the form
-                if edit_job_form.cleaned_data['house']:
-                    new_house = edit_job_form.cleaned_data['house']
-
+                new_house = edit_job_form.cleaned_data.get('house', None)
+                if new_house != None:
                     job.house = new_house
 
                     #update objects
@@ -300,11 +304,10 @@ def index(request):
                     if _House(new_house).has_active_jobs():
                         current_worker, created = Current_Worker.objects.get_or_create(house=job.house, company=job.company, customer=current_user, current=True)
 
-                if edit_job_form.cleaned_data['company']:
+                new_company = edit_job_form.cleaned_data.get('company', None)
+                if new_company != None:
 
-                    new_company = edit_job_form.cleaned_data['company']
                     job.company = new_company
-
                     job.save(update_fields=['company'])
 
                     #when changing the company, set current to false for the previous current worker object and create a new worker object
@@ -317,16 +320,19 @@ def index(request):
                     except ObjectDoesNotExist as e:
                         print(e)
 
-                if edit_job_form.cleaned_data['document_link']:
-                    job.document_link = edit_job_form.cleaned_data['document_link']
+                document_link = edit_job_form.cleaned_data.get('document_link', None)
+                if document_link != None:
+                    job.document_link = document_link
                     job.save(update_fields=['document_link'])
 
-                if edit_job_form.cleaned_data['notes']:
-                    job.notes = edit_job_form.cleaned_data['notes']
+                notes = edit_job_form.cleaned_data.get('notes', None)
+                if notes != None:
+                    job.notes = notes
                     job.save(update_fields=['notes'])
 
-                if edit_job_form.cleaned_data['start_amount'] and 1 + float(edit_job_form.cleaned_data['start_amount']) != 0: #update balance_amount if start_amount is in the POST data
-                    job.start_amount = edit_job_form.cleaned_data['start_amount']
+                start_amount = edit_job_form.cleaned_data.get('start_amount', None)
+                if start_amount != None and 1 + float(start_amount) != 1.0: #update balance_amount if start_amount is in the POST data
+                    job.start_amount = start_amount
                     job.balance_amount = job.balance
                     print(job.balance_amount)
                     job.save(update_fields=['start_amount', 'balance_amount'])

@@ -582,8 +582,9 @@ div.item-container + h3.sub-title {
   div.popup-forms ul.mobile-option-icons .paid_link_upload_m {
     position: absolute;
     top: 103px;
+    left: 0;
     padding: 30px 0;
-    width: 80px;
+    width: 100%;
     overflow: hidden;
     opacity: 0;
   }
@@ -597,11 +598,15 @@ div.item-container + h3.sub-title {
   }
 
   div.popup-forms ul.mobile-option-icons .edit-item-popup-mobile > svg {
-    color:  #ee8a90;
+    color: rgb(76, 110, 245);
+  }
+
+  div.popup-forms ul.mobile-option-icons button.upload-btn > svg {
+    color: rgb(76, 110, 245);
   }
 
   div.popup-forms ul.mobile-option-icons .reject-option-m > svg {
-    color:  rgb(76, 110, 245);
+    color: #ee8a90;
   }
 
   div.popup-forms ul.mobile-option-icons > li > button.request_payment_form_m {
@@ -696,9 +701,8 @@ tr.spacer {
 @media(max-width: 799px) {
 
   div.popup-forms ul.mobile-option-icons {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 40%;
+    left: 26%;
   }
 
 }
@@ -1030,6 +1034,8 @@ div.input-wrap select {
 #search_trigger {
   display: none;
   padding: 0 15px 15px 15px;
+  background-color: transparent;
+  border: 0;
 }
 
 #search_trigger > svg {
@@ -1116,7 +1122,7 @@ div.input-wrap select {
   background-color: #fff;
   max-width: 300px;
   z-index: 99999999 !important;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s linear;
   visibility: hidden;
   opacity: 0;
   overflow: hidden;
@@ -1148,6 +1154,8 @@ form.popup div.input-wrap select {
   top: 13px;
   right: 1px;
   padding: 10px 18px;
+  background-color: transparent;
+  border: 0;
 }
 
 .popup .popup_remove_trigger {

@@ -24,47 +24,22 @@
       </ul>
     </div>
     {% for job in jobs %}
+
       {# Item Options Forms #}
       {% if current_user|in_group:'Customers' %}
+
       <div class="option-forms">
-        {# Approve Job Form #}
-        <form id="approve-job-form-{{job.id}}" class="approve-job-form" action="{% url 'jobs_admin:index' %}" method="post">
-          {% csrf_token %}
-          {% if approve_form.errors %}
-          <div class="form-messages">
-            <p>Please try again.</p>
-          </div>
-          {% endif %}
-          {{approve_form}}
-          <input type="hidden" name="job_id" value="{{job.id}}">
-          <input type="hidden" name="approve_job" value="approve_job">
-        </form>
+        {% include 'includes/forms/approve_job.html' %}
+        {% include 'includes/forms/approve_as_payment_job.html' %}
+        {% include 'includes/forms/reject_job.html' %}
+      </div>
+      <div class="popup-forms">
+        {% include 'includes/forms/edit_job.html' %}
 
-        {# Approve As Payment Form #}
-        <form id="approve-as-payment-form-{{job.id}}" class="approve-as-payment-form" action="{% url 'jobs_admin:index' %}" method="post">
-          {% csrf_token %}
-          {% if approve_as_payment_form.errors %}
-          <div class="form-messages">
-            <p>Please try again.</p>
-          </div>
-          {% endif %}
-          {{approve_as_payment_form}}
-          <input type="hidden" name="job_id" value="{{job.id}}">
-          <input type="hidden" name="approve-as-payment" value="approve-as-payment">
-        </form>
+        <ul class="mobile-option-icons popup animated bounceInUp">
+          {% include 'includes/option_items/mobile_options_job.html' %}
+        </ul>
 
-        {# Reject Form #}
-        <form id="reject-form-{{job.id}}" class="reject-form" action="{% url 'jobs_admin:index' %}" method="post">
-          {% csrf_token %}
-          {% if reject_estimate_form.errors %}
-          <div class="form-messages">
-            <p>Please try again.</p>
-          </div>
-          {% endif %}
-          {{reject_estimate_form}}
-          <input type="hidden" name="job_id" value="{{job.id}}">
-          <input type="hidden" name="reject_estimate" value="reject_estimate">
-        </form>
       </div>
       {% endif %}
 
@@ -115,43 +90,16 @@
                 <span class="info-title">Amount</span>
                 <li class="info-4">${{ job.start_amount|intcomma }}</li>
                 <hr>
+
                 {# Mobile Option Buttons #}
-                <ul class="list-inline mobile-option-icons">
-                  {% if job.approved == True %}
-                  <li class="list-inline-item">
-                    <button type="submit" form="reject-form-{{job.id}}" class="reject-option-m">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </li>
-                  {% elif job.rejected == True %}
-                  <li class="list-inline-item approve-payment-option-m">
-                    <button type="submit" form="approve-as-payment-form-{{job.id}}" class="approve-payment-option-m">
-                      <i class="far fa-money-bill-alt"></i>
-                    </button>
-                  </li>
-                  <li class="list-inline-item">
-                    <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-option-m">
-                      <i class="fas fa-check"></i>
-                    </button>
-                  </li>
-                  {% else %}
-                  <li class="list-inline-item">
-                    <button type="submit" form="reject-form-{{job.id}}" class="reject-option-m">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </li>
-                  <li class="list-inline-item">
-                    <button type="submit" form="approve-as-payment-form-{{job.id}}" class="approve-payment-option-m">
-                      <i class="far fa-money-bill-alt"></i>
-                    </button>
-                  </li>
-                  <li class="list-inline-item">
-                    <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-option-m">
-                      <i class="fas fa-check"></i>
-                    </button>
-                  </li>
-                  {% endif %}
-                </ul>
+
+                <span class="info-title">Options</span>
+                <div class="item-options-toggle-mobile">
+                  <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
+
                 {# Desktop Options #}
                 <div class="item-options-dropdown dropdown">
 
@@ -206,44 +154,18 @@
         {% if current_user|in_group:'Customers' %}
         <div class="option-forms">
 
-          {# Reject Payment Form #}
-          <form id="reject-payment-form-{{ payment.id }}" class="reject-payment-form" action="{% url 'payment_requests:payments' %}" method="post">
-            {% csrf_token %}
-            {% if change_payment_status_form.errors %}
-            <div class="form-messages">
-              <p>{{change_payment_status_form.errors}}</p>
-            </div>
-            {% endif %}
-            {{change_payment_status_form}}
-            <input type="hidden" name="p_id" value="{{ payment.id }}">
-            <input name="reject_payment" type="hidden" value="reject_payment">
-          </form>
+          {% include 'includes/forms/reject_payment.html' %}
 
-          {# Approve Payment Form #}
-          <form id="approve-payment-form-{{ payment.id }}" class="approve-payment-form" action="{% url 'payment_requests:payments' %}" method="post">
-            {% csrf_token %}
-            {% if change_payment_status_form.errors %}
-            <div class="form-messages">
-              <p>Please try again.</p>
-            </div>
-            {% endif %}
-            {{change_payment_status_form}}
-            <input type="hidden" name="p_id" value="{{ payment.id }}">
-            <input type="hidden" name="approve_payment" value="approve_payment">
-          </form>
+          {% include 'includes/forms/reject_payment.html' %}
 
-          {# Upload Form #}
-          <form id="upload-document-form-{{ payment.id }}" class="upload-document-form" action="{% url 'payment_history:p_history_job' %}" method="post" role="form" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% if upload_document_form.errors %}
-            <div class="form-messages">
-              <p>{{upload_document_form.errors}}</p>
-            </div>
-            {% endif %}
-            <input name="thank_you" value="/payments/thank_you" type="hidden">
-            <input name="p_id" value="{{ payment.id }}" type="hidden">
-            <input type="hidden" name="upload-document" value="upload-document">
-          </form>
+          {% include 'includes/forms/upload_document_payment.html' %}
+
+        </div>
+        <div class="popup-forms">
+
+          <ul class="mobile-option-icons popup animated bounceInUp">
+            {% include 'includes/option_items/mobile_options_payment.html' %}
+          </ul>
 
         </div>
         {% endif %}
@@ -308,41 +230,16 @@
                   <span class="info-title">Amount</span>
                   <li class="info-4">${{ payment.amount|intcomma }}</li>
                   <hr>
+
                   {# Mobile Option Buttons #}
-                  <ul class="list-inline mobile-option-icons">
 
-                    {# New #}
-                    {% if payment.approved == False and payment.rejected == False %}
-                    <li class="list-inline-item">
-                      <button type="submit" form="approve-payment-form-{{ payment.id }}" class="approve-option-m">
-                        <i class="fas fa-check"></i>
-                      </button>
-                    </li>
+                  <span class="info-title">Options</span>
+                  <div class="item-options-toggle-mobile">
+                    <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                  </div>
 
-                    {# Approved #}
-                    {% elif payment.approved == True and payment.rejected == False %}
-                    <li class="list-inline-item">
-                      <button type="submit" form="reject-payment-form-{{ payment.id }}" class="reject-option-m">
-                        <i class="fas fa-times"></i>
-                      </button>
-                    </li>
-
-                    <li class="list-inline-item">
-                      <input class="paid_link_upload_m" name="paid_link" form="upload-document-form-{{ payment.id }}" id="paid_link-{{ item.id }}_m" type="file">
-                      <button type="submit" form="upload-document-form-{{ payment.id }}" class="dropdown-item upload-btn">
-                        <i class="fas fa-upload"></i>
-                      </button>
-                    </li>
-
-                    {# Rejected #}
-                    {% elif payment.rejected == True %}
-                    <li class="list-inline-item">
-                      <button type="submit" form="approve-payment-form-{{ payment.id }}" class="approve-option-m">
-                        <i class="fas fa-check"></i>
-                      </button>
-                    </li>
-                    {% endif %}
-                  </ul>
                   {# Desktop Options #}
                   <div class="item-options-dropdown dropdown">
 
@@ -402,21 +299,20 @@
       {% for expense in expenses %}
 
         {# Item Options Forms #}
+
         {% if current_user|in_group:'Customers' %}
+
         <div class="option-forms">
           {# Delete Expense #}
-          <form id="delete_exp_form_{{ expense.id }}" class="delete_exp_form" action="/expenses/" method="post">
-            {% csrf_token %}
-            {% if delete_exp_form.errors %}
-            <div class="form-messages">
-              <p>Please try again.</p>
-            </div>
-            {% endif %}
-            {{delete_exp_form}}
-            <input type="hidden" name="expense_id" value="{{ expense.id }}">
-            <input type="hidden" name="delete_exp_form" value="delete_exp_form">
-          </form>
+          {% include 'includes/forms/delete_expense.html' %}
         </div>
+
+        <div class="popup-forms">
+          <ul class="mobile-option-icons popup animated bounceInUp">
+            {% include 'includes/option_items/mobile_options_expense.html' %}
+          </ul>
+        </div>
+
         {% endif %}
 
         <div class="item-container">
@@ -453,16 +349,15 @@
                   <span class="info-title">Amount</span>
                   <li class="info-4">${{ expense.amount|intcomma }}</li>
                   <hr>
+
                   {# Mobile Option Buttons #}
-                  <ul class="list-inline mobile-option-icons">
+                  <span class="info-title">Options</span>
+                  <div class="item-options-toggle-mobile">
+                    <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                  </div>
 
-                    <li class="list-inline-item">
-                      <button type="submit" form="delete_exp_form_{{ expense.id }}" class="delete-option-m">
-                        <i class="far fa-trash-alt"></i>
-                      </button>
-                    </li>
-
-                  </ul>
                   {# Desktop Options #}
                   <div class="item-options-dropdown dropdown">
 

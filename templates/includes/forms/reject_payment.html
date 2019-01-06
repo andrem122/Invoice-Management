@@ -1,0 +1,12 @@
+{# Reject Payment Form #}/
+<form id="reject-payment-form-{{ item.id }}{{ payment.id }}" class="reject-payment-form" action="" method="post">
+  {% csrf_token %}
+  {% if change_payment_status_form.errors %}
+  <div class="form-messages">
+    <p>{{change_payment_status_form.errors}}</p>
+  </div>
+  {% endif %}
+  {{change_payment_status_form}}
+  <input type="hidden" name="p_id" value="{{ item.id }}{{ payment.id }}">
+  <input name="reject_payment" type="hidden" value="reject_payment">
+</form>

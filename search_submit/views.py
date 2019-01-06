@@ -2,6 +2,7 @@ from django.views.generic.base import View
 from django.http import HttpResponse
 from django.template import loader
 from jobs.models import Job, Request_Payment
+from jobs_admin.forms import Edit_Job
 from expenses.models import Expenses
 from django.db.models import Q
 from django.shortcuts import redirect
@@ -35,30 +36,35 @@ class Search_Submit_View(View):
 
     @method_decorator(user_passes_test(customer_and_staff_check, login_url='/accounts/login/'))
     def get(self, request):
+        current_user = request.user
         template = loader.get_template(self.template_name)
         upload_document_form = Upload_Document_Form()
         send_data_form = Send_Data()
+        edit_job_form = Edit_Job(user=current_user)
 
-        current_user = request.user
         customer = Customer(current_user)
         context = {
             'current_user': current_user,
             'upload_document_form': upload_document_form,
             'send_data_form': send_data_form,
+            'edit_job_form': edit_job_form,
         }
 
         return HttpResponse(template.render(context, request))
 
     @method_decorator(user_passes_test(customer_and_staff_check, login_url='/accounts/login/'))
     def post(self, request):
+        current_user = request.user
         template = loader.get_template(self.template_name)
         upload_document_form = Upload_Document_Form()
+        edit_job_form = Edit_Job(user=current_user)
 
         current_user = request.user
         customer = Customer(current_user)
         context = {
             'current_user': current_user,
             'upload_document_form': upload_document_form,
+            'edit_job_form': edit_job_form,
         }
 
         if request.method == 'POST':
@@ -116,9 +122,10 @@ class Search_Submit_View(View):
                 if expenses.exists():
                     context['expenses'] = expenses
                     context['count'] += int(expenses.count())
-                    
+
             else:
                 upload_document_form = Upload_Document_Form()
+                edit_job_form = Edit_Job(user=current_user)
 
         return HttpResponse(template.render(context, request))
 

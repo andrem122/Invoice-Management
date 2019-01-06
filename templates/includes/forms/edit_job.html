@@ -1,0 +1,72 @@
+{# Edit Job Form #}
+<form id="edit-job-form-{{ item.id }}{{ job.id }}" class="edit-job-form popup" action="" method="post" enctype="multipart/form-data">
+  <div class="exit-on-click">
+     <i class="fas fa-times popup_remove_trigger"></i>
+  </div>
+  <h2>Edit Job</h2>
+  {% csrf_token %}
+  {% if edit_job_form.errors %}
+  <div class="form-messages">
+    <p>Please try again.</p>
+  </div>
+  {% endif %}
+
+  <div class="input-label-wrap">
+    <div class="label-wrap">{{ edit_job_form.house.label_tag }}</div>
+    <div class="input-wrap input-wrap-select">
+      <i class="fas fa-home"></i>
+      <select id="id_house" name="house">
+        <option selected value="">
+          House
+        </option>
+        {% for house in edit_job_form.fields.house.queryset %}
+          <option value="{{ house.id }}">{{ house }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="input-label-wrap">
+    <div class="label-wrap">{{ edit_job_form.company.label_tag }}</div>
+    <div class="input-wrap input-wrap-select">
+      <i class="far fa-building"></i>
+      <select id="id_company" name="company">
+        <option selected value="">
+          Company
+        </option>
+        {% for company in edit_job_form.fields.company.queryset %}
+          <option value="{{ company.id }}">{{ company }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="input-label-wrap">
+    <div class="label-wrap">{{ edit_job_form.start_amount.label_tag }}</div>
+    <div class="input-wrap">
+      <i class="fas fa-dollar-sign"></i>
+      <input type="number" name="start_amount" value="{{ item.start_amount }}{{ job.start_amount }}" step="0.01">
+    </div>
+  </div>
+
+  <div class="input-label-file-wrap">
+    <div class="label-wrap">{{ edit_job_form.document_link.label_tag }}</div>
+    <div class="file-wrap">
+      <i class="fas fa-upload"></i>
+      <button type="button" class="file-upload-btn">Upload File</button>
+      {{ edit_job_form.document_link }}
+      <div id="file-input-message"></div>
+    </div>
+  </div>
+
+  <div class="input-label-wrap">
+    <div class="label-wrap">{{ edit_job_form.notes.label_tag }}</div>
+    <div class="input-wrap">
+      <textarea name="notes" cols="40" rows="10" maxlength="3000" required="">{{ item.notes }}{{ job.notes }}</textarea>
+    </div>
+  </div>
+
+  <input type="hidden" name="job_id" value="{{ item.id }}{{ job.id }}" />
+  <input type="hidden" name="edit_job" value="edit_job" />
+  <input class="form-submit-btn" type="submit" value="Save" />
+</form>

@@ -1,0 +1,35 @@
+{# New #}
+{% if item.approved == False and item.rejected == False or payment.approved == False and payment.rejected == False %}
+<li>
+  <button type="submit" form="approve-payment-form-{{ item.id }}{{ payment.id }}" class="mobile-option-item approve-option-m">
+    <span>Approve</span><i class="fas fa-check"></i>
+  </button>
+</li>
+<li>
+  <button type="submit" form="reject-payment-form-{{ item.id }}{{ payment.id }}" class="mobile-option-item reject-option-m">
+    <span>Reject</span><i class=" mobile-option fas fa-times"></i>
+  </button>
+</li>
+
+{# Approved #}
+{% elif item.approved == True and item.rejected == False or payment.approved == True and payment.rejected == False %}
+<li>
+  <button type="submit" form="reject-payment-form-{{ item.id }}{{ payment.id }}" class="mobile-option-item reject-option-m">
+    <span>Reject</span><i class=" mobile-option fas fa-times"></i>
+  </button>
+</li>
+<li>
+  <input class="paid_link_upload_m" name="paid_link" form="upload-document-form-{{ item.id }}{{ payment.id }}" id="paid_link-{{ item.id }}{{ payment.id }}_m" type="file">
+  <button type="submit" form="upload-document-form-{{ item.id }}{{ payment.id }}" class="dropdown-item upload-btn mobile-option-item">
+    <span>Upload</span><i class="fas fa-upload"></i>
+  </button>
+</li>
+
+{# Rejected #}
+{% elif item.rejected == True or payment.rejected == True %}
+<li>
+  <button type="submit" form="approve-payment-form-{{ item.id }}{{ payment.id }}" class="mobile-option-item approve-option-m">
+    <span>Approve</span><i class="mobile-option fas fa-check"></i>
+  </button>
+</li>
+{% endif %}

@@ -1,0 +1,19 @@
+<div class="dropdown-menu{% if item.approved == True %} dropdown-approved{% else %} dropdown-new{% endif %}">
+
+  {# New #}
+  {% if item.approved == False and item.rejected == False %}
+  <button type="submit" form="approve-payment-form-{{ item.id }}" class="dropdown-item approve-btn option-item">Approve</button>
+  <button type="submit" form="reject-payment-form-{{ item.id }}" class="dropdown-item reject-btn option-item">Reject</button>
+
+  {# Approved #}
+  {% elif item.approved == True and item.rejected == False %}
+  <button type="submit" form="reject-payment-form-{{ item.id }}" class="dropdown-item reject-btn option-item">Reject</button>
+  <input class="paid_link_upload" name="paid_link" form="upload-document-form-{{ item.id }}" id="paid_link_{{ item.id }}" required type="file">
+  <button type="submit" form="upload-document-form-{{ item.id }}" class="dropdown-item upload-btn">Upload Document</button>
+
+  {# Rejected #}
+  {% elif item.rejected == True %}
+  <button type="submit" form="approve-payment-form-{{ item.id }}" class="dropdown-item approve-btn option-item">Approve</button>
+  {% endif %}
+  
+</div>

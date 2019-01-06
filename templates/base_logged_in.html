@@ -23,6 +23,8 @@
     <script defer src="https://use.fontawesome.com/releases/v5.4.1/js/all.js" integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7" crossorigin="anonymous"></script>
     <!-- jQuery -->
     <script defer src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
     <!-- Custom -->
     <link rel="stylesheet" href="{% static 'logged-in.css' %}?v=1.39" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400|Raleway:300" />
@@ -36,7 +38,7 @@
     <script defer src="{% static 'form.js' %}?v=1.8" type="text/javascript"></script>
     {% endif %}
 
-    {% if request.path == '/jobs/' or request.path == '/jobs-admin/' %}
+    {% if request.path == '/jobs/' or request.path == '/jobs-admin/' or request.path == '/payments/' or request.path == '/projects/' or request.path == '/search/' %}
     <script defer src="{% static 'item_form_popup.js' %}?v=1.4" type="text/javascript"></script>
     {% endif %}
 

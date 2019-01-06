@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from send_data.forms import Send_Data
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
 from itertools import chain
 import datetime
 

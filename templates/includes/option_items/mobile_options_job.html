@@ -1,0 +1,51 @@
+{# Approved Item #}
+{% if item.approved == True or job.approved == True %}
+
+  <li>
+    <button type="submit" form="reject-form-{{ item.id }}{{ job.id }}" class="option-item mobile-option-item reject-option-m popup_remove_trigger">
+      <span>Reject</span><i class="option-item fas fa-times"></i>
+    </button>
+  </li>
+
+{# Rejected Item #}
+{% elif item.rejected == True or job.rejected == True %}
+
+  <li class="approve-payment-option-m">
+    <button type="submit" form="approve-as-payment-form-{{ item.id }}{{ job.id }}" class="option-item mobile-option-item approve-payment-option-m popup_remove_trigger">
+      <span>Payment</span><i class="option-item far fa-money-bill-alt"></i>
+    </button>
+  </li>
+
+  <li>
+    <button type="submit" form="approve-job-form-{{ item.id }}{{ job.id }}" class="option-item mobile-option-item approve-option-m popup_remove_trigger">
+      <span>Approve</span><i class="option-item fas fa-check"></i>
+    </button>
+  </li>
+
+{# New Item #}
+{% else %}
+
+  <li>
+    <button type="submit" form="approve-as-payment-form-{{ item.id }}{{ job.id }}" class="option-item mobile-option-item approve-payment-option-m popup_remove_trigger">
+      <span>Payment</span><i class="option-item far fa-money-bill-alt"></i>
+    </button>
+  </li>
+
+  <li>
+    <button type="submit" form="reject-form-{{ item.id }}{{ job.id }}" class="option-item mobile-option-item reject-option-m popup_remove_trigger">
+      <span>Reject</span><i class="option-item fas fa-times"></i>
+    </button>
+  </li>
+
+  <li>
+    <button type="submit" form="approve-job-form-{{ item.id }}{{ job.id }}" class="option-item mobile-option-item approve-option-m popup_remove_trigger">
+      <span>Approve</span><i class="option-item fas fa-check"></i>
+    </button>
+  </li>
+
+{% endif %}
+<li>
+  <button class="edit-item-popup edit-item-popup-mobile mobile-option-item trigger-within-popup">
+    <span>Edit Job</span><i class="far fa-edit"></i>
+  </button>
+</li>

@@ -1,0 +1,10 @@
+{# Unarchive House #}
+<form id="narchive_house_form_{{ house.id }}" class="narchive_house_form" action="" method="post">
+  {% csrf_token %}
+  {% if archive_house_form.errors %}
+  <div class="form-messages">
+    <p>Please try again.</p>
+  </div>
+  {% endif %}
+  <input type="hidden" name="house_id" value="{{ house.id }}">
+</form>

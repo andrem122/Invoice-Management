@@ -2,7 +2,7 @@ from jobs.models import Job, Current_Worker, House, Request_Payment
 from expenses.models import Expenses
 from django.contrib.auth.models import User
 from django.db.models import Q
-import operator, datetime, pytz
+import datetime, pytz
 
 class Customer:
     """
@@ -13,7 +13,7 @@ class Customer:
     #filter results by the last week
     #note: add 1 day to 'today' because time seems to lag in the server
     today = datetime.datetime.now() + datetime.timedelta(days=2)
-    start_delta = datetime.timedelta(days=today.weekday()+5)
+    start_delta = datetime.timedelta(days=today.weekday()+4)
     start_week = today - start_delta #start week is one week back
 
     #allow datetime to be aware
@@ -161,6 +161,7 @@ class Customer:
                 house=house,
                 house__customer=self.customer,
             ).count()
+
 
     """Current (Active) Houses"""
     def active_houses(self):

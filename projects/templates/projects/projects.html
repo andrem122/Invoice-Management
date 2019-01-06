@@ -24,17 +24,26 @@
   {% if current_user|in_group:'Customers' %}
   <div class="option-forms">
 
-    {# Archive House #}
-    <form id="narchive_house_form_{{ house.id }}" class="narchive_house_form" action="/projects/" method="post">
-      {% csrf_token %}
-      {% if archive_house_form.errors %}
-      <div class="form-messages">
-        <p>Please try again.</p>
-      </div>
-      {% endif %}
-      <input type="hidden" name="house_id" value="{{ house.id }}">
-    </form>
+    {% include 'includes/forms/narchive_house.html' %}
 
+  </div>
+  <div class="popup-forms">
+    {# Mobile Option Buttons #}
+    <ul class="mobile-option-icons popup">
+
+      <li>
+        <button type="submit" form="narchive_house_form_{{ house.id }}" class="archive-option-m mobile-option-item">
+          {% if house.archived == False %}
+            <span>Archive</span>
+            <i class="fas fa-archive"></i>
+          {% else %}
+            <span>Unarchive</span>
+            <i class="fas fa-undo"></i>
+          {% endif %}
+        </button>
+      </li>
+
+    </ul>
   </div>
 
   {% endif %}
@@ -44,10 +53,15 @@
         <div class="info-group col col-sm-6">
           <ul>
             <li>
+
               {% if num_active_jobs > 0 %}
-              <div class="status active">Active</div>
+
+                <div class="status active">Active</div>
+
               {% else %}
-              <div class="status open">Open</div>
+
+                <div class="status open">Open</div>
+
               {% endif %}
             </li>
             <span class="info-title">Project</span>
@@ -87,20 +101,14 @@
             <hr>
 
             {% if current_user|in_group:'Customers' %}
+
             {# Mobile Option Buttons #}
-            <ul class="list-inline mobile-option-icons">
-
-              <li class="list-inline-item">
-                <button type="submit" form="narchive_house_form_{{ house.id }}" class="archive-option-m">
-                  {% if house.archived == False %}
-                    <i class="fas fa-archive"></i>
-                  {% else %}
-                    <i class="fas fa-undo"></i>
-                  {% endif %}
-                </button>
-              </li>
-
-            </ul>
+            <span class="info-title">Options</span>
+            <div class="item-options-toggle-mobile">
+              <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
+                <i class="fas fa-ellipsis-h"></i>
+              </button>
+            </div>
 
             {# Desktop Options #}
             <div class="item-options-dropdown dropdown">
@@ -135,19 +143,25 @@
 
   {# Item Options Forms #}
   {% if current_user|in_group:'Customers' %}
-  <div class="option-forms">
-    {# Archive House #}
-    <form id="archive_house_form_{{ house.id }}" class="archive_house_form" action="" method="post">
-      {% csrf_token %}
-      {% if archive_house_form.errors %}
-      <div class="form-messages">
-        <p>Please try again.</p>
-      </div>
-      {% endif %}
-      <input type="hidden" name="house_id" value="{{ house.id }}">
-    </form>
+    <div class="option-forms">
 
-  </div>
+      {% include 'includes/forms/archive_house.html' %}
+
+    </div>
+    <div class="popup-forms">
+
+      {# Mobile Option Buttons #}
+      <ul class="mobile-option-icons popup">
+
+        <li class="list-inline-item">
+          <button type="submit" form="archive_house_form_{{ house.id }}" class="archive-option-m mobile-option-item">
+              <span>Unarchive</span><i class="fas fa-undo"></i>
+          </button>
+        </li>
+
+      </ul>
+
+    </div>
 
   {% endif %}
   <div class="item-container">
@@ -190,24 +204,18 @@
         <div class="info-group col col-sm-2">
           <ul>
             <span class="info-title">Total Spent</span>
-            <li class="info-4">${{total|intcomma}}</li>
+            <li class="info-4">${{ total|intcomma }}</li>
             <hr>
 
             {% if current_user|in_group:'Customers' %}
-            {# Mobile Option Buttons #}
-            <ul class="list-inline mobile-option-icons">
 
-              <li class="list-inline-item">
-                <button type="submit" form="archive_house_form_{{ house.id }}" class="archive-option-m">
-                  {% if house.archived == False %}
-                    <i class="fas fa-archive"></i>
-                  {% else %}
-                    <i class="fas fa-undo"></i>
-                  {% endif %}
-                </button>
-              </li>
-
-            </ul>
+            {# Mobile Options #}
+            <span class="info-title">Options</span>
+            <div class="item-options-toggle-mobile">
+              <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
+                <i class="fas fa-ellipsis-h"></i>
+              </button>
+            </div>
 
             {# Desktop Options #}
             <div class="item-options-dropdown dropdown">
