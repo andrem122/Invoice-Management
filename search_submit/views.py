@@ -68,10 +68,10 @@ class Search_Submit_View(View):
         }
 
         if request.method == 'POST':
-            query = request.POST.get('search')
-            query_terms = self.normalize_query(query)
+            query = request.POST.get('search', None)
             queryset_jobs, queryset_payments = [], []
-            if query != '':
+            if query != None:
+                query_terms = self.normalize_query(query)
                 #search jobs table
                 queryset_jobs = functools.reduce(operator.__or__, (
                     Q(company__username__icontains=term) |

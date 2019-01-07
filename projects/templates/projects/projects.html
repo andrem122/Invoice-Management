@@ -29,7 +29,7 @@
   </div>
   <div class="popup-forms">
     {# Mobile Option Buttons #}
-    <ul class="mobile-option-icons popup">
+    <ul class="mobile-option-icons popup animated bounceInUp">
 
       <li>
         <button type="submit" form="narchive_house_form_{{ house.id }}" class="archive-option-m mobile-option-item">
@@ -63,6 +63,7 @@
                 <div class="status open">Open</div>
 
               {% endif %}
+
             </li>
             <span class="info-title">Project</span>
             <li class="info-1"><a href="/project-details/{{ house.id }}">{{ house.address }}</a></li>
@@ -97,7 +98,7 @@
         <div class="info-group col col-sm-2">
           <ul>
             <span class="info-title">Total Spent</span>
-            <li class="info-4">${{total|intcomma}}</li>
+            <li class="info-4">${{ total|intcomma }}</li>
             <hr>
 
             {% if current_user|in_group:'Customers' %}
@@ -151,7 +152,7 @@
     <div class="popup-forms">
 
       {# Mobile Option Buttons #}
-      <ul class="mobile-option-icons popup">
+      <ul class="mobile-option-icons popup animated bounceInUp">
 
         <li class="list-inline-item">
           <button type="submit" form="archive_house_form_{{ house.id }}" class="archive-option-m mobile-option-item">

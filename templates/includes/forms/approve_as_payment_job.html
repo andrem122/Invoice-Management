@@ -1,5 +1,5 @@
 {# Approve As Payment Form #}
-<form id="approve-as-payment-form-{{item.id}}" class="approve-as-payment-form" action="" method="post">
+<form id="approve-as-payment-form-{{ item.id }}{{ job.id }}" class="approve-as-payment-form" action="{% url 'jobs_admin:index' %}" method="post">
   {% csrf_token %}
   {% if approve_as_payment_form.errors %}
   <div class="form-messages">
@@ -7,6 +7,6 @@
   </div>
   {% endif %}
   {{ approve_as_payment_form }}
-  <input type="hidden" name="job_id" value="{{item.id}}">
+  <input type="hidden" name="job_id" value="{{ item.id }}{{ job.id }}">
   <input type="hidden" name="approve-as-payment" value="approve-as-payment">
 </form>

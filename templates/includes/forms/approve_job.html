@@ -1,5 +1,5 @@
 {# Approve Job Form #}
-<form id="approve-job-form-{{item.id}}" class="approve-job-form" action="" method="post">
+<form id="approve-job-form-{{ item.id }}{{ job.id }}" class="approve-job-form" action="{% url 'jobs_admin:index' %}" method="post">
   {% csrf_token %}
   {% if approve_form.errors %}
   <div class="form-messages">
@@ -7,6 +7,6 @@
   </div>
   {% endif %}
   {{ approve_form }}
-  <input type="hidden" name="job_id" value="{{item.id}}">
+  <input type="hidden" name="job_id" value="{{ item.id }}{{ job.id }}">
   <input type="hidden" name="approve_job" value="approve_job">
 </form>

@@ -1,5 +1,5 @@
 {# Reject Form #}
-<form id="reject-form-{{ item.id }}" class="reject-form" action="" method="post">
+<form id="reject-form-{{ item.id }}{{ job.id }}" class="reject-form" action="{% url 'jobs_admin:index' %}" method="post">
   {% csrf_token %}
   {% if reject_estimate_form.errors %}
   <div class="form-messages">
@@ -7,6 +7,6 @@
   </div>
   {% endif %}
   {{ reject_estimate_form }}
-  <input type="hidden" name="job_id" value="{{item.id}}">
+  <input type="hidden" name="job_id" value="{{ item.id }}{{ job.id }}">
   <input type="hidden" name="reject_estimate" value="reject_estimate">
 </form>

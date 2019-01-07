@@ -27,6 +27,7 @@
 
     {% for house in expenses_houses %}
       <h3 id="{{ house.address }}" class="sub-title">{{ house.address }}</h3>
+
       {% if forloop.first %}
       <div class="item-headings-wrapper container-fluid">
         <ul class="item-headings row">
@@ -44,25 +45,22 @@
         </ul>
       </div>
       {% endif %}
+
       {% for expense in expenses %}
         {% if expense.house == house %}
           {# Item Options Forms #}
           {% if current_user|in_group:'Customers' %}
-          <div class="option-forms">
-            {# Delete Expense #}
-            <form id="delete_exp_form_{{ expense.id }}" class="delete_exp_form" action="/expenses/" method="post">
-              {% csrf_token %}
-              {% if delete_exp_form.errors %}
-              <div class="form-messages">
-                <p>Please try again.</p>
-              </div>
-              {% endif %}
-              {{ delete_exp_form }}
-              <input type="hidden" name="expense_id" value="{{ expense.id }}">
-              <input type="hidden" name="post_from_url" value="{{ request.build_absolute_uri }}">
-              <input type="hidden" name="delete_exp_form" value="delete_exp_form">
-            </form>
-          </div>
+
+            <div class="option-forms">
+              {% include 'includes/forms/delete_expense.html' %}
+            </div>
+
+            <div class="popup-forms">
+              <ul class="mobile-option-icons popup animated bounceInUp">
+                {% include 'includes/option_items/mobile_options_expense.html' %}
+              </ul>
+            </div>
+
           {% endif %}
 
           <div class="item-container">
@@ -99,16 +97,15 @@
                     <span class="info-title">Amount</span>
                     <li class="info-4">${{ expense.amount|intcomma }}</li>
                     <hr>
+
                     {# Mobile Option Buttons #}
-                    <ul class="list-inline mobile-option-icons">
+                    <span class="info-title">Options</span>
+                    <div class="item-options-toggle-mobile">
+                      <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
+                        <i class="fas fa-ellipsis-h"></i>
+                      </button>
+                    </div>
 
-                      <li class="list-inline-item">
-                        <button type="submit" form="delete_exp_form_{{ expense.id }}" class="delete-option-m">
-                          <i class="far fa-trash-alt"></i>
-                        </button>
-                      </li>
-
-                    </ul>
                     {# Desktop Options #}
                     <div class="item-options-dropdown dropdown">
 

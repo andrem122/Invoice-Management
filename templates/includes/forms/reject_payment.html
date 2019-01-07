@@ -1,5 +1,5 @@
-{# Reject Payment Form #}/
-<form id="reject-payment-form-{{ item.id }}{{ payment.id }}" class="reject-payment-form" action="" method="post">
+{# Reject Payment Form #}
+<form id="reject-payment-form-{{ item.id }}{{ payment.id }}" class="reject-payment-form" action="{% url 'payment_requests:payments' %}" method="post">
   {% csrf_token %}
   {% if change_payment_status_form.errors %}
   <div class="form-messages">

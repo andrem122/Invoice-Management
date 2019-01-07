@@ -61,7 +61,7 @@ class _House:
             approved=True,
         )
 
-    def has_active_jobs(self):
+    def has_active_jobs(self, **kwargs):
         """
         Checks if the house has any active jobs.
 
@@ -74,7 +74,7 @@ class _House:
         Raises:
             None.
         """
-        if Job.objects.filter(house=self.house, balance_amount__gt=0, approved=True).exists():
+        if Job.objects.filter(house=self.house, balance_amount__gt=0, approved=True, **kwargs).exists():
             return True
 
         return False

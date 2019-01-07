@@ -150,7 +150,9 @@ def index(request):
 
                 #add the user as a current worker on the house OR do nothing if they are already active
                 if job.balance_amount > 0 and job.approved == True:
-                    Current_Worker.objects.get_or_create(house=house, company=job.company, customer=current_user, current=True)
+                    current_worker, created = Current_Worker.objects.get_or_create(house=house, company=job.company, customer=current_user, current=False)
+                    current_worker.current = True
+                    current_worker.save(update_fields=['current'])
                 else: #this job may be complete because payments may have been made previously, so set house.completed_jobs=True
                     house.completed_jobs = True
                     house.save(update_fields=['completed_jobs'])
@@ -290,19 +292,22 @@ def index(request):
                     Request_Payment.objects.filter(job__pk=job_id).update(house=new_house) #get payments associated with job instance
                     job.save(update_fields=['house'])
 
-                    #if the previous house has no more active jobs, set current to false on the current worker object
-                    if not _House(previous_house).has_active_jobs():
+                    #if the company working on the previous house has no more active jobs with that house, set current to false on the current worker object
+                    if not _House(previous_house).has_active_jobs(company=job.company):
                         try:
                             current_worker = Current_Worker.objects.get(house=previous_house, company=job.company, customer=current_user, current=True)
                             current_worker.current = False
-                            current_worker.save()
-                            print(current_worker)
+                            current_worker.save(update_fields=['current'])
+                            print('Current Worker object currrent attribute updated to false')
                         except ObjectDoesNotExist as e:
                             print(e)
 
                     #if the new house now has an active job, create a current worker object
                     if _House(new_house).has_active_jobs():
-                        current_worker, created = Current_Worker.objects.get_or_create(house=job.house, company=job.company, customer=current_user, current=True)
+                        current_worker, created = Current_Worker.objects.get_or_create(house=job.house, company=job.company, customer=current_user, current=False)
+                        #if there was a current_worker object already, get it and set current equal to True
+                        current_worker.current = True
+                        current_worker.save(update_fields=['current'])
 
                 new_company = edit_job_form.cleaned_data.get('company', None)
                 if new_company != None:
@@ -316,7 +321,10 @@ def index(request):
                         current_worker.current = False
                         current_worker.save()
 
-                        Current_Worker.objects.get_or_create(house=job.house, company=new_company, customer=current_user, current=True)
+                        new_current_worker, created = Current_Worker.objects.get_or_create(house=job.house, company=new_company, customer=current_user, current=False)
+                        #if there was a current_worker object already (current was set to False), get it and set current equal to True
+                        new_current_worker.current = True
+                        new_current_worker.save(update_fields=['current'])
                     except ObjectDoesNotExist as e:
                         print(e)
 
