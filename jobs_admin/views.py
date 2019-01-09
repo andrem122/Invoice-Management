@@ -150,7 +150,7 @@ def index(request):
 
                 #add the user as a current worker on the house OR do nothing if they are already active
                 if job.balance_amount > 0 and job.approved == True:
-                    current_worker, created = Current_Worker.objects.get_or_create(house=house, company=job.company, customer=current_user, current=False)
+                    current_worker, created = Current_Worker.objects.get_or_create(house=house, job=job, company=job.company, customer=current_user, current=False)
                     current_worker.current = True
                     current_worker.save(update_fields=['current'])
                 else: #this job may be complete because payments may have been made previously, so set house.completed_jobs=True
@@ -253,7 +253,7 @@ def index(request):
                 #delete current worker object if no active jobs exist for the house
                 if not Job.objects.filter(house=job.house, house__customer=customer.customer, approved=True, balance_amount__gt=0).exists():
                     try:
-                        current_worker = Current_Worker.objects.get(house=job.house, company=job.company, customer=current_user, current=True)
+                        current_worker = Current_Worker.objects.get(house=job.house, job=job, company=job.company, customer=current_user, current=True)
                         current_worker.current = False
                         current_worker.save()
                     except ObjectDoesNotExist as e:
@@ -282,9 +282,13 @@ def index(request):
 
                 previous_house = job.house #the house the job object belonged to before it is changed
                 previous_company = job.company
+                new_house = edit_job_form.cleaned_data.get('house', None)
+                new_company = edit_job_form.cleaned_data.get('company', None)
+                document_link = edit_job_form.cleaned_data.get('document_link', None)
+                notes = edit_job_form.cleaned_data.get('notes', None)
+                start_amount = edit_job_form.cleaned_data.get('start_amount', None)
 
                 #update the job instance based on which fields were submitted in the form
-                new_house = edit_job_form.cleaned_data.get('house', None)
                 if new_house != None:
                     job.house = new_house
 
@@ -292,24 +296,28 @@ def index(request):
                     Request_Payment.objects.filter(job__pk=job_id).update(house=new_house) #get payments associated with job instance
                     job.save(update_fields=['house'])
 
-                    #if the company working on the previous house has no more active jobs with that house, set current to false on the current worker object
+                    #if the company working on the previous house has no more active jobs with that house, set current to false on the current_worker object
                     if not _House(previous_house).has_active_jobs(company=job.company):
                         try:
-                            current_worker = Current_Worker.objects.get(house=previous_house, company=job.company, customer=current_user, current=True)
+                            current_worker = Current_Worker.objects.get(house=previous_house, job=job, company=previous_company, customer=current_user, current=True)
                             current_worker.current = False
                             current_worker.save(update_fields=['current'])
-                            print('Current Worker object currrent attribute updated to false')
                         except ObjectDoesNotExist as e:
                             print(e)
 
                     #if the new house now has an active job, create a current worker object
                     if _House(new_house).has_active_jobs():
-                        current_worker, created = Current_Worker.objects.get_or_create(house=job.house, company=job.company, customer=current_user, current=False)
+
+                        #if both the house and company are being changed, get the new company and use it to get or create a current_worker object
+                        company = job.company
+                        if new_company != None:
+                            company = new_company
+
+                        current_worker, created = Current_Worker.objects.get_or_create(house=job.house, job=job, company=company, customer=current_user, current=False)
                         #if there was a current_worker object already, get it and set current equal to True
                         current_worker.current = True
                         current_worker.save(update_fields=['current'])
 
-                new_company = edit_job_form.cleaned_data.get('company', None)
                 if new_company != None:
 
                     job.company = new_company
@@ -317,28 +325,27 @@ def index(request):
 
                     #when changing the company, set current to false for the previous current worker object and create a new worker object
                     try:
-                        current_worker = Current_Worker.objects.get(house=previous_house, company=previous_company, customer=current_user, current=True)
+                        #get previous current_worker object
+                        current_worker = Current_Worker.objects.get(house=previous_house, job=job, company=previous_company, customer=current_user, current=True)
                         current_worker.current = False
                         current_worker.save()
 
-                        new_current_worker, created = Current_Worker.objects.get_or_create(house=job.house, company=new_company, customer=current_user, current=False)
+                        new_current_worker, created = Current_Worker.objects.get_or_create(house=job.house, job=job, company=new_company, customer=current_user, current=False)
                         #if there was a current_worker object already (current was set to False), get it and set current equal to True
                         new_current_worker.current = True
                         new_current_worker.save(update_fields=['current'])
+
                     except ObjectDoesNotExist as e:
                         print(e)
 
-                document_link = edit_job_form.cleaned_data.get('document_link', None)
                 if document_link != None:
                     job.document_link = document_link
                     job.save(update_fields=['document_link'])
 
-                notes = edit_job_form.cleaned_data.get('notes', None)
                 if notes != None:
                     job.notes = notes
                     job.save(update_fields=['notes'])
 
-                start_amount = edit_job_form.cleaned_data.get('start_amount', None)
                 if start_amount != None and 1 + float(start_amount) != 1.0: #update balance_amount if start_amount is in the POST data
                     job.start_amount = start_amount
                     job.balance_amount = job.balance

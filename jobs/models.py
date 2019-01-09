@@ -41,16 +41,6 @@ class House(models.Model):
 
     house_list_file = models.FileField(null=True, blank=False)
 
-#the class that shows if the current company has at least one job in a house
-class Current_Worker(models.Model):
-    house = models.ForeignKey(House, on_delete=models.CASCADE)
-    company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer', null=True)
-    current = models.BooleanField(default=False)
-
-    def __str__(self):
-        return str(self.company) + '-' + str(self.house)
-
 class Job(models.Model):
     house = models.ForeignKey(House, on_delete=models.CASCADE, blank=True)
     company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
@@ -103,3 +93,14 @@ class Request_Payment(models.Model):
 
     document_link = models.FileField(null=True, upload_to=generate_file_path_worker)
     paid_link = models.FileField(null=True, upload_to=generate_file_path_customer)
+
+#the class that shows if the current company has at least one job in a house
+class Current_Worker(models.Model):
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True)
+    company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer', null=True)
+    current = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.job.pk) + '-' + str(self.house) + '-' + str(self.company)
