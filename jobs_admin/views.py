@@ -263,8 +263,6 @@ def index(request):
                         current_worker.current = False
                         current_worker.save()
 
-                        append_string = f" Current Worker: Address: {current_worker.house.address}, Job Id: {current_worker.job.id}, Company: {current_worker.company}, Current: {current_worker.current}"
-                        print("Current Worker 'current' attribute updated to false through reject estimate." + append_string)
                     except ObjectDoesNotExist as e:
                         print(e)
 
@@ -312,8 +310,6 @@ def index(request):
                             current_worker.current = False
                             current_worker.save(update_fields=['current'])
 
-                            append_string = f" Current Worker: Address: {current_worker.house.address}, Job Id: {current_worker.job.id}, Company: {current_worker.company}, Current: {current_worker.current}"
-                            print("Current Worker object updated 'current' attribute to false through edit job." + append_string)
                         except ObjectDoesNotExist as e:
                             print(e)
 
@@ -330,13 +326,6 @@ def index(request):
                         current_worker.current = True
                         current_worker.save(update_fields=['current'])
 
-                        append_string = f" Current Worker: Address: {current_worker.house.address}, Job Id: {current_worker.job.id}, Company: {current_worker.company}, Current: {current_worker.current}"
-
-                        if created:
-                            print("Current Worker object created through edit job form new house." + append_string)
-                        else:
-                            print("Current Worker object 'current' attribute updated to true through edit job form new house." + append_string)
-
                 if new_company != None:
 
                     job.company = new_company
@@ -349,19 +338,10 @@ def index(request):
                         current_worker.current = False
                         current_worker.save()
 
-                        append_string = f" Current Worker: Address: {current_worker.house.address}, Job Id: {current_worker.job.id}, Company: {current_worker.company}, Current: {current_worker.current}"
-                        print("Current Worker object 'current' attribute updated to false through edit job form change company." + append_string)
-
                         new_current_worker, created = Current_Worker.objects.get_or_create(house=job.house, job=job, company=new_company, customer=current_user, current=False)
                         #if there was a current_worker object already (current was set to False), get it and set current equal to True
                         new_current_worker.current = True
                         new_current_worker.save(update_fields=['current'])
-
-                        append_string = f" Current Worker: Address: {new_current_worker.house.address}, Job Id: {new_current_worker.job.id}, Company: {new_current_worker.company}, Current: {new_current_worker.current}"
-                        if created:
-                            print("Current Worker object created through edit job form change company." + append_string)
-                        else:
-                            print("Current Worker object 'current' attribute updated to true through edit job form change company." + append_string)
 
                     except ObjectDoesNotExist as e:
                         print(e)

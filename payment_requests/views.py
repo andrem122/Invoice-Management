@@ -153,8 +153,6 @@ def payments(request):
                         current_worker.current = False
                         current_worker.save()
 
-                        append_string = f" Current Worker: Address: {current_worker.house.address}, Job Id: {current_worker.job.id}, Company: {current_worker.company}, Current: {current_worker.current}"
-                        print("Current Worker object updated 'current' attribute to false through approve payment." + append_string)
                     except ObjectDoesNotExist as e:
                         print(e)
 
@@ -215,12 +213,6 @@ def payments(request):
 
                     current_worker.current = True
                     current_worker.save()
-
-                    append_string = f" Current Worker: Address: {current_worker.house.address}, Job Id: {current_worker.job.id}, Company: {current_worker.company}, Current: {current_worker.current}"
-                    if created:
-                        print("Current Worker object created through reject payment." + append_string)
-                    else:
-                        print("Current Worker object 'current' attribute updated to true through reject payment." + append_string)
 
                 job.save(update_fields=['approved', 'rejected'])
 
