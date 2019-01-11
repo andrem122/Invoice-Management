@@ -154,11 +154,6 @@ def index(request):
                     current_worker.current = True
                     current_worker.save(update_fields=['current'])
 
-                    append_string = f" Current Worker: Address: {current_worker.house.address}, Job Id: {current_worker.job.id}, Company: {current_worker.company}, Current: {current_worker.current}"
-                    if created:
-                        print(f"Current worker created through approve job." + append_string)
-                    else:
-                        print(f"Current worker updated through approved job." + append_string)
                 else: #this job may be complete because payments may have been made previously, so set house.completed_jobs=True
                     house.completed_jobs = True
                     house.save(update_fields=['completed_jobs'])
