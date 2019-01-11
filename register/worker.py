@@ -40,10 +40,8 @@ class Worker:
     """Houses"""
     #gets all houses the worker is approved to work on
     def approved_houses(self):
-        return Current_Worker.objects.filter(
-            company=self.worker,
-            current=True,
-        )
+        sql = 'SELECT * FROM jobs_current_worker WHERE customer_id={customer_id} AND current=1 AND company_id={company_id} GROUP BY house_id'.format(customer_id=self.customer.id, company_id=self.worker.id)
+        return Current_Worker.objects.raw(sql)
 
     #gets all houses the worker has pending jobs for
     def unapproved_houses(self):

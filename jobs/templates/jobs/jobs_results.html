@@ -12,53 +12,16 @@
 
 {# Forms #}
 {% block option_forms %}
+{% endblock option_forms %}
 
+{% block popup_forms %}
   {% if item.approved == True %}
     {# Request Payment #}
 
-      <form id="request_payment_form_{{ item.id }}" class="request_payment_form popup" action="/jobs/" method="post" enctype="multipart/form-data">
-        <div class="exit-on-click">
-          <i id="send-data-exit" class="fas fa-times popup_remove_trigger"></i>
-        </div>
-        <h2>Request Payment</h2>
-        {% csrf_token %}
-
-        {% if request_payment_form.errors %}
-        <div class="form-messages">
-          <p>{{ request_payment_form.errors }}</p>
-        </div>
-        {% endif %}
-
-        {% if messages %}
-          <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message}}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-
-        <div class="input-label-wrap">
-          <div class="label-wrap">{{ request_payment_form.amount.label_tag }}</div>
-          <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ request_payment_form.amount }}</div>
-        </div>
-
-        <div class="input-label-file-wrap">
-          <div class="label-wrap">{{ request_payment_form.document_link.label_tag }}</div>
-          <div class="file-wrap">
-            <i class="fas fa-upload"></i>
-            <button type="button" class="file-upload-btn">Upload File</button>
-            {{ request_payment_form.document_link }}
-            <div id="file-input-message"></div>
-          </div>
-        </div>
-
-        <input type="hidden" name="job_id" value="{{ item.id }}" />
-        <input class="form-submit-btn" type="submit" value="Request Payment" />
-      </form>
+      {% include 'includes/forms/request_payment_form_payment.html' %}
 
   {% endif %}
-
-{% endblock option_forms %}
+{% endblock %}
 
 {# Item Status #}
 {% block item_status %}
@@ -66,7 +29,7 @@
   <div class="status new">Pending</div>
 
   {% elif item.approved == True and item.balance > 0 %}
-  <div class="status active">Active</div>/
+  <div class="status active">Active</div>
 
   {% elif item.approved == True %}
   <div class="status approved">Approved</div>
@@ -94,13 +57,9 @@
 
 {# Option Buttons #}
 {% block mobile_option_btns %}
-  {% if item.approved == True %}
-    <li class="list-inline-item">
-      <button form="request_payment_form_{{ item.id }}" class="request-money-popup request_payment_form_m">
-        <i class="request-money-popup fas fa-money-bill-alt"></i>
-      </button>
-    </li>
-  {% endif %}
+
+  {% include 'includes/option_items/mobile_options_worker_job.html' %}
+
 {% endblock mobile_option_btns %}
 
 {% block desktop_option_btns %}

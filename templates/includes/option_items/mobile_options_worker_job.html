@@ -1,0 +1,8 @@
+{% if item.approved == True %}
+  <li>
+    <button form="request_payment_form_{{ item.id }}" class="request-money-popup mobile-option-item request_payment_form_m trigger-within-popup">
+      <span>Request</span>
+      <i class="request-money-popup fas fa-money-bill-alt"></i>
+    </button>
+  </li>
+{% endif %}

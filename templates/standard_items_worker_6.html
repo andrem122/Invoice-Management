@@ -50,6 +50,15 @@
           {% endblock option_forms %}
         </div>
 
+        <div class="popup-forms">
+          {% block popup_forms %}
+          {% endblock popup_forms %}
+          <ul class="mobile-option-icons popup animated bounceInUp">
+            {% block mobile_option_btns %}
+            {% endblock mobile_option_btns %}
+          </ul>
+        </div>
+
         <div class="item-container">
           <div class="container-fluid">
             <div class="row">
@@ -93,10 +102,14 @@
 
                     <hr>
                     {# Mobile Option Buttons #}
-                    <ul class="mobile-option-icons popup">
-                      {% block mobile_option_btns %}
-                      {% endblock mobile_option_btns %}
-                    </ul>
+
+                    <span class="info-title">Options</span>
+                    <div class="item-options-toggle-mobile">
+                      <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
+                        <i class="fas fa-ellipsis-h"></i>
+                      </button>
+                    </div>
+
                     {# Desktop Options #}
                   <div class="item-options-dropdown dropdown">
                     {% if item.approved == True %}

@@ -64,35 +64,6 @@ window.addEventListener("load", function(event) {
 
   submit_upload_form();
 
-  //submits forms and shows hidden inputs when button is clicked
-  function post_form_with_file_input(class_names, type) {
-    var clicks = 0;
-    document.addEventListener('click', function(e){
-
-      var classes = Array.from(e.target.classList); //convert DOMTicketList to array
-      l = class_names.length;
-
-      for(var i = 0; i < l; i++) {
-        if(classes.includes(class_names[i])) {
-          clicks += 1;
-          var form = e.target.parentElement.parentElement;
-          var target_input = form.children[1];
-          if(clicks === 1) {
-            e.preventDefault();
-            target_input.setAttribute('type', type);
-          } else {
-            if(target_input.value !== '' && target_input.value !== '0.0') {
-              form.submit();
-            }
-          }
-        }
-      }
-    });
-  }
-
-  post_form_with_file_input(['upload-document-p'], 'file');
-  post_form_with_file_input(['request-payment-p'], 'number');
-
   //activate intro js if it is a new user
   /*
   if (document.documentURI.indexOf('new_user=True') !== -1) {

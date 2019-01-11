@@ -28,8 +28,6 @@ window.addEventListener("load", function(event) {
     if (event_type === 'click') { //for click popups
       document.addEventListener(event_type, function(e) {
 
-        //console.log('Classes: ' + e.target.classList.toString() + ' Node Name: ' + e.target.nodeName.toString());
-
         if(e.target.classList.contains('popup-trigger')) {
           overlay_ele.classList.add('visible');
           popup_ele.classList.add('visible');

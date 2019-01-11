@@ -2,60 +2,6 @@
 {% load jobs_admin_group_check %}
 
 {% block after_loader %}
-	<div id="overlay_id" class="overlay">
-
-		{# Send Data Form #}
-		{% if request.path == '/jobs-admin/' or request.path == '/payments/' %}
-			<form class="popup" id="send-data-form" action="{% url 'send_data' %}" method="post">
-				<button class="exit-on-click">
-					<i id="send-data-exit" class="fas fa-times popup_remove_trigger"></i>
-				</button>
-				<h2>Send Data</h2>
-				<p>Send the data on this page to somebody.</p>
-				{% csrf_token %}
-				{% if send_data_form.errors %}
-				<div class="form-messages">
-					<p>{{send_data_form.errors}}</p>
-				</div>
-				{% endif %}
-				{% if messages %}
-				<ul class="messages">
-						{% for message in messages %}
-						<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message}}</li>
-						{% endfor %}
-				</ul>
-				{% endif %}
-				{{ send_data_form }}
-				<input type="hidden" name="path" value="{{ request.path }}">
-				<input id="send-data-submit" class="form-submit-btn" value="Send Data" type="submit">
-			</form>
-		{% endif %}
-
-		{% if request.path == '/add-expense/' or request.path == '/addjob/' %}
-			<div class="popup sending-data">
-				<h3>Sending data...</h3>
-
-				<div class="sending-data-container">
-					<div class="sending-data-icon-container">
-					  <div class="dot dot-1"></div>
-					  <div class="dot dot-2"></div>
-					  <div class="dot dot-3"></div>
-					</div>
-
-					<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-					  <defs>
-					    <filter id="goo">
-					      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-					      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 21 -7"/>
-					    </filter>
-					  </defs>
-					</svg>
-				</div>
-
-			</div>
-		{% endif %}
-
-	</div>
 {% endblock after_loader %}
 
 {% block menu_options %}
@@ -153,6 +99,7 @@
 				<input name="search"
 						 id="search"
 						 type="search"
+						 tabindex="-1"
 						 placeholder="Search"
 						 ic-post-to="{% url 'search-ajax' %}"
 						 ic-trigger-on="keyup changed"

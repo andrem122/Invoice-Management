@@ -597,7 +597,7 @@ div.item-container + h3.sub-title {
     color:  #303B57;
   }
 
-  div.popup-forms ul.mobile-option-icons .edit-item-popup-mobile > svg {
+  div.popup-forms ul.mobile-option-icons .edit-item-option-m > svg {
     color: rgb(76, 110, 245);
   }
 
@@ -607,10 +607,6 @@ div.item-container + h3.sub-title {
 
   div.popup-forms ul.mobile-option-icons .reject-option-m > svg {
     color: #ee8a90;
-  }
-
-  div.popup-forms ul.mobile-option-icons > li > button.request_payment_form_m {
-    padding: 17px 90px !important;
   }
 
   .sub-title {
@@ -1183,7 +1179,7 @@ form.popup div.input-wrap select {
 
 @media (max-width: 1178px) {
   .request_payment_form {
-    top: 43%;
+    top: 16%;
     transform: none;
   }
 }

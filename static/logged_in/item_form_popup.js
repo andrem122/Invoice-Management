@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function(e){
 
           //if the parent of the target element is NOT .popup-forms, get it
           console.log(e.target);
-          if (e.target.classList.contains('edit-item-popup-mobile')) {
+          if (e.target.classList.contains('trigger-within-popup')) {
             popup_forms = get_parent(e.target, '.popup-forms');
           } else {
             popup_forms = get_parent(e.target, '.item-container').previousElementSibling; //gets .popup-forms
@@ -108,11 +108,17 @@ document.addEventListener('DOMContentLoaded', function(e){
 
   }
   var overlay = document.getElementById('overlay_id');
-  item_form_popup(['edit-item-popup'], 'edit-job-form', overlay);
-  item_form_popup(['item-options-toggle-mobile-btn'], 'mobile-option-icons', overlay);
 
-  if(document.location.pathname === '/jobs/') {
-    item_form_popup(['request-money-popup', 'popup'], 'request_payment_form', overlay);
+  if(document.location.pathname === '/jobs-admin/') {
+
+    item_form_popup(['edit-item-popup'], 'edit-job-form', overlay);
+
+  } else if(document.location.pathname === '/jobs/') {
+
+    item_form_popup(['request-money-popup', 'request_payment_form'], 'request_payment_form', overlay);
+
   }
+
+  item_form_popup(['item-options-toggle-mobile-btn'], 'mobile-option-icons', overlay);
 
 });

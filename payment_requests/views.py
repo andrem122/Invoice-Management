@@ -141,15 +141,20 @@ def payments(request):
 
                 """if there are no more unapproved payments for a house,
                 set pending_payments=False for that specific house
-                AND if a company has no more approved jobs for a house with a balance greater than zero,
-                then delete them as a current_worker
                 """
-
                 if not Request_Payment.objects.filter(house=house, approved=False).exists():
                     house.pending_payments = False
+
+                """if a company has no more approved jobs for a house with a balance greater than zero,
+                then set current to false for that current_worker object"""
                 if not Job.objects.filter(company=job.company, house=job.house, balance_amount__gt=0, approved=True).exists():
                     try:
-                        Current_Worker.objects.get(company=job.company, house=job.house).delete()
+                        current_worker = Current_Worker.objects.get(company=job.company, job=job, house=job.house, customer=current_user, current=True)
+                        current_worker.current = False
+                        current_worker.save()
+
+                        append_string = f" Current Worker: Address: {current_worker.house.address}, Job Id: {current_worker.job.id}, Company: {current_worker.company}, Current: {current_worker.current}"
+                        print("Current Worker object updated 'current' attribute to false through approve payment." + append_string)
                     except ObjectDoesNotExist as e:
                         print(e)
 
@@ -201,11 +206,22 @@ def payments(request):
 
                 #if job balance greater than zero after rejection, add as current worker
                 if job.balance_amount > 0 and payment.requested_by_worker == True:
-                    worker, created = Current_Worker.objects.get_or_create(
+                    current_worker, created = Current_Worker.objects.get_or_create(
                         company=job.company,
                         house=house,
-                        current=True,
+                        customer=current_user,
+                        job=job,
                     )
+
+                    current_worker.current = True
+                    current_worker.save()
+
+                    append_string = f" Current Worker: Address: {current_worker.house.address}, Job Id: {current_worker.job.id}, Company: {current_worker.company}, Current: {current_worker.current}"
+                    if created:
+                        print("Current Worker object created through reject payment." + append_string)
+                    else:
+                        print("Current Worker object 'current' attribute updated to true through reject payment." + append_string)
+
                 job.save(update_fields=['approved', 'rejected'])
 
                 if payment.requested_by_worker == True:
