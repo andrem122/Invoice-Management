@@ -453,6 +453,10 @@ div.item-container + h3.sub-title {
   margin-top: 30px;
 }
 
+.project-details-title {
+  margin-bottom: 25px;
+}
+
 @media (max-width: 1178px) {
   #page-content-wrapper {
     padding-bottom: 0;
@@ -609,7 +613,7 @@ div.item-container + h3.sub-title {
     color: #ee8a90;
   }
 
-  .sub-title {
+  .sub-title, .project-details-title {
     text-align: center;
   }
 }

@@ -1,23 +1,23 @@
 <div class="dropdown-menu
-  {% if item.approved == True and item.balance > 0 %}
+  {% if item.approved == True and item.balance > 0 or job.approved == True and job.balance > 0 %}
   dropdown-active
-  {% elif item.approved == True %}
+  {% elif item.approved == True or job.approved == True %}
   dropdown-new-approved
-  {% elif item.rejected == True %}
+  {% elif item.rejected == True or job.rejected == True %}
   dropdown-rejected
   {% else %}
   dropdown-new-approved
   {% endif %}"
 >
-  {% if item.approved == True %}
-  <button type="submit" form="reject-form-{{item.id}}" class="dropdown-item reject-btn option-item">Reject</button>
-  {% elif item.rejected == True %}
-  <button type="submit" form="approve-as-payment-form-{{item.id}}" class="dropdown-item approve-payment-option option-item">Approve Payment</button>
-  <button type="submit" form="approve-job-form-{{item.id}}" class="dropdown-item approve-job-option option-item">Approve Job</button>
+  {% if item.approved == True or job.approved == True %}
+  <button type="submit" form="reject-form-{{ item.id }}{{ job.id }}" class="dropdown-item reject-btn option-item">Reject</button>
+  {% elif item.rejected == True or job.rejected == True %}
+  <button type="submit" form="approve-as-payment-form-{{ item.id }}{{ job.id }}" class="dropdown-item approve-payment-option option-item">Approve Payment</button>
+  <button type="submit" form="approve-job-form-{{ item.id }}{{ job.id }}" class="dropdown-item approve-job-option option-item">Approve Job</button>
   {% else %}
-  <button type="submit" form="approve-as-payment-form-{{item.id}}" class="dropdown-item approve-payment-option option-item">Approve Payment</button>
-  <button type="submit" form="approve-job-form-{{item.id}}" class="dropdown-item approve-job-option option-item">Approve Job</button>
-  <button type="submit" form="reject-form-{{item.id}}" class="dropdown-item reject-job-option option-item">Reject</button>
+  <button type="submit" form="approve-as-payment-form-{{ item.id }}{{ job.id }}" class="dropdown-item approve-payment-option option-item">Approve Payment</button>
+  <button type="submit" form="approve-job-form-{{ item.id }}{{ job.id }}" class="dropdown-item approve-job-option option-item">Approve Job</button>
+  <button type="submit" form="reject-form-{{ item.id }}{{ job.id }}" class="dropdown-item reject-job-option option-item">Reject</button>
   {% endif %}
   <button class="dropdown-item edit-job-option edit-item-popup">Edit Job</button>
 </div>

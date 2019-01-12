@@ -9,7 +9,7 @@
 {% endblock scripts %}
 
 {% block content %}
-<h2>{{ address }}</h2>
+<h2 class="project-details-title">{{ address }}</h2>
 <div class="white-block" id="project_details">
 
   <div class="number-circle-container">
@@ -58,7 +58,7 @@
 
 <div id="expenses">
   {% if expenses %}
-    <h2>Expenses</h2>
+    <h2 class="sub-title">Expenses</h2>
     {% for expense in expenses %}
       {% if forloop.first %}
       <div class="item-headings-wrapper container-fluid">
@@ -82,20 +82,20 @@
       {% if current_user|in_group:'Customers' %}
       <div class="option-forms">
 
-        {# Delete Expense #}
-        <form id="delete_exp_form_{{ expense.id }}" class="delete_exp_form" action="/expenses/" method="post">
-          {% csrf_token %}
-          {% if delete_exp_form.errors %}
-          <div class="form-messages">
-            <p>Please try again.</p>
-          </div>
-          {% endif %}
-          {{delete_exp_form}}
-          <input type="hidden" name="expense_id" value="{{ expense.id }}">
-          <input type="hidden" name="post_from_url" value="{{ request.build_absolute_uri }}">
-          <input type="hidden" name="delete_exp_form" value="delete_exp_form">
-        </form>
+        {% include 'includes/forms/delete_expense.html' %}
 
+      </div>
+      <div class="popup-forms">
+        <ul class="mobile-option-icons popup animated bounceInUp">
+
+          <li>
+            <button type="submit" form="delete_exp_form_{{ expense.id }}" class="delete-option-m mobile-option-item">
+              <span>Delete</span>
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </li>
+
+        </ul>
       </div>
       {% endif %}
 
@@ -134,15 +134,14 @@
                 <li class="info-4">${{ expense.amount|intcomma }}</li>
                 <hr>
                 {# Mobile Option Buttons #}
-                <ul class="list-inline mobile-option-icons">
 
-                  <li class="list-inline-item">
-                    <button type="submit" form="delete_exp_form_{{ expense.id }}" class="delete-option-m">
-                      <i class="far fa-trash-alt"></i>
-                    </button>
-                  </li>
+                <span class="info-title">Options</span>
+                <div class="item-options-toggle-mobile">
+                  <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
 
-                </ul>
                 {# Desktop Options #}
                 <div class="item-options-dropdown dropdown">
 
@@ -167,7 +166,7 @@
 
   <div id="approved_jobs">
     {% if approved_jobs %}
-      <h2>Approved Jobs</h2>
+      <h2 class="sub-title">Approved Jobs</h2>
       {% for job in approved_jobs %}
         {% if forloop.first %}
         <div class="item-headings-wrapper container-fluid">
@@ -191,6 +190,23 @@
         {% if current_user|in_group:'Customers' %}
         <div class="option-forms">
 
+          {% include 'includes/forms/approve_job.html' %}
+
+          {% include 'includes/forms/approve_as_payment_job.html' %}
+
+          {% include 'includes/forms/reject_job.html' %}
+
+        </div>
+
+        <div class="popup-forms">
+
+          {% include 'includes/forms/edit_job.html' %}
+
+          <ul class="mobile-option-icons popup animated bounceInUp">
+
+            {% include 'includes/option_items/mobile_options_job.html' %}
+
+          </ul>
         </div>
         {% endif %}
 
@@ -235,16 +251,16 @@
                   <span class="info-title">Amount</span>
                   <li class="info-4">${{ job.start_amount|intcomma }}</li>
                   <hr>
+
                   {# Mobile Option Buttons #}
-                  <ul class="list-inline mobile-option-icons">
 
-                    <li class="list-inline-item">
-                      <button type="submit" form="delete_exp_form_{{ job.id }}" class="delete-option-m">
-                        <i class="far fa-trash-alt"></i>
-                      </button>
-                    </li>
+                  <span class="info-title">Options</span>
+                  <div class="item-options-toggle-mobile">
+                    <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                  </div>
 
-                  </ul>
                   {# Desktop Options #}
                   <div class="item-options-dropdown dropdown">
 
@@ -252,9 +268,7 @@
                       <i class="fas fa-ellipsis-v"></i>
                     </a>
 
-                    <div class="dropdown-menu">
-                      <button type="submit" form="delete_exp_form_{{ job.id }}" class="dropdown-item delete-exp-option">Delete</button>
-                    </div>
+                    {% include 'includes/option_items/desktop_options_job.html' %}
 
                   </div>
                 </ul>

@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function(e){
         if(e.target.classList.contains(trigger_classes[i])) {
 
           //if the parent of the target element is NOT .popup-forms, get it
-          console.log(e.target);
           if (e.target.classList.contains('trigger-within-popup')) {
             popup_forms = get_parent(e.target, '.popup-forms');
           } else {
@@ -52,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function(e){
 
           if(popup_element !== undefined) {
 
-            console.log("Popup Element: " + popup_element.className);
             popup_element.classList.add('visible');
             overlay.classList.add('visible');
 
@@ -69,18 +67,15 @@ document.addEventListener('DOMContentLoaded', function(e){
           if(e.target.classList.contains('trigger-within-popup')) {
 
             //remove the class 'visible' from all other popups except the wanted popup
-            console.log('Detected a trigger element within a popup element. Class name of wanted popup is ' + popup_element.className + '.');
             var len = popup_forms.childElementCount;
             var wanted_popup_class = popup_element.className;
 
             for(var j = 0; j < len; j++) {
 
               var popup = popup_forms.children[j];
-              console.log(popup.className);
               if(popup.className !== wanted_popup_class) {
 
                 popup.classList.remove('visible');
-                console.log("Popup " + popup.className + " is no longer visible.");
 
               }
 
@@ -93,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function(e){
                  ) { //remove all forms from view
             if(popup_forms !== undefined && popup_element !== undefined) {
 
-              console.log("All popups will be removed from visibility.");
               popup_forms.classList.remove('flex-container');
               popup_element.classList.remove('visible');
               overlay.classList.remove('visible');
@@ -107,13 +101,15 @@ document.addEventListener('DOMContentLoaded', function(e){
     });
 
   }
-  var overlay = document.getElementById('overlay_id');
 
-  if(document.location.pathname === '/jobs-admin/') {
+  var overlay = document.getElementById('overlay_id');
+  var path_name = document.location.pathname;
+
+  if(path_name === '/jobs-admin/' || path_name.indexOf('project-details') !== -1) {
 
     item_form_popup(['edit-item-popup'], 'edit-job-form', overlay);
 
-  } else if(document.location.pathname === '/jobs/') {
+  } else if(path_name === '/jobs/') {
 
     item_form_popup(['request-money-popup', 'request_payment_form'], 'request_payment_form', overlay);
 
