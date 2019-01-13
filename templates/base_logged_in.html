@@ -26,16 +26,16 @@
     <!-- Animate CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
     <!-- Custom -->
-    <link rel="stylesheet" href="{% static 'logged-in.css' %}?v=1.42" />
+    <link rel="stylesheet" href="{% static 'logged-in.css' %}?v=1.43" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400|Raleway:300" />
-    <script defer src="{% static 'logged-in.js' %}?v=1.17" type="text/javascript"></script>
+    <script defer src="{% static 'logged-in.js' %}?v=1.18" type="text/javascript"></script>
 
     {% if request.path == '/jobs-admin/' or request.path == '/payments/' %}
     <script src="{% static 'ajax_form_submit.js' %}?v=1.7" type="text/javascript"></script>
     {% endif %}
 
     {% if request.path == '/add-expense/' or request.path == '/addjob/' or request.path == '/jobs-admin/' or request.path == '/payments/' or request.path == '/jobs/' or request.path == '/add-house/' or request.path == '/search/' or request.path == '/projects/' %}
-    <script defer src="{% static 'form.js' %}?v=1.10" type="text/javascript"></script>
+    <script defer src="{% static 'form.js' %}?v=1.11" type="text/javascript"></script>
     {% endif %}
 
 
@@ -105,12 +105,12 @@
                 {% endif %}
                 {{ send_data_form }}
                 <input type="hidden" name="path" value="{{ request.path }}">
-                <input id="send-data-submit" class="form-submit-btn" value="Send Data" type="submit">
+                <input id="send-data-submit" name="form-submit-btn" class="form-submit-btn" value="Send Data" type="submit">
               </form>
             {% endif %}
 
-            {% if request.path == '/add-expense/' or request.path == '/addjob/' %}
-              <div class="popup sending-data">
+            {% if request.path == '/add-expense/' or request.path == '/addjob/' or request.path == '/jobs-admin/' or request.path == '/payments/' %}
+              <div id="sending-data-popup" class="popup">
                 <h3>Sending data...</h3>
 
                 <div class="sending-data-container">

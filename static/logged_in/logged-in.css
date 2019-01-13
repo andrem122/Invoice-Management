@@ -1167,7 +1167,7 @@ form.popup div.input-wrap select {
   box-sizing: content-box;
 }
 
-.popup.sending-data {
+.popup#sending-data-popup {
   height: 336px;
   overflow: hidden;
 }
@@ -1408,7 +1408,7 @@ a#step-4 {
   height: 100%;
 }
 
-.popup.sending-data > h3 {
+.popup#sending-data-popup > h3 {
   text-align: center;
 }
 

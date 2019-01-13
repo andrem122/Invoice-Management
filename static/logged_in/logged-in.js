@@ -34,25 +34,8 @@ window.addEventListener("load", function(event) {
     }
   });
 
-  //submits a form when button is clicked
-  function post_form(class_names) {
-    document.addEventListener('click', function(e){
-      var classes = Array.from(e.target.classList); //convert DOMTicketList to array
-      l = class_names.length;
-      var clicked = false; //prevent multiple submissions of forms
-      for (var i = 0; i < l; i++) {
-        if(classes.includes(class_names[i]) && clicked === false) {
-          clicked = true;
-          var form = e.target.parentElement.parentElement;
-          form.submit();
-        }
-      }
-    });
-  }
-
-  post_form(['submit-p']);
-
-  function submit_upload_form() {
+  function upload_document_form_on_change() {
+    //submits uploaded document as soon as the user uploads the document into the input element
     document.addEventListener('change', function(e){
       if(e.target.classList.contains('paid_link_upload') || e.target.classList.contains('paid_link_upload_m')) {
         //submit upload form when file is uploaded
@@ -62,7 +45,7 @@ window.addEventListener("load", function(event) {
     });
   }
 
-  submit_upload_form();
+  upload_document_form_on_change();
 
   //activate intro js if it is a new user
   /*
