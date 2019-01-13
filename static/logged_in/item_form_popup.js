@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function(e){
 
   function item_form_popup(trigger_classes, element_to_popup_class, overlay) {
     var popup_forms, form = null;
-    document.addEventListener('click', function(e) {
+    $(document).on('click touchstart', function(e) {
       var l = trigger_classes.length;
 
       console.log("Node Name: " + e.target.nodeName + ", Element Classes: " + e.target.classList + ", Element ID: " + e.target.id);

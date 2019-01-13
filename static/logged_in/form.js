@@ -43,7 +43,6 @@ window.addEventListener("load", function(event) {
         //remove the popup FORM on submit if desired
         if(switch_popups_on_submit === true && popup_ele.nodeName === 'FORM') {
 
-          console.log("Popups will be switched!");
           popup_ele.addEventListener('submit', function() {
             popup_ele.classList.remove('visible');
           });
