@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', function(e){
     var popup_forms, form = null;
     document.addEventListener('click', function(e) {
       var l = trigger_classes.length;
+
+      console.log("Node Name: " + e.target.nodeName + ", Element Classes: " + e.target.classList + ", Element ID: " + e.target.id);
       for(var i = 0; i < l; i++) {
         if(e.target.classList.contains(trigger_classes[i])) {
 
