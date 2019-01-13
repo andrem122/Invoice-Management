@@ -1158,7 +1158,7 @@ form.popup div.input-wrap select {
   border: 0;
 }
 
-.popup .popup_remove_trigger {
+.popup .popup-remove-trigger {
   z-index: 99;
 }
 

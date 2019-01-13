@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function(e){
 
           }
 
-        } else if (e.target.classList.contains('overlay') || e.target.classList.contains('popup_remove_trigger') ||
+        } else if (e.target.classList.contains('overlay') || e.target.classList.contains('popup-remove-trigger') ||
                    e.target.classList.contains('exit-on-click')
                  ) { //remove all forms from view
             if(popup_forms !== undefined && popup_element !== undefined) {
@@ -93,16 +93,6 @@ document.addEventListener('DOMContentLoaded', function(e){
               overlay.classList.remove('visible');
 
             }
-
-        } else {
-
-          if(popup_forms !== undefined && popup_element !== undefined) {
-
-            popup_forms.classList.remove('flex-container');
-            popup_element.classList.remove('visible');
-            overlay.classList.remove('visible');
-
-          }
 
         }
 

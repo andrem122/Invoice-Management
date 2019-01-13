@@ -76,7 +76,7 @@ window.addEventListener("load", function(event) {
   var send_data_form_popup = document.getElementById('send-data-form');
   var sending_data_popup = document.getElementById('sending-data-popup');
   if ((path === '/jobs-admin/' || path === '/payments/') && (send_data_form_popup !== null || sending_data_popup !== null)) {
-    alter_popup('click', send_data_form_popup, ['overlay_id', 'popup_remove_trigger', 'exit-on-click'], undefined, true);
+    alter_popup('click', send_data_form_popup, ['overlay_id', 'popup-remove-trigger', 'exit-on-click'], undefined, true);
     alter_popup('submit', sending_data_popup, [1, 2, 3], send_data_form_popup);
   }
 
