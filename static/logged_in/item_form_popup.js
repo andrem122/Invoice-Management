@@ -94,6 +94,16 @@ document.addEventListener('DOMContentLoaded', function(e){
 
             }
 
+        } else {
+
+          if(popup_forms !== undefined && popup_element !== undefined) {
+
+            popup_forms.classList.remove('flex-container');
+            popup_element.classList.remove('visible');
+            overlay.classList.remove('visible');
+
+          }
+
         }
 
       }
