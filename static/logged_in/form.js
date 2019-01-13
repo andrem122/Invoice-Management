@@ -21,7 +21,7 @@ window.addEventListener("load", function(event) {
     //pops up or removes modal with 'popup' class when trigger is activated
     var overlay_ele = document.getElementById('overlay_id');
     if (event_type === 'click') { //for click popups
-      document.addEventListener('click', function(e) {
+      $(document).addEventListener('click touchstart', function(e) {
 
         //add the 'visible' class to the appropriate elements when the trigger is clicked
         if(e.target.classList.contains('popup-trigger')) {
