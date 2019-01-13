@@ -1170,6 +1170,8 @@ form.popup div.input-wrap select {
 .popup#sending-data-popup {
   height: 336px;
   overflow: hidden;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .popup input[type="submit"] {
