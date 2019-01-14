@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function(e){
 
           }
 
+          //for popup triggers within popups
           if(e.target.classList.contains('trigger-within-popup')) {
 
             //remove the class 'visible' from all other popups except the wanted popup
