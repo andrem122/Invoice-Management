@@ -116,7 +116,7 @@ window.addEventListener("load", function(event) {
       }
     });
 
-    document.addEventListener('click', function(e){
+    $(document).on('click touchstart', function(e) {
       //console.log('Classes: ' + e.target.classList.toString() + ' Node Name: ' + e.target.nodeName.toString());
 
       if(e.target.classList.contains('popup-trigger-search') || e.target.classList.contains('search_input_mobile') || e.target.id === 'search_trigger') {
@@ -128,7 +128,9 @@ window.addEventListener("load", function(event) {
       else if (e.target.id === 'overlay_id') {
         overlay_ele.classList.remove('visible');
         search_popup.classList.remove('visible');
+        search_popup.blur();
       }
+      
     });
   }
 

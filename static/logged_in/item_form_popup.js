@@ -34,10 +34,9 @@ document.addEventListener('DOMContentLoaded', function(e){
 
   function item_form_popup(trigger_classes, element_to_popup_class, overlay) {
     var popup_forms, form = null;
-    $(document).on('click touchstart', function(e) { //added event 'touchstart' for mobile devices
-      var l = trigger_classes.length;
+    $(document).on('click touchstart', function(e) {//added event 'touchstart' for mobile devices
 
-      console.log("Node Name: " + e.target.nodeName + ", Element Classes: " + e.target.classList + ", Element ID: " + e.target.id);
+      var l = trigger_classes.length;
       for(var i = 0; i < l; i++) {
         if(e.target.classList.contains(trigger_classes[i])) {
 
