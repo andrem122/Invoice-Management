@@ -177,7 +177,8 @@ def index(request):
                     html = load_ajax_results(current_user)
                     return HttpResponse(html)
                 else:
-                    return redirect('/jobs-admin/')
+                    post_from_url = request.POST.get('post_from_url', None)
+                    return redirect(post_from_url)
 
         elif request.POST.get('approve-as-payment'):
             approve_as_payment_form = Approve_As_Payment(request.POST)
@@ -221,7 +222,8 @@ def index(request):
                     html = load_ajax_results(current_user)
                     return HttpResponse(html)
                 else:
-                    return redirect('/jobs-admin/')
+                    post_from_url = request.POST.get('post_from_url', None)
+                    return redirect(post_from_url)
 
         elif request.POST.get('reject_estimate'):
             reject_estimate_form = Reject_Estimate(request.POST)
@@ -272,7 +274,8 @@ def index(request):
                     html = load_ajax_results(current_user)
                     return HttpResponse(html)
                 else:
-                    return redirect('/jobs-admin/')
+                    post_from_url = request.POST.get('post_from_url', None)
+                    return redirect(post_from_url)
 
         elif request.POST.get('edit_job'):
             job_id = int(request.POST.get('job_id')) #get job id from POST request
@@ -363,7 +366,8 @@ def index(request):
                 html = load_ajax_results(current_user)
                 return HttpResponse(html)
             else:
-                return redirect('/jobs-admin/')
+                post_from_url = request.POST.get('post_from_url', None)
+                return redirect(post_from_url)
     # if a GET (or any other method) we'll create a blank form
     else:
         approve_form = Approve_Job()

@@ -92,8 +92,8 @@
 			<input type="hidden" name="job_house" value="{{p.job.house}}">
 		</form>
 
-		<form id="search-form" role="form" action="{% url 'search' %}" method="post">
-			{% csrf_token %}
+		<form id="search-form" role="form" action="{% url 'search_submit:search' %}" method="get">
+
 			<div id="search-wrap">
 				<i class="fas fa-search"></i>
 				<input name="search"
@@ -101,10 +101,7 @@
 						 type="search"
 						 tabindex="-1"
 						 placeholder="Search"
-						 ic-post-to="{% url 'search-ajax' %}"
-						 ic-trigger-on="keyup changed"
-						 ic-trigger-delay="300ms"
-						 ic-target="#search-result-container"/>
+						 />
 			</div>
 			<button class="round-btn" type="submit">Submit</button>
 		</form>

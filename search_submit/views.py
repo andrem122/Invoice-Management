@@ -9,8 +9,10 @@ from django.shortcuts import redirect
 from customer_register.customer import Customer
 from payment_history.forms import Upload_Document_Form
 from django.utils.decorators import method_decorator
+from django.template.loader import render_to_string
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
+from django.views.decorators.csrf import csrf_exempt
 from send_data.forms import Send_Data
 import operator
 import functools
@@ -34,43 +36,14 @@ class Search_Submit_View(View):
 
         return [normspace(' ',(t[0] or t[1]).strip()) for t in findterms(query_string)]
 
-    @method_decorator(user_passes_test(customer_and_staff_check, login_url='/accounts/login/'))
-    def get(self, request):
-        current_user = request.user
-        template = loader.get_template(self.template_name)
-        upload_document_form = Upload_Document_Form()
-        send_data_form = Send_Data()
-        edit_job_form = Edit_Job(user=current_user)
+    def search_results(self, request, context, ajax=False):
+        if request.method == 'GET':
 
-        customer = Customer(current_user)
-        context = {
-            'current_user': current_user,
-            'upload_document_form': upload_document_form,
-            'send_data_form': send_data_form,
-            'edit_job_form': edit_job_form,
-        }
-
-        return HttpResponse(template.render(context, request))
-
-    @method_decorator(user_passes_test(customer_and_staff_check, login_url='/accounts/login/'))
-    def post(self, request):
-        current_user = request.user
-        template = loader.get_template(self.template_name)
-        upload_document_form = Upload_Document_Form()
-        edit_job_form = Edit_Job(user=current_user)
-
-        current_user = request.user
-        customer = Customer(current_user)
-        context = {
-            'current_user': current_user,
-            'upload_document_form': upload_document_form,
-            'edit_job_form': edit_job_form,
-        }
-
-        if request.method == 'POST':
-            query = request.POST.get('search', None)
+            query = request.GET.get('search', None)
             queryset_jobs, queryset_payments = [], []
-            if query != None:
+            customer = Customer(request.user)
+
+            if query != None and query != '':
                 query_terms = self.normalize_query(query)
                 #search jobs table
                 queryset_jobs = functools.reduce(operator.__or__, (
@@ -123,14 +96,46 @@ class Search_Submit_View(View):
                     context['expenses'] = expenses
                     context['count'] += int(expenses.count())
 
+                if ajax:
+                    context['edit_job_form'] = Edit_Job(user=request.user)
+                    context['upload_document_form'] = Upload_Document_Form()
+                    return render_to_string('search_submit/search_submit_results.html', context)
+
+                return context
+
             else:
                 upload_document_form = Upload_Document_Form()
-                edit_job_form = Edit_Job(user=current_user)
+                edit_job_form = Edit_Job(user=request.user)
 
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    @method_decorator(user_passes_test(customer_and_staff_check, login_url='/accounts/login/'))
+    def get(self, request):
+        current_user = request.user
+        template = loader.get_template(self.template_name)
+        upload_document_form = Upload_Document_Form()
+        send_data_form = Send_Data()
+        edit_job_form = Edit_Job(user=current_user)
+
+        context = {
+            'current_user': current_user,
+            'upload_document_form': upload_document_form,
+            'send_data_form': send_data_form,
+            'edit_job_form': edit_job_form,
+        }
+
+        context = self.search_results(request, context)
         return HttpResponse(template.render(context, request))
 
-class Search_Ajax_Submit_View(Search_Submit_View):
+class Search_Submit_Ajax_View(Search_Submit_View):
     template_name = 'search_submit/search_submit_results.html'
 
     def get(self, request):
-        return redirect('/search')
+        current_user = request.user
+        if request.is_ajax():
+            html = self.search_results(request, context={'current_user': current_user,}, ajax=True)
+            return HttpResponse(html)
+        else:
+            return redirect('/search')
