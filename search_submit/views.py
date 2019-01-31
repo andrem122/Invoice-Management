@@ -2,12 +2,13 @@ from django.views.generic.base import View
 from django.http import HttpResponse
 from django.template import loader
 from jobs.models import Job, Request_Payment
-from jobs_admin.forms import Edit_Job
 from expenses.models import Expenses
 from django.db.models import Q
 from django.shortcuts import redirect
 from customer_register.customer import Customer
 from payment_history.forms import Upload_Document_Form
+from expenses.forms import Delete_Expense
+from jobs_admin.forms import Approve_Job, Approve_As_Payment, Reject_Estimate, Edit_Job
 from django.utils.decorators import method_decorator
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import user_passes_test
@@ -84,6 +85,7 @@ class Search_Submit_View(View):
 
                 context['query'] = query
                 context['count'] = count
+                context['post_from_url'] = request.build_absolute_uri().replace('ajax', '')
 
                 #if query results
                 if jobs.exists():
@@ -98,7 +100,12 @@ class Search_Submit_View(View):
 
                 if ajax:
                     context['edit_job_form'] = Edit_Job(user=request.user)
+                    context['approve_form'] = Approve_Job()
+                    context['approve_as_payment_form'] = Approve_As_Payment()
+                    context['reject_estimate_form'] = Reject_Estimate()
                     context['upload_document_form'] = Upload_Document_Form()
+                    context['delete_exp_form'] = Delete_Expense()
+                    context['request'] = request
                     return render_to_string('search_submit/search_submit_results.html', context)
 
                 return context
@@ -106,6 +113,7 @@ class Search_Submit_View(View):
             else:
                 upload_document_form = Upload_Document_Form()
                 edit_job_form = Edit_Job(user=request.user)
+                return context
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):

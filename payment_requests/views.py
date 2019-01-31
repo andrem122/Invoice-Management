@@ -165,7 +165,8 @@ def payments(request):
                     html = load_ajax_results(current_user)
                     return HttpResponse(html)
                 else:
-                    return redirect('/payments/')
+                    post_from_url = request.POST.get('post_from_url', None)
+                    return redirect(post_from_url)
 
         elif request.POST.get('reject_payment'):
             change_payment_status_form = Change_Payment_Status(request.POST)
@@ -243,7 +244,8 @@ def payments(request):
                     html = load_ajax_results(current_user)
                     return HttpResponse(html)
                 else:
-                    return redirect('/payments/')
+                    post_from_url = request.POST.get('post_from_url', None)
+                    return redirect(post_from_url)
 
     # if a GET (or any other method) we'll create a blank form
     else:

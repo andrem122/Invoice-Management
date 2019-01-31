@@ -3,7 +3,7 @@
 {% load jobs_admin_group_check %}
 
   <span{% if request.path == '/search/'%} class="no-ajax-search-results"{% endif %}>
-    <h3>{{count}} Results for: <i>{{query}}</i></h3>
+    <h3>{{ count }} Results for: <i>{{ query }}</i></h3>
     {# Headings for jobs #}
     {% if jobs %}
     <h4 class="sub-title">Jobs</h4>
