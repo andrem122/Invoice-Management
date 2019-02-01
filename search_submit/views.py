@@ -43,6 +43,8 @@ class Search_Submit_View(View):
             query = request.GET.get('search', None)
             queryset_jobs, queryset_payments = [], []
             customer = Customer(request.user)
+            context['count'] = 0
+
 
             if query != None and query != '':
                 query_terms = self.normalize_query(query)
@@ -81,10 +83,8 @@ class Search_Submit_View(View):
                 jobs = Job.objects.filter(queryset_jobs, house__customer=customer.customer)
                 payments = Request_Payment.objects.filter(queryset_payments, job__house__customer=customer.customer)
                 expenses = Expenses.objects.filter(queryset_expenses, house__customer=customer.customer)
-                count = 0
 
                 context['query'] = query
-                context['count'] = count
                 context['post_from_url'] = request.build_absolute_uri().replace('ajax', '')
 
                 #if query results
@@ -113,7 +113,11 @@ class Search_Submit_View(View):
             else:
                 upload_document_form = Upload_Document_Form()
                 edit_job_form = Edit_Job(user=request.user)
-                return context
+
+                if not ajax:
+                    return context
+                else:
+                    return render_to_string('search_submit/search_submit_results.html', context)
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
