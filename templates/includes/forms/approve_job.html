@@ -10,4 +10,12 @@
   <input type="hidden" name="job_id" value="{{ item.id }}{{ job.id }}">
   <input type="hidden" name="approve_job" value="approve_job">
   <input type="hidden" name="post_from_url" value="{{ post_from_url }}">
+
+  {# For post requests coming from the 'search_submit' app #}
+  <input type="hidden" name="request" value="{{ request }}">
+  <input type="hidden" name="query" value="{{ query }}">
+  <input type="hidden" name="count" value="{{ count }}">
+  <input type="hidden" name="jobs" value="{{ jobs }}">
+  <input type="hidden" name="payments" value="{{ payments }}">
+  <input type="hidden" name="expenses" value="{{ expenses }}">
 </form>

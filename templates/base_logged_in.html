@@ -30,16 +30,17 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400|Raleway:300" />
     <script defer src="{% static 'logged-in.js' %}?v=1.18" type="text/javascript"></script>
 
-    {% if request.path == '/jobs-admin/' or request.path == '/payments/' %}
-    <script src="{% static 'ajax_form_submit.js' %}?v=1.7" type="text/javascript"></script>
+    {% if request.path == '/search/' %}
+    <script defer src="{% static 'ajax_search.js' %}?v=1.0" type="text/javascript"></script>
+    {% endif %}
+
+    {% if request.path == '/jobs-admin/' or request.path == '/payments/' or request.path == '/search/' %}
+    <script defer src="{% static 'search_submit/search_submit.js' %}?v=1.0"></script>
+    <script defer src="{% static 'ajax_form_submit.js' %}?v=1.7" type="text/javascript"></script>
     {% endif %}
 
     {% if request.path == '/add-expense/' or request.path == '/addjob/' or request.path == '/jobs-admin/' or request.path == '/payments/' or request.path == '/jobs/' or request.path == '/add-house/' or request.path == '/search/' or request.path == '/projects/' %}
     <script defer src="{% static 'form.js' %}?v=1.14" type="text/javascript"></script>
-    {% endif %}
-
-    {% if request.path == '/search/' %}
-    <script defer src="{% static 'ajax_search.js' %}?v=1.0" type="text/javascript"></script>
     {% endif %}
 
 

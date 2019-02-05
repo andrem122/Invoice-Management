@@ -10,14 +10,14 @@
   {% endif %}"
 >
   {% if item.approved == True or job.approved == True %}
-  <button type="submit" form="reject-form-{{ item.id }}{{ job.id }}" class="dropdown-item reject-btn option-item">Reject</button>
+  <button type="submit" form="reject-form-{{ item.id }}{{ job.id }}" class="dropdown-item reject-btn job-option option-item">Reject</button>
   {% elif item.rejected == True or job.rejected == True %}
   <button type="submit" form="approve-as-payment-form-{{ item.id }}{{ job.id }}" class="dropdown-item approve-payment-option option-item">Approve Payment</button>
-  <button type="submit" form="approve-job-form-{{ item.id }}{{ job.id }}" class="dropdown-item approve-job-option option-item">Approve Job</button>
+  <button type="submit" form="approve-job-form-{{ item.id }}{{ job.id }}" class="dropdown-item approve-job-option job-option option-item">Approve Job</button>
   {% else %}
   <button type="submit" form="approve-as-payment-form-{{ item.id }}{{ job.id }}" class="dropdown-item approve-payment-option option-item">Approve Payment</button>
-  <button type="submit" form="approve-job-form-{{ item.id }}{{ job.id }}" class="dropdown-item approve-job-option option-item">Approve Job</button>
-  <button type="submit" form="reject-form-{{ item.id }}{{ job.id }}" class="dropdown-item reject-job-option option-item">Reject</button>
+  <button type="submit" form="approve-job-form-{{ item.id }}{{ job.id }}" class="dropdown-item approve-job-option job-option option-item">Approve Job</button>
+  <button type="submit" form="reject-form-{{ item.id }}{{ job.id }}" class="dropdown-item reject-job-option job-option option-item">Reject</button>
   {% endif %}
-  <button class="dropdown-item edit-job-option edit-item-popup">Edit Job</button>
+  <button class="dropdown-item edit-job-option job-option edit-item-popup">Edit Job</button>
 </div>

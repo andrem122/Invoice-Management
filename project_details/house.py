@@ -79,6 +79,24 @@ class _House:
 
         return False
 
+    def has_rejected_jobs(self, **kwargs):
+        """
+        Checks if the house has any rejected jobs.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A Boolean.
+
+        Raises:
+            None.
+        """
+        if Job.objects.filter(house=self.house, rejected=True, **kwargs).exists():
+            return True
+
+        return False
+
     def budget(self):
         """
         Calculates the budget for the house based on three variables
@@ -96,7 +114,7 @@ class _House:
         """
 
         budget = (_House.closing_cost*self.vars['after_repair_value']) - self.vars['purchase_price'] - self.vars['profit'] - _House.broker_fee
-        return round(budget, 2)
+        return float(round(budget, 2))
 
     def total_spent(self):
         """
@@ -145,5 +163,32 @@ class _House:
         return (budget_balance, budget_balance_degree)
 
     def potential_profit(self):
+        """
+        Calculates the estimated profit.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A tuple.
+
+        Raises:
+            None.
+        """
         potential_profit = (_House.closing_cost*self.vars['after_repair_value']) - self.vars['purchase_price'] - self.total_spent() - _House.broker_fee
         return round(potential_profit, 2)
+
+    def budget_used(self):
+        """
+        Calculates how much of the budget has been used as a percentage.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            An integer.
+
+        Raises:
+            None.
+        """
+        return int(self.total_spent() / self.budget() * 100.0)

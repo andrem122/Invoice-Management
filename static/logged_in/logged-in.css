@@ -1021,7 +1021,7 @@ div.input-wrap select {
 }
 
 /* Search */
-#search-result-container {
+#results-container {
   transition: all 0.3s ease-in-out;
   margin-top: 30px;
 }

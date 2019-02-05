@@ -106,18 +106,7 @@
                     <i class="fas fa-ellipsis-v"></i>
                   </a>
 
-                  <div class="dropdown-menu{% if job.approved == True %} dropdown-approved{% else %} dropdown-new{% endif %}">
-                    {% if job.approved == True %}
-              			<button type="submit" form="reject-form-{{job.id}}" class="dropdown-item reject-btn">Reject</button>
-                    {% elif job.rejected == True %}
-                    <button type="submit" form="approve-as-payment-form-{{job.id}}" class="dropdown-item approve-payment-option">Approve Payment</button>
-                    <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-job-option">Approve Job</button>
-                    {% else %}
-                    <button type="submit" form="approve-as-payment-form-{{job.id}}" class="dropdown-item approve-payment-option">Approve Payment</button>
-                    <button type="submit" form="approve-job-form-{{job.id}}" class="dropdown-item approve-job-option">Approve Job</button>
-                    <button type="submit" form="reject-form-{{job.id}}" class="dropdown-item reject-job-option">Reject</button>
-                    {% endif %}
-              		</div>
+                  {% include 'includes/option_items/desktop_options_job.html' %}
 
                 </div>
               </ul>
@@ -247,24 +236,7 @@
                     </a>
 
                     {# Dropdown Menu Desktop #}
-                    <div class="dropdown-menu{% if job.approved == True %} dropdown-approved{% else %} dropdown-new{% endif %}">
-
-                      {# New #}
-                      {% if payment.approved == False and payment.rejected == False %}
-                      <button type="submit" form="approve-payment-form-{{ payment.id }}" class="dropdown-item approve-btn">Approve</button>
-                      <button type="submit" form="reject-payment-form-{{ payment.id }}" class="dropdown-item reject-btn">Reject</button>
-
-                      {# Approved #}
-                      {% elif payment.approved == True and payment.rejected == False %}
-                      <button type="submit" form="reject-payment-form-{{ payment.id }}" class="dropdown-item reject-btn">Reject</button>
-                      <input class="paid_link_upload" name="paid_link" form="upload-document-form-{{ payment.id }}" id="paid_link-{{ payment.id }}" required type="file">
-                      <button type="submit" form="upload-document-form-{{ payment.id }}" class="dropdown-item upload-btn">Upload Document</button>
-
-                      {# Rejected #}
-                      {% elif payment.rejected == True %}
-                      <button type="submit" form="approve-payment-form-{{ payment.id }}" class="dropdown-item approve-btn">Approve</button>
-                      {% endif %}
-                    </div>
+                    {% include 'includes/option_items/desktop_options_payment.html' %}
 
                   </div>
                 </ul>

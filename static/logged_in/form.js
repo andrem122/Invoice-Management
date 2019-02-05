@@ -85,11 +85,11 @@ window.addEventListener("load", function(event) {
     alter_popup('submit', sending_data_popup, [1, 2, 3], add_object_form);
   }
 
-  if (send_data_form_popup !== undefined) {
+  if (send_data_form_popup !== null) {
     send_data_form_popup.style.display = 'block';
   }
 
-  if(sending_data_popup !== undefined) {
+  if(sending_data_popup !== null) {
     sending_data_popup.style.display = 'block';
   }
 
@@ -130,7 +130,7 @@ window.addEventListener("load", function(event) {
         search_popup.classList.remove('visible');
         search_popup.blur();
       }
-      
+
     });
   }
 

@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', function() {
          data: $search_form.serialize(),
          success: function(data, textStatus) {
            //append html results to search result container and update url with new search parameter
-           $('#search-result-container').html(data);
+           $('#results-container').html(data);
 
            try {
              var href = document.location.href;

@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function(e){
   var overlay = document.getElementById('overlay_id');
   var path_name = document.location.pathname;
 
-  if(path_name === '/jobs-admin/' || path_name.indexOf('project-details') !== -1) {
+  if(path_name === '/jobs-admin/' || path_name.indexOf('project-details') !== -1 || path_name === '/search/') {
 
     item_form_popup(['edit-item-popup'], 'edit-job-form', overlay);
 
