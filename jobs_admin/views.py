@@ -75,6 +75,25 @@ def load_ajax_results(user):
 
     return render_to_string('jobs_admin/jobs_admin_results.html', job_results_context)
 
+def load_ajax_search_results(request):
+    """Loads ajax html for the search view"""
+    search_submit_context = {
+        'current_user': request.user,
+        'query': request.POST.get('query', None),
+        'post_from_url': request.POST.get('post_from_url', None),
+        'edit_job_form': Edit_Job(user=request.user),
+        'approve_form': Approve_Job(),
+        'approve_as_payment_form': Approve_As_Payment(),
+        'reject_estimate_form': Reject_Estimate(),
+        'upload_document_form': Upload_Document_Form(),
+        'upload_document_form': Upload_Document_Form(),
+        'delete_exp_form': Delete_Expense(),
+    }
+
+    search_submit_view = Search_Submit_View()
+    html = search_submit_view.search_results(query=search_submit_context.get('query'), request=request, context=search_submit_context, ajax=True)
+    return html
+
 def approve_job(request, customer):
     """
     Called when a user approves a job
@@ -84,20 +103,7 @@ def approve_job(request, customer):
         #get POST data
         job_id = int(request.POST.get('job_id'))
         post_from_url = request.POST.get('post_from_url', None)
-
-        #if POST request is from search_submit view
-        if 'search' in post_from_url:
-            search_submit_context = {
-                'current_user': request.user,
-                'query': request.POST.get('query', None),
-                'edit_job_form': Edit_Job(user=request.user),
-                'approve_form': Approve_Job(),
-                'approve_as_payment_form': Approve_As_Payment(),
-                'reject_estimate_form': Reject_Estimate(),
-                'upload_document_form': Upload_Document_Form(),
-                'upload_document_form': Upload_Document_Form(),
-                'delete_exp_form': Delete_Expense(),
-            }
+        print('Approve Job: ' + post_from_url)
 
         job = Job.objects.get(pk=job_id)
         house = job.house
@@ -136,9 +142,7 @@ def approve_job(request, customer):
 
             #return ajax results for the search query else return results for /jobs-admin/
             if 'search' in post_from_url:
-                search_submit_view = Search_Submit_View()
-                html = search_submit_view.search_results(query=search_submit_context.get('query'), request=request, context=search_submit_context, ajax=True)
-                return html
+                return load_ajax_search_results(request)
             else:
                 html = load_ajax_results(request.user)
                 return html
@@ -151,6 +155,7 @@ def approve_as_payment(request, customer):
     if approve_as_payment_form.is_valid():
         #get POST data
         job_id = int(request.POST.get('job_id'))
+        post_from_url = request.POST.get('post_from_url', None)
 
         #get the job and house
         job = Job.objects.get(pk=job_id)
@@ -185,8 +190,11 @@ def approve_as_payment(request, customer):
         send_approval_mail(request, job, 'Payment Approved!', 'Payment Approved!')
 
         if request.is_ajax():
-            html = load_ajax_results(request.user)
-            return html
+            if 'search' in post_from_url:
+                return load_ajax_search_results(request)
+            else:
+                html = load_ajax_results(request.user)
+                return html
         else:
             return request.POST.get('post_from_url', None)
 
@@ -195,6 +203,8 @@ def reject_estimate(request, customer):
     if reject_estimate_form.is_valid():
         #get POST data
         job_id = int(request.POST.get('job_id'))
+        post_from_url = request.POST.get('post_from_url', None)
+        print('Reject Job: ' + post_from_url)
 
         #get the job and house
         job = Job.objects.get(pk=job_id)
@@ -236,8 +246,11 @@ def reject_estimate(request, customer):
             house.save(update_fields=['completed_jobs'])
 
         if request.is_ajax():
-            html = load_ajax_results(request.user)
-            return html
+            if 'search' in post_from_url:
+                return load_ajax_search_results(request)
+            else:
+                html = load_ajax_results(request.user)
+                return html
         else:
             return request.POST.get('post_from_url', None)
 
@@ -247,6 +260,7 @@ def edit_job(request, customer):
     """
     job_id = int(request.POST.get('job_id')) #get job id from POST request
     job = get_object_or_404(Job, id=job_id) #get job instance
+    post_from_url = request.POST.get('post_from_url', None)
 
     edit_job_form = Edit_Job(data=request.POST, files=request.FILES, user=request.user)
 
@@ -342,8 +356,11 @@ def edit_job(request, customer):
 
 
     if request.is_ajax():
-        html = load_ajax_results(request.user)
-        return html
+        if 'search' in post_from_url:
+            return load_ajax_search_results(request)
+        else:
+            html = load_ajax_results(request.user)
+            return html
     else:
         return request.POST.get('post_from_url', None)
 

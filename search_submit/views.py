@@ -82,7 +82,11 @@ class Search_Submit_View(View):
             expenses = Expenses.objects.filter(queryset_expenses, house__customer=customer.customer)
 
             context['query'] = query
-            context['post_from_url'] = request.build_absolute_uri().replace('ajax', '')
+
+            if 'ajax' in request.build_absolute_uri():
+                context['post_from_url'] = request.build_absolute_uri().replace('ajax', '')
+            else:
+                context['post_from_url'] = request.build_absolute_uri().replace('jobs-admin/', 'search/?search=' + query)
 
             #if query results
             if jobs.exists():

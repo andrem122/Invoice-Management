@@ -10,4 +10,6 @@
   <input type="hidden" name="job_id" value="{{ item.id }}{{ job.id }}">
   <input type="hidden" name="reject_estimate" value="reject_estimate">
   <input type="hidden" name="post_from_url" value="{{ post_from_url }}">
+
+  {% include 'includes/forms/search_inputs.html' %}
 </form>
