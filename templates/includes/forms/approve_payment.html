@@ -6,8 +6,10 @@
     <p>Please try again.</p>
   </div>
   {% endif %}
-  {{change_payment_status_form}}
+  {{ change_payment_status_form }}
   <input type="hidden" name="p_id" value="{{ item.id }}{{ payment.id }}">
   <input type="hidden" name="approve_payment" value="approve_payment">
   <input type="hidden" name="post_from_url" value="{{ post_from_url }}">
+
+  {% include 'includes/forms/search_inputs.html' %}
 </form>

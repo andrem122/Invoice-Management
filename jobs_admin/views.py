@@ -14,10 +14,10 @@ from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from itertools import chain
-
 from payment_history.forms import Upload_Document_Form
 from expenses.forms import Delete_Expense
 from search_submit.views import Search_Submit_View
+from ajax.ajax import Ajax
 
 def send_approval_mail(request, job_object, subject, html_title):
     template_message = 'Your job at {} for ${} has been approved!'.format(job_object.house.address, job_object.start_amount)
@@ -43,38 +43,6 @@ def send_approval_mail(request, job_object, subject, html_title):
     except:
         print('Email has failed')
 
-def load_ajax_results(user):
-    customer = Customer(user)
-
-    #get active houses and houses with estimates
-    active_houses = customer.active_houses()
-    estimate_houses = customer.proposed_jobs_houses()
-    completed_houses = customer.current_week_completed_houses()
-    rejected_houses = customer.current_week_rejected_job_houses()
-
-    #get estimates, approved, completed, and rejected jobs
-    estimates = customer.current_week_proposed_jobs()
-    approved_jobs = customer.approved_jobs()
-    completed_jobs = customer.current_week_completed_jobs()
-    rejected_jobs = customer.current_week_rejected_jobs()
-
-    #get forms
-    edit_job_form = Edit_Job(user=user)
-
-
-    #combine querysets and keep unique values for houses
-    houses = set(chain(active_houses, estimate_houses, completed_houses, rejected_houses))
-    jobs = list(chain(estimates, approved_jobs, completed_jobs, rejected_jobs))
-
-    job_results_context = {
-        'houses': houses,
-        'items': jobs,
-        'current_user': user,
-        'edit_job_form': edit_job_form,
-    }
-
-    return render_to_string('jobs_admin/jobs_admin_results.html', job_results_context)
-
 def load_ajax_search_results(request):
     """Loads ajax html for the search view"""
     search_submit_context = {
@@ -86,12 +54,16 @@ def load_ajax_search_results(request):
         'approve_as_payment_form': Approve_As_Payment(),
         'reject_estimate_form': Reject_Estimate(),
         'upload_document_form': Upload_Document_Form(),
-        'upload_document_form': Upload_Document_Form(),
         'delete_exp_form': Delete_Expense(),
     }
 
     search_submit_view = Search_Submit_View()
-    html = search_submit_view.search_results(query=search_submit_context.get('query'), request=request, context=search_submit_context, ajax=True)
+    html = search_submit_view.search_results(
+        query=search_submit_context.get('query'),
+        request=request,
+        context=search_submit_context,
+        ajax=True)
+
     return html
 
 def approve_job(request, customer):
@@ -103,7 +75,6 @@ def approve_job(request, customer):
         #get POST data
         job_id = int(request.POST.get('job_id'))
         post_from_url = request.POST.get('post_from_url', None)
-        print('Approve Job: ' + post_from_url)
 
         job = Job.objects.get(pk=job_id)
         house = job.house
@@ -115,7 +86,7 @@ def approve_job(request, customer):
 
         #add the user as a current worker on the house OR do nothing if they are already active
         if job.balance_amount > 0 and job.approved == True:
-            current_worker, created = Current_Worker.objects.get_or_create(house=house, job=job, company=job.company, customer=request.user, current=False)
+            current_worker, created = Current_Worker.objects.get_or_create(house=house, job=job, company=job.company, customer=request.user)
             current_worker.current = True
             current_worker.save(update_fields=['current'])
 
@@ -144,7 +115,8 @@ def approve_job(request, customer):
             if 'search' in post_from_url:
                 return load_ajax_search_results(request)
             else:
-                html = load_ajax_results(request.user)
+                ajax = Ajax(customer)
+                html = ajax.load_ajax_results('jobs')
                 return html
 
         else:
@@ -193,7 +165,8 @@ def approve_as_payment(request, customer):
             if 'search' in post_from_url:
                 return load_ajax_search_results(request)
             else:
-                html = load_ajax_results(request.user)
+                ajax = Ajax(customer)
+                html = ajax.load_ajax_results('jobs')
                 return html
         else:
             return request.POST.get('post_from_url', None)
@@ -204,7 +177,6 @@ def reject_estimate(request, customer):
         #get POST data
         job_id = int(request.POST.get('job_id'))
         post_from_url = request.POST.get('post_from_url', None)
-        print('Reject Job: ' + post_from_url)
 
         #get the job and house
         job = Job.objects.get(pk=job_id)
@@ -215,7 +187,7 @@ def reject_estimate(request, customer):
         job.rejected = True
         house.rejected_jobs = True
 
-        #update job total paid if needed
+        #update job total paid and delete payment object if payment object associated with job was NOT requested by the worker
         try:
             payment = Request_Payment.objects.filter(job=job, requested_by_worker=False)
             total_paid = float(job.total_paid)
@@ -223,20 +195,10 @@ def reject_estimate(request, customer):
             job.balance_amount = job.balance
             payment.delete() #delete payments generated by system
         except IndexError as e:
-            print('No elements in the QuerySet, so an IndexError will occur')
+            print('No elements in the "Request_Payment" QuerySet, so an IndexError will occur')
 
         job.save()
         house.save(update_fields=['rejected_jobs'])
-
-        #update current worker object current attribute to false if no active jobs exist for the house
-        if not Job.objects.filter(house=job.house, house__customer=customer.customer, approved=True, balance_amount__gt=0).exists():
-            try:
-                current_worker = Current_Worker.objects.get(house=job.house, job=job, company=job.company, customer=request.user, current=True)
-                current_worker.current = False
-                current_worker.save()
-
-            except ObjectDoesNotExist as e:
-                print(e)
 
         if not customer.current_week_proposed_jobs(house=house).exists():
             house.proposed_jobs = False
@@ -245,11 +207,20 @@ def reject_estimate(request, customer):
             house.completed_jobs = False
             house.save(update_fields=['completed_jobs'])
 
+        #update current worker object 'current' attribute to false if rejecting an active job
+        try:
+            current_worker = Current_Worker.objects.get(house=job.house, job=job, company=job.company, customer=request.user, current=True)
+            current_worker.current = False
+            current_worker.save()
+        except ObjectDoesNotExist as e:
+            print(e)
+
         if request.is_ajax():
             if 'search' in post_from_url:
                 return load_ajax_search_results(request)
             else:
-                html = load_ajax_results(request.user)
+                ajax = Ajax(customer)
+                html = ajax.load_ajax_results('jobs')
                 return html
         else:
             return request.POST.get('post_from_url', None)
@@ -307,13 +278,11 @@ def edit_job(request, customer):
 
             #if new house has rejected jobs, set rejected_jobs attribute to True.
             if _House(new_house).has_rejected_jobs():
-                print(f'New house, {new_house.address}, now has a rejected job')
                 new_house.rejected_jobs = True
                 new_house.save(update_fields=['rejected_jobs'])
 
             #if previous house has no more rejected job, set rejected_jobs attribute to False
             if not _House(previous_house).has_rejected_jobs():
-                print(f'Previous house, {previous_house.address}, has no more rejected jobs.')
                 previous_house.rejected_jobs = False
                 previous_house.save(update_fields=['rejected_jobs'])
 
@@ -359,7 +328,8 @@ def edit_job(request, customer):
         if 'search' in post_from_url:
             return load_ajax_search_results(request)
         else:
-            html = load_ajax_results(request.user)
+            ajax = Ajax(customer)
+            html = ajax.load_ajax_results('jobs')
             return html
     else:
         return request.POST.get('post_from_url', None)
@@ -429,12 +399,16 @@ def index(request):
     #form logic
     if request.method == 'POST':
         response = '<h2>Error</h2>'
+
         if request.POST.get('approve_job'):
             response = approve_job(request, customer)
+
         elif request.POST.get('approve-as-payment'):
             response = approve_as_payment(request, customer)
+
         elif request.POST.get('reject_estimate'):
             response = reject_estimate(request, customer)
+
         elif request.POST.get('edit_job'):
             response = edit_job(request, customer)
 

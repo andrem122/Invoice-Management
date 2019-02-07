@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', function() {
 
-  function ajax_post(url) {
+  function ajax_post() {
     document.addEventListener('click', function(e){
       if (e.target.classList.contains('option-item')) {
         e.target.disabled = true; //disable to button to prevent double submissions
@@ -8,17 +8,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
         form_id = e.target.getAttribute('form');
         $form = $('#' + form_id);
-
-        //change the url to '/payments/' or '/jobs-admin/' depending on which option-item was clicked
-        if (url === 'variable_url') {
-
-          if (e.target.classList.contains('job-option')) {
-            url = '/jobs-admin/';
-          } else if (e.target.classList.contains('payment-option')) {
-            url = '/payments/';
-          }
-
-        }
+        url = $form.attr('action');
 
         //ajax POST
          $.ajax({
@@ -38,14 +28,7 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  var path = window.location.pathname;
-  if (path === '/jobs-admin/') {
-    ajax_post(path);
-  } else if (path === '/payments/') {
-    ajax_post(path);
-  } else if (path === '/search/') {
-    ajax_post('variable_url');
-  }
+  ajax_post();
 
 
 });

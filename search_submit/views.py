@@ -83,10 +83,13 @@ class Search_Submit_View(View):
 
             context['query'] = query
 
+            replacement_string = 'search/?search=' + query
             if 'ajax' in request.build_absolute_uri():
                 context['post_from_url'] = request.build_absolute_uri().replace('ajax', '')
+            elif 'payments' in request.build_absolute_uri():
+                context['post_from_url'] = request.build_absolute_uri().replace('payments/', replacement_string)
             else:
-                context['post_from_url'] = request.build_absolute_uri().replace('jobs-admin/', 'search/?search=' + query)
+                context['post_from_url'] = request.build_absolute_uri().replace('jobs-admin/', replacement_string)
 
             #if query results
             if jobs.exists():
