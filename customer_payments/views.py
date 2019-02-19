@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.conf import settings
+from django.shortcuts import redirect
 from django.views.generic.base import TemplateView
+from django.contrib.auth.models import User
+from customer_register.models import Customer_User
 import stripe
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -11,14 +14,47 @@ class Customer_Payments(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['key'] = settings.STRIPE_PUBLISHABLE_KEY
+        context['post_from_url'] = self.request.build_absolute_uri()
         return context
 
 def charge(request):
     if request.method == 'POST':
-        charge = stripe.Charge.create(
-            amount=500,
-            currency='usd',
-            description='A Django charge',
-            source=request.POST['stripeToken']
-        )
-        return render(request, 'charge.html')
+        template_name = 'charge.html'
+
+        # Try to charge customer and catch errors
+        try:
+            charge = stripe.Charge.create(
+                amount=500,
+                currency='usd',
+                description='Necro Software Monthly Subscription',
+                source=request.POST['stripeToken']
+            )
+        except stripe.error.CardError as e:
+            # Problem with the card
+            print(e)
+        except stripe.error.RateLimitError as e:
+            # Too many requests made to the API too quickly
+            print(e)
+        except stripe.error.InvalidRequestError as e:
+            # Invalid parameters were supplied to Stripe API
+            print(e)
+        except stripe.error.AuthenticationError as e:
+            # Authentication Error: Authentication with Stripe API failed (maybe you changed API keys recently)
+            print(e)
+        except stripe.error.APIConnectionError as e:
+            # Network communication with Stripe failed
+            print(e)
+        except stripe.error.StripeError as e:
+            # Stripe Error
+            print(e)
+        else:
+            # Success
+            # Update 'is_paying' attribute to True for the current user
+            customer, created = Customer_User.objects.get_or_create(user=request.user)
+            user = User.objects.get(pk=request.user.pk)
+            user.customer_user.is_paying = True
+            user.save()
+
+        return render(request, template_name)
+    else:
+        return redirect('/customer-payments')

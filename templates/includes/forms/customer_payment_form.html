@@ -1,0 +1,10 @@
+<form action="{% url 'customer_payments:charge' %}" method="post">
+  {% csrf_token %}
+  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="{{ key }}"
+          data-description="Necro Software Monthly Subscription"
+          data-amount="500"
+          data-locale="auto">
+  </script>
+  <input type="hidden" name="post_from_url" value="{{ post_from_url }}">
+</form>

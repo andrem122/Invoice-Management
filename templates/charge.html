@@ -1,13 +1,5 @@
 {% extends 'base_logged_in.html' %}
 
 {% block content %}
-<h2>Buy for $5.00</h2>
-<form action="{% url 'charge' %}" method="post">
-  {% csrf_token %}
-  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-          data-key="{{ key }}"
-          data-description="A Django Charge"
-          data-amount="500"
-          data-locale="auto"></script>
-</form>
+<h2>Thanks, you paid <strong>$5.00</strong>!</h2>
 {% endblock content %}
