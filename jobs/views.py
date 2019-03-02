@@ -6,8 +6,17 @@ from .forms import Request_Payment_Form
 from django.contrib.auth.decorators import user_passes_test, login_required
 from project_management.decorators import worker_check
 from register.worker import Worker
+from customer_register.models import Customer_User
 from itertools import chain
 from optimize_image import optimize_image, is_image, generate_file_path
+
+def generate_login_url(request):
+    if request.is_secure():
+        protocol = 'https://'
+    else:
+        protocol = 'http://'
+
+    return protocol + request.get_host() + '/accounts/login/'
 
 @user_passes_test(worker_check, login_url='/accounts/login/')
 def index(request):
@@ -38,6 +47,7 @@ def index(request):
 
     if new_user:
         context['new_user'] = new_user
+        context['login_url'] = generate_login_url(request)
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -86,6 +96,7 @@ def thank_you(request):
 #redirect a user after successful login
 def redirect_user(request):
     if request.user.groups.filter(name='Customers').exists(): #if the user is a customer
+        customer, created = Customer_User.objects.get_or_create(user=request.user)
         return redirect('/jobs-admin/')
     elif request.user.groups.filter(name='Customers Staff').exists(): #if the user is customer's staff
         return redirect('/payments')

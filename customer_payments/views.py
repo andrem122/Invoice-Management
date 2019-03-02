@@ -4,6 +4,8 @@ from django.shortcuts import redirect
 from django.views.generic.base import TemplateView
 from django.contrib.auth.models import User
 from customer_register.models import Customer_User
+from django.contrib.auth.decorators import user_passes_test
+from project_management.decorators import customer_and_staff_check
 import stripe
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -17,9 +19,24 @@ class Customer_Payments(TemplateView):
         context['post_from_url'] = self.request.build_absolute_uri()
         return context
 
+@user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def charge(request):
     if request.method == 'POST':
         template_name = 'charge.html'
+
+        # Create a customer in Stripe
+        customer = stripe.Customer.create(
+            email=request.user.email
+
+        )
+
+        # Create a product
+        product = stripe.Product.create(
+            name='Necro Software Monthly Subscription',
+            type='service',
+        )
+
+        #create a plan from the product
 
         # Try to charge customer and catch errors
         try:

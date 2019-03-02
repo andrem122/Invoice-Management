@@ -154,7 +154,7 @@ body.customer-register .panel-login {
 }
 
 body.customer-register .panel-login input[type="text"], body.customer-register .panel-login input[type="email"],
-body.customer-register .panel-login input[type="password"] {
+body.customer-register .panel-login input[type="password"], body.customer-register .panel-login input[type="tel"] {
     padding: 21px 23px;
     height: auto;
     font-size: 16px;

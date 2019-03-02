@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html class="{% block html_class %}{% endblock html_class %}" lang="en">
 <head>
@@ -17,6 +18,11 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <!-- Custom -->
+
+    {% if request.path == '/customer-register/' %}
+    <script defer src="{% static 'login.js' %}?v=1.0" type="text/javascript"></script>
+    {% endif %}
+
     {% block scripts %}
     {% endblock scripts %}
 </head>
