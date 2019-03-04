@@ -40,7 +40,7 @@ def register(request):
             customer_user = Customer_User.objects.create(
                 user=user,
                 is_paying=False,
-                phone_number=phone_number.as_e164,
+                phone_number=phone_number,
             )
 
             user.save()
