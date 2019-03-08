@@ -1,41 +1,20 @@
 {% extends 'logged_in_customer.html' %}
 
-{% load humanize %}
 {% load static %}
 
-{% block title %}All Payments for Job {{job_id}}{% endblock title %}
+{% block title %}Job {{ job_id }} Payments{% endblock title %}
 
 {% block scripts %}
-<script type="text/javascript" src="{% static 'payment_history/payment_history.js' %}" defer></script>
 {% endblock scripts %}
 
+{% block page_title %}Job {{ job_id }} Payments - {{ address }}{% endblock page_title %}
+{% block back_button %}<a href="/jobs-admin/" class="back-button-arrow" name="jobs-admin"><i class="fas fa-arrow-left"></i><span>Back to Jobs</span></a>{% endblock back_button %}
+{% block button_with_title %}<a href="/addjob/" class="round-btn solid-round-btn" name="add_payment">Add Payment</a>{% endblock button_with_title %}
+
 {% block content %}
-<div class="job-container">
-  <div class="house">
-    <h3 class="payments-title">Payments for Job {{job_id}} At {{address}}</h3>
-  </div>
-  <div class="jobs">
 
+  <div id="results-container">
+    {% include 'payment_history/p_history_job_results.html' %}
   </div>
-  <table class="job-summary">
-    <tr class="job-headings">
-      <th>Timestamp</th>
-      <th>Company</th>
-      <th>Amount</th>
-      <th>Document Link</th>
-    </tr>
-    <tr class="spacer"></tr>
-    {% for p in payments %}
-    <tr class="job-info">
-      <td>{{p.approved_date}}</td>
-      <td>{{p.job.company}}</td>
-      <td>${{p.amount|intcomma}}</td>
-      <td><a href="{% if p.document_link.url != None %}{{p.document_link.url}}{% else %}#{% endif %}">View Document</a></td>
-    </tr>
-    {% endfor %}
-  </table>
-</div> <!-- /.job-container -->
+
 {% endblock content %}
-</body>
-
-</html>

@@ -76,7 +76,7 @@ class Test_Payment_Requests(TestCase):
 
         response = self.c.post(
             '/payment_history/p_history_job',
-            {'v-payment-history': 'v-payment-history', 'job_house': '1234 N Test Way', 'job_id': '1'}
+            {'view-payment-history': 'view-payment-history', 'job_house': '1234 N Test Way', 'job_id': '1'}
         )
 
         self.assertEqual(response.status_code, 200)

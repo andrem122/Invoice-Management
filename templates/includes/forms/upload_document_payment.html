@@ -1,5 +1,5 @@
 {# Upload Form #}
-<form id="upload-document-form-{{ item.id }}{{ payment.id }}" class="upload-document-form" action="{% url 'payment_history:p_history_job' %}" method="post" role="form" enctype="multipart/form-data">
+<form id="upload-document-form-{{ item.id }}{{ payment.id }}" class="upload-document-form" action="/payment-history/p-history-job/{{ item.id }}{{ payment.id }}" method="post" role="form" enctype="multipart/form-data">
   {% csrf_token %}
   {% if upload_document_form.errors %}
   <div class="form-messages">

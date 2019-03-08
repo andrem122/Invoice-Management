@@ -242,6 +242,7 @@ def payments(request):
 
     template = loader.get_template('payment_requests/payments.html')
     start_week = str(Customer.start_week.strftime('%b %d'))
+    post_from_url = request.build_absolute_uri()
     today = str(Customer.today.strftime('%b %d'))
     send_data_form = Send_Data()
 
@@ -255,6 +256,7 @@ def payments(request):
         'upload_document_form': upload_document_form,
         'start_week': start_week,
         'today': today,
+        'post_from_url': post_from_url,
         'send_data_form': send_data_form,
     }
 

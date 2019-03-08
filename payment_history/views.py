@@ -7,9 +7,10 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from project_management.decorators import customer_and_staff_check
 from send_data.forms import Send_Data
 from django.contrib import messages
+from utils.utils import get_succeeded
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
-def p_history_job(request):
+def p_history_job(request, job_id):
     current_user = request.user
     template = loader.get_template('payment_history/p_history_job.html')
     upload_document_form = Upload_Document_Form()
@@ -21,33 +22,23 @@ def p_history_job(request):
         'send_data_from': send_data_from,
     }
 
+    #get the job and house address associated with the payment
+    if get_succeeded(Job, pk=job_id):
+        job = Job.objects.get(pk=job_id)
+        address = job.house.address
+
+        #get all payments for the job
+        payments = Request_Payment.objects.filter(job=job)
+
+        #add to context dict
+        context['items'] = payments
+        context['job_id'] = job_id
+        context['address'] = address
+
     #form logic
     if request.method == 'POST':
-
-        #for payment history form
-        if request.POST.get('v-payment-history'):
-            #get populated form
-            payment_history_form = Payment_History_Form(request.POST)
-
-            if payment_history_form.is_valid():
-
-                #get job ID from POST
-                job_id = int(request.POST.get('job_id'))
-
-                #get the job and house address associated with the payment
-                job = Job.objects.get(pk=job_id)
-                address = str(request.POST.get('job_house'))
-
-                #get all approved payments for the job
-                payments = Request_Payment.objects.filter(job=job, approved=True)
-
-                #add it to the context dict
-                context['payments'] = payments
-                context['job_id'] = job_id
-                context['address'] = address
-
         #for upload document form
-        elif request.POST.get('upload-document'):
+        if request.POST.get('upload-document'):
 
             p_id = int(request.POST.get('p_id'))
             payment = Request_Payment.objects.get(pk=p_id)
