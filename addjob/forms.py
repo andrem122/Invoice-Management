@@ -68,4 +68,4 @@ class AddJob_Customer(ModelForm, forms.Form):
         customer_id = user.id
         #filter house by customer id
         self.fields['house'].queryset = House.objects.filter(customer=customer_id, archived=False)
-        self.fields['company'].queryset = User.objects.filter(groups=str(customer_id))
+        self.fields['company'].queryset = User.objects.filter(groups__name=str(customer_id))

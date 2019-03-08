@@ -1,10 +1,33 @@
-from .utils import send_sms
 from django.contrib.auth.models import User
 from customer_register.customer import Customer
 from project_details.house import _House
+from twilio.rest import Client
+from django.conf import settings
 
-def format_message(address, percent):
-    return '{address} is over {percent} percent of its budget.'.format(address=address, percent=percent)
+def as_currency(amount):
+    if amount >= 0:
+        return '${:,.2f}'.format(amount)
+    else:
+        return '-${:,.2f}'.format(-amount)
+
+def send_sms(message):
+    """SMS utility method"""
+
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    response = client.messages.create(body=message, to='+15613465571', from_='+15612202733')
+    return response
+
+def format_message(address, percent, budget, total_spent):
+    budget = as_currency(budget)
+    total_spent = as_currency(total_spent)
+    begin_message = 'WARNING: {percent}% of the budget for project {address} has been spent! Spend less money to ensure a profit.'.format(percent=percent, address=address)
+    middle_message = '\n\nBudget: {budget}\nTotal Spent: {total_spent}'.format(budget=budget, total_spent=total_spent)
+    end_message = '\n\nThis is an automated text message from Necro Software Systems.'
+
+    if percent >= 100:
+        begin_message = 'WARNING: Project {address} is over budget!'.format(address=address)
+
+    return begin_message + middle_message + end_message
 
 def sms_budget_alerts():
     #send message to each customer
@@ -15,20 +38,18 @@ def sms_budget_alerts():
         #get customer object
         _customer = Customer(customer)
         phone_number = customer.customer_user.phone_number
+        print(phone_number)
 
         #loop through customer houses
         for house in _customer.houses:
             #find out if budget is over 50%, 75%, 90%, and over budget
-            budget_used = _House(house).budget_used()
-            if budget_used > 50 and budget_used < 75:
-                message = format_message(house.address, 50)
-                send_sms(to=phone_number, message=message)
-            elif budget_used > 75 and budget_used < 90:
-                message = format_message(house.address, 75)
-                send_sms(to=phone_number, message=message)
-            elif budget_used > 90 and budget_used < 100:
-                message = format_message(house.address, 90)
-                send_sms(to=phone_number, message=message)
-            else:
-                message = '{address} is over budget!'
-                send_sms(to=phone_number, message=message)
+            _house = _House(house)
+            percent_budget_used = _house.budget_used()
+            budget = _house.budget()
+            total_spent = _house.total_spent()
+            if percent_budget_used > 50 and percent_budget_used < 100:
+                message = format_message(house.address, percent_budget_used, budget, total_spent)
+                send_sms(message=message)
+            elif percent_budget_used >= 100:
+                message = format_message(house.address, percent_budget_used, budget, total_spent)
+                send_sms(message=message)
