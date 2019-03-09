@@ -3,6 +3,7 @@ from customer_register.customer import Customer
 from project_details.house import _House
 from twilio.rest import Client
 from django.conf import settings
+import datetime
 
 def as_currency(amount):
     if amount >= 0:
@@ -30,25 +31,29 @@ def format_message(address, percent, budget, total_spent):
     return begin_message + middle_message + end_message
 
 def sms_budget_alerts():
-    #send message to each customer
-    customers = User.objects.filter(groups__name__in=['Customers'], customer_user__wants_sms=True)
+    today = datetime.date.today()
+    weekday = today.weekday()
 
-    #loop through customers
-    for customer in customers:
-        #get customer object
-        _customer = Customer(customer)
-        phone_number = customer.customer_user.phone_number.as_e164
+    if (weekday == 5):
+        #send message to each customer
+        customers = User.objects.filter(groups__name__in=['Customers'], customer_user__wants_sms=True)
 
-        #loop through customer houses
-        for house in _customer._houses(archived=False):
-            #find out if budget is over 50%, 75%, 90%, and over budget
-            _house = _House(house)
-            percent_budget_used = _house.budget_used()
-            budget = _house.budget()
-            total_spent = _house.total_spent()
-            if percent_budget_used > 50 and percent_budget_used < 100:
-                message = format_message(house.address, percent_budget_used, budget, total_spent)
-                send_sms(to=phone_number, message=message)
-            elif percent_budget_used >= 100:
-                message = format_message(house.address, percent_budget_used, budget, total_spent)
-                send_sms(to=phone_number, message=message)
+        #loop through customers
+        for customer in customers:
+            #get customer object
+            _customer = Customer(customer)
+            phone_number = customer.customer_user.phone_number.as_e164
+
+            #loop through customer houses
+            for house in _customer._houses(archived=False):
+                #find out if budget is over 50%, 75%, 90%, and over budget
+                _house = _House(house)
+                percent_budget_used = _house.budget_used()
+                budget = _house.budget()
+                total_spent = _house.total_spent()
+                if percent_budget_used > 50 and percent_budget_used < 100:
+                    message = format_message(house.address, percent_budget_used, budget, total_spent)
+                    send_sms(to=phone_number, message=message)
+                elif percent_budget_used >= 100:
+                    message = format_message(house.address, percent_budget_used, budget, total_spent)
+                    send_sms(to=phone_number, message=message)
