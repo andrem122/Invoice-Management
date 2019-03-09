@@ -8,6 +8,7 @@ from utils.utils import get_succeeded
 class Customer_User(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_paying = models.BooleanField(default=False)
+    wants_sms = models.BooleanField(default=False)
     phone_number = PhoneNumberField(null=True, blank=False, unique=True)
 
 

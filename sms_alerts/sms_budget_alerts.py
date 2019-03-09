@@ -10,11 +10,11 @@ def as_currency(amount):
     else:
         return '-${:,.2f}'.format(-amount)
 
-def send_sms(message):
+def send_sms(to, message):
     """SMS utility method"""
 
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-    response = client.messages.create(body=message, to='+15613465571', from_='+15612202733')
+    response = client.messages.create(body=message, to=to, from_='+15612202733')
     return response
 
 def format_message(address, percent, budget, total_spent):
@@ -31,17 +31,16 @@ def format_message(address, percent, budget, total_spent):
 
 def sms_budget_alerts():
     #send message to each customer
-    customers = User.objects.filter(groups__name__in=['Customers'])
+    customers = User.objects.filter(groups__name__in=['Customers'], customer_user__wants_sms=True)
 
     #loop through customers
     for customer in customers:
         #get customer object
         _customer = Customer(customer)
-        phone_number = customer.customer_user.phone_number
-        print(phone_number)
+        phone_number = customer.customer_user.phone_number.as_e164
 
         #loop through customer houses
-        for house in _customer.houses:
+        for house in _customer._houses(archived=False):
             #find out if budget is over 50%, 75%, 90%, and over budget
             _house = _House(house)
             percent_budget_used = _house.budget_used()
@@ -49,7 +48,7 @@ def sms_budget_alerts():
             total_spent = _house.total_spent()
             if percent_budget_used > 50 and percent_budget_used < 100:
                 message = format_message(house.address, percent_budget_used, budget, total_spent)
-                send_sms(message=message)
+                send_sms(to=phone_number, message=message)
             elif percent_budget_used >= 100:
                 message = format_message(house.address, percent_budget_used, budget, total_spent)
-                send_sms(message=message)
+                send_sms(to=phone_number, message=message)
