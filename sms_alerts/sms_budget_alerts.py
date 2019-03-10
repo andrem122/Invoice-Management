@@ -19,16 +19,21 @@ def send_sms(to, message):
     return response
 
 def format_message(address, percent, budget, total_spent):
-    budget = as_currency(budget)
-    total_spent = as_currency(total_spent)
-    begin_message = 'WARNING: {percent}% of the budget for project {address} has been spent! Spend less money to ensure a profit.'.format(percent=percent, address=address)
-    middle_message = '\n\nBudget: {budget}\nTotal Spent: {total_spent}'.format(budget=budget, total_spent=total_spent)
-    end_message = '\n\nThis is an automated text message from Necro Software Systems.'
 
-    if percent >= 100:
-        begin_message = 'WARNING: Project {address} is over budget!'.format(address=address)
+    if percent >= 50:
+        budget = as_currency(budget)
+        total_spent = as_currency(total_spent)
+        begin_message = 'WARNING: {percent}% of the budget for project {address} has been spent! Spend less money to ensure a profit.'.format(percent=percent, address=address)
+        middle_message = '\n\nBudget: {budget}\nTotal Spent: {total_spent}'.format(budget=budget, total_spent=total_spent)
+        end_message = '\n\nThis is an automated text message from Necro Software Systems.'
 
-    return begin_message + middle_message + end_message
+
+        if percent >= 100:
+            begin_message = 'WARNING: Project {address} is over budget!'.format(address=address)
+
+        return begin_message + middle_message + end_message
+
+    return None
 
 def sms_budget_alerts():
     today = datetime.date.today()
@@ -51,9 +56,8 @@ def sms_budget_alerts():
                 percent_budget_used = _house.budget_used()
                 budget = _house.budget()
                 total_spent = _house.total_spent()
-                if percent_budget_used > 50 and percent_budget_used < 100:
-                    message = format_message(house.address, percent_budget_used, budget, total_spent)
-                    send_sms(to=phone_number, message=message)
-                elif percent_budget_used >= 100:
-                    message = format_message(house.address, percent_budget_used, budget, total_spent)
+
+                message = format_message(house.address, percent_budget_used, budget, total_spent)
+
+                if message != None:
                     send_sms(to=phone_number, message=message)
