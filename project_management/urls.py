@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
+    path('', include('customer_register.urls')),
     path('admin/', admin.site.urls),
     path('jobs/', include('jobs.urls')),
     path('jobs-admin/', include('jobs_admin.urls')),
@@ -28,7 +29,6 @@ urlpatterns = [
     path('payments/', include('payment_requests.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', include('register.urls')),
-    path('customer-register/', include('customer_register.urls')),
     path('add-house/', include('add_house.urls')),
     path('add-expense/', include('add_expense.urls')),
     path('expenses/', include('expenses.urls')),

@@ -14,7 +14,7 @@ def register(request):
     customer_user_form = Customer_User_Register()
 
     #load the template
-    template = loader.get_template('customer_register/customer_register.html')
+    template = loader.get_template('customer_register/home.html')
 
     context = {
         'user_register_form': user_register_form,

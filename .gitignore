@@ -5,3 +5,4 @@ __pycache__/
 migrations/
 my.cnf
 secret_key.txt
+.env

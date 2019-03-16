@@ -1,0 +1,81 @@
+{% extends 'base_generic_website.html' %}
+{% load static %}
+
+{% block scripts %}
+<link rel="stylesheet" href="{% static 'main.css' %}?v=1.47">
+{% endblock scripts %}
+
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="page-content">
+  <main id="main">
+    <section id="intro">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-md-7 col-lg-6">
+            <h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h1>
+            <p>
+              Cras ac mi sodales, interdum orci a, mattis eros. Suspendisse potenti.
+              Etiam vulputate diam tortor, tincidunt mollis ligula lobortis a. Sed
+              molestie, ex quis congue interdum, ipsum eros vulputate turpis, ac mattis
+              metus lectus non eros.
+            </p>
+            <button type="button" class="btn btn-primary">Primary</button>
+            <div class="description">
+              <p>Already on Necro Software? <a href="/accounts/login">Log in</a></p>
+            </div>
+          </div>
+          <figure class="col-md-5 col-lg-6">
+            <img src="https://shortlist.co/wp-content/uploads/2019/02/Homepage-Hero-2.png" alt="Test">
+          </figure>
+        </div>
+
+        <div class="row logos-row">
+          <div class="col-12">
+              <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+<footer>
+
+</footer>
+{% endblock content %}
