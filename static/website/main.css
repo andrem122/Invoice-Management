@@ -1,3 +1,93 @@
+img {
+  max-width: 100%;
+}
+
+h3 {
+  font-size: 18px;
+}
+
 .logos-row {
   background-color: rgb(141, 194, 255);
+  padding: 20px 0;
+}
+
+.logos-row h3 {
+  text-align: center;
+}
+
+.hbl-logos {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo-item > img {
+  height: 50px;
+  width: 100px;
+}
+
+.title-p-cta {
+  padding-top: 90px;
+  min-height: 580px;
+}
+
+/* Text */
+.ps-text {
+  font-size: 16px;
+}
+
+.description-text {
+  font-size: 22px;
+}
+
+/* Sections */
+section.page-section {
+  padding: 60px 0 60px 0;
+}
+
+section.home-second {
+  text-align: center;
+}
+
+section.home-solutions {
+  background-image: url('https://shortlist.co/wp-content/themes/wpserved/dist/images/solutions-new-bg.png');
+  background-color: rgb(44, 42, 99);
+  background-position: 50% 0px;
+  background-position-x: 50%;
+  background-position-y: 0px;
+  background-repeat: no-repeat;
+  background-size: 1540px auto;
+}
+
+section.home-solutions .home-solutions-intro {
+  text-align: center;
+  color: #fff;
+}
+
+section.home-solutions .item-with-title-p {
+  max-width: 350px;
+  border-bottom: 1px solid rgba(111, 98, 211, 0.3);
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+section.home-team {
+  background: #f5f6fa;
+}
+
+section.home-team .home-team-content {
+  text-align: center;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+section.home-team .home-team-image {
+  text-align: center;
+}
+
+section.home-team .home-team-image > h3 {
+  font-weight: bold;
+}
+
+section.home-team .home-team-image > img {
+  height: 500px;
 }
