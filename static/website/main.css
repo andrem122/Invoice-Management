@@ -91,3 +91,27 @@ section.home-team .home-team-image > h3 {
 section.home-team .home-team-image > img {
   height: 500px;
 }
+
+section.home-sign-up {
+  text-align: center;
+}
+
+section.home-sign-up img {
+  height: 200px;
+}
+
+footer {
+  text-align: center;
+  background-color: rgb(50, 45, 109);
+  color: #fff;
+  padding: 36px 0 18px;
+}
+
+footer .footer-nav-menu .footer-nav-menu-item > a {
+  color: #fff;
+}
+
+ul.footer-nav-menu + svg {
+  fill: #fff;
+  width: 450px;
+}
