@@ -20,21 +20,13 @@
           <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
+          <a class="nav-link" href="#">Product</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
+          <a class="nav-link" href="#">About</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
+          <a class="nav-link" href="#">Contact</a>
         </li>
       </ul>
     </div>
@@ -48,20 +40,18 @@
 
         <div class="row">
           <div class="col-md-7 col-lg-6 title-p-cta">
-            <h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h1>
-            <p>
-              Cras ac mi sodales, interdum orci a, mattis eros. Suspendisse potenti.
-              Etiam vulputate diam tortor, tincidunt mollis ligula lobortis a. Sed
-              molestie, ex quis congue interdum, ipsum eros vulputate turpis, ac mattis
-              metus lectus non eros.
+            <h1>The Easiest, Fastest Way to Manage Your Rehab Projects</h1>
+            <p class="description-text">
+              Painlessly keep track of your budget, easily manage invoices, and
+              effortlessly stay on top of rehab projects.
             </p>
-            <button type="button" class="btn btn-primary">Primary</button>
+            <button type="button" class="btn btn-primary">Sign Up For Free</button>
             <div class="description">
               <p>Already on Necro Software? <a href="/accounts/login">Log in</a></p>
             </div>
           </div>
           <figure class="col-md-5 col-lg-6">
-            <img src="https://shortlist.co/wp-content/uploads/2019/02/Homepage-Hero-2.png" alt="Test">
+            <img src="{% static 'construction-workers.jpg' %}" alt="Construction Workers">
           </figure>
         </div>
 
@@ -106,59 +96,55 @@
               This is a comment from one of our customers, which we hear <i>a lot</i>.
             </p>
             <p class="description-text">
-              Suspendisse luctus massa at sapien pulvinar,
-              quis auctor arcu tristique. In sed venenatis arcu.
-              Nullam vitae tellus ligula.
+              Your business runs on time, and every minute counts. Necro Software helps you
+              stay ahead of the curve by automating tasks.
             </p>
             <p>
               <a href="#">Product Overview <i class="fas fa-arrow-right"></i></a>
             </p>
           </div>
 
-          <div class="col-12">
+          <div class="col-12 selling-points">
             <div class="row">
 
-              <div class="col-sm">
+              <div class="col-md icon-title-description">
                 <div class="icon">
-                  <img src="https://shortlist.co/wp-content/uploads/2018/09/source.svg">
+                  <img src="{% static 'checklist.png' %}" alt="Checklist">
                 </div>
-                <h4>Source</h4>
+                <h4>Manage</h4>
                 <p>
-                  Donec semper, magna non malesuada placerat, dui turpis lacinia tellus,
-                  sit amet get eros.
+                  Easily keep track of jobs and payments
                 </p>
               </div>
 
-              <div class="col-sm">
+              <div class="col-md icon-title-description">
                 <div class="icon">
-                  <img src="https://shortlist.co/wp-content/uploads/2018/09/source.svg">
+                  <img src="{% static 'notification-bell.png' %}" alt="Notification Bell">
                 </div>
-                <h4>Source</h4>
+                <h4>Alerts</h4>
                 <p>
-                  Donec semper, magna non malesuada placerat, dui turpis lacinia tellus,
-                  sit amet get eros.
+                  Get SMS alerts to effortlessly stay on top of your projects
                 </p>
               </div>
 
-              <div class="col-sm">
+              <div class="col-md icon-title-description">
                 <div class="icon">
-                  <img src="https://shortlist.co/wp-content/uploads/2018/09/source.svg">
+                  <img src="{% static 'organize.png' %}" alt="Organize Diagram">
                 </div>
-                <h4>Source</h4>
+                <h4>Organize</h4>
                 <p>
-                  Donec semper, magna non malesuada placerat, dui turpis lacinia tellus,
-                  sit amet get eros.
+                  Painlessly have all your expenses, jobs, and payments organized by Necro Software
                 </p>
               </div>
 
-              <div class="col-sm">
+              <div class="col-md icon-title-description">
                 <div class="icon">
-                  <img src="https://shortlist.co/wp-content/uploads/2018/09/source.svg">
+                  <img src="{% static 'house.png' %}" alt="House">
                 </div>
-                <h4>Source</h4>
+                <h4>Projects</h4>
                 <p>
-                  Donec semper, magna non malesuada placerat, dui turpis lacinia tellus,
-                  sit amet get eros.
+                  Frustration-free project tracking: track budgets, jobs, and expenses
+                  for each project
                 </p>
               </div>
 
@@ -267,13 +253,13 @@
           <a href="#">Home</a>
         </li>
         <li class="footer-nav-menu-item list-inline-item">
+          <a href="#">Product</a>
+        </li>
+        <li class="footer-nav-menu-item list-inline-item">
           <a href="#">About</a>
         </li>
         <li class="footer-nav-menu-item list-inline-item">
           <a href="#">Contact</a>
-        </li>
-        <li class="footer-nav-menu-item list-inline-item">
-          <a href="#">Find Us</a>
         </li>
       </ul>
 
