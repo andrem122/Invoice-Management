@@ -7,31 +7,7 @@
 
 
 {% block content %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid max-width-container">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Product</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link" href="#">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Contact</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+{% include 'includes/website-parts/navigation.html' %}
 
 <div id="page-content">
   <main id="main">
@@ -39,54 +15,52 @@
       <div class="container-fluid max-width-container">
 
         <div class="row">
-          <div class="col-md-7 col-lg-6 title-p-cta">
+          <div class="col-lg-6 title-p-cta">
             <h1>The Easiest, Fastest Way to Manage Your Rehab Projects</h1>
             <p class="description-text">
               Painlessly keep track of your budget, easily manage invoices, and
               effortlessly stay on top of rehab projects.
             </p>
-            <button type="button" class="btn btn-primary">Sign Up For Free</button>
+            <a type="button" href="/customer-register" class="standard-btn">Sign Up For Free</a>
             <div class="description">
               <p>Already on Necro Software? <a href="/accounts/login">Log in</a></p>
             </div>
           </div>
-          <figure class="col-md-5 col-lg-6">
+          <figure class="col-lg-6">
             <img src="{% static 'construction-workers.jpg' %}" alt="Construction Workers">
           </figure>
         </div>
 
       </div>
 
-      <div class="row counters">
-        <div class="col-12">
-            <div class="container-fluid max-width-container">
-              <div class="counters row">
-                <div class="counter col-md-4">
-										<span class="text-above">More Than</span>
-                    <div class="number-wrap">
-                      <span class="number">100</span>
-                    </div>
-                    <span class="text-below">Possibilities</span>
-								</div>
-                <div class="counter col-md-4">
-										<span class="text-above">Over</span>
-                    <div class="number-wrap">
-                      <span class="number">6</span>
-                    </div>
-                    <span class="text-below">Million Dollars Tracked</span>
-								</div>
-                <div class="counter col-md-4">
-										<span class="text-above">More Than</span>
-                    <div class="number-wrap">
-                      <span class="number">30</span>
-                    </div>
-                    <span class="text-below">Projects Tracked</span>
-								</div>
+    </section>
+
+    <section class="counters">
+      <div class="container-fluid full-width-container">
+        <div class="row">
+          <div class="counter col-md-4">
+              <span class="text-above">More Than</span>
+              <div class="number-wrap">
+                <span class="number">100</span>
               </div>
-            </div>
+              <span class="text-below">Possibilities</span>
+          </div>
+          <div class="counter col-md-4">
+              <span class="text-above">Over</span>
+              <div class="number-wrap">
+                <span class="number">6</span>
+              </div>
+              <span class="text-below">Million Dollars Tracked</span>
+          </div>
+          <div class="counter col-md-4">
+              <span class="text-above">More Than</span>
+              <div class="number-wrap">
+                <span class="number">30</span>
+              </div>
+              <span class="text-below">Projects Tracked</span>
+          </div>
         </div>
       </div>
-
     </section>
 
     <section class="home-second page-section">
@@ -235,12 +209,12 @@
       <div class="container-fluid max-width-container">
         <div class="row">
           <div class="col-md-12">
-            <img src="https://shortlist.co/wp-content/themes/wpserved/dist/images/home-solutions-image.png" alt="above title">
-            <h2>Sign Up Today</h2>
+            <img src="{% static 'agreement.png' %}" alt="Sign Up">
+            <h2>Sign Up Free</h2>
             <p class="description-text">
               Sign up for free today and get all features, free updates, and unparalleled support.
             </p>
-            <button type="button" class="btn btn-primary">Sign Up For Free</button>
+            <a type="button" href="/customer-register" class="standard-btn">Sign Up For Free</a>
           </div>
         </div>
       </div>
@@ -249,41 +223,5 @@
   </main>
 </div>
 
-<footer>
-  <div class="container-fluid max-width-container">
-
-    <nav class="footer-nav">
-      <ul class="footer-nav-menu list-inline">
-        <li class="footer-nav-menu-item list-inline-item">
-          <a href="#">Home</a>
-        </li>
-        <li class="footer-nav-menu-item list-inline-item">
-          <a href="#">Product</a>
-        </li>
-        <li class="footer-nav-menu-item list-inline-item">
-          <a href="#">About</a>
-        </li>
-        <li class="footer-nav-menu-item list-inline-item">
-          <a href="#">Contact</a>
-        </li>
-      </ul>
-
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 4320 504" style="enable-background:new 0 0 4320 504;" xml:space="preserve">
-        <polygon points="198,0 0,0 0,108 198,108 198,504 306,504 306,108 504,108 504,0 306,0     "></polygon>
-        <polygon points="1008,198 720,198 720,0 612,0 612,198 612,306 612,504 720,504 720,306 1008,306 1008,504 1116,504 1116,306 1116,198 1116,0 1008,0    "></polygon>
-        <rect x="1224" width="504" height="108"></rect>
-        <rect x="1224" y="198" width="504" height="108"></rect>
-        <rect x="1224" y="396" width="504" height="108"></rect>
-        <polygon points="2214,0 2106,0 1944,0 1836,0 1836,108 1836,504 1944,504 1944,108 2106,108 2106,504 2214,504 2214,108 2376,108 2376,504 2484,504 2484,108 2484,0 2376,0    "></polygon>
-        <rect x="2592" width="504" height="108"></rect>
-        <rect x="2592" y="198" width="504" height="108"></rect>
-        <rect x="2592" y="396" width="288" height="108"></rect>
-        <rect x="2988" y="396" width="108" height="108"></rect>
-        <polygon points="3204,0 3204,108 3204,396 3204,504 3312,504 3708,504 3708,396 3312,396 3312,108 3708,108 3708,0 3312,0     "></polygon>
-        <path d="M4212,0h-288h-108v108v288v108h108h288h108V396V108V0H4212z M4212,396h-288V108h288V396z"></path>
-      </svg>
-      <p>Copyright &copy; 2019</p>
-    </nav>
-  </div>
-</footer>
+{% include 'includes/website-parts/footer.html' %}
 {% endblock content %}

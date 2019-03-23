@@ -15,11 +15,13 @@ h3 {
   width: 88%;
 }
 
-.counters {
-  background-color: rgb(141, 194, 255);
-  padding: 20px;
-  align-items: center;
-  color: #fff;
+.full-width-container {
+  width: 100%;
+}
+
+/* Navigation */
+.navbar-brand > img {
+  width: 50px;
 }
 
 /* Counter */
@@ -37,13 +39,6 @@ h3 {
 .counter .number {
   font-size: 45px;
   font-weight: bold;
-}
-
-@media only screen and (min-width: 993px) {
-  .title-p-cta {
-    padding-top: 90px;
-    min-height: 580px;
-  }
 }
 
 /* Text */
@@ -81,14 +76,70 @@ section.page-section {
   padding: 60px 0 60px 0;
 }
 
-@media only screen and (max-width: 767px) {
+section.home-banner .description {
+  margin-top: 20px;
+}
+
+section.home-banner .title-p-cta {
+  padding-top: 90px;
+  padding-bottom: 50px;
+}
+
+@media only screen and (max-width: 1200px) {
+  section.home-banner .title-p-cta {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+}
+
+@media only screen and (max-width: 992px) {
   section.home-banner {
     text-align: center;
+  }
+
+  section.home-banner .title-p-cta {
+    padding-top: 90px;
+    padding-bottom: 0;
+  }
+}
+
+section.counters {
+  background-color: rgb(141, 194, 255);
+  padding: 20px;
+  align-items: center;
+  color: #fff;
+}
+
+@media only screen and (max-width: 767px) {
+  section.counters {
+    text-align: center;
+  }
+
+  section.counters .counter {
+    margin-bottom: 30px;
+  }
+
+  section.counters .counter:last-child {
+    margin-bottom: 0;
   }
 }
 
 section.home-second {
   text-align: center;
+}
+
+section.home-second .row .col-12:first-child {
+  margin-bottom: 30px;
+}
+
+@media only screen and (max-width: 767px) {
+  section.home-second .icon-title-description {
+    margin-bottom: 30px;
+  }
+
+  section.home-second .icon-title-description:last-child {
+    margin-bottom: 0;
+  }
 }
 
 section.home-solutions {
@@ -140,7 +191,8 @@ section.home-sign-up {
 }
 
 section.home-sign-up img {
-  height: 200px;
+  height: 185px;
+  margin-bottom: 15px;
 }
 
 footer {
@@ -152,6 +204,11 @@ footer {
 
 footer .footer-nav-menu .footer-nav-menu-item > a {
   color: #fff;
+}
+
+footer .logo-container img {
+  width: 100px;
+  margin-bottom: 20px;
 }
 
 ul.footer-nav-menu + svg {
@@ -166,4 +223,24 @@ ul.footer-nav-menu + svg {
 
 .icon-title-description h4 {
   margin: 15px 0;
+}
+
+/* Buttons */
+.standard-btn {
+  background-color: #536cdb;
+  border-radius: 33px;
+  padding: 16px 30px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-align: center;
+  color: #fff;
+  border: 2px solid #536cdb;
+}
+
+.standard-btn:hover {
+  background-color: #fff;
+  color: #536cdb;
+  text-decoration: none;
 }
