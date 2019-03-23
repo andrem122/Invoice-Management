@@ -11,24 +11,32 @@ h3 {
   font-size: 18px;
 }
 
-.logos-row {
-  background-color: rgb(141, 194, 255);
-  padding: 30px 0 50px;
-  align-items: center;
+.max-width-container {
+  width: 88%;
 }
 
-.logos-row h3 {
+.counters {
+  background-color: rgb(141, 194, 255);
+  padding: 20px;
+  align-items: center;
+  color: #fff;
+}
+
+/* Counter */
+.counter {
   text-align: center;
 }
 
-.hbl-logos {
-  display: flex;
-  justify-content: space-between;
+.counter .text-above, .counter .text-below {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: lighter;
 }
 
-.logo-item > img {
-  height: 50px;
-  width: 100px;
+.counter .number {
+  font-size: 45px;
+  font-weight: bold;
 }
 
 @media only screen and (min-width: 993px) {
