@@ -1287,8 +1287,12 @@ form.popup div.input-wrap select {
 }
 
 @media screen and (max-width: 1235px) and (min-width: 500px) {
-  .back-button-arrow {
+  .back-button-arrow > span {
     display: none;
+  }
+
+  .back-button-arrow {
+    padding: 0 20px;
   }
 }
 
