@@ -20,6 +20,11 @@ h3 {
 }
 
 /* Navigation */
+nav.navbar {
+  border-bottom: 1.83px solid rgb(230, 230, 230);
+  background-color: #fff;
+}
+
 .navbar-brand > img {
   width: 50px;
 }
@@ -61,6 +66,10 @@ h1 {
   font-size: 28px;
 }
 
+h2 {
+  font-size: 26px;
+}
+
 h1, h2, h3, h4 {
   font-weight: bold;
 }
@@ -68,6 +77,10 @@ h1, h2, h3, h4 {
 @media only screen and (min-width: 993px) {
   h1 {
     font-size: 36px;
+  }
+
+  h2 {
+    font-size: 33px;
   }
 }
 
@@ -81,14 +94,20 @@ section.home-banner .description {
 }
 
 section.home-banner .title-p-cta {
-  padding-top: 90px;
+  padding-top: 168px;
   padding-bottom: 50px;
 }
 
 @media only screen and (max-width: 1200px) {
   section.home-banner .title-p-cta {
-    padding-top: 50px;
+    padding-top: 128px;
     padding-bottom: 50px;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  section.home-banner .row figure.col-lg-6 > img {
+    padding-top: 78px;
   }
 }
 
@@ -98,9 +117,10 @@ section.home-banner .title-p-cta {
   }
 
   section.home-banner .title-p-cta {
-    padding-top: 90px;
+    padding-top: 168px;
     padding-bottom: 0;
   }
+
 }
 
 section.counters {
@@ -195,6 +215,10 @@ section.home-sign-up img {
   margin-bottom: 15px;
 }
 
+section.home-team .home-team-image > img {
+  margin-bottom: 20px;
+}
+
 footer {
   text-align: center;
   background-color: rgb(50, 45, 109);
@@ -204,6 +228,17 @@ footer {
 
 footer .footer-nav-menu .footer-nav-menu-item > a {
   color: #fff;
+  opacity: 0.45;
+  transition: opacity 0.2s ease-in-out;
+}
+
+footer .footer-nav-menu .footer-nav-menu-item > a:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+footer .footer-nav p.copyright {
+  opacity: 0.45;
 }
 
 footer .logo-container img {
@@ -218,7 +253,13 @@ ul.footer-nav-menu + svg {
 
 /* Icon with title and description */
 .icon-title-description .icon > img {
-  height: 98px;
+  height: 85px;
+}
+
+@media only screen and (min-width: 768px) {
+  .icon-title-description .icon > img {
+    height: 98px;
+  }
 }
 
 .icon-title-description h4 {
