@@ -34,7 +34,6 @@ def send_data(request):
             }
 
             if send_to:
-                host = request.get_host()
                 #send data based on path
                 if path == '/jobs-admin/':
                     #get data to write to csv
@@ -46,25 +45,20 @@ def send_data(request):
                     jobs = list(chain(estimates, approved_jobs, completed_jobs, rejected_jobs))
 
                     #send data
-                    headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid', 'Contract Link']
-                    attributes = [['house', 'address'], 'company', 'start_amount', 'balance', 'start_date', 'total_paid', 'document_link']
-                    send_data_email(user_email=current_user.email, title='ACTIVE JOBS', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
+                    send_data_email(user_email=current_user.email, title='ACTIVE JOBS', queryset=jobs, form_vals=form_vals, request=request)
 
                 elif path == '/payments/':
                     #get querysets
                     payments = customer.current_week_approved_payments()
                     expenses = customer.current_week_expenses(pay_this_week=True)
 
-                    #generate csvs
+                    #generate csvs for payments
                     title = 'PAYMENTS FOR THE WEEK'
-                    headers = ['House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Contract Link']
-                    attributes = [['house', 'address'], ['job', 'company'], 'amount', 'submit_date', 'approved_date', ['job', 'document_link']]
-                    payments_result = generate_csv(title, headers, payments, attributes, host)
+                    payments_csv = generate_csv(title=title, queryset=payments, request=request)
 
+                    #generate csvs for expenses
                     title = 'EXPENSES FOR THE WEEK'
-                    headers = ['House', 'Expense Type', 'Amount',  'Date Added']
-                    attributes = ['house', 'expense_type', 'amount', 'submit_date']
-                    expenses_result = generate_csv(title, headers, expenses, attributes, host)
+                    expenses_csv = generate_csv(title=title, queryset=expenses, request=request)
 
                     #generate zip
                     try:
@@ -83,12 +77,12 @@ def send_data(request):
 
                     #attach files
                     try:
-                        email.attach('payments.csv', payments_result[1], 'text/csv')
+                        email.attach('payments.csv', payments_csv, 'text/csv')
                     except TypeError as e:
                         print('No query results for payments, and therefore a CSV file could not be generated')
 
                     try:
-                        email.attach('expenses.csv', expenses_result[1], 'text/csv')
+                        email.attach('expenses.csv', expenses_csv, 'text/csv')
                     except TypeError as e:
                         print('No query results for expenses, and therefore a CSV file could not be generated')
 

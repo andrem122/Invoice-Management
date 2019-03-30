@@ -1,4 +1,7 @@
 from django.core.mail import EmailMessage
+from django.core.files.storage import default_storage
+from jobs.models import House, Job, Request_Payment
+from expenses.models import Expenses
 from crontab import CronTab
 import csv
 import io
@@ -8,72 +11,81 @@ import getpass
 import datetime
 import sys
 
-def send_data_email(user_email, title, headers, queryset, attributes, host, form_vals={}):
+def send_data_email(user_email, title, queryset, request, form_vals={}):
     """sends data through email in a zip and csv file"""
     #create email
     email = EmailMessage(form_vals['subject'], form_vals['message'], user_email, [form_vals['send_to']])
 
-    #generate csv
-    result = generate_csv(title, headers, queryset, attributes, host)
-
-    email.attach('data.csv', result[1], 'text/csv')
+    #generate csv and attach to email
+    csv = generate_csv(title=title, queryset=queryset, request=request)
+    email.attach('data.csv', csv, 'text/csv')
 
 
     #generate zip
-    zip_file = generate_zip(document_links=result[0])
-    email.attach('files.zip', zip_file, 'application/x-zip-compressed')
+    # zip_file = generate_zip(document_links=result[0])
+    # email.attach('files.zip', zip_file, 'application/x-zip-compressed')
 
     #send email
+    print(default_storage.exists('sample'))
     email.send(fail_silently=False)
 
-def generate_csv(title, headers, queryset, attributes, host):
-    if queryset:
+def generate_file_url(request, document_link):
+    if request.is_secure():
+        protocol = 'https://'
+    else:
+        protocol = 'http://'
 
+    return '{protocol}{host}/media/{document_link}'.format(protocol=protocol, host=request.get_host(), document_link=document_link)
+
+def get_attributes_and_headers(object, request):
+    """
+    Returns a tuple with the desired values from objects and headings for the csv file
+    based on the instance type
+    """
+    if isinstance(object, Job):
+        file_url = generate_file_url(request=request, document_link=object.document_link)
+        headers    = ('House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid', 'Contract Link')
+        attributes = (object.house.address, object.company, object.start_amount, object.balance, object.start_date, object.total_paid, file_url)
+    elif isinstance(object, Request_Payment):
+        file_url = generate_file_url(request=request, document_link=object.job.document_link)
+        headers    = ('House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Contract Link')
+        attributes = (object.house.address, object.job.company, object.amount, object.submit_date, object.approved_date, file_url)
+    elif isinstance(object, Expenses):
+        file_url = generate_file_url(request=request, document_link=object.job.document_link)
+        headers = ('House', 'Expense Type', 'Amount',  'Date Added', 'Contract Link')
+        attributes = (object.house, object.expense_type, object.amount, object.submit_date, file_url)
+    else:
+        headers = None
+        attributes = None
+
+    return (headers, attributes)
+
+def generate_csv(title, queryset, request):
+    if queryset:
         #generate csv file
         csv_file = io.StringIO()
         writer = csv.writer(csv_file, delimiter=',')
         writer.writerow([title])
-        writer.writerow(headers)
-        document_links = []
 
-        for q in queryset:
-            try: #for payment objects
-                document_links.append(str(q.job.document_link))
-            except AttributeError: #for job objects
-                print('This is a Job object and thus has no attribute "job"')
-                document_links.append(str(q.document_link))
-            atts = []
+        for count, item in enumerate(queryset):
+            headers, attributes = get_attributes_and_headers(object=item, request=request)
 
-            #loop through attributes
-            for attribute in attributes:
-                #if the attribute is a list
-                if isinstance(attribute, list):
-                    if attribute[1] == 'document_link':
-                        try:
-                            a = 'http://{host}/media/{document_path}'.format(
-                                host=host,
-                                document_path=str(getattr(getattr(q, attribute[0]), attribute[1]))
-                            )
-                        except NameError:
-                            print('Request object is missing in tests')
-                    else:
-                        a = str(getattr(getattr(q, attribute[0]), attribute[1]))
-                #if the attribute is NOT a list
-                else:
-                    if attribute == 'document_link':
-                        try:
-                            a = 'http://{host}/media/{document_path}'.format(
-                                    host=host,
-                                    document_path=str(getattr(q, attribute)),
-                                )
-                        except NameError:
-                            print('Request object is missing in tests')
-                    else:
-                        a = str(getattr(q, attribute))
-                atts.append(a)
-            writer.writerow(atts)
+            #write headers for spreadsheet on first loop
+            if count == 0:
+                writer.writerow(headers)
 
-        return (document_links, csv_file.getvalue())
+            writer.writerow(attributes)
+
+        return csv_file.getvalue()
+
+def get_document_links(queryset):
+    for item in queryset:
+        #get document paths
+        try: #for payment objects
+            yield str(item.job.document_link)
+        except AttributeError: #for job objects
+            print('This is a Job object and thus has no attribute "job"')
+            yield str(item.document_link)
 
 def generate_zip(document_links=[]):
     """generates zip file"""
@@ -82,8 +94,8 @@ def generate_zip(document_links=[]):
         zf = zipfile.ZipFile(zip_file, "w")
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         prev_arcnames = [] #previous arcnames
-        for counter, fpath in enumerate(document_links):
-            absname = os.path.abspath(os.path.join(base_dir, 'media', *fpath.split('/')))
+        for counter, file_path in enumerate(document_links):
+            absname = os.path.abspath(os.path.join(base_dir, 'media', *file_path.split('/')))
             arcname = os.path.split(absname)[1]
 
             #do not overwrite files with the same name
