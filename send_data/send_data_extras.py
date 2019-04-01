@@ -13,7 +13,13 @@ import zipfile
 def generate_aws_file_url(document_link):
     """Generates file url"""
     Config.signature_version = botocore.UNSIGNED
-    return boto3.client('s3', settings.AWS_S3_REGION_NAME, config=Config(s3={'addressing_style': 'path'})).generate_presigned_url('get_object', ExpiresIn=86400, Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': str(document_link)})
+    return boto3.client(
+        's3',
+        settings.AWS_S3_REGION_NAME,
+        config=Config(s3={'addressing_style': 'path'}),
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_ACCESS_KEY_ID,
+    ).generate_presigned_url('get_object', ExpiresIn=86400, Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': str(document_link)})
 
 
 def get_attributes_and_headers(object, request):
