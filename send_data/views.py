@@ -140,12 +140,6 @@ def send_data(request):
 
                     email.send(fail_silently=False)
 
-                elif path == '/expenses/':
-                    expenses = customer.all_expenses()
-                    headers = ['House', 'Expense Type', 'Amount',  'Date Added', 'Document Link']
-                    attributes = ['house', 'expense_type', 'amount', 'submit_date', 'document_link']
-                    send_data_email(user_email=current_user.email, title='EXPENSES', headers=headers, queryset=expenses, attributes=attributes, form_vals=form_vals, host=host)
-
             else:
                 messages.error(request, 'Please enter an email address to send the data to.')
                 return redirect(path)
