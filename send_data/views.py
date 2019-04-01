@@ -101,6 +101,9 @@ def send_data(request):
                 elif path == '/payments/':
                     #get querysets
                     payments = customer.current_week_payments_all()
+                    approved_payments = customer.current_week_approved_payments()
+                    rejected_payments = customer.current_week_rejected_payments()
+                    new_payments = customer.current_week_new_payment_requests()
                     expenses = customer.current_week_expenses(pay_this_week=True)
 
                     #create email object
@@ -109,11 +112,32 @@ def send_data(request):
                     status_values = statuses.values()
                     if True not in status_values or all(status_value == True for status_value in status_values):
                         payments_and_expenses = list(chain(payments, expenses))
-                        print(payments_and_expenses)
                         csv = generate_csv(title='ALL WEEKLY PAYMENTS AND EXPENSES', queryset=payments_and_expenses, request=request)
                         zip_file = generate_zip(queryset=payments_and_expenses)
                         email.attach('data.csv', csv, 'text/csv')
                         email.attach('files.zip', zip_file, 'application/x-zip-compressed')
+                    else:
+                        for status_name, status_value in statuses.items():
+                            if status_name == 'approved' and status_value == True and approved_payments:
+                                csv = generate_csv(title='ALL WEEKLY APPROVED PAYMENTS', queryset=approved_payments, request=request)
+                                zip_file = generate_zip(queryset=approved_payments)
+                                email.attach('approved.csv', csv, 'text/csv')
+                                email.attach('approved.zip', zip_file, 'application/x-zip-compressed')
+
+                            elif status_name == 'rejected' and status_value == True and rejected_payments:
+                                csv = generate_csv(title='ALL WEEKLY REJECTED PAYMENTS', queryset=rejected_payments, request=request)
+                                zip_file = generate_zip(queryset=rejected_payments)
+                                email.attach('rejected.csv', csv, 'text/csv')
+                                email.attach('rejected.zip', zip_file, 'application/x-zip-compressed')
+
+                            elif status_name == 'new' and status_value == True and new_payments:
+                                csv = generate_csv(title='ALL WEEKLY NEW PAYMENT REQUESTS', queryset=new_payments, request=request)
+                                zip_file = generate_zip(queryset=new_payments)
+                                email.attach('new.csv', csv, 'text/csv')
+                                email.attach('new.zip', zip_file, 'application/x-zip-compressed')
+
+                            else:
+                                print('No specific status was selected')
 
 
                     email.send(fail_silently=False)

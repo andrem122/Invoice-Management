@@ -306,6 +306,29 @@ class Customer:
             submit_date__range=[Customer.start_week, Customer.today],
             **kwargs
         )
+
+    def current_week_new_payment_requests(self, **kwargs):
+        """
+        Gets all new payment requests for approved jobs that have not been
+        rejected or approved for the current week.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            A queryset.
+
+        Raises:
+            None.
+        """
+        return Request_Payment.objects.filter(
+            job__approved=True,
+            approved=False,
+            rejected=False,
+            submit_date__range=[Customer.start_week, Customer.today],
+            **kwargs
+        )
+
     def current_week_payment_history_houses(self):
         """
         Gets all houses with a payment history for the current week.
