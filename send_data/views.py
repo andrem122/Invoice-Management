@@ -24,7 +24,6 @@ def send_data(request):
         if send_data_form.is_valid():
             #get form data
             send_to   = str(send_data_form.cleaned_data['send_to'])
-            subject   = str(send_data_form.cleaned_data['subject'])
             message   = str(send_data_form.cleaned_data['message'])
             approved  = send_data_form.cleaned_data['approved']
             rejected  = send_data_form.cleaned_data['rejected']
@@ -40,7 +39,6 @@ def send_data(request):
 
             form_vals = {
                 'send_to': send_to,
-                'subject': subject,
                 'message': message,
             }
 
@@ -53,7 +51,7 @@ def send_data(request):
                     estimates = customer.current_week_proposed_jobs()
                     completed_jobs = customer.current_week_completed_jobs()
 
-                    email = EmailMessage(form_vals['subject'], form_vals['message'], current_user.email, [form_vals['send_to']])
+                    email = EmailMessage('Shared Data', form_vals['message'], current_user.email, [form_vals['send_to']])
 
                     """
                     if all status values in 'statuses' dict are False, send all weekly jobs
@@ -107,7 +105,7 @@ def send_data(request):
                     expenses = customer.current_week_expenses(pay_this_week=True)
 
                     #create email object
-                    email = EmailMessage(form_vals['subject'], form_vals['message'], current_user.email, [form_vals['send_to']])
+                    email = EmailMessage('Shared Data', form_vals['message'], current_user.email, [form_vals['send_to']])
 
                     status_values = statuses.values()
                     if True not in status_values or all(status_value == True for status_value in status_values):

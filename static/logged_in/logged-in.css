@@ -950,7 +950,7 @@ div.input-wrap select {
   background-color: #fff;
   display: block;
   position: relative;
-  margin-bottom: 30px;
+  margin-bottom: 0;
 }
 .inputGroup label {
   padding: 20px 30px;

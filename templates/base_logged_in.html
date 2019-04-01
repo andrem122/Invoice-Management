@@ -26,7 +26,7 @@
     <!-- Animate CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
     <!-- Custom -->
-    <link rel="stylesheet" href="{% static 'logged-in.css' %}?v=1.47" />
+    <link rel="stylesheet" href="{% static 'logged-in.css' %}?v=1.48" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400|Raleway:300" />
     <script defer src="{% static 'logged-in.js' %}?v=1.20" type="text/javascript"></script>
 
@@ -107,7 +107,36 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
-                {{ send_data_form }}
+                {{ send_data_form.send_to.label_tag }}
+                {{ send_data_form.send_to }}
+
+                {{ send_data_form.message.label_tag }}
+                {{ send_data_form.message }}
+
+                <div class="inputGroup">
+                  {{ send_data_form.approved }}
+                  <label for="id_approved">
+                    {% if request.path == '/jobs-admin/' %}
+                      Active
+                    {% else %}
+                      Approved
+                    {% endif %}
+                  </label>
+                </div>
+                <div class="inputGroup">
+                  {{ send_data_form.rejected }}
+                  {{ send_data_form.rejected.label_tag }}
+                </div>
+                <div class="inputGroup">
+                  {{ send_data_form.new }}
+                  {{ send_data_form.new.label_tag }}
+                </div>
+                {% if request.path == '/jobs-admin/' %}
+                <div class="inputGroup">
+                  {{ send_data_form.completed }}
+                  {{ send_data_form.completed.label_tag }}
+                </div>
+                {% endif %}
                 <input type="hidden" name="path" value="{{ request.path }}">
                 <input id="send-data-submit" name="form-submit-btn" class="form-submit-btn" value="Send Data" type="submit">
               </form>
