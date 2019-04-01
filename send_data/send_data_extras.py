@@ -1,7 +1,5 @@
-from django.core.mail import EmailMessage
 from jobs.models import Job, Request_Payment
 from expenses.models import Expenses
-from crontab import CronTab
 from django.conf import settings
 from botocore.client import Config
 from requests import get
@@ -9,30 +7,12 @@ import boto3
 import botocore
 import csv
 import io
-import os
 import zipfile
-
-def send_data_email(user_email, title, queryset, request, form_vals={}):
-    """sends data through email in a zip and csv file"""
-    #create email
-    email = EmailMessage(form_vals['subject'], form_vals['message'], user_email, [form_vals['send_to']])
-
-    #generate csv and attach to email
-    csv = generate_csv(title=title, queryset=queryset, request=request)
-    email.attach('data.csv', csv, 'text/csv')
-
-
-    #generate zip
-    zip_file = generate_zip(queryset=queryset)
-    email.attach('files.zip', zip_file, 'application/x-zip-compressed')
-
-    #send email
-    email.send(fail_silently=False)
 
 def generate_aws_file_url(document_link):
     """Generates file url"""
     Config.signature_version = botocore.UNSIGNED
-    return boto3.client('s3', settings.AWS_S3_REGION_NAME, config=Config(s3={'addressing_style': 'path'})).generate_presigned_url('get_object', ExpiresIn=3600, Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': str(document_link)})
+    return boto3.client('s3', settings.AWS_S3_REGION_NAME, config=Config(s3={'addressing_style': 'path'})).generate_presigned_url('get_object', ExpiresIn=86400, Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': str(document_link)})
 
 
 def get_attributes_and_headers(object, request):
@@ -63,7 +43,7 @@ def generate_csv(title, queryset, request):
         #create csv writer
         csv_file = io.StringIO()
         writer = csv.writer(csv_file, delimiter=',')
-        writer.writerow((title))
+        writer.writerow([title])
 
         for count, item in enumerate(queryset):
             headers, attributes = get_attributes_and_headers(object=item, request=request)
@@ -81,49 +61,59 @@ def generate_csv(title, queryset, request):
         raise ValueError('A queryset must be inserted to generate a spreadsheet')
 
 def get_document_links(queryset):
-    for item in queryset:
-        #get document paths
-        try: #for job or expense objects
-            yield str(item.document_link)
-        except AttributeError: #for payment objects
-            yield str(item.job.document_link)
+    """Gets document paths"""
+    if queryset:
+        for item in queryset:
+            if isinstance(item, Job) or isinstance(item, Expenses):
+                yield str(item.document_link)
+            elif isinstance(item, Request_Payment):
+                yield str(item.job.document_link)
+    else:
+        raise ValueError('A queryset must be inserted to get document links')
+
 
 def download_file_from_url(url):
     """Downloads file from specifed url"""
-    file = io.BytesIO()
-    # get request
-    response = get(url)
-    # write to file
-    file.write(response.content)
+    if url:
+        file = io.BytesIO()
+        # get request
+        response = get(url)
+        # write to file
+        file.write(response.content)
 
-    value = file.getvalue()
-    file.close()
-    return value
+        value = file.getvalue()
+        file.close()
+        return value
+    else:
+        raise ValueError('A url must be provided to extract url contents')
 
 def generate_zip(queryset):
     """generates zip file"""
-    zip_file = io.BytesIO() #create a zip file in memory
-    zf = zipfile.ZipFile(zip_file, "w") #open the zip file created in memory and open in 'write' mode
+    if queryset:
+        zip_file = io.BytesIO() #create a zip file in memory
+        zf = zipfile.ZipFile(zip_file, "w") #open the zip file created in memory and open in 'write' mode
 
-    #get document links from queryset
-    document_links = get_document_links(queryset)
+        #get document links from queryset
+        document_links = get_document_links(queryset)
 
-    #get urls from aws
-    previous_arcnames = []
-    for count, document_link in enumerate(document_links):
-        file_url = generate_aws_file_url(document_link)
-        file = download_file_from_url(url=file_url)
+        #get urls from aws
+        previous_arcnames = []
+        for count, document_link in enumerate(document_links):
+            file_url = generate_aws_file_url(document_link)
+            file = download_file_from_url(url=file_url)
 
-        #add to zip file
-        arcname = document_link.split('/')[-1] #name we will call the file in the zip file
+            #add to zip file
+            arcname = document_link.split('/')[-1] #name we will call the file in the zip file
 
-        if arcname in previous_arcnames: #change arcname to prevent overwriting of file
-            arcname = document_link.split('/')[-1] + '-' + str(count)
+            if arcname in previous_arcnames: #change arcname to prevent overwriting of file
+                arcname = document_link.split('/')[-1] + '-' + str(count)
 
-        zf.writestr(zinfo_or_arcname=arcname, data=file)
-        previous_arcnames.append(arcname) #append arcname we used to list so we know if we used the name before (prevents overwriting of files with the same name)
+            zf.writestr(zinfo_or_arcname=arcname, data=file)
+            previous_arcnames.append(arcname) #append arcname we used to list so we know if we used the name before (prevents overwriting of files with the same name)
 
-    zf.close()
-    value = zip_file.getvalue()
-    zip_file.close()
-    return value
+        zf.close()
+        value = zip_file.getvalue()
+        zip_file.close()
+        return value
+    else:
+        raise ValueError('A queryset must be inserted to generate a zip file')

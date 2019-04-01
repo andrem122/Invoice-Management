@@ -5,8 +5,9 @@ from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
 from send_data.forms import Send_Data
 from django.contrib import messages
-from .send_data_extras import send_data_email, generate_csv, generate_zip
+from .send_data_extras import generate_csv, generate_zip
 from django.core.mail import EmailMessage
+import sys
 from itertools import chain
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
@@ -19,13 +20,23 @@ def send_data(request):
 
     if request.method == 'POST':
         send_data_form = Send_Data(request.POST)
-        path = str(request.POST.get('path', ''))
+        path = str(request.POST.get('path', None))
         if send_data_form.is_valid():
             #get form data
-            send_to = str(send_data_form.cleaned_data['send_to'])
-            subject = str(send_data_form.cleaned_data['subject'])
-            message = str(send_data_form.cleaned_data['message'])
-            #frequency = int(send_data_form.cleaned_data['frequency'])
+            send_to   = str(send_data_form.cleaned_data['send_to'])
+            subject   = str(send_data_form.cleaned_data['subject'])
+            message   = str(send_data_form.cleaned_data['message'])
+            approved  = send_data_form.cleaned_data['approved']
+            rejected  = send_data_form.cleaned_data['rejected']
+            new       = send_data_form.cleaned_data['new']
+            completed = send_data_form.cleaned_data['completed']
+
+            statuses = {
+                'approved': approved,
+                'rejected': rejected,
+                'new': new,
+                'completed': completed,
+            }
 
             form_vals = {
                 'send_to': send_to,
@@ -37,65 +48,75 @@ def send_data(request):
                 #send data based on path
                 if path == '/jobs-admin/':
                     #get data to write to csv
-                    estimates = customer.current_week_proposed_jobs()
                     approved_jobs = customer.approved_jobs()
-                    completed_jobs = customer.current_week_completed_jobs()
                     rejected_jobs = customer.current_week_rejected_jobs()
+                    estimates = customer.current_week_proposed_jobs()
+                    completed_jobs = customer.current_week_completed_jobs()
 
-                    jobs = list(chain(estimates, approved_jobs, completed_jobs, rejected_jobs))
+                    email = EmailMessage(form_vals['subject'], form_vals['message'], current_user.email, [form_vals['send_to']])
 
-                    #send data
-                    send_data_email(user_email=current_user.email, title='ACTIVE JOBS', queryset=jobs, form_vals=form_vals, request=request)
+                    """
+                    if all status values in 'statuses' dict are False, send all weekly jobs
+                    OR
+                    if all status values are in 'statuses' dict are True, send all weekly jobs
+                    """
+                    status_values = statuses.values()
+                    if True not in status_values or all(status_value == True for status_value in status_values):
+                        jobs = list(chain(estimates, approved_jobs, completed_jobs, rejected_jobs))
+                        csv = generate_csv(title='ALL WEEKLY JOBS', queryset=jobs, request=request)
+                        zip_file = generate_zip(queryset=jobs)
+                        email.attach('data.csv', csv, 'text/csv')
+                        email.attach('files.zip', zip_file, 'application/x-zip-compressed')
+                    else:
+                        for status_name, status_value in statuses.items():
+                            if status_name == 'approved' and status_value == True and approved_jobs:
+                                csv = generate_csv(title='ALL WEEKLY APPROVED JOBS', queryset=approved_jobs, request=request)
+                                zip_file = generate_zip(queryset=approved_jobs)
+                                email.attach('approved.csv', csv, 'text/csv')
+                                email.attach('approved.zip', zip_file, 'application/x-zip-compressed')
+
+                            elif status_name == 'rejected' and status_value == True and rejected_jobs:
+                                csv = generate_csv(title='ALL WEEKLY REJECTED JOBS', queryset=rejected_jobs, request=request)
+                                zip_file = generate_zip(queryset=rejected_jobs)
+                                email.attach('rejected.csv', csv, 'text/csv')
+                                email.attach('rejected.zip', zip_file, 'application/x-zip-compressed')
+
+                            elif status_name == 'new' and status_value == True and estimates:
+                                csv = generate_csv(title='ALL WEEKLY ESTIMATES', queryset=estimates, request=request)
+                                zip_file = generate_zip(queryset=estimates)
+                                email.attach('estimates.csv', csv, 'text/csv')
+                                email.attach('estimates.zip', zip_file, 'application/x-zip-compressed')
+
+                            elif status_name == 'completed' and status_value == True and completed_jobs:
+                                csv = generate_csv(title='ALL WEEKLY COMPLETED JOBS', queryset=completed_jobs, request=request)
+                                zip_file = generate_zip(queryset=completed_jobs)
+                                email.attach('completed.csv', csv, 'text/csv')
+                                email.attach('completed.zip', zip_file, 'application/x-zip-compressed')
+
+                            else:
+                                print('No specific status was selected')
+
+                    email.send(fail_silently=False)
 
                 elif path == '/payments/':
                     #get querysets
-                    payments = customer.current_week_approved_payments()
+                    payments = customer.current_week_payments_all()
                     expenses = customer.current_week_expenses(pay_this_week=True)
 
-                    #generate csvs for payments
-                    title = 'PAYMENTS FOR THE WEEK'
-                    payments_csv = generate_csv(title=title, queryset=payments, request=request)
-
-                    #generate csvs for expenses
-                    title = 'EXPENSES FOR THE WEEK'
-                    expenses_csv = generate_csv(title=title, queryset=expenses, request=request)
-
-                    #generate zip
-                    try:
-                        zip_file = generate_zip(payments_result[0] + expenses_result[0])
-                    except TypeError as e:
-                        print('There are no query results for either payments or expenses')
-                        try:
-                            zip_file = generate_zip(payments_result[0])
-                        except TypeError as e:
-                            print('There are no query results for payments')
-                            zip_file = generate_zip(expenses_result[0])
-
-
-                    #create email
+                    #create email object
                     email = EmailMessage(form_vals['subject'], form_vals['message'], current_user.email, [form_vals['send_to']])
 
-                    #attach files
-                    try:
-                        email.attach('payments.csv', payments_csv, 'text/csv')
-                    except TypeError as e:
-                        print('No query results for payments, and therefore a CSV file could not be generated')
+                    status_values = statuses.values()
+                    if True not in status_values or all(status_value == True for status_value in status_values):
+                        payments_and_expenses = list(chain(payments, expenses))
+                        print(payments_and_expenses)
+                        csv = generate_csv(title='ALL WEEKLY PAYMENTS AND EXPENSES', queryset=payments_and_expenses, request=request)
+                        zip_file = generate_zip(queryset=payments_and_expenses)
+                        email.attach('data.csv', csv, 'text/csv')
+                        email.attach('files.zip', zip_file, 'application/x-zip-compressed')
 
-                    try:
-                        email.attach('expenses.csv', expenses_csv, 'text/csv')
-                    except TypeError as e:
-                        print('No query results for expenses, and therefore a CSV file could not be generated')
 
-                    email.attach('files.zip', zip_file, 'application/x-zip-compressed')
-
-                    #send email
                     email.send(fail_silently=False)
-
-                elif path == '/jobs-complete/':
-                    jobs = customer.completed_jobs()
-                    headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid']
-                    attributes = ['house', 'company', 'start_amount', 'balance', 'start_date', 'total_paid']
-                    send_data_email(user_email=current_user.email, title='COMPLETED JOBS', headers=headers, queryset=jobs, attributes=attributes, form_vals=form_vals, host=host)
 
                 elif path == '/expenses/':
                     expenses = customer.all_expenses()

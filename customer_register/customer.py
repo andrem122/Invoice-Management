@@ -248,7 +248,7 @@ class Customer:
             self: The object instance.
 
         Returns:
-            A generator.
+            A queryset.
 
         Raises:
             None.

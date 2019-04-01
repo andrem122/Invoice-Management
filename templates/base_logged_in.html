@@ -97,7 +97,7 @@
                 {% csrf_token %}
                 {% if send_data_form.errors %}
                 <div class="form-messages">
-                  <p>{{send_data_form.errors}}</p>
+                  <p>{{ send_data_form.errors }}</p>
                 </div>
                 {% endif %}
                 {% if messages %}
