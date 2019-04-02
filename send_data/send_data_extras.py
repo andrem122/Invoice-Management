@@ -17,6 +17,8 @@ def generate_aws_file_url(document_link):
         's3',
         settings.AWS_S3_REGION_NAME,
         config=Config(s3={'addressing_style': 'path'}),
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
     ).generate_presigned_url('get_object', ExpiresIn=86400, Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': str(document_link)})
 
 
