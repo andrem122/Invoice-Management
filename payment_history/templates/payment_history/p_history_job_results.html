@@ -65,7 +65,7 @@
 {% endblock item_heading_3_m_v %}
 
 {% block item_heading_4_m %}Submitted{% endblock item_heading_4_m %}
-{% block item_heading_4_m_v %}{{ item.approved_date|date:'M j, g:i a' }}{% endblock item_heading_4_m_v %}
+{% block item_heading_4_m_v %}{{ item.approved_date|date:'M j, Y' }}{% endblock item_heading_4_m_v %}
 
 {% block item_heading_5_m %}Amount{% endblock item_heading_5_m %}
 {% block item_heading_5_m_v %}${{ item.amount|intcomma }}{% endblock item_heading_5_m_v %}
