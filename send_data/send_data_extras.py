@@ -17,8 +17,6 @@ def generate_aws_file_url(document_link):
         's3',
         settings.AWS_S3_REGION_NAME,
         config=Config(s3={'addressing_style': 'path'}),
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_ACCESS_KEY_ID,
     ).generate_presigned_url('get_object', ExpiresIn=86400, Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': str(document_link)})
 
 
@@ -49,22 +47,20 @@ def generate_csv(title, queryset, request):
     if queryset:
         if isinstance(queryset, QuerySet) or isinstance(queryset, list):
                     #create csv writer
-                    csv_file = io.StringIO()
-                    writer = csv.writer(csv_file, delimiter=',')
-                    writer.writerow([title])
+                    with io.StringIO() as csv_file:
+                        writer = csv.writer(csv_file, delimiter=',')
+                        writer.writerow([title])
 
-                    for count, item in enumerate(queryset):
-                        headers, attributes = get_attributes_and_headers(object=item, request=request)
+                        for count, item in enumerate(queryset):
+                            headers, attributes = get_attributes_and_headers(object=item, request=request)
 
-                        #write headers for spreadsheet on first loop
-                        if count == 0:
-                            writer.writerow(headers)
+                            #write headers for spreadsheet on first loop
+                            if count == 0:
+                                writer.writerow(headers)
 
-                        writer.writerow(attributes)
+                            writer.writerow(attributes)
 
-                    value = csv_file.getvalue()
-                    csv_file.close()
-                    return value
+                        return csv_file.getvalue()
         else:
             raise TypeError('Queryset argument must be of type Queryset or list')
     else:
@@ -88,15 +84,12 @@ def get_document_links(queryset):
 def download_file_from_url(url):
     """Downloads file from specifed url"""
     if url:
-        file = io.BytesIO()
-        # get request
-        response = get(url)
-        # write to file
-        file.write(response.content)
-
-        value = file.getvalue()
-        file.close()
-        return value
+        with io.BytesIO() as file:
+            # get request
+            response = get(url)
+            # write to file
+            file.write(response.content)
+            return file.getvalue()
     else:
         raise ValueError('A url must be provided to extract url contents')
 
@@ -104,31 +97,27 @@ def generate_zip(queryset):
     """generates zip file"""
     if queryset:
         if isinstance(queryset, QuerySet) or isinstance(queryset, list):
-            zip_file = io.BytesIO() #create a zip file in memory
-            zf = zipfile.ZipFile(zip_file, "w") #open the zip file created in memory and open in 'write' mode
+            with io.BytesIO() as zip_file:
+                with zipfile.ZipFile(zip_file, "w") as zf: #open the zip file created in memory and open in 'write' mode
+                    #get document links from queryset
+                    document_links = get_document_links(queryset)
 
-            #get document links from queryset
-            document_links = get_document_links(queryset)
+                    #get urls from aws
+                    previous_arcnames = []
+                    for count, document_link in enumerate(document_links):
+                        file_url = generate_aws_file_url(document_link)
+                        file = download_file_from_url(url=file_url)
 
-            #get urls from aws
-            previous_arcnames = []
-            for count, document_link in enumerate(document_links):
-                file_url = generate_aws_file_url(document_link)
-                file = download_file_from_url(url=file_url)
+                        #add to zip file
+                        arcname = document_link.split('/')[-1] #name we will call the file in the zip file
 
-                #add to zip file
-                arcname = document_link.split('/')[-1] #name we will call the file in the zip file
+                        if arcname in previous_arcnames: #change arcname to prevent overwriting of file
+                            arcname = document_link.split('/')[-1] + '-' + str(count)
 
-                if arcname in previous_arcnames: #change arcname to prevent overwriting of file
-                    arcname = document_link.split('/')[-1] + '-' + str(count)
+                        zf.writestr(zinfo_or_arcname=arcname, data=file)
+                        previous_arcnames.append(arcname) #append arcname we used to list so we know if we used the name before (prevents overwriting of files with the same name)
 
-                zf.writestr(zinfo_or_arcname=arcname, data=file)
-                previous_arcnames.append(arcname) #append arcname we used to list so we know if we used the name before (prevents overwriting of files with the same name)
-
-            zf.close()
-            value = zip_file.getvalue()
-            zip_file.close()
-            return value
+                return zip_file.getvalue()
         else:
             raise TypeError('Queryset argument must be of type Queryset or list')
     else:
