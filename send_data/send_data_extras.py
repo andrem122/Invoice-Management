@@ -9,6 +9,7 @@ import botocore
 import csv
 import io
 import zipfile
+import os
 
 def generate_aws_file_url(document_link):
     """Generates file url"""
