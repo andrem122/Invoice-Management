@@ -114,7 +114,8 @@ def generate_zip(queryset):
                         arcname = document_link.split('/')[-1] #name we will call the file in the zip file
 
                         if arcname in previous_arcnames: #change arcname to prevent overwriting of file
-                            arcname = document_link.split('/')[-1] + '-' + str(count)
+                            file_name, file_extension = os.path.splitext(document_link.split('/')[-1])
+                            arcname = '{file_name}-{count}{file_extension}'.format(file_name=file_name, count=count, file_extension=file_extension)
 
                         zf.writestr(zinfo_or_arcname=arcname, data=file)
                         previous_arcnames.append(arcname) #append arcname we used to list so we know if we used the name before (prevents overwriting of files with the same name)
