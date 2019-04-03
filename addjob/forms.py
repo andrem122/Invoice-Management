@@ -37,7 +37,7 @@ class AddJob(ModelForm, forms.Form):
             print(user.username)
             customer_id = user.id
         #filter house by customer id
-        self.fields['house'].queryset = House.objects.filter(customer=customer_id, archived=False)
+        self.fields['house'].queryset = House.objects.filter(customer=customer_id, archived=False).order_by('address')
 
 class AddJob_Customer(ModelForm, forms.Form):
     """
@@ -67,5 +67,5 @@ class AddJob_Customer(ModelForm, forms.Form):
         #get customer id
         customer_id = user.id
         #filter house by customer id
-        self.fields['house'].queryset = House.objects.filter(customer=customer_id, archived=False)
-        self.fields['company'].queryset = User.objects.filter(groups__name=str(customer_id))
+        self.fields['house'].queryset = House.objects.filter(customer=customer_id, archived=False).order_by('address')
+        self.fields['company'].queryset = User.objects.filter(groups__name=str(customer_id)).order_by('username')

@@ -60,7 +60,7 @@
               Company
             </option>
             {% for company in form.fields.company.queryset %}
-              <option value="{{company.id}}">{{ company }}</option>
+              <option value="{{ company.id }}">{{ company }}</option>
             {% endfor %}
           </select>
         </div>
