@@ -3,7 +3,27 @@ from django.shortcuts import render, redirect
 from .forms import Download_Data_Form
 from django.contrib.auth.decorators import login_required
 from customer_register.customer import Customer
+from send_data.send_data_extras import get_attributes_and_headers
+from django.db.models.query import QuerySet
 import csv
+
+def write_to_csv(writer, title, queryset, request):
+    if queryset:
+        if isinstance(queryset, QuerySet) or isinstance(queryset, list):
+            writer.writerow([title])
+            for count, item in enumerate(queryset):
+                headers, attributes = get_attributes_and_headers(object=item, request=request)
+
+                #write headers for spreadsheet on first loop
+                if count == 0:
+                    writer.writerow(headers)
+
+                writer.writerow(attributes)
+
+        else:
+            raise TypeError('Queryset argument must be of type Queryset or list')
+    else:
+        raise ValueError('A queryset must be inserted to generate a spreadsheet')
 
 @login_required
 def index(request):
@@ -28,41 +48,20 @@ def index(request):
                 response['Content-Disposition'] = 'attachment; filename="all_data.csv"'
                 writer = csv.writer(response)
 
-                def write_to_csv(title, headers, queryset, attributes):
-                    if queryset:
-                        writer.writerow([title])
-                        writer.writerow(headers)
-                        atts = []
-                        for q in queryset:
-                            atts = []
-                            for attribute in attributes:
-                                if isinstance(attribute, list):
-                                    a = str(getattr(getattr(q, attribute[0]), attribute[1]))
-                                else:
-                                    a = str(getattr(q, attribute))
-                                atts.append(a)
-                            writer.writerow(atts)
-
                 #active jobs
-                headers = ['House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid']
-                attributes = ['house', 'company', 'start_amount', 'balance', 'start_date', 'total_paid']
-                write_to_csv(title='ACTIVE JOBS', headers=headers, queryset=approved_jobs, attributes=attributes)
+                write_to_csv(writer=writer, title='ACTIVE JOBS', queryset=approved_jobs, request=request)
 
                 #proposed jobs
-                write_to_csv(title='ESTIMATES', headers=headers, queryset=proposed_jobs, attributes=attributes)
+                write_to_csv(writer=writer, title='ESTIMATES', queryset=proposed_jobs, request=request)
 
                 #completed jobs
-                write_to_csv(title='COMPLETED JOBS', headers=headers, queryset=completed_jobs, attributes=attributes)
+                write_to_csv(writer=writer, title='COMPLETED JOBS', queryset=completed_jobs, request=request)
 
                 #all payments
-                headers = ['House', 'Company', 'Submit Date', 'Date Approved', 'Amount', 'Approved']
-                attributes = ['house', ['job', 'company'], 'submit_date', 'approved_date', 'amount', 'approved']
-                write_to_csv(title='ALL PAYMENTS', headers=headers, queryset=all_payments, attributes=attributes)
+                write_to_csv(writer=writer, title='ALL PAYMENTS', queryset=all_payments, request=request)
 
                 #expenses
-                headers = ['House', 'Expense Type', 'Amount',  'Date Added']
-                attributes = ['house', 'expense_type', 'amount', 'submit_date']
-                write_to_csv(title='EXPENSES', headers=headers, queryset=expenses, attributes=attributes)
+                write_to_csv(writer=writer, title='EXPENSES', queryset=expenses, request=request)
 
                 return response
 

@@ -37,7 +37,7 @@ def get_attributes_and_headers(object, request):
         headers    = ('House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Contract Link')
         attributes = (object.house.address, object.job.company, object.amount, object.submit_date, object.approved_date, file_url)
     elif isinstance(object, Expenses):
-        file_url = generate_aws_file_url(document_link=object.job.document_link)
+        file_url = generate_aws_file_url(document_link=object.document_link)
         headers = ('House', 'Expense Type', 'Amount',  'Date Added', 'Contract Link')
         attributes = (object.house, object.expense_type, object.amount, object.submit_date, file_url)
     else:
