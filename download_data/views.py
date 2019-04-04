@@ -48,20 +48,20 @@ def index(request):
                 response['Content-Disposition'] = 'attachment; filename="all_data.csv"'
                 writer = csv.writer(response)
 
-                #active jobs
-                write_to_csv(writer=writer, title='ACTIVE JOBS', queryset=approved_jobs, request=request)
+                titles    = ('ACTIVE JOBS', 'ESTIMATES', 'COMPLETED JOBS', 'ALL PAYMENTS', 'EXPENSES')
+                querysets = (approved_jobs, proposed_jobs, completed_jobs, all_payments, expenses)
+                zipped    = zip(titles, querysets)
 
-                #proposed jobs
-                write_to_csv(writer=writer, title='ESTIMATES', queryset=proposed_jobs, request=request)
-
-                #completed jobs
-                write_to_csv(writer=writer, title='COMPLETED JOBS', queryset=completed_jobs, request=request)
-
-                #all payments
-                write_to_csv(writer=writer, title='ALL PAYMENTS', queryset=all_payments, request=request)
-
-                #expenses
-                write_to_csv(writer=writer, title='EXPENSES', queryset=expenses, request=request)
+                try:
+                    for title, queryset in zipped:
+                        write_to_csv(
+                            writer=writer,
+                            title=title,
+                            queryset=queryset,
+                            request=request
+                        )
+                except ValueError as e:
+                    print(e)
 
                 return response
 

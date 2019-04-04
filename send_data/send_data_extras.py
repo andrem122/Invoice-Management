@@ -3,6 +3,7 @@ from expenses.models import Expenses
 from django.conf import settings
 from botocore.client import Config
 from django.db.models.query import QuerySet
+from sms_alerts.sms_budget_alerts import as_currency
 from requests import get
 import boto3
 import botocore
@@ -28,18 +29,26 @@ def get_attributes_and_headers(object, request):
     Returns a tuple with the desired values from objects and headings for the csv file
     based on the instance type
     """
+    try:
+        if object.approved:
+            is_approved = 'Approved'
+        else:
+            is_approved = 'Not Approved'
+    except AttributeError as e:
+        print(e)
+
     if isinstance(object, Job):
         file_url = generate_aws_file_url(document_link=object.document_link)
-        headers    = ('House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid', 'Contract Link')
-        attributes = (object.house.address, object.company, object.start_amount, object.balance, object.start_date, object.total_paid, file_url)
+        headers    = ('House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid', 'Status', 'Contract Link')
+        attributes = (object.house.address, object.company, as_currency(object.start_amount), as_currency(object.balance), object.start_date.strftime('%m/%d/%Y %I:%M %p'), as_currency(object.total_paid), is_approved, file_url)
     elif isinstance(object, Request_Payment):
         file_url = generate_aws_file_url(document_link=object.job.document_link)
-        headers    = ('House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Contract Link')
-        attributes = (object.house.address, object.job.company, object.amount, object.submit_date, object.approved_date, file_url)
+        headers    = ('House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Status', 'Contract Link')
+        attributes = (object.house.address, object.job.company, as_currency(object.amount), object.submit_date.strftime('%m/%d/%Y %I:%M %p'), object.approved_date.strftime('%m/%d/%Y %I:%M %p'), is_approved, file_url)
     elif isinstance(object, Expenses):
         file_url = generate_aws_file_url(document_link=object.document_link)
         headers = ('House', 'Expense Type', 'Amount',  'Date Added', 'Contract Link')
-        attributes = (object.house, object.expense_type, object.amount, object.submit_date, file_url)
+        attributes = (object.house, object.expense_type, as_currency(object.amount), object.submit_date.strftime('%m/%d/%Y %I:%M %p'), file_url)
     else:
         headers = None
         attributes = None
