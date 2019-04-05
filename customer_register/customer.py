@@ -74,7 +74,7 @@ class Customer:
         Raises:
             None.
         """
-        return House.objects.filter(customer=self.customer, **kwargs)
+        return House.objects.filter(customer=self.customer, **kwargs).order_by('address')
 
     def house_totals(self, houses, **kwargs):
         """
