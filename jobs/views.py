@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import render, redirect
-from .models import House, Job, Request_Payment
+from django.shortcuts import redirect
+from .models import House, Job
 from .forms import Request_Payment_Form
 from django.contrib.auth.decorators import user_passes_test, login_required
 from project_management.decorators import worker_check
@@ -18,6 +18,20 @@ def generate_login_url(request):
 
     return protocol + request.get_host() + '/accounts/login/'
 
+def generate_unique_house_queryset(houses=[]):
+    """
+    Removes duplicate house objects by comparing
+    current_worker objects to house objects
+    """
+    for house in houses:
+        try:
+            if house.house in houses: #if house from current_worker object is in list, continue onto next loop
+                continue
+            else:
+                yield house
+        except AttributeError as e:
+            yield house
+
 @user_passes_test(worker_check, login_url='/accounts/login/')
 def index(request):
     current_user = request.user
@@ -29,7 +43,8 @@ def index(request):
     approved_jobs = worker.approved_jobs()
     unapproved_jobs = worker.unapproved_jobs()
 
-    houses = set(chain(approved_houses, unapproved_houses))
+    houses = list(chain(approved_houses, unapproved_houses))
+    houses = generate_unique_house_queryset(houses=houses)
     items = list(chain(approved_jobs, unapproved_jobs))
 
     template = loader.get_template('jobs/index.html')
