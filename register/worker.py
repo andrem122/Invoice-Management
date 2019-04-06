@@ -30,40 +30,58 @@ class Worker:
         customer_id = int(customer_id)
         self.customer = User.objects.get(pk=customer_id)
 
-    def generate_queryset(self, outer_queryset, inner_queryset):
-        for o in outer_queryset:
-            for i in inner_queryset:
-                if getattr(o, 'address') == getattr(getattr(i, 'house'), 'address'):
-                    yield o
-                    break
-
     """Houses"""
     #gets all houses the worker is approved to work on
     def approved_houses(self):
         sql = 'SELECT * FROM jobs_current_worker WHERE customer_id={customer_id} AND current=1 AND company_id={company_id} GROUP BY house_id'.format(customer_id=self.customer.id, company_id=self.worker.id)
         return Current_Worker.objects.raw(sql)
 
-    #gets all houses the worker has pending jobs for
-    def unapproved_houses(self):
-        houses = House.objects.filter(customer=self.customer, proposed_jobs=True)
-        jobs = Job.objects.filter(company=self.worker, approved=False, rejected=False, balance_amount__gt=0, start_date__range=[Worker.start_week, Worker.today])
-        return self.generate_queryset(outer_queryset=houses, inner_queryset=jobs)
+    #get all houses with pending jobs for the current week
+    def current_week_unapproved_houses(self):
+        return House.objects.filter(
+            customer=self.customer,
+            proposed_jobs=True,
+            job__company=self.worker,
+            job__approved=False,
+            job__rejected=False,
+            job__balance_amount__gt=0,
+            job__start_date__range=[Worker.start_week, Worker.today],
+        )
 
-    #gets all houses the worker has completed jobs for
-    def completed_houses(self):
-        houses = House.objects.filter(customer=self.customer, completed_jobs=True)
-        jobs = self.completed_jobs()
-        return generate_queryset(outer_queryset=houses, inner_queryset=jobs)
+    #gets all houses the worker has completed jobs for the current week
+    def current_week_completed_houses(self):
+        return House.objects.filter(
+            customer=self.customer,
+            completed_jobs=True,
+            job__company=self.worker,
+            job__approved=True,
+            job__balance_amount__lte=0,
+            job__start_date__range=[Worker.start_week, Worker.today],
+        )
 
     """Jobs"""
     #gets all approved jobs for the worker
     def approved_jobs(self):
-        return Job.objects.filter(company=self.worker, approved=True, balance_amount__gt=0)
+        return Job.objects.filter(
+            company=self.worker,
+            approved=True, balance_amount__gt=0,
+        )
 
-    #gets all unapproved jobs for the worker
-    def unapproved_jobs(self):
-        return Job.objects.filter(company=self.worker, approved=False, rejected=False, balance_amount__gt=0, start_date__range=[Worker.start_week, Worker.today])
+    #gets all unapproved jobs for the worker for the current week
+    def current_week_unapproved_jobs(self):
+        return Job.objects.filter(
+            company=self.worker,
+            approved=False,
+            rejected=False,
+            balance_amount__gt=0,
+            start_date__range=[Worker.start_week, Worker.today],
+        )
 
-    #gets all completed jobs for the worker
-    def completed_jobs(self):
-        return Job.objects.filter(company=self.worker, approved=True, balance_amount__lte=0)
+    #gets all completed jobs for the worker for the current week
+    def current_week_completed_jobs(self):
+        return Job.objects.filter(
+            company=self.worker,
+            approved=True,
+            balance_amount__lte=0,
+            start_date__range=[Worker.start_week, Worker.today],
+        )

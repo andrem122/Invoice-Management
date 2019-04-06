@@ -38,14 +38,16 @@ def index(request):
 
     worker = Worker(current_user)
     approved_houses = worker.approved_houses()
-    unapproved_houses = worker.unapproved_houses()
+    unapproved_houses = worker.current_week_unapproved_houses()
+    completed_houses = worker.current_week_completed_houses()
 
     approved_jobs = worker.approved_jobs()
-    unapproved_jobs = worker.unapproved_jobs()
+    unapproved_jobs = worker.current_week_unapproved_jobs()
+    completed_jobs = worker.current_week_completed_jobs()
 
-    houses = list(chain(approved_houses, unapproved_houses))
+    houses = list(chain(approved_houses, unapproved_houses, completed_houses))
     houses = generate_unique_house_queryset(houses=houses)
-    items = list(chain(approved_jobs, unapproved_jobs))
+    items = list(chain(approved_jobs, unapproved_jobs, completed_jobs))
 
     template = loader.get_template('jobs/index.html')
     request_payment_form = Request_Payment_Form()
