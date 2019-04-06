@@ -46,7 +46,7 @@ class Worker:
             job__rejected=False,
             job__balance_amount__gt=0,
             job__start_date__range=[Worker.start_week, Worker.today],
-        )
+        ).distinct()
 
     #gets all houses the worker has completed jobs for the current week
     def current_week_completed_houses(self):
@@ -57,7 +57,7 @@ class Worker:
             job__approved=True,
             job__balance_amount__lte=0,
             job__start_date__range=[Worker.start_week, Worker.today],
-        )
+        ).distinct()
 
     """Jobs"""
     #gets all approved jobs for the worker
