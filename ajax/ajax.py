@@ -17,7 +17,7 @@ class Ajax:
         if object_type is 'jobs':
             #get active houses and houses with estimates
             active_houses = self.customer.active_houses()
-            estimate_houses = self.customer.proposed_jobs_houses()
+            estimate_houses = self.customer.current_week_proposed_jobs_houses()
             completed_houses = self.customer.current_week_completed_houses()
             rejected_houses = self.customer.current_week_rejected_job_houses()
 

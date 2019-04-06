@@ -339,7 +339,7 @@ def index(request):
 
     #get active houses and houses with estimates
     active_houses = customer.active_houses()
-    estimate_houses = customer.proposed_jobs_houses()
+    estimate_houses = customer.current_week_proposed_jobs_houses()
     completed_houses = customer.current_week_completed_houses()
     rejected_houses = customer.current_week_rejected_job_houses()
 
