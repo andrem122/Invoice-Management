@@ -1,5 +1,6 @@
 //loader and intro js
 window.addEventListener("load", function(event) {
+  document.body.style.visibility='visible';
   var wrapper = document.getElementById('wrapper');
   var loader = document.getElementById('loader');
   wrapper.style.display = 'block';

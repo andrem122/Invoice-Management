@@ -48,7 +48,7 @@
     {% block scripts %}
     {% endblock scripts %}
   </head>
-  <body class="{% block body_class %}{% endblock body_class %}">
+  <body style="visibility: hidden;" class="{% block body_class %}{% endblock body_class %}">
     <!--Scroll Up Button-->
     <a href="#" id="scroll" style="visibility: hidden;"><span></span></a>
     <!--End Scroll Up Button-->
@@ -195,6 +195,14 @@
     {% block body_end %}
     {% endblock %}
   </body>
+  {% comment %}
+    For "Flash Of Unstyled Content"
+  {% endcomment %}
+  <noscript>
+    <style>
+      body { visibility: visible; }
+    </style>
+</noscript>
 </html>
 {% block html_end %}
 {% endblock %}

@@ -578,19 +578,11 @@ class Customer:
         Raises:
             None.
         """
-        houses = House.objects.filter(
+        return House.objects.filter(
             customer=self.customer,
-            expenses=True
-        )
-
-        for house in houses:
-            if Expenses.objects.filter(
-                house=house,
-                house__customer=self.customer,
-                submit_date__range=[Customer.start_week, Customer.today],
-                pay_this_week=True,
-            ).exists():
-                yield house
+            expense_house__submit_date__range=[Customer.start_week, Customer.today],
+            expense_house__pay_this_week=True,
+        ).distinct()
 
     def all_expenses(self):
         """
