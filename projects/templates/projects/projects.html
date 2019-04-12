@@ -10,7 +10,7 @@
 {% block scripts %}
 {% endblock scripts %}
 
-{% block page_title %}{{ narchived_count }} Projects{% endblock page_title %}
+{% block page_title %}{{ narchived_houses|length }} Projects{% endblock page_title %}
 {% block button_with_title %}<a href="/add-house/" class="round-btn solid-round-btn" name="add_project">Add Project</a>{% endblock button_with_title %}
 {% block heading_status %}Status{% endblock heading_status %}
 {% block item_heading_1 %}Project{% endblock item_heading_1 %}
@@ -18,7 +18,7 @@
 {% block item_heading_3 %}Approved Jobs{% endblock item_heading_3 %}
 {% block item_heading_4 %}Total Spent{% endblock item_heading_4 %}
 {% block item_loop %}
-  {% for house, num_expenses, num_active_jobs, num_approved_jobs, total in zipped_narchived %}
+  {% for house in narchived_houses %}
 
   {# Item Options Forms #}
   {% if current_user|in_group:'Customers' %}
@@ -54,7 +54,7 @@
           <ul>
             <li>
 
-              {% if num_active_jobs > 0 %}
+              {% if house.num_active_jobs > 0 %}
 
                 <div class="status active">Active</div>
 
@@ -75,14 +75,14 @@
             <span class="info-title">Expenses</span>
             <li class="info-2 active_jobs">
 
-                {% if num_expenses > 1 %}
-                <span>{{ num_expenses }}</span> Expenses
+                {% if house.num_expenses > 1 %}
+                <span>{{ house.num_expenses }}</span> Expenses
 
-                {% elif num_expenses == 1 %}
-                <span>{{ num_expenses }}</span> Expense
+                {% elif house.num_expenses == 1 %}
+                <span>{{ house.num_expenses }}</span> Expense
 
                 {% else %}
-                <span>{{ num_expenses }}</span> Expenses
+                <span>{{ house.num_expenses }}</span> Expenses
 
                 {% endif %}
 
@@ -90,7 +90,7 @@
             <hr>
             <span class="info-title">Approved Jobs</span>
             <li class="info-3">
-              <span>{{ num_approved_jobs }}</span> Jobs
+              <span>{{ house.num_approved_jobs }}</span> Jobs
             </li>
             <hr>
           </ul>
@@ -98,7 +98,7 @@
         <div class="info-group col col-sm-2">
           <ul>
             <span class="info-title">Total Spent</span>
-            <li class="info-4">${{ total|intcomma }}</li>
+            <li class="info-4">${{ house.total_spent|intcomma }}</li>
             <hr>
 
             {% if current_user|in_group:'Customers' %}
@@ -137,10 +137,10 @@
   {# Archived Houses #}
 
   {% if archived_houses %}
-    <h2 class="secondary-title">{{ archived_count }} Archived Projects</h2>
+    <h2 class="secondary-title">{{ archived_houses|length }} Archived Projects</h2>
   {% endif %}
 
-  {% for house, num_expenses, num_active_jobs, num_approved_jobs, total in zipped_archived %}
+  {% for house in archived_houses %}
 
   {# Item Options Forms #}
   {% if current_user|in_group:'Customers' %}
@@ -183,21 +183,21 @@
             <span class="info-title">Expenses</span>
             <li class="info-2 active_jobs">
 
-                {% if num_expenses > 1 %}
-                <span>{{ num_expenses }}</span> Expenses
+                {% if house.num_expenses > 1 %}
+                <span>{{ house.num_expenses }}</span> Expenses
 
-                {% elif num_expenses == 1 %}
-                <span>{{ num_expenses }}</span> Expense
+                {% elif house.num_expenses == 1 %}
+                <span>{{ house.num_expenses }}</span> Expense
 
                 {% else %}
-                <span>{{ num_expenses }}</span> Expenses
+                <span>{{ house.num_expenses }}</span> Expenses
                 {% endif %}
 
             </li>
             <hr>
             <span class="info-title">Approved Jobs</span>
             <li class="info-3">
-              <span>{{ num_approved_jobs }}</span> Jobs
+              <span>{{ house.num_approved_jobs }}</span> Jobs
             </li>
             <hr>
           </ul>
@@ -205,7 +205,7 @@
         <div class="info-group col col-sm-2">
           <ul>
             <span class="info-title">Total Spent</span>
-            <li class="info-4">${{ total|intcomma }}</li>
+            <li class="info-4">${{ house.total_spent|intcomma }}</li>
             <hr>
 
             {% if current_user|in_group:'Customers' %}

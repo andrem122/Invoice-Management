@@ -1,10 +1,6 @@
 from django.db import models
 from django.conf import settings
-import logging
 import os
-
-# Get an instance of a logger
-logger = logging.getLogger(__name__)
 
 #create database table structure here
 class House(models.Model):
@@ -62,8 +58,6 @@ class Job(models.Model):
     #balance is calculated using start_amount and total_paid
     @property
     def balance(self):
-        if self.total_paid > self.start_amount:
-            logger.error('Total amount paid exceeds the starting job amount.')
         return float(self.start_amount) - float(self.total_paid)
 
     balance_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)

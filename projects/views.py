@@ -18,40 +18,20 @@ def projects(request):
     Show all projects the customer currently has including
     completed projects and open ones
     """
-    #get all houses/projects of the customer
-    narchived_houses = customer._houses(archived=False)
-    archived_houses = customer._houses(archived=True)
-
-    narchived_count = narchived_houses.count()
-    archived_count = archived_houses.count()
 
     """
     get number of active jobs, completed jobs,
     and total amount spent for each property
     """
-    num_expenses = customer.num_expenses(archived=False)
-    num_active_jobs = customer.num_active_jobs(archived=False)
-    num_approved_jobs = customer.num_approved_jobs(archived=False)
-    narchived_totals = customer.house_totals(houses=narchived_houses, approved=True)
-    zipped_narchived = zip(narchived_houses, num_expenses, num_active_jobs, num_approved_jobs, narchived_totals)
-
-    num_expenses = customer.num_expenses(archived=True)
-    num_active_jobs = customer.num_active_jobs(archived=True)
-    num_approved_jobs = customer.num_approved_jobs(archived=True)
-    archived_totals = customer.house_totals(houses=archived_houses, approved=True)
-    zipped_archived = zip(archived_houses, num_expenses, num_active_jobs, num_approved_jobs, archived_totals)
-
-
+    archived_houses = customer.projects(archived=1)
+    narchived_houses = customer.projects(archived=0)
     template = loader.get_template('projects/projects.html')
     send_data_form = Send_Data()
     archive_house_form = Archive_House()
 
     context = {
-        'zipped_narchived': zipped_narchived,
-        'zipped_archived': zipped_archived,
         'archived_houses': archived_houses,
-        'narchived_count': narchived_count,
-        'archived_count': archived_count,
+        'narchived_houses': narchived_houses,
         'current_user': current_user,
         'archive_house_form': archive_house_form,
         'send_data_form': send_data_form,
