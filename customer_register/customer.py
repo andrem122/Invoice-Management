@@ -35,11 +35,11 @@ class Customer:
             self.customer = customer
         self.houses = self._houses()
 
-    """Attributes of Houses"""
     def projects(self, archived):
         """
-        Gets total amount paid in jobs and expenses for each house,
-        number of approved jobs, and number of expenses.
+        Gets total amount spent in jobs and expenses for each house,
+        number of approved jobs, number of active jobs, and number
+        of expenses for the projects view.
 
         Args:
             self: The object instance.
@@ -84,70 +84,12 @@ class Customer:
                 AS num_active_jobs
 
            FROM jobs_house h
-           WHERE customer_id = {customer_id}
-           AND archived = {archived}
+           WHERE customer_id = %s
+           AND archived = %s
            ORDER BY address
-        """.format(customer_id=self.customer.id, archived=archived)
-
-        return House.objects.raw(sql)
-
-    def num_active_jobs(self, **kwargs):
         """
-        Gets the number of active jobs for each house of the customer.
 
-        Args:
-            self: The object instance.
-
-        Returns:
-            A generator object with integers representing the number
-            of active jobs for each house.
-
-        Raises:
-            None.
-        """
-        for house in self._houses(**kwargs):
-            #get all active jobs for the each house
-            yield Job.objects.filter(house=house, house__customer=self.customer, approved=True, balance_amount__gt=0).count()
-
-    def num_approved_jobs(self, **kwargs):
-        """
-        Gets the number of completed jobs for each house of the customer.
-
-        Args:
-            self: The object instance.
-
-        Returns:
-            A generator object with integers representing the number
-            of completed jobs for each house.
-
-        Raises:
-            None.
-        """
-        for house in self._houses(**kwargs):
-            #get all active jobs for the each house
-            yield Job.objects.filter(house=house, house__customer=self.customer, approved=True).count()
-
-    def num_expenses(self, **kwargs):
-        """
-        Gets the number of expenses for each house of the customer.
-
-        Args:
-            self: The object instance.
-
-        Returns:
-            A generator object with integers representing the number
-            of completed jobs for each house.
-
-        Raises:
-            None.
-        """
-        for house in self._houses(**kwargs):
-            #get all expenses for the each house
-            yield Expenses.objects.filter(
-                house=house,
-                house__customer=self.customer,
-            ).count()
-
+        return House.objects.raw(sql, params=[self.customer.id, archived])
 
     """Current (Active) Houses"""
     def active_houses(self):
@@ -167,7 +109,6 @@ class Customer:
             customer=self.customer,
             current_worker__current=True
         )
-
 
     def approved_jobs(self):
         """

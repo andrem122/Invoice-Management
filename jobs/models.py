@@ -8,7 +8,7 @@ class House(models.Model):
     companies = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='Current_Worker',
-        through_fields=('house', 'company'), #see https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ManyToManyField.through_fields
+        through_fields=('house', 'company'),
     )
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer_house')
     purchase_price = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
