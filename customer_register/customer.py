@@ -2,7 +2,6 @@ from jobs.models import Job, Current_Worker, House, Request_Payment
 from expenses.models import Expenses
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.db.models.functions import Coalesce
 from itertools import chain
 import datetime, pytz
 

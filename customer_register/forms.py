@@ -24,6 +24,5 @@ class Customer_User_Register(ModelForm):
     """
     class Meta:
         model = Customer_User
-        #the attributes from the Job class that we want to exclude in our form
         #widgets for each input element
         fields = ['phone_number']

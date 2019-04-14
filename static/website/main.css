@@ -29,6 +29,20 @@ nav.navbar {
   width: 50px;
 }
 
+nav.navbar .nav-item .standard-btn {
+  padding: 8px 30px;
+}
+
+nav.navbar .nav-item:nth-child(3) {
+  margin-right: 28px;
+}
+
+@media only screen and (max-width: 992px) {
+  nav.navbar .nav-item .standard-btn {
+    display: none;
+  }
+}
+
 /* Counter */
 .counter {
   text-align: center;
@@ -84,7 +98,7 @@ h1, h2, h3, h4 {
   }
 }
 
-/* Sections */
+/* Home Sections */
 section.page-section {
   padding: 60px 0 60px 0;
 }
@@ -283,4 +297,98 @@ ul.footer-nav-menu + svg {
   background-color: #fff;
   color: #536cdb;
   text-decoration: none;
+}
+
+/* Forms */
+form input, form label {
+  display: block;
+  width: 100%;
+}
+
+form input:not([type="submit"]) {
+  margin-bottom: 20px;
+  border-radius: 30px;
+  padding: 12px 25px;
+  border: 1px solid #ccc;
+}
+
+form input[type="submit"] {
+  cursor: pointer;
+}
+
+/* Contact Sales */
+@media only screen and (min-width: 993px) {
+  form.contact-sales-form {
+    margin-top: 132px;
+  }
+}
+
+form.contact-sales-form {
+  padding: 36px 40px 30px 40px;
+  max-width: 400px;
+  background-color: #fff;
+}
+
+form.contact-sales-form .form-description {
+  margin-top: 20px;
+}
+
+form.contact-sales-form .form-description > p {
+  font-size: 12px;
+  color: rgb(166, 171, 191);
+  text-align: center;
+}
+
+form ul.messages {
+  list-style: none;
+  padding: 0;
+}
+
+form ul.messages li {
+  padding: 10px;
+}
+
+form ul.messages li.success {
+  color: #4BB543;
+  background-color: #DAFFD8;
+}
+
+form ul.messages li.error {
+  color: #B00E0E;
+  background-color: #FEAAAA;
+}
+
+section#contact-sales-home-banner {
+  background-color: rgb(245, 246, 250);
+  padding: 45px 0;
+}
+
+section#contact-sales-home-banner .col-lg-6:last-child {
+  display: flex;
+  justify-content: center;
+}
+
+section#contact-sales-home-banner .form-intro {
+  text-align: center;
+}
+
+section#contact-sales-home-banner .form-intro h2 {
+  font-size: 25px;
+}
+
+section#contact-sales-home-banner .list-group-item svg {
+  margin-right: 8px;
+}
+
+section#contact-sales-home-banner .list-group-item {
+  background-color: transparent;
+  border: 0;
+  padding-left: 0;
+}
+
+@media only screen and (max-width: 992px) {
+  section#contact-sales-home-banner .title-p-cta {
+    padding-top: 80px;
+    margin-bottom: 37px;
+  }
 }
