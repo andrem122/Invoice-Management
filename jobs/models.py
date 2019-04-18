@@ -1,8 +1,83 @@
 from django.db import models
 from django.conf import settings
+from django.db.models.functions import Coalesce
+from django.db.models import Sum, F, ExpressionWrapper, DecimalField, IntegerField, Func, Subquery, OuterRef
 import os
 
 #create database table structure here
+class Round(Func):
+  function = 'ROUND'
+  arity = 2
+
+class House_Set(models.QuerySet):
+
+    def add_total_spent(self):
+        from expenses.models import Expenses
+
+        return self.annotate(
+            total_spent=Coalesce(
+                Subquery(
+                    Request_Payment.objects
+                    .filter(
+                        house_id=OuterRef('pk'),
+                        approved=True
+                    ).values('house_id')
+                    .order_by()
+                    .annotate(
+                        sum=Sum('amount')
+                    ).values('sum')[:1],
+                    output_field=DecimalField()
+                ), 0) +
+                Coalesce(
+                    Subquery(
+                        Expenses.objects
+                        .filter(
+                            house_id=OuterRef('pk')
+                        ).values('house_id')
+                        .order_by()
+                        .annotate(
+                            sum=Sum('amount')
+                        ).values('sum')[:1],
+                        output_field=DecimalField()
+                ), 0)
+        )
+
+    def add_budget(self):
+        return self.annotate(
+            budget=ExpressionWrapper(
+                Round(0.933 * F('after_repair_value') - F('purchase_price') - F('profit') - 400.00, 2),
+                output_field=DecimalField()
+            )
+        )
+
+    def add_budget_balance(self):
+        return self.add_budget().add_total_spent().annotate(
+            budget_balance=ExpressionWrapper(
+                F('budget') - F('total_spent'),
+                output_field=DecimalField()
+            ),
+            budget_balance_degree=ExpressionWrapper(
+                Round(360 * F('total_spent') / F('budget'), 4),
+                output_field=DecimalField()
+            )
+        )
+
+    def add_percent_budget_used(self):
+        return self.add_budget().add_total_spent().annotate(
+            percent_budget_used=ExpressionWrapper(
+                F('total_spent') / F('budget'),
+                output_field=IntegerField()
+            )
+        )
+
+    def add_potential_profit(self):
+        return self.add_total_spent().annotate(
+            potential_profit=ExpressionWrapper(
+                Round(0.933 * F('after_repair_value') - F('purchase_price') - F('total_spent') - 400.00, 2),
+                output_field=DecimalField()
+            )
+        )
+
 class House(models.Model):
     address = models.CharField(max_length=250)
     companies = models.ManyToManyField(
@@ -27,6 +102,8 @@ class House(models.Model):
 
     expenses = models.BooleanField(default=False)
     archived = models.BooleanField(default=False)
+
+    objects = House_Set.as_manager()
 
     def __str__(self):
         return self.address
