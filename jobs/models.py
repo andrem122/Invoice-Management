@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.db.models.functions import Coalesce
-from django.db.models import Sum, F, ExpressionWrapper, DecimalField, IntegerField, Func, Subquery, OuterRef
+from django.db.models import Sum, Count, F, ExpressionWrapper, DecimalField, IntegerField, Func, Subquery, OuterRef
 import os
 
 #create database table structure here
@@ -76,6 +76,58 @@ class House_Set(models.QuerySet):
                 Round(0.933 * F('after_repair_value') - F('purchase_price') - F('total_spent') - 400.00, 2),
                 output_field=DecimalField()
             )
+        )
+
+    def add_num_approved_jobs(self):
+        return self.annotate(
+            num_approved_jobs=Coalesce(
+                Subquery(
+                    Job.objects
+                    .filter(
+                        house_id=OuterRef('pk'),
+                        approved=True,
+                    ).values('house_id')
+                    .order_by()
+                    .annotate(
+                        count=Count('pk')
+                    ).values('count')[:1],
+                    output_field=IntegerField()
+            ), 0)
+        )
+
+    def add_num_active_jobs(self):
+        return self.annotate(
+            num_active_jobs=Coalesce(
+                Subquery(
+                    Job.objects
+                    .filter(
+                        house_id=OuterRef('pk'),
+                        approved=True,
+                        balance_amount__gt=0
+                    ).values('house_id')
+                    .order_by()
+                    .annotate(
+                        count=Count('pk')
+                    ).values('count')[:1],
+                    output_field=IntegerField()
+            ), 0)
+        )
+
+    def add_num_expenses(self):
+        from expenses.models import Expenses
+        return self.annotate(
+            num_expenses=Coalesce(
+                Subquery(
+                    Expenses.objects
+                    .filter(
+                        house_id=OuterRef('pk'),
+                    ).values('house_id')
+                    .order_by()
+                    .annotate(
+                        count=Count('pk')
+                    ).values('count')[:1],
+                    output_field=IntegerField()
+            ), 0)
         )
 
 class House(models.Model):

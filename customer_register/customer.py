@@ -34,61 +34,6 @@ class Customer:
             self.customer = customer
         self.houses = self._houses()
 
-    def projects(self, archived):
-        """
-        Gets total amount spent in jobs and expenses for each house,
-        number of approved jobs, number of active jobs, and number
-        of expenses for the projects view.
-
-        Args:
-            self: The object instance.
-            houses: Queryset of the House class.
-
-        Returns:
-            A queryset
-
-        Raises:
-            None.
-        """
-        sql = """
-            SELECT h.id, h.address,
-
-               COALESCE(
-                   (SELECT COALESCE(SUM(j.total_paid), 0)
-                    FROM jobs_job j
-                    WHERE j.house_id = h.id
-                    AND j.approved=1), 0) +
-                COALESCE(
-                    (SELECT COALESCE(SUM(e.amount), 0)
-                     FROM expenses_expenses e
-                     WHERE e.house_id = h.id), 0)
-                AS total_spent,
-
-                (SELECT COUNT(j.id)
-                FROM jobs_job j
-                WHERE j.house_id = h.id
-                AND j.approved=1)
-                AS num_approved_jobs,
-
-                (SELECT COUNT(e.id)
-                FROM expenses_expenses e
-                WHERE e.house_id = h.id)
-                AS num_expenses,
-
-                (SELECT COUNT(j.id)
-                FROM jobs_job j
-                WHERE j.house_id = h.id
-                AND j.approved=1
-                AND j.balance_amount > 0)
-                AS num_active_jobs
-
-           FROM jobs_house h
-           WHERE customer_id = %s
-           AND archived = %s
-           ORDER BY address
-        """
-
-        return House.objects.raw(sql, params=[self.customer.id, archived])
 
     """Current (Active) Houses"""
     def active_houses(self):
