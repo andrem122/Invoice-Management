@@ -6,7 +6,6 @@ from .forms import Archive_House
 from jobs.models import House
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
-from django.db import connection
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def projects(request):
@@ -73,5 +72,5 @@ def projects(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         archive_house_form = Archive_House()
-    print(len(connection.queries))
+        
     return HttpResponse(template.render(context, request))
