@@ -58,7 +58,7 @@ def send_approval_mail(request, payment_object, subject, html_title):
         send_mail(
             subject,
             plain_message,
-            request.user.email,
+            'no-reply@novaonesoftware.com',
             [payment_object.job.company.email],
             fail_silently=False,
             html_message=html_message,

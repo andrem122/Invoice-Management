@@ -29,7 +29,7 @@ def contact_sales(request):
             phone_number = contact_sales_form.cleaned_data['phone_number']
 
             message = """
-            A demo of Nova One has been requested.\n\n
+            A demo of Nova One has been requested.\n
             First Name: {first_name}\n
             Last Name: {last_name}\n
             Email: {email}\n
@@ -44,7 +44,7 @@ def contact_sales(request):
             send_mail(
                 'Demo Requested',
                 message,
-                'andre.mashraghi@gmail.com',
+                'no-reply@novaonesoftware.com',
                 ['andre.mashraghi@gmail.com'],
                 fail_silently=False,
             )
