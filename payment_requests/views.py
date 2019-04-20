@@ -52,7 +52,7 @@ def send_approval_mail(request, payment_object, subject, html_title):
         'host_url': request.build_absolute_uri('/'),
     }
     html_message = render_to_string('email/approved.html', context)
-    plain_message = """Hi {},\n\nYour payment request for ${} at {} has been approved!\n\nThanks for your cooperation.\nNecro Software Systems\n\n**This is an automated message. Please do not reply**
+    plain_message = """Hi {},\n\nYour payment request for ${} at {} has been approved!\n\nThanks for your cooperation.\nNova One Software Systems\n\n**This is an automated message. Please do not reply**
     """.format(username, payment_object.amount, payment_object.job.house.address)
     try:
         send_mail(

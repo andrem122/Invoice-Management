@@ -32,7 +32,7 @@ def charge(request):
 
         # Create a product
         product = stripe.Product.create(
-            name='Necro Software Monthly Subscription',
+            name='Nova One Software Monthly Subscription',
             type='service',
         )
 
@@ -43,7 +43,7 @@ def charge(request):
             charge = stripe.Charge.create(
                 amount=500,
                 currency='usd',
-                description='Necro Software Monthly Subscription',
+                description='Nova One Software Monthly Subscription',
                 source=request.POST['stripeToken']
             )
         except stripe.error.CardError as e:

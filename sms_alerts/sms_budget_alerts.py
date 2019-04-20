@@ -25,7 +25,7 @@ def format_message(address, percent, budget, total_spent):
         total_spent = as_currency(total_spent)
         begin_message = 'WARNING: {percent}% of the budget for project {address} has been spent! Spend less money to ensure a profit.'.format(percent=percent, address=address)
         middle_message = '\n\nBudget: {budget}\nTotal Spent: {total_spent}'.format(budget=budget, total_spent=total_spent)
-        end_message = '\n\nThis is an automated text message from Necro Software Systems.'
+        end_message = '\n\nThis is an automated text message from Nova One Software Systems.'
 
 
         if percent >= 100:
