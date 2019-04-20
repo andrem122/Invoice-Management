@@ -44,7 +44,7 @@ class Edit_Job(ModelForm, forms.Form):
     """
     Allows users to edit a the Job Instance
     """
-    
+
     class Meta:
         model = Job
         fields = [
@@ -61,8 +61,6 @@ class Edit_Job(ModelForm, forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #get customer id
-        customer_id = user.id
         #filter house by customer id
-        self.fields['house'].queryset = House.objects.filter(customer=customer_id, archived=False)
-        self.fields['company'].queryset = User.objects.filter(groups=str(customer_id))
+        self.fields['house'].queryset = House.objects.filter(customer=user, archived=False)
+        self.fields['company'].queryset = User.objects.filter(groups__name=str(user.id))

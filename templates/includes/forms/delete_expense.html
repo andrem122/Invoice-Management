@@ -1,4 +1,4 @@
-<form id="delete_exp_form_{{ expense.id }}" class="delete_exp_form" action="{% url 'expenses:expenses' %}" method="post">
+<form id="delete_exp_form_{{ expense.id }}{{ item.id }}" class="delete_exp_form" action="{% url 'expenses:expenses' %}" method="post">
   {% csrf_token %}
   {% if delete_exp_form.errors %}
   <div class="form-messages">
@@ -6,7 +6,7 @@
   </div>
   {% endif %}
   {{ delete_exp_form }}
-  <input type="hidden" name="expense_id" value="{{ expense.id }}">
+  <input type="hidden" name="expense_id" value="{{ expense.id }}{{ item.id }}">
   <input type="hidden" name="delete_exp_form" value="delete_exp_form">
   <input type="hidden" name="post_from_url" value="{{ post_from_url }}">
 

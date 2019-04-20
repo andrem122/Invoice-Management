@@ -3,6 +3,7 @@
 {% load humanize %}
 {% load static %}
 {% load jobs_admin_group_check %}
+{% load class_tag %}
 
 {% block scripts %}
 <script type="text/javascript" src="{% static 'project_details/project_details.js' %}" defer></script>
@@ -56,43 +57,63 @@
 
 </div>
 
-<div id="expenses">
-  {% if expenses %}
-    <h2 class="sub-title">Expenses</h2>
-    {% for expense in expenses %}
-      {% if forloop.first %}
+<div id="expenses-and-jobs">
+  {% if expenses_and_jobs %}
+    <h2 class="sub-title">Expenses & Approved Jobs</h2>
+    {% for item in expenses_and_jobs %}
+      {% ifchanged %}
       <div class="item-headings-wrapper container-fluid">
         <ul class="item-headings row">
           <div class="col col-sm-6">
             <li>Status</li>
-            <li class="second-heading">Type</li>
+            <li class="second-heading">
+              {% if item|get_class == 'Expenses' %}
+                Type
+              {% else %}
+                Company
+              {% endif %}
+            </li>
           </div>
           <div class="col col-sm-4">
             <li class="contract_link">Contract Link</li>
-            <li>Date Added</li>
+            <li>
+              Submitted
+            </li>
           </div>
           <div class="col col-sm-2">
             <li>Amount</li>
           </div>
         </ul>
       </div>
-      {% endif %}
+      {% endifchanged %}
 
       {# Item Options Forms #}
       {% if current_user|in_group:'Customers' %}
       <div class="option-forms">
-
-        {% include 'includes/forms/delete_expense.html' %}
+        {% if item|get_class == 'Expenses' %}
+          {% include 'includes/forms/delete_expense.html' %}
+        {% else %}
+          {% include 'includes/forms/reject_job.html' %}
+        {% endif %}
 
       </div>
       <div class="popup-forms">
+        {% include 'includes/forms/edit_job.html' %}
         <ul class="mobile-option-icons popup animated bounceInUp">
 
           <li>
-            <button type="submit" form="delete_exp_form_{{ expense.id }}" class="delete-option-m mobile-option-item">
+            {% if item|get_class == 'Expenses' %}
+
+            <button type="submit" form="delete_exp_form_{{ item.id }}" class="delete-option-m mobile-option-item">
               <span>Delete</span>
               <i class="far fa-trash-alt"></i>
             </button>
+
+            {% else %}
+
+              {% include 'includes/option_items/mobile_options_job.html' %}
+
+            {% endif %}
           </li>
 
         </ul>
@@ -106,10 +127,25 @@
               <ul>
                 <li>
                   {# Status #}
-                  <div class="status expense">Expense</div>
+                  {% if item|get_class == 'Expenses' %}
+                    <div class="status expense">Expense</div>
+                  {% elif item|get_class == 'Job' and item.balance_amount > 0 %}
+                    <div class="status active">Active Job</div>
+                  {% else %}
+                    <div class="status approved">Job</div>
+                  {% endif %}
                 </li>
-                <span class="info-title">Expense Type</span>
-                <li class="info-1">{{ expense.expense_type }}</li>
+                <span class="info-title">
+                  {% if item|get_class == 'Expenses' %}
+                    Expense Type
+                  {% else %}
+                    Company
+                  {% endif %}
+                </span>
+                <li class="info-1">
+                  {{ item.expense_type }}
+                  {{ item.company }}
+                </li>
                 <hr>
               </ul>
             </div>
@@ -117,12 +153,13 @@
               <ul>
                 <span class="info-title">Contract</span>
                 <li class="info-2">
-                  <a rel="noopener noreferrer" target="_blank" href="{{ expense.document_link.url }}">View Contract</a>
+                  <a rel="noopener noreferrer" target="_blank" href="{{ item.document_link.url }}">View Contract</a>
                 </li>
                 <hr>
                 <span class="info-title">Submitted</span>
                 <li class="info-3">
-                  {{ expense.submit_date|date:'M j, Y' }}
+                  {{ item.submit_date|date:'M j, Y' }}
+                  {{ item.start_date|date:'M j, Y' }}
                 </li>
                 <hr>
               </ul>
@@ -131,7 +168,10 @@
               {% if current_user|in_group:'Customers' %}
               <ul>
                 <span class="info-title">Amount</span>
-                <li class="info-4">${{ expense.amount|intcomma }}</li>
+                <li class="info-4">
+                  ${{ item.amount|intcomma }}
+                  {{ item.start_amount|intcomma }}
+                </li>
                 <hr>
                 {# Mobile Option Buttons #}
 
@@ -148,10 +188,13 @@
                   <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-ellipsis-v"></i>
                   </a>
-
+                  {% if item|get_class == 'Expenses' %}
                   <div class="dropdown-menu">
-                    <button type="submit" form="delete_exp_form_{{ expense.id }}" class="dropdown-item delete-exp-option">Delete</button>
+                    <button type="submit" form="delete_exp_form_{{ item.id }}" class="dropdown-item delete-exp-option">Delete</button>
                   </div>
+                  {% else %}
+                    {% include 'includes/option_items/desktop_options_job.html' %}
+                  {% endif %}
 
                 </div>
               </ul>
@@ -164,120 +207,25 @@
   </div>
   {% endif %}
 
-  <div id="approved_jobs">
-    {% if approved_jobs %}
-      <h2 class="sub-title">Approved Jobs</h2>
-      {% for job in approved_jobs %}
-        {% if forloop.first %}
-        <div class="item-headings-wrapper container-fluid">
-          <ul class="item-headings row">
-            <div class="col col-sm-6">
-              <li>Status</li>
-              <li class="second-heading">Company</li>
-            </div>
-            <div class="col col-sm-4">
-              <li class="contract_link">Contract Link</li>
-              <li>Submitted</li>
-            </div>
-            <div class="col col-sm-2">
-              <li>Amount</li>
-            </div>
-          </ul>
-        </div>
-        {% endif %}
-
-        {# Item Options Forms #}
-        {% if current_user|in_group:'Customers' %}
-        <div class="option-forms">
-
-          {% include 'includes/forms/approve_job.html' %}
-
-          {% include 'includes/forms/approve_as_payment_job.html' %}
-
-          {% include 'includes/forms/reject_job.html' %}
-
-        </div>
-
-        <div class="popup-forms">
-
-          {% include 'includes/forms/edit_job.html' %}
-
-          <ul class="mobile-option-icons popup animated bounceInUp">
-
-            {% include 'includes/option_items/mobile_options_job.html' %}
-
-          </ul>
-        </div>
-        {% endif %}
-
-        <div class="item-container">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="info-group col col-sm-6">
-                <ul>
-                  <li>
-                    {# Status #}
-
-                    {% if job.approved == True and job.balance > 0 %}
-                    <div class="status active">Active</div>
-
-                    {% else %}
-                    <div class="status approved">Completed</div>
-                    {% endif %}
-
-                  </li>
-                  <span class="info-title">Company</span>
-                  <li class="info-1">{{ job.company }}</li>
-                  <hr>
-                </ul>
-              </div>
-              <div class="info-group col col-sm-4">
-                <ul>
-                  <span class="info-title">Contract</span>
-                  <li class="info-2">
-                    <a rel="noopener noreferrer" target="_blank" href="{{ job.document_link.url }}">View Contract</a>
-                  </li>
-                  <hr>
-                  <span class="info-title">Submitted</span>
-                  <li class="info-3">
-                    {{ job.start_date|date:'M j, Y' }}
-                  </li>
-                  <hr>
-                </ul>
-              </div>
-              <div class="info-group col col-sm-2">
-                {% if current_user|in_group:'Customers' %}
-                <ul>
-                  <span class="info-title">Amount</span>
-                  <li class="info-4">${{ job.start_amount|intcomma }}</li>
-                  <hr>
-
-                  {# Mobile Option Buttons #}
-
-                  <span class="info-title">Options</span>
-                  <div class="item-options-toggle-mobile">
-                    <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
-                      <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                  </div>
-
-                  {# Desktop Options #}
-                  <div class="item-options-dropdown dropdown">
-
-                    <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v"></i>
-                    </a>
-
-                    {% include 'includes/option_items/desktop_options_job.html' %}
-
-                  </div>
-                </ul>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </div> <!-- /.item-container -->
-      {% endfor %}
+  {% if expenses_and_jobs.has_other_pages %}
+  <ul class="pagination">
+    {% if expenses_and_jobs.has_previous %}
+      <li><a href="?page={{ expenses_and_jobs.previous_page_number }}"><i class="fas fa-angle-left"></i></a></li>
+    {% else %}
+      <li class="disabled"><span><i class="fas fa-angle-left"></i></span></li>
     {% endif %}
-  </div>
+    {% for i in expenses_and_jobs.paginator.page_range %}
+      {% if expenses_and_jobs.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if expenses_and_jobs.has_next %}
+      <li><a href="?page={{ expenses_and_jobs.next_page_number }}"><i class="fas fa-angle-right"></i></a></li>
+    {% else %}
+      <li class="disabled"><span><i class="fas fa-angle-right"></i></span></li>
+    {% endif %}
+  </ul>
+  {% endif %}
 {% endblock content %}
