@@ -6,6 +6,8 @@ from .forms import Archive_House
 from jobs.models import House
 from django.contrib.auth.decorators import user_passes_test
 from project_management.decorators import customer_and_staff_check
+from django.core.paginator import Paginator
+from itertools import chain
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def projects(request):
@@ -19,15 +21,16 @@ def projects(request):
     get number of active jobs, completed jobs,
     and total amount spent for each property
     """
-    archived_houses = (
-        House.objects.filter(archived=True)
+    narchived_houses = (
+        House.objects.filter(archived=False)
         .add_total_spent()
         .add_num_approved_jobs()
         .add_num_active_jobs()
         .add_num_expenses()
     )
-    narchived_houses = (
-        House.objects.filter(archived=False)
+
+    archived_houses = (
+        House.objects.filter(archived=True)
         .add_total_spent()
         .add_num_approved_jobs()
         .add_num_active_jobs()
@@ -38,9 +41,18 @@ def projects(request):
     send_data_form = Send_Data()
     archive_house_form = Archive_House()
 
+    projects_list = list(chain(narchived_houses, archived_houses))
+    paginator = Paginator(projects_list, 25)
+
+    page = request.GET.get('page')
+    projects = paginator.get_page(page)
+    narchived_houses_count = narchived_houses.count()
+    archived_houses_count = archived_houses.count()
+
     context = {
-        'archived_houses': archived_houses,
-        'narchived_houses': narchived_houses,
+        'projects': projects,
+        'narchived_houses_count': narchived_houses_count,
+        'archived_houses_count': archived_houses_count,
         'current_user': current_user,
         'archive_house_form': archive_house_form,
         'send_data_form': send_data_form,
@@ -72,5 +84,5 @@ def projects(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         archive_house_form = Archive_House()
-        
+
     return HttpResponse(template.render(context, request))

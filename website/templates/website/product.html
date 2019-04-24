@@ -1,0 +1,407 @@
+{% extends 'base_generic_website.html' %}
+{% load static %}
+
+{% block scripts %}
+{% endblock scripts %}
+
+
+{% block content %}
+{% include 'includes/website_parts/navigation.html' %}
+
+<div id="page-content">
+  <main id="main">
+    <section id="product-banner" class="home-banner">
+      <div class="container-fluid max-width-container">
+
+        <div class="row">
+          <div class="col-lg-12 title-p-cta">
+            <h1>All-in-one solution to Manage and Grow Your Real Estate Business</h1>
+            <p class="description-text">
+              Painlessly keep track of your budget, easily manage invoices, and
+              effortlessly stay on top of rehab projects.
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md icon-title-description">
+            <div class="icon">
+              <img src="{% static 'checklist.png' %}" alt="Checklist">
+            </div>
+            <h4>Manage</h4>
+          </div>
+
+          <div class="col-md icon-title-description">
+            <div class="icon">
+              <img src="{% static 'notification-bell.png' %}" alt="Notification Bell">
+            </div>
+            <h4>Alerts</h4>
+          </div>
+
+          <div class="col-md icon-title-description">
+            <div class="icon">
+              <img src="{% static 'organize.png' %}" alt="Organize Diagram">
+            </div>
+            <h4>Organize</h4>
+          </div>
+
+          <div class="col-md icon-title-description">
+            <div class="icon">
+              <img src="{% static 'house.png' %}" alt="House">
+            </div>
+            <h4>Projects</h4>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="product-features page-section">
+      <div class="container-fluid max-width-container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h1 class="p1">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </h1>
+            <p class="description-text">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Nav tabs -->
+          <ul id="product-features-tab" class="nav nav-tabs justify-content-center" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="messages-tab" data-toggle="tab" href="#messages" role="tab" aria-controls="messages" aria-selected="false">Messages</a>
+            </li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <div class="row">
+                <div class="col-md">
+                  <img src="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines-1.png" srcset="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines@2x-1.png 2x">
+                </div>
+                <div class="col-md product-feature-description">
+                  <h2>Lorem Ipsum</h2>
+                  <p>
+                    Cillum1 ad ut irure tempor velit nostrud occaecat ullamco aliqua anim Lorem sint.
+                    Veniam sint duis incididunt do esse magna mollit excepteur laborum qui. Id id
+                    reprehenderit sit est eu aliqua occaecat quis.
+                  </p>
+                  <p>
+                    Cillum1 ad ut irure tempor velit nostrud occaecat ullamco aliqua anim Lorem sint.
+                    Veniam sint duis incididunt do esse magna mollit excepteur laborum qui.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+              <div class="row">
+                <div class="col-md">
+                  <img src="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines-1.png" srcset="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines@2x-1.png 2x">
+                </div>
+                <div class="col-md product-feature-description">
+                  <h2>Lorem Ipsum</h2>
+                  <p>
+                    Cillum2 ad ut irure tempor velit nostrud occaecat ullamco aliqua anim Lorem sint.
+                    Veniam sint duis incididunt do esse magna mollit excepteur laborum qui. Id id
+                    reprehenderit sit est eu aliqua occaecat quis.
+                  </p>
+                  <p>
+                    Cillum1 ad ut irure tempor velit nostrud occaecat ullamco aliqua anim Lorem sint.
+                    Veniam sint duis incididunt do esse magna mollit excepteur laborum qui.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+              <div class="row">
+                <div class="col-md">
+                  <img src="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines-1.png" srcset="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines@2x-1.png 2x">
+                </div>
+                <div class="col-md product-feature-description">
+                  <h2>Lorem Ipsum</h2>
+                  <p>
+                    Cillum3 ad ut irure tempor velit nostrud occaecat ullamco aliqua anim Lorem sint.
+                    Veniam sint duis incididunt do esse magna mollit excepteur laborum qui. Id id
+                    reprehenderit sit est eu aliqua occaecat quis.
+                  </p>
+                  <p>
+                    Cillum1 ad ut irure tempor velit nostrud occaecat ullamco aliqua anim Lorem sint.
+                    Veniam sint duis incididunt do esse magna mollit excepteur laborum qui.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </section>
+
+    <section class="product-checklist page-section">
+      <div class="container-fluid max-width-container">
+        <div class="row">
+
+          <div class="col-12 product-checklist-intro">
+            <h2>
+              See How Nova One Can Help You
+            </h2>
+            <p class="description-text">
+              Watch the video below to see how Nova One
+              can help you easily stay on top of your projects.
+            </p>
+          </div>
+
+          <div class="product-checklist-list col-12">
+
+            <div class="row">
+
+              <div class="col-lg-5">
+                <ul id="product-checklist-items" class="list-group">
+                  <li class="list-group-item"><i class="far fa-thumbs-up"></i>Stress-free project management</li>
+                  <li class="list-group-item"><i class="far fa-thumbs-up"></i>Text message alerts</li>
+                  <li class="list-group-item"><i class="far fa-thumbs-up"></i>Easy expense tracking</li>
+                  <li class="list-group-item"><i class="far fa-thumbs-up"></i>Automatic budget tracking</li>
+                  <li class="list-group-item"><i class="far fa-thumbs-up"></i>Free live support</li>
+                </ul>
+              </div>
+
+              <div class="col-lg-7">
+                <div class="video-container">
+                  <video muted="" playsinline="" loop="" poster="https://shortlist.co/wp-content/uploads/2018/10/Edit-Onboarding-Flow-Screenshot@2x-1.png" width="100%" height="auto">
+										<source src="https://shortlist.co/wp-content/uploads/2018/10/Edit-Onboarding-Flow_3.mp4" type="video/mp4">
+									</video>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row three-items justify-content-center">
+              <div class="col-12 three-items-intro">
+                <h1>Lorem ipsum dolor sit amet</h1>
+                <p class="description-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                <p class="description-text">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                  nisi ut aliquip ex ea commodo consequat.
+                </p>
+              </div>
+
+              <div class="col-md-4 icon-title-description">
+                <div class="icon">
+                  <img src="{% static 'notification-bell.png' %}" alt="Notification Bell">
+                </div>
+                <h4>Alerts</h4>
+              </div>
+
+              <div class="col-md-4 icon-title-description">
+                <div class="icon">
+                  <img src="{% static 'organize.png' %}" alt="Organize Diagram">
+                </div>
+                <h4>Organize</h4>
+              </div>
+
+              <div class="col-md-4 icon-title-description">
+                <div class="icon">
+                  <img src="{% static 'house.png' %}" alt="House">
+                </div>
+                <h4>Projects</h4>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="product-media page-section">
+      <div class="container-fluid max-width-container">
+        <div class="row justify-content-center">
+          <h1>Lorem ipsum dolor sit amet, consectetur adipisicing</h1>
+          <p class="description-text">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+            sed do eiusmod tempor incididunt ut labore et dolore magna
+            aliqua.
+          </p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4 product-media-content">
+            <h3>Lorem ipsum dolor sit amet.</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+              sed do eiusmod tempor incididunt ut labore et dolore magna
+              aliqua.
+            </p>
+            <ul id="product-checklist-items" class="list-group">
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Stress-free project management</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Text message alerts</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Easy expense tracking</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Automatic budget tracking</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Free live support</li>
+            </ul>
+          </div>
+          <div class="col-lg-8 product-media-video">
+            <div class="video-container">
+              <video muted="" playsinline="" loop="" poster="https://shortlist.co/wp-content/uploads/2018/10/Track-Your-Enagagements-Screenshot@2x.png" width="100%" height="auto">
+							  <source src="" type="video/mp4">
+							</video>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-8 product-media-video">
+            <div class="video-container">
+              <video muted="" playsinline="" loop="" poster="https://shortlist.co/wp-content/uploads/2018/10/Track-Your-Enagagements-Screenshot@2x.png" width="100%" height="auto">
+                <source src="" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+          <div class="col-lg-4 product-media-content">
+            <h3>Lorem ipsum dolor sit amet.</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+              sed do eiusmod tempor incididunt ut labore et dolore magna
+              aliqua.
+            </p>
+            <ul id="product-checklist-items" class="list-group">
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Stress-free project management</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Text message alerts</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Easy expense tracking</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Automatic budget tracking</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Free live support</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4 product-media-content">
+            <h3>Lorem ipsum dolor sit amet.</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+              sed do eiusmod tempor incididunt ut labore et dolore magna
+              aliqua.
+            </p>
+            <ul id="product-checklist-items" class="list-group">
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Stress-free project management</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Text message alerts</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Easy expense tracking</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Automatic budget tracking</li>
+              <li class="list-group-item"><i class="far fa-thumbs-up"></i>Free live support</li>
+            </ul>
+          </div>
+          <div class="col-lg-8 product-media-video">
+            <div class="video-container">
+              <video muted="" playsinline="" loop="" poster="https://shortlist.co/wp-content/uploads/2018/10/Track-Your-Enagagements-Screenshot@2x.png" width="100%" height="auto">
+                <source src="" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="analytics page-section">
+      <div class="container-fluid max-width-container">
+        <div class="row">
+          <div class="col-lg-8">
+            <img src="https://shortlist.co/wp-content/uploads/2018/10/report1x.png" srcset="https://shortlist.co/wp-content/uploads/2018/10/report2x.png 2x">
+          </div>
+          <div class="col-lg-4">
+            <div class="analytics-content">
+              <h1>Lorem ipsum dolor sit amet</h1>
+              <p class="description-text">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+            </div>
+            <div class="analytics-items">
+              <div class="row">
+
+                <div class="col-md-6 analytics-item">
+                  <h4>
+                    <img src="https://shortlist.co/wp-content/uploads/2018/09/icon1-2.svg">
+                    Lorem Ipsum
+                  </h4>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  </p>
+                </div>
+
+                <div class="col-md-6 analytics-item">
+                  <h4>
+                    <img src="https://shortlist.co/wp-content/uploads/2018/09/icon1-2.svg">
+                    Lorem Ipsum
+                  </h4>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  </p>
+                </div>
+
+                <div class="col-md-6 analytics-item">
+                  <h4>
+                    <img src="https://shortlist.co/wp-content/uploads/2018/09/icon1-2.svg">
+                    Lorem Ipsum
+                  </h4>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  </p>
+                </div>
+
+                <div class="col-md-6 analytics-item">
+                  <h4>
+                    <img src="https://shortlist.co/wp-content/uploads/2018/09/icon1-2.svg">
+                    Lorem Ipsum
+                  </h4>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  </p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-sign-up page-section">
+      <div class="container-fluid max-width-container">
+        <div class="row">
+          <div class="col-md-12">
+            <img src="{% static 'agreement.png' %}" alt="Sign Up">
+            <h2>Sign Up Free</h2>
+            <p class="description-text">
+              Sign up for free today and get all features, free updates, and unparalleled support.
+            </p>
+            <a href="/customer-register" class="standard-btn">Try It For Free</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+{% include 'includes/website_parts/footer.html' %}
+{% endblock content %}

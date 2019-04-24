@@ -35,6 +35,24 @@ window.addEventListener("load", function(event) {
     }
   });
 
+  /* Scroll to top when arrow up clicked */
+  $scroll_btn = $('#scroll');
+  $('window').scroll(function(){
+    if ($(this).scrollTop() > 2) {
+      console.log('Scroll button visible');
+      $scroll_btn.removeClass('hidden');
+      $scroll_btn.addClass('visible');
+    } else {
+      $scroll_btn.removeClass('visible');
+      $scroll_btn.addClass('hidden');
+    }
+  });
+
+  $('#scroll').click(function(){
+    $("html, body").animate({ scrollTop: 0 }, 600);
+    return false;
+  });
+
   function upload_document_form_on_change() {
     //submits uploaded document as soon as the user uploads the document into the input element
     document.addEventListener('change', function(e){
@@ -86,21 +104,5 @@ window.addEventListener("load", function(event) {
       }).start();
   }
   */
-  /*Scroll to top when arrow up clicked BEGIN*/
-  $scroll_btn = $('#scroll');
-  $('body').scroll(function(){
-    if ($(this).scrollTop() > 2) {
-      $scroll_btn.removeClass('hidden');
-      $scroll_btn.addClass('visible');
-    } else {
-      $scroll_btn.removeClass('visible');
-      $scroll_btn.addClass('hidden');
-    }
-  });
-
-  $('#scroll').click(function(){
-    $("html, body").animate({ scrollTop: 0 }, 600);
-    return false;
-  });
 
 });

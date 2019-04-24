@@ -1,11 +1,11 @@
 {# Archive House #}
-<form id="archive_house_form_{{ house.id }}" class="archive_house_form" action="{% url 'projects:projects' %}" method="post">
+<form id="archive_house_form_{{ project.id }}" class="archive_house_form" action="{% url 'projects:projects' %}" method="post">
   {% csrf_token %}
   {% if archive_house_form.errors %}
   <div class="form-messages">
     <p>Please try again.</p>
   </div>
   {% endif %}
-  <input type="hidden" name="house_id" value="{{ house.id }}">
+  <input type="hidden" name="house_id" value="{{ project.id }}">
   <input type="hidden" name="post_from_url" value="{{ post_from_url }}">
 </form>

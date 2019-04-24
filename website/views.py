@@ -12,6 +12,13 @@ def home(request):
 
     return HttpResponse(template.render(context, request))
 
+def product(request):
+    #load the template
+    template = loader.get_template('website/product.html')
+    context = {}
+
+    return HttpResponse(template.render(context, request))
+
 def contact_sales(request):
     #load the template
     template = loader.get_template('website/contact_sales.html')

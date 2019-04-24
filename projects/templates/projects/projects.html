@@ -1,152 +1,37 @@
-{% extends 'standard_items_customer_5.html' %}
+{% extends 'logged_in_customer.html' %}
 
 {% load humanize %}
 {% load static %}
 {% load payment_requests_group_check %}
 {% load projects_extras %}
+{% load class_tag %}
 
 {% block title %}Projects{% endblock title %}
 
 {% block scripts %}
 {% endblock scripts %}
 
-{% block page_title %}{{ narchived_houses|length }} Projects{% endblock page_title %}
+{% block page_title %}{{ narchived_houses_count }} Projects | {{ archived_houses_count }} Archived Projects{% endblock page_title %}
 {% block button_with_title %}<a href="/add-house/" class="round-btn solid-round-btn" name="add_project">Add Project</a>{% endblock button_with_title %}
-{% block heading_status %}Status{% endblock heading_status %}
-{% block item_heading_1 %}Project{% endblock item_heading_1 %}
-{% block item_heading_2 %}Expenses{% endblock item_heading_2 %}
-{% block item_heading_3 %}Approved Jobs{% endblock item_heading_3 %}
-{% block item_heading_4 %}Total Spent{% endblock item_heading_4 %}
-{% block item_loop %}
-  {% for house in narchived_houses %}
 
-  {# Item Options Forms #}
-  {% if current_user|in_group:'Customers' %}
-  <div class="option-forms">
-
-    {% include 'includes/forms/narchive_house.html' %}
-
-  </div>
-  <div class="popup-forms">
-    {# Mobile Option Buttons #}
-    <ul class="mobile-option-icons popup animated bounceInUp">
-
-      <li>
-        <button type="submit" form="narchive_house_form_{{ house.id }}" class="archive-option-m mobile-option-item">
-          {% if house.archived == False %}
-            <span>Archive</span>
-            <i class="fas fa-archive"></i>
-          {% else %}
-            <span>Unarchive</span>
-            <i class="fas fa-undo"></i>
-          {% endif %}
-        </button>
-      </li>
-
-    </ul>
-  </div>
-
-  {% endif %}
-  <div class="item-container">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="info-group col col-sm-6">
-          <ul>
-            <li>
-
-              {% if house.num_active_jobs > 0 %}
-
-                <div class="status active">Active</div>
-
-              {% else %}
-
-                <div class="status open">Open</div>
-
-              {% endif %}
-
-            </li>
-            <span class="info-title">Project</span>
-            <li class="info-1"><a href="/project-details/{{ house.id }}">{{ house.address }}</a></li>
-            <hr>
-          </ul>
-        </div>
-        <div class="info-group col col-sm-4">
-          <ul>
-            <span class="info-title">Expenses</span>
-            <li class="info-2 active_jobs">
-
-                {% if house.num_expenses > 1 %}
-                <span>{{ house.num_expenses }}</span> Expenses
-
-                {% elif house.num_expenses == 1 %}
-                <span>{{ house.num_expenses }}</span> Expense
-
-                {% else %}
-                <span>{{ house.num_expenses }}</span> Expenses
-
-                {% endif %}
-
-            </li>
-            <hr>
-            <span class="info-title">Approved Jobs</span>
-            <li class="info-3">
-              <span>{{ house.num_approved_jobs }}</span> Jobs
-            </li>
-            <hr>
-          </ul>
-        </div>
-        <div class="info-group col col-sm-2">
-          <ul>
-            <span class="info-title">Total Spent</span>
-            <li class="info-4">${{ house.total_spent|intcomma }}</li>
-            <hr>
-
-            {% if current_user|in_group:'Customers' %}
-
-            {# Mobile Option Buttons #}
-            <span class="info-title">Options</span>
-            <div class="item-options-toggle-mobile">
-              <button class="item-options-toggle-mobile-btn" type="button" name="item-options-toggle-mobile-btn">
-                <i class="fas fa-ellipsis-h"></i>
-              </button>
-            </div>
-
-            {# Desktop Options #}
-            <div class="item-options-dropdown dropdown">
-
-              <a class="item-options-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-ellipsis-v"></i>
-              </a>
-
-              <div class="dropdown-menu">
-                <button type="submit" form="narchive_house_form_{{ house.id }}" class="dropdown-item archive-house-option">
-                  Archive
-                </button>
-              </div>
-
-            </div>
-
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div> <!-- /.item-container -->
-  {% endfor %}
-
+{% block content %}
   {# Archived Houses #}
 
   {% if archived_houses %}
-    <h2 class="secondary-title">{{ archived_houses|length }} Archived Projects</h2>
+    <h2 class="secondary-title">{{ projects|length }} Projects</h2>
   {% endif %}
 
-  {% for house in archived_houses %}
+  {% for project in projects %}
 
   {# Item Options Forms #}
   {% if current_user|in_group:'Customers' %}
     <div class="option-forms">
 
-      {% include 'includes/forms/archive_house.html' %}
+      {% if project.archived == False %}
+        {% include 'includes/forms/narchive_house.html' %}
+      {% else %}
+        {% include 'includes/forms/archive_house.html' %}
+      {% endif %}
 
     </div>
     <div class="popup-forms">
@@ -155,9 +40,15 @@
       <ul class="mobile-option-icons popup animated bounceInUp">
 
         <li class="list-inline-item">
-          <button type="submit" form="archive_house_form_{{ house.id }}" class="archive-option-m mobile-option-item">
+          {% if project.archived == False %}
+          <button type="submit" form="narchive_house_form_{{ project.id }}" class="archive-option-m mobile-option-item">
+              <span>Archive</span><i class="fas fa-archive"></i>
+          </button>
+          {% else %}
+          <button type="submit" form="archive_house_form_{{ project.id }}" class="archive-option-m mobile-option-item">
               <span>Unarchive</span><i class="fas fa-undo"></i>
           </button>
+          {% endif %}
         </li>
 
       </ul>
@@ -171,10 +62,22 @@
         <div class="info-group col col-sm-6">
           <ul>
             <li>
-              <div class="status completed">Completed</div>
+              {% if project.num_active_jobs > 0 and project.archived == False %}
+
+                <div class="status active">Active</div>
+
+              {% elif project.archived == False %}
+
+                <div class="status open">Open</div>
+
+              {% else %}
+
+                <div class="status completed">Completed</div>
+
+              {% endif %}
             </li>
             <span class="info-title">Project</span>
-            <li class="info-1"><a href="/project-details/{{ house.id }}">{{ house.address }}</a></li>
+            <li class="info-1"><a href="/project-details/{{ project.id }}">{{ project.address }}</a></li>
             <hr>
           </ul>
         </div>
@@ -183,21 +86,19 @@
             <span class="info-title">Expenses</span>
             <li class="info-2 active_jobs">
 
-                {% if house.num_expenses > 1 %}
-                <span>{{ house.num_expenses }}</span> Expenses
 
-                {% elif house.num_expenses == 1 %}
-                <span>{{ house.num_expenses }}</span> Expense
-
+                <span>{{ project.num_expenses }}</span>
+                {% if project.num_expenses > 1 or project.num_expenses == 0 %}
+                Expenses
                 {% else %}
-                <span>{{ house.num_expenses }}</span> Expenses
+                Expense
                 {% endif %}
 
             </li>
             <hr>
             <span class="info-title">Approved Jobs</span>
             <li class="info-3">
-              <span>{{ house.num_approved_jobs }}</span> Jobs
+              <span>{{ project.num_approved_jobs }}</span> Jobs
             </li>
             <hr>
           </ul>
@@ -205,7 +106,7 @@
         <div class="info-group col col-sm-2">
           <ul>
             <span class="info-title">Total Spent</span>
-            <li class="info-4">${{ house.total_spent|intcomma }}</li>
+            <li class="info-4">${{ project.total_spent|intcomma }}</li>
             <hr>
 
             {% if current_user|in_group:'Customers' %}
@@ -225,11 +126,19 @@
                 <i class="fas fa-ellipsis-v"></i>
               </a>
 
+              {% if project.archived == False %}
               <div class="dropdown-menu">
-                <button type="submit" form="archive_house_form_{{ house.id }}" class="dropdown-item archive-house-option">
+                <button type="submit" form="narchive_house_form_{{ project.id }}" class="dropdown-item archive-house-option">
+                  Archive
+                </button>
+              </div>
+              {% else %}
+              <div class="dropdown-menu">
+                <button type="submit" form="archive_house_form_{{ project.id }}" class="dropdown-item archive-house-option">
                     Unarchive
                 </button>
               </div>
+              {% endif %}
 
             </div>
 
@@ -241,4 +150,26 @@
   </div> <!-- /.item-container -->
   {% endfor %}
 
-{% endblock item_loop %}
+  {# Pagination #}
+  {% if projects.has_other_pages %}
+  <ul class="pagination">
+    {% if projects.has_previous %}
+      <li><a href="?page={{ projects.previous_page_number }}"><i class="fas fa-angle-left"></i></a></li>
+    {% else %}
+      <li class="disabled"><span><i class="fas fa-angle-left"></i></span></li>
+    {% endif %}
+    {% for i in projects.paginator.page_range %}
+      {% if projects.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if projects.has_next %}
+      <li><a href="?page={{ projects.next_page_number }}"><i class="fas fa-angle-right"></i></a></li>
+    {% else %}
+      <li class="disabled"><span><i class="fas fa-angle-right"></i></span></li>
+    {% endif %}
+  </ul>
+  {% endif %}
+{% endblock content %}

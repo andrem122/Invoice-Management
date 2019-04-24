@@ -12,7 +12,7 @@ h3 {
 }
 
 .max-width-container {
-  width: 88%;
+  width: 70%;
 }
 
 .full-width-container {
@@ -84,6 +84,10 @@ h2 {
   font-size: 26px;
 }
 
+h3 {
+  font-size: 21px;
+}
+
 h1, h2, h3, h4 {
   font-weight: bold;
 }
@@ -95,6 +99,10 @@ h1, h2, h3, h4 {
 
   h2 {
     font-size: 33px;
+  }
+
+  h3 {
+    font-size: 26px;
   }
 }
 
@@ -316,6 +324,17 @@ form input[type="submit"] {
   cursor: pointer;
 }
 
+/* Lists */
+.list-group-item svg {
+  margin-right: 8px;
+}
+
+.list-group-item {
+  background-color: transparent;
+  border: 0;
+  padding-left: 0;
+}
+
 /* Contact Sales */
 @media only screen and (min-width: 993px) {
   form.contact-sales-form {
@@ -376,19 +395,65 @@ section#contact-sales-home-banner .form-intro h2 {
   font-size: 25px;
 }
 
-section#contact-sales-home-banner .list-group-item svg {
-  margin-right: 8px;
-}
-
-section#contact-sales-home-banner .list-group-item {
-  background-color: transparent;
-  border: 0;
-  padding-left: 0;
-}
-
 @media only screen and (max-width: 992px) {
   section#contact-sales-home-banner .title-p-cta {
     padding-top: 80px;
     margin-bottom: 37px;
   }
+}
+
+section#product-banner {
+  text-align: center;
+  background-color: rgb(50, 45, 109);
+}
+
+section#product-banner h1, section#product-banner h4,
+section#product-banner .description-text {
+  color: #fff;
+}
+
+section.product-features .p1,  section.product-features .description-text {
+  text-align: center;
+}
+
+@media only screen and (min-width: 992px) {
+  section.product-features .product-feature-description p {
+    font-size: 19px;
+  }
+}
+
+section.product-features #product-features-tab {
+  width: 100%;
+}
+
+section.product-checklist {
+  background-color: rgb(44, 42, 99);
+}
+
+section.product-checklist .product-checklist-intro h2,
+section.product-checklist .product-checklist-intro p,
+section.product-checklist .three-items {
+  text-align: center;
+  color: #fff;
+}
+
+section.product-checklist #product-checklist-items > .list-group-item, section.product-features #checklist-items-product li {
+  color: #fff;
+}
+
+section.product-media .row {
+  margin-bottom: 60px;
+}
+
+section.product-media .row:last-child {
+  margin-bottom: 0;
+}
+
+section.analytics {
+  background-color: rgb(245, 246, 250);
+}
+
+section.analytics .analytics-item img {
+  height: 20px;
+  width: 20px;
 }
