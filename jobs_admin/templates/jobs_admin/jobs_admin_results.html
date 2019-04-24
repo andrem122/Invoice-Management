@@ -33,7 +33,7 @@
   {% if item.approved == False and item.rejected == False %}
   <div class="status new">New</div>
 
-  {% elif item.approved == True and item.balance > 0 %}
+  {% elif item.approved == True and item.balance_ > 0 %}
   <div class="status active">Active</div>
 
   {% elif item.approved == True %}
@@ -52,7 +52,7 @@
   {% if item.approved == True %}
   <span class="info-title">Balance</span>
   <li class="info-1">
-    ${{ item.balance_amount|intcomma }}
+    ${{ item.balance_|intcomma }}
   </li>
   <hr>
   {% endif %}

@@ -166,6 +166,32 @@ class House(models.Model):
 
     house_list_file = models.FileField(null=True, blank=False)
 
+class Job_Set(models.QuerySet):
+    def add_total_paid(self):
+        return self.annotate(
+            total_paid_=Coalesce(
+                Subquery(
+                    Request_Payment.objects
+                    .filter(
+                        job_id=OuterRef('pk'),
+                        approved=True
+                    ).values('job_id')
+                    .order_by()
+                    .annotate(
+                        sum=Sum('amount')
+                    ).values('sum')[:1],
+                    output_field=DecimalField()
+                ), 0)
+        )
+
+    def add_balance(self):
+        return self.add_total_paid().annotate(
+            balance_=ExpressionWrapper(
+                F('start_amount') - F('total_paid_'),
+                output_field=DecimalField()
+            )
+        )
+
 class Job(models.Model):
     house = models.ForeignKey(House, on_delete=models.CASCADE, blank=True)
     company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
@@ -175,6 +201,7 @@ class Job(models.Model):
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)
     notes = models.TextField(max_length=3000, default='No notes...')
+    objects = Job_Set.as_manager()
 
     def __str__(self):
         return str(self.company.get_username()) + '-' + str(self.house.address + '-' + str(self.start_amount))

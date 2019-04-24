@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import redirect
-from jobs.models import Job, Current_Worker, House, Request_Payment
+from jobs.models import Job, Current_Worker, Request_Payment
 from project_details.house import _House
 from .forms import Approve_Job, Approve_As_Payment, Reject_Estimate, Edit_Job
 from django.contrib.auth.decorators import user_passes_test
@@ -344,10 +344,10 @@ def index(request):
     rejected_houses = customer.current_week_rejected_job_houses()
 
     #get estimates, approved, completed, and rejected jobs
-    estimates = customer.current_week_proposed_jobs()
-    approved_jobs = customer.approved_jobs()
-    completed_jobs = customer.current_week_completed_jobs()
-    rejected_jobs = customer.current_week_rejected_jobs()
+    estimates = customer.current_week_proposed_jobs().add_balance()
+    approved_jobs = customer.approved_jobs().add_balance()
+    completed_jobs = customer.current_week_completed_jobs().add_balance()
+    rejected_jobs = customer.current_week_rejected_jobs().add_balance()
 
 
     #combine querysets and keep unique values for houses
