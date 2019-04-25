@@ -22,10 +22,10 @@ class Ajax:
             rejected_houses = self.customer.current_week_rejected_job_houses()
 
             #get estimates, approved, completed, and rejected jobs
-            estimates = self.customer.current_week_proposed_jobs()
-            approved_jobs = self.customer.approved_jobs()
-            completed_jobs = self.customer.current_week_completed_jobs()
-            rejected_jobs = self.customer.current_week_rejected_jobs()
+            estimates = self.customer.current_week_proposed_jobs().add_balance()
+            approved_jobs = self.customer.approved_jobs().add_balance()
+            completed_jobs = self.customer.current_week_completed_jobs().add_balance()
+            rejected_jobs = self.customer.current_week_rejected_jobs().add_balance()
 
             #get forms
             edit_job_form = Edit_Job(user=self.customer.customer)
