@@ -7,6 +7,7 @@ from send_data.forms import Send_Data
 from django.contrib import messages
 from .send_data_extras import generate_csv, generate_zip
 from django.core.mail import EmailMessage
+from django.conf import settings
 import sys
 from itertools import chain
 
@@ -51,7 +52,12 @@ def send_data(request):
                     estimates = customer.current_week_proposed_jobs()
                     completed_jobs = customer.current_week_completed_jobs()
 
-                    email = EmailMessage('Shared Data', form_vals['message'], current_user.email, [form_vals['send_to']])
+                    email = EmailMessage(
+                        'Shared Data',
+                        form_vals['message'],
+                        settings.EMAIL_HOST_USER,
+                        [form_vals['send_to']]
+                    )
 
                     """
                     if all status values in 'statuses' dict are False, send all weekly jobs

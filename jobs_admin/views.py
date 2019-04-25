@@ -18,6 +18,7 @@ from payment_history.forms import Upload_Document_Form
 from expenses.forms import Delete_Expense
 from search_submit.views import Search_Submit_View
 from ajax.ajax import Ajax
+from django.conf import settings
 
 def send_approval_mail(request, job_object, subject, html_title):
     template_message = 'Your job at {} for ${} has been approved!'.format(job_object.house.address, job_object.start_amount)
@@ -34,7 +35,7 @@ def send_approval_mail(request, job_object, subject, html_title):
     send_mail(
         subject,
         plain_message,
-        'no-reply@novaonesoftware.com',
+        settings.EMAIL_HOST_USER,
         [job_object.company.email],
         fail_silently=False,
         html_message=html_message,
