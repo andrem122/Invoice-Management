@@ -111,7 +111,12 @@ def send_data(request):
                     expenses = customer.current_week_expenses(pay_this_week=True)
 
                     #create email object
-                    email = EmailMessage('Shared Data', form_vals['message'], current_user.email, [form_vals['send_to']])
+                    email = EmailMessage(
+                            'Shared Data',
+                            form_vals['message'],
+                            settings.EMAIL_HOST_USER, 
+                            [form_vals['send_to']]
+                            )
 
                     status_values = statuses.values()
                     if True not in status_values or all(status_value == True for status_value in status_values):

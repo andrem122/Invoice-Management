@@ -169,7 +169,7 @@ class House(models.Model):
 class Job_Set(models.QuerySet):
     def add_total_paid(self):
         return self.annotate(
-            total_paid_=Coalesce(
+            total_paid1=Coalesce(
                 Subquery(
                     Request_Payment.objects
                     .filter(
@@ -186,8 +186,8 @@ class Job_Set(models.QuerySet):
 
     def add_balance(self):
         return self.add_total_paid().annotate(
-            balance_=ExpressionWrapper(
-                F('start_amount') - F('total_paid_'),
+            balance1=ExpressionWrapper(
+                F('start_amount') - F('total_paid1'),
                 output_field=DecimalField()
             )
         )

@@ -337,22 +337,31 @@ form input[type="submit"] {
 
 /* Contact Sales */
 @media only screen and (min-width: 993px) {
-  form.contact-sales-form {
+  form#contact-sales-form {
     margin-top: 132px;
   }
 }
 
-form.contact-sales-form {
+form.standard-webiste-form {
   padding: 36px 40px 30px 40px;
   max-width: 400px;
   background-color: #fff;
 }
 
-form.contact-sales-form .form-description {
+form.standard-webiste-form textarea {
+  width: 100%;
+  border-radius: 10px;
+  padding: 15px 0 0 18px;
+  font-family: inherit;
+  border: 1px solid #ccc;
+  margin-bottom: 23px;
+}
+
+form.standard-webiste-form .form-description {
   margin-top: 20px;
 }
 
-form.contact-sales-form .form-description > p {
+form.standard-webiste-form .form-description > p {
   font-size: 12px;
   color: rgb(166, 171, 191);
   text-align: center;

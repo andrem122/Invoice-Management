@@ -14,7 +14,7 @@ class Customer:
     #filter results by the last week
     #note: add 1 day to 'today' because time seems to lag in the server
     today = datetime.datetime.now() + datetime.timedelta(days=2)
-    start_delta = datetime.timedelta(days=today.weekday()+4)
+    start_delta = datetime.timedelta(days=today.weekday() + 4)
     start_week = today - start_delta #start week is one week back
 
     #allow datetime to be aware
@@ -49,10 +49,23 @@ class Customer:
         Raises:
             None.
         """
-        return House.objects.filter(
-            customer=self.customer,
-            current_worker__current=True
-        )
+
+        sql = """
+        SELECT h.id, h.address
+        FROM jobs_house h
+        INNER JOIN jobs_job j
+        ON j.house_id = h.id
+        WHERE customer_id = %s
+        AND j.approved = 1
+        AND COALESCE(j.start_amount, 0) - COALESCE(
+            (SELECT COALESCE(SUM(p.amount), 0)
+             FROM jobs_request_payment p
+             WHERE p.job_id = j.id
+             AND p.approved = 1
+             AND j.approved = 1), 0)
+        > 0;
+        """
+        return House.objects.raw(sql, params=[self.customer.id])
 
     def approved_jobs(self):
         """
@@ -67,10 +80,10 @@ class Customer:
         Raises:
             None.
         """
-        return Job.objects.filter(
+        return Job.objects.add_balance().filter(
             house__customer=self.customer,
             approved=True,
-            balance_amount__gt=0
+            balance1__gt=0,
         )
 
     """Completed"""
@@ -87,9 +100,22 @@ class Customer:
         Raises:
             None.
         """
-        for house in self._houses(archived=False):
-            if Job.objects.filter(house=house, approved=True, balance_amount__lte=0).exists():
-                yield house
+        sql = """
+        SELECT DISTINCT h.id, h.address
+        FROM jobs_house h
+        INNER JOIN jobs_job j
+        ON j.house_id = h.id
+        WHERE customer_id = %s
+        AND j.approved = 1
+        AND COALESCE(j.start_amount, 0) - COALESCE(
+            (SELECT COALESCE(SUM(p.amount), 0)
+             FROM jobs_request_payment p
+             WHERE p.job_id = j.id
+             AND p.approved = 1
+             AND j.approved = 1), 0)
+        <= 0;
+        """
+        return House.objects.raw(sql, params=[self.customer.id])
 
     def completed_jobs(self, **kwargs):
         """
@@ -104,10 +130,10 @@ class Customer:
         Raises:
             None.
         """
-        return Job.objects.filter(
+        return Job.objects.add_balance().filter(
             house__customer=self.customer,
             approved=True,
-            balance_amount__lte=0,
+            balance1__lte=0,
             house__archived=False,
             **kwargs
         )
@@ -133,6 +159,21 @@ class Customer:
             Q(submit_date__range=[Customer.start_week, Customer.today]) | Q(approved_date__range=[Customer.start_week, Customer.today]),
             **kwargs
         )
+
+        """
+        SELECT u.id, u.username,
+
+        COALESCE((SELECT SUM(r.amount)
+        FROM jobs_request_payment r
+        INNER JOIN jobs_job j
+        ON r.job_id = j.id
+        WHERE j.approved = 1
+        AND r.approved = 1
+        AND j.company_id = u.id), 0)
+        AS total_paid
+
+        FROM auth_user u;
+        """
 
 
     def current_week_payment_requests(self, **kwargs):
@@ -211,11 +252,10 @@ class Customer:
         Raises:
             None.
         """
-        return Job.objects.filter(
+        return Job.objects.add_balance().filter(
             house__customer=self.customer,
-            house__completed_jobs=True,
             approved=True,
-            balance_amount__lte=0,
+            balance1__lte=0,
             start_date__range=[Customer.start_week, Customer.today],
             **kwargs
         )
@@ -471,12 +511,24 @@ class Customer:
         Raises:
             None.
         """
-        return House.objects.filter(
-            customer=self.customer,
-            job__approved=True,
-            job__balance_amount__lte=0,
-            job__start_date__range=[Customer.start_week, Customer.today],
-        ).distinct()
+
+        sql = """
+        SELECT DISTINCT h.id, h.address
+        FROM jobs_house h
+        INNER JOIN jobs_job j
+        ON j.house_id = h.id
+        WHERE customer_id = %s
+        AND j.approved = 1
+        AND j.start_date BETWEEN %s AND %s
+        AND COALESCE(j.start_amount, 0) - COALESCE(
+            (SELECT COALESCE(SUM(p.amount), 0)
+             FROM jobs_request_payment p
+             WHERE p.job_id = j.id
+             AND p.approved = 1
+             AND j.approved = 1), 0)
+        <= 0;
+        """
+        return House.objects.raw(sql, params=[self.customer.id, Customer.start_week, Customer.today])
 
     def current_week_rejected_job_houses(self):
         """

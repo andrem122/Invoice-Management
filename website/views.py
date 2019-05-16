@@ -1,7 +1,7 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.template import loader
 from django.shortcuts import render
-from website.forms import Contact_Sales
+from website.forms import Contact_Sales, Contact_Support
 from django.core.mail import send_mail
 from django.contrib import messages
 
@@ -62,3 +62,36 @@ def contact_sales(request):
     else:
         contact_sales_form = Contact_Sales()
     return HttpResponse(template.render(context, request))
+
+def contact_support(request):
+    if request.method == 'POST':
+        contact_support_form = Contact_Support(data=request.POST)
+        if contact_support_form.is_valid():
+            email = contact_support_form.cleaned_data['email']
+            form_message = contact_support_form.cleaned_data['message']
+
+            email_message = """
+            A customer has requested support. Please see details below.\n
+            Customer Email: {email}\n
+            Customer Message: {form_message}
+            """.format(
+                email=email,
+                form_message=form_message,
+            )
+
+            send_mail(
+                'Customer Support Needed',
+                email_message,
+                'no-reply@novaonesoftware.com',
+                ['andre.mashraghi@gmail.com'],
+                fail_silently=False,
+            )
+
+            messages.success(request, 'Thanks! Your message has been sent!')
+        else:
+            messages.error(request, 'Validation Error: Please try again.')
+    else:
+        raise Http404("Invalid request: Only POST request allowed.")
+
+    template = loader.get_template('404.html')
+    return HttpResponse(template.render(request=request))

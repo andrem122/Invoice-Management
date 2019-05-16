@@ -33,7 +33,6 @@ def add_job(request):
                 company = form.cleaned_data['company']
 
             start_amount = form.cleaned_data['start_amount']
-            print(form.cleaned_data['document_link'])
             img_names = (form.cleaned_data['document_link'].name, )
 
             #the house now has a proposed job, so set proposed_jobs=True
@@ -48,9 +47,7 @@ def add_job(request):
             else:
                 job.company = current_user
 
-            job.total_paid = 0.00
             job.approved = False
-            job.balance_amount = job.balance
             job.save()
 
             result = is_image(img_names)

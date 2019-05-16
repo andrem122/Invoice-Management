@@ -26,6 +26,7 @@ urlpatterns = [
     path('jobs/', include('jobs.urls')),
     path('jobs-admin/', include('jobs_admin.urls')),
     path('addjob/', include('addjob.urls')),
+    path('add-payment/', include('add_payment.urls')),
     path('payment-history/', include('payment_history.urls')),
     path('payments/', include('payment_requests.urls')),
     path('accounts/', include('django.contrib.auth.urls')),

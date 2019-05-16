@@ -74,6 +74,8 @@ window.addEventListener("load", function(event) {
   //for send data form popup
   var send_data_form_popup = document.getElementById('send-data-form');
   var sending_data_popup = document.getElementById('sending-data-popup');
+  var contact_support_form_popup = document.getElementById('contact-support-form');
+
   if ((path === '/jobs-admin/' || path === '/payments/') && (send_data_form_popup !== null || sending_data_popup !== null)) {
     alter_popup('click', send_data_form_popup, ['overlay_id', 'popup-remove-trigger', 'exit-on-click'], undefined, true);
     alter_popup('submit', sending_data_popup, [1, 2, 3], send_data_form_popup);
@@ -83,6 +85,12 @@ window.addEventListener("load", function(event) {
   if (path === '/add-expense/' || path === '/addjob/' && sending_data_popup !== null) {
     var add_object_form = document.getElementsByClassName('add-form')[0];
     alter_popup('submit', sending_data_popup, [1, 2, 3], add_object_form);
+  }
+
+  //for the 404 page
+  if((document.title === "Page Not Found") && (contact_support_form_popup !== null)) {
+    var contact_button = document.getElementsByClassName('contact-btn')[0];
+    alter_popup('click', contact_support_form_popup, ['overlay_id', 'popup-remove-trigger', 'exit-on-click'], undefined, false);
   }
 
   if (send_data_form_popup !== null) {

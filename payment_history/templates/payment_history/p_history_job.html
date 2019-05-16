@@ -9,7 +9,7 @@
 
 {% block page_title %}Job {{ job_id }} Payments - {{ address }}{% endblock page_title %}
 {% block back_button %}<a href="/jobs-admin/" class="back-button-arrow" name="jobs-admin"><i class="fas fa-arrow-left"></i><span>Back to Jobs</span></a>{% endblock back_button %}
-{% block button_with_title %}<a href="/addjob/" class="round-btn solid-round-btn" name="add_payment">Add Payment</a>{% endblock button_with_title %}
+{% block button_with_title %}<a href="/add-payment/{{ job_id }}" class="round-btn solid-round-btn" name="add_payment">Add Payment</a>{% endblock button_with_title %}
 
 {% block content %}
 

@@ -80,11 +80,7 @@ def approve_payment(request, customer):
         house = job.house
 
         """update approved column to True and set approved_date to the time the payment was
-        approved and update the total_paid column for the job"""
-        job.total_paid = job.total_paid + payment.amount
-        job.save(update_fields=['total_paid'])
-        job.balance_amount = job.balance #update the balance
-        job.save(update_fields=['balance_amount'])
+        approved"""
 
         payment.approved_date = datetime.datetime.now()
         payment.approved = True
@@ -144,13 +140,6 @@ def reject_estimate(request, customer):
         payment = Request_Payment.objects.get(pk=p_id)
         job = payment.job
         house = job.house
-
-        #find new total paid and balance for job
-        if job.balance_amount < job.start_amount:
-            job.total_paid = job.total_paid - payment.amount
-            job.save(update_fields=['total_paid']) #update database value so the balance can be calculated
-            job.balance_amount = job.balance #update the balance
-            job.save(update_fields=['balance_amount'])
 
         if payment.requested_by_worker == False:
             payment.delete()

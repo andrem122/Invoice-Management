@@ -1,0 +1,59 @@
+{% extends 'logged_in_customer.html' %}
+
+{ # allow static resources to be loaded from each app's 'static' folder #}
+{% load static %}
+
+{ # text that goes to the '<title>' tag #}
+{% block title %}Add Payment{% endblock title %}
+
+{% block scripts %}
+{% endblock scripts %}
+
+{% block page_title %}Add Payment{% endblock page_title %}
+
+{% block content %}
+<div class="form-wrapper">
+  <div class="panel-heading">
+    <p>
+      Add a payment by uploading a file
+      and by inputting an amount.
+    </p>
+  </div>
+  <div class="panel-body">
+    <form id="add-payment-form" class="add-form" action="" method="post" role="form" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+      {% if form.errors %}
+      <div class="form-messages">
+        <p>{{ form.errors }}</p>
+      </div>
+      {% endif %}
+
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.amount.label_tag }}</div>
+        <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.amount }}</div>
+      </div>
+
+      <div class="input-label-file-wrap">
+        <div class="label-wrap">
+          {{ form.document_link.label_tag }}
+        </div>
+        <div class="file-wrap">
+          <i class="fas fa-upload"></i>
+          <button type="button" class="file-upload-btn">Upload File</button>
+          <input class="file_upload" name="document_link" id="id_document_link" type="file" required>
+          <div id="file-input-message"></div>
+        </div>
+      </div>
+
+      <input class="form-submit-btn" type="submit" value="Add Payment">
+    </form>
+  </div>
+</div>
+{% endblock content %}
