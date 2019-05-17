@@ -265,7 +265,7 @@ ul.item-headings {
   font-size: 30px;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .title-container {
     display: block;
     text-align: center;
@@ -582,15 +582,16 @@ div.item-container + h3.sub-title {
     border-radius: 4px;
   }
 
-  div.popup-forms ul.mobile-option-icons > li > button {
+  div.popup-forms ul.mobile-option-icons > li > .mobile-option-item {
     background-color: transparent;
     border: 0;
     cursor: pointer;
     padding: 17px;
-    font-size: 29px;
+    font-size: 25px;
+    color: inherit;
   }
 
-  div.popup-forms ul.mobile-option-icons > li > button.mobile-option-item > span {
+  div.popup-forms ul.mobile-option-icons > li > .mobile-option-item > span {
     display: inline-block;
     margin-right: 17px;
   }
@@ -623,6 +624,10 @@ div.item-container + h3.sub-title {
 
   div.popup-forms ul.mobile-option-icons .reject-option-m > svg {
     color: #ee8a90;
+  }
+
+  div.popup-forms ul.mobile-option-icons .view-payments-option-m > svg {
+    color:  #05C280;
   }
 
   .sub-title, .project-details-title {
@@ -1287,7 +1292,7 @@ form.popup div.input-wrap select {
   margin-left: 8px;
 }
 
-@media screen and (max-width: 1235px) and (min-width: 500px) {
+@media screen and (max-width: 1235px) and (min-width: 601px) {
   .back-button-arrow > span {
     display: none;
   }

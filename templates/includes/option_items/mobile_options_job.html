@@ -6,6 +6,11 @@
       <span>Reject</span><i class="option-item fas fa-times"></i>
     </button>
   </li>
+  <li>
+    <a href="/payment-history/p-history-job/{{ item.id }}{{ job.id }}" class="option-item mobile-option-item view-payments-option-m popup-remove-trigger">
+      <span>View Payments</span><i class="fas fa-money-check-alt"></i>
+    </a>
+  </li>
 
 {# Rejected Item #}
 {% elif item.rejected == True or job.rejected == True %}
