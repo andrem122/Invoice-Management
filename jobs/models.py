@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.db.models.functions import Coalesce
+from django.db.models.expressions import RawSQL
 from django.db.models import Sum, Count, F, ExpressionWrapper, DecimalField, IntegerField, Func, Subquery, OuterRef
 import os
 
@@ -96,21 +97,24 @@ class House_Set(models.QuerySet):
         )
 
     def add_num_active_jobs(self):
+        sql = """
+        COALESCE(
+        (SELECT COUNT(U0.`id`)
+        FROM `jobs_job` U0
+        WHERE (U0.`approved` = True AND U0.`house_id` = (`jobs_house`.`id`))
+        AND COALESCE(U0.`start_amount`, 0) - COALESCE((SELECT SUM(p.amount)
+            FROM jobs_request_payment p
+            WHERE p.`job_id` = U0.`id`
+            AND U0.`approved` = 1
+            AND p.`approved` = 1
+            GROUP BY U0.`id`), 0) > 0
+        GROUP BY U0.`house_id`
+        ORDER BY NULL
+        LIMIT 1), 0)
+        """
+
         return self.annotate(
-            num_active_jobs=Coalesce(
-                Subquery(
-                    Job.objects
-                    .filter(
-                        house_id=OuterRef('pk'),
-                        approved=True,
-                        balance_amount__gt=0
-                    ).values('house_id')
-                    .order_by()
-                    .annotate(
-                        count=Count('pk')
-                    ).values('count')[:1],
-                    output_field=IntegerField()
-            ), 0)
+            num_active_jobs=RawSQL(sql, params=())
         )
 
     def add_num_expenses(self):
@@ -229,10 +233,10 @@ class Request_Payment(models.Model):
     requested_by_worker = models.BooleanField(default=False)
 
     def __str__(self):
-        info = [self.house.address, self.job.company, self.amount, self.approved]
+        info = [self.job.id, self.house.address, self.job.company, self.amount, self.approved]
         info = [str(x) for x in info]
 
-        return info[0] + '-' + info[1] + '-' + info[2] + '-' + info[3]
+        return info[0] + '-' + info[1] + '-' + info[2] + '-' + info[3] + info[4]
 
     def generate_file_path_worker(self, file_name):
         return os.path.join('worker_uploads', str(self.house.address), str(file_name))

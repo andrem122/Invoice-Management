@@ -22,20 +22,28 @@ def projects(request):
     and total amount spent for each property
     """
     narchived_houses = (
-        House.objects.filter(archived=False)
+        House.objects.filter(
+        archived=False,
+        customer=current_user,
+        )
         .add_total_spent()
         .add_num_approved_jobs()
-        .add_num_active_jobs()
         .add_num_expenses()
+        .add_num_active_jobs()
     )
 
     archived_houses = (
-        House.objects.filter(archived=True)
+        House.objects.filter(
+        archived=True,
+        customer=current_user,
+        )
         .add_total_spent()
         .add_num_approved_jobs()
-        .add_num_active_jobs()
         .add_num_expenses()
+        .add_num_active_jobs()
     )
+
+    print(archived_houses.query)
 
     template = loader.get_template('projects/projects.html')
     send_data_form = Send_Data()

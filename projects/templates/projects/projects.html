@@ -23,6 +23,26 @@
 
   {% for project in projects %}
 
+  {% ifchanged %}
+  <div class="item-headings-wrapper container-fluid">
+    <ul class="item-headings row">
+      <div class="col col-sm-6">
+        <li>Status</li>
+        <li class="second-heading">
+          Project
+        </li>
+      </div>
+      <div class="col col-sm-4">
+        <li>Expenses</li>
+        <li>Approved Jobs</li>
+      </div>
+      <div class="col col-sm-2">
+        <li>Total Spent</li>
+      </div>
+    </ul>
+  </div>
+  {% endifchanged %}
+
   {# Item Options Forms #}
   {% if current_user|in_group:'Customers' %}
     <div class="option-forms">

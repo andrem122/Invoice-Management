@@ -35,7 +35,7 @@ def project_details(request, house_id):
         )[0]
 
         expenses = Expenses.objects.filter(house=house)
-        approved_jobs = Job.objects.filter(house=house, approved=True)
+        approved_jobs = Job.objects.filter(house=house, approved=True).add_balance()
         expenses_and_jobs_list = list(chain(expenses, approved_jobs))
         paginator = Paginator(expenses_and_jobs_list, 25)
 

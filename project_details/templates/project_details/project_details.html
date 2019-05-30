@@ -129,7 +129,7 @@
                   {# Status #}
                   {% if item|get_class == 'Expenses' %}
                     <div class="status expense">Expense</div>
-                  {% elif item|get_class == 'Job' and item.balance_amount > 0 %}
+                  {% elif item|get_class == 'Job' and item.balance1 > 0 %}
                     <div class="status active">Active Job</div>
                   {% else %}
                     <div class="status approved">Job</div>

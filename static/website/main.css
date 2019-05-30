@@ -446,6 +446,7 @@ section.product-checklist .three-items {
   color: #fff;
 }
 
+section.product-checklist .product-checklist-list h3,
 section.product-checklist #product-checklist-items > .list-group-item, section.product-features #checklist-items-product li {
   color: #fff;
 }
