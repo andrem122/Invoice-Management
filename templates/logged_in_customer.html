@@ -81,7 +81,7 @@
 
 	<div class="right-options-container">
 		{# Download Data Form #}
-		<form id="download-data-form" class="download-data-form" action="/download-data/" method="post">
+		<form id="download-data-form" class="download-data-form" action="/spreadsheets/all-data-spreadsheet" method="post">
 			{% csrf_token %}
 			{% if download_data_form.errors %}
 			<div class="form-messages">

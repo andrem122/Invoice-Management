@@ -34,7 +34,7 @@ urlpatterns = [
     path('add-house/', include('add_house.urls')),
     path('add-expense/', include('add_expense.urls')),
     path('expenses/', include('expenses.urls')),
-    path('download-data/', include('download_data.urls')),
+    path('spreadsheets/', include('csv_generator.urls')),
     path('projects/', include('projects.urls')),
     path('search/', include('search_submit.urls')),
     path('send-data/', include('send_data.urls')),

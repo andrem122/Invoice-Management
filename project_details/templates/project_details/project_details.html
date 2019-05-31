@@ -5,12 +5,15 @@
 {% load jobs_admin_group_check %}
 {% load class_tag %}
 
+{% block page_title %}{{ address }}{% endblock page_title %}
+{% block button_with_title %}<a href="#" class="round-btn solid-round-btn send-post-on-click" data-csrfmiddlewaretoken="{{ csrf_token }}" data-house-id="{{ house_id }}" data-url="{% url 'csv_generator:project_details_spreadsheet' %}" name="generate_spreadsheet">Generate Spreadsheet</a>{% endblock button_with_title %}
+
 {% block scripts %}
 <script type="text/javascript" src="{% static 'project_details/project_details.js' %}" defer></script>
 {% endblock scripts %}
 
 {% block content %}
-<h2 class="project-details-title">{{ address }}</h2>
+<div id="spreadhseet-hidden-element" style="display: none;"></div>
 <div class="white-block" id="project_details">
 
   <div class="number-circle-container">

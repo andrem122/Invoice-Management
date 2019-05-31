@@ -144,4 +144,37 @@ window.addEventListener("load", function(event) {
 
   search_popup();
 
+  function send_post_request_on_click() {
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('send-post-on-click')) {
+
+        e.preventDefault();
+        $.post(
+          e.target.getAttribute('data-url'),
+          {
+            house_id: e.target.getAttribute('data-house-id'),
+            csrfmiddlewaretoken: e.target.getAttribute('data-csrfmiddlewaretoken'),
+          },
+          function(data, status, jqXHR) {
+            downloadFile('house.csv', encodeURIComponent(data));
+          }
+        );
+
+      }
+    });
+  }
+
+  function downloadFile(fileName, urlData) {
+    console.log(urlData);
+    var hiddenElement = document.createElement('a');
+    hiddenElement.href = 'data:text/csv;charset=UTF-8,' + urlData;
+    hiddenElement.target = '_blank';
+    hiddenElement.download = 'test.csv';
+    document.getElementById('spreadhseet-hidden-element').appendChild(hiddenElement);
+    hiddenElement.click();
+  }
+
+
+  send_post_request_on_click();
+
 });

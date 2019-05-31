@@ -44,6 +44,7 @@ def project_details(request, house_id):
 
         #add info to the context dictionary
         context['address'] = house.address
+        context['house_id'] = house.id
         context['expenses_and_jobs'] = expenses_and_jobs
         context['budget_balance'] = house.budget_balance
         context['budget_balance_degree'] = house.budget_balance_degree
