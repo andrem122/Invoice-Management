@@ -40,7 +40,7 @@ def get_attributes_and_headers(object, request):
     if isinstance(object, Job):
         file_url = generate_aws_file_url(document_link=object.document_link)
         headers    = ('House', 'Company', 'Start Amount', 'Balance', 'Submit Date', 'Total Paid', 'Status', 'Contract Link')
-        attributes = (object.house.address, object.company, as_currency(object.start_amount), as_currency(object.balance), object.start_date.strftime('%m/%d/%Y %I:%M %p'), as_currency(object.total_paid), is_approved, file_url)
+        attributes = (object.house.address, object.company, as_currency(object.start_amount), as_currency(object.balance1), object.start_date.strftime('%m/%d/%Y %I:%M %p'), as_currency(object.total_paid), is_approved, file_url)
     elif isinstance(object, Request_Payment):
         file_url = generate_aws_file_url(document_link=object.job.document_link)
         headers    = ('House', 'Company', 'Amount', 'Submit Date', 'Approved Date', 'Status', 'Contract Link')
