@@ -92,11 +92,11 @@ def project_details_spreadsheet(request):
             writer = csv.writer(response)
 
             #get querysets
-            approved_jobs = house.approved_jobs().add_balance()
+            approved_jobs = house.approved_jobs().add_balance().add_total_paid()
             expenses = house.expenses()
 
-            titles    = ('APPROVED JOBS', 'EXPENSES')
-            querysets = (approved_jobs, expenses)
+            titles    = ('EXPENSES', 'APPROVED JOBS')
+            querysets = (expenses, approved_jobs)
             zipped    = zip(titles, querysets)
 
             try:

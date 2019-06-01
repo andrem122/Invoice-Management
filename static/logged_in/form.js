@@ -164,8 +164,9 @@ window.addEventListener("load", function(event) {
     });
   }
 
+  send_post_request_on_click();
+
   function downloadFile(fileName, urlData) {
-    console.log(urlData);
     var hiddenElement = document.createElement('a');
     hiddenElement.href = 'data:text/csv;charset=UTF-8,' + urlData;
     hiddenElement.target = '_blank';
@@ -173,8 +174,5 @@ window.addEventListener("load", function(event) {
     document.getElementById('spreadhseet-hidden-element').appendChild(hiddenElement);
     hiddenElement.click();
   }
-
-
-  send_post_request_on_click();
 
 });
