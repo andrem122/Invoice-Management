@@ -185,8 +185,8 @@
 
               <div class="col-lg-7">
                 <div class="video-container">
-                  <video muted="" playsinline="" loop="" poster="https://shortlist.co/wp-content/uploads/2018/10/Edit-Onboarding-Flow-Screenshot@2x-1.png" width="100%" height="auto">
-										<source src="https://shortlist.co/wp-content/uploads/2018/10/Edit-Onboarding-Flow_3.mp4" type="video/mp4">
+                  <video autoplay="" playsinline="" muted="" loop="" poster="/static/novaone-video-poster.png" width="100%" height="auto">
+										<source src="{% static 'novaone.mp4' %}" type="video/mp4">
 									</video>
                 </div>
               </div>
@@ -254,22 +254,14 @@
               <li class="list-group-item"><i class="far fa-thumbs-up"></i>Job balance tracking</li>
             </ul>
           </div>
-          <div class="col-lg-8 product-media-video">
-            <div class="video-container">
-              <video muted="" playsinline="" loop="" poster="https://shortlist.co/wp-content/uploads/2018/10/Track-Your-Enagagements-Screenshot@2x.png" width="100%" height="auto">
-							  <source src="" type="video/mp4">
-							</video>
-            </div>
+          <div class="col-lg-8 product-media">
+            <img src="{% static 'active-projects.png' %}" alt="Active Projects">
           </div>
         </div>
 
         <div class="row">
-          <div class="col-lg-8 product-media-video">
-            <div class="video-container">
-              <video muted="" playsinline="" loop="" poster="https://shortlist.co/wp-content/uploads/2018/10/Track-Your-Enagagements-Screenshot@2x.png" width="100%" height="auto">
-                <source src="" type="video/mp4">
-              </video>
-            </div>
+          <div class="col-lg-8 product-media">
+            <img src="{% static 'track-expenses-jobs.png' %}" alt="Expense and Job Tracking">
           </div>
 
           <div class="col-lg-4 product-media-content">

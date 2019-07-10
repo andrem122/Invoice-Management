@@ -11,7 +11,6 @@ from send_data.forms import Send_Data
 from django.core.exceptions import ObjectDoesNotExist
 from customer_register.customer import Customer
 from django.template.loader import render_to_string
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from itertools import chain
 from payment_history.forms import Upload_Document_Form
@@ -219,7 +218,7 @@ def reject_estimate(request, customer):
 
 def edit_job(request, customer):
     """
-    Called when a edits a job's properties
+    Called when a user edits a job's properties
     """
     job_id = int(request.POST.get('job_id')) #get job id from POST request
     job = get_object_or_404(Job, id=job_id) #get job instance
@@ -326,7 +325,6 @@ def edit_job(request, customer):
     else:
         return request.POST.get('post_from_url', None)
 
-@csrf_exempt
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def index(request):
     #get current user
