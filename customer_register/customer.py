@@ -1,8 +1,7 @@
-from jobs.models import Job, Current_Worker, House, Request_Payment
+from jobs.models import Job, House, Request_Payment
 from expenses.models import Expenses
 from django.contrib.auth.models import User
 from django.db.models import Q
-from itertools import chain
 import datetime, pytz
 
 class Customer:
