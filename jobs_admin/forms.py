@@ -50,6 +50,7 @@ class Edit_Job(ModelForm, forms.Form):
         fields = [
             'house',
             'company',
+            'job_type',
             'start_amount',
             'document_link',
             'notes',

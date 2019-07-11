@@ -207,6 +207,31 @@ class Job(models.Model):
     notes = models.TextField(max_length=3000, default='No notes...')
     objects = Job_Set.as_manager()
 
+    #categories
+    electric = 'Electric'
+    plumbing = 'Plumbing'
+    drywall = 'Drywall'
+    roofing = 'Roofing'
+    window_door = 'Window/Door'
+    demolition = 'Demolition'
+    landscaping = 'Landscaping'
+    cabinets_countertops = 'Cabinet/Countertop'
+    misc = 'Miscellaneous'
+
+    job_choices = (
+        (electric, 'Electric'),
+        (plumbing, 'Plumbing'),
+        (drywall, 'Drywall'),
+        (roofing, 'Roofing'),
+        (window_door, 'Window/Door'),
+        (demolition, 'Demolition'),
+        (landscaping, 'Landscaping'),
+        (cabinets_countertops, 'Cabinet/Countertop'),
+        (misc, 'Miscellaneous'),
+    )
+
+    job_type = models.CharField(max_length=100, choices=job_choices, default=misc)
+
     def __str__(self):
         return str(self.company.get_username()) + '-' + str(self.house.address + '-' + str(self.start_amount))
 

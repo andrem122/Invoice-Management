@@ -36,6 +36,7 @@
       </div>
       {% endif %}
 
+      {# House #}
       <div class="input-label-wrap">
         <div class="label-wrap">{{ form.house.label_tag }}</div>
         <div class="input-wrap input-wrap-select">
@@ -51,6 +52,7 @@
         </div>
       </div>
 
+      {# Company #}
       <div class="input-label-wrap">
         <div class="label-wrap">{{ form.company.label_tag }}</div>
         <div class="input-wrap input-wrap-select">
@@ -67,10 +69,20 @@
       </div>
 
       <div class="input-label-wrap">
+        <div class="label-wrap">{{ form.job_type.label_tag }}</div>
+        <div class="input-wrap input-wrap-select">
+          <i class="fa fa-list-alt" aria-hidden="true"></i>
+          {{ form.job_type }}
+        </div>
+      </div>
+
+      {# Start Amount #}
+      <div class="input-label-wrap">
         <div class="label-wrap">{{ form.start_amount.label_tag }}</div>
         <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ form.start_amount }}</div>
       </div>
 
+      {# File Upload #}
       <div class="input-label-file-wrap">
         <div class="label-wrap">
           {{ form.document_link.label_tag }}

@@ -42,6 +42,14 @@
   </div>
 
   <div class="input-label-wrap">
+    <div class="label-wrap">{{ edit_job_form.job_type.label_tag }}</div>
+    <div class="input-wrap input-wrap-select">
+      <i class="fa fa-list-alt" aria-hidden="true"></i>
+      {{ edit_job_form.job_type }}
+    </div>
+  </div>
+
+  <div class="input-label-wrap">
     <div class="label-wrap">{{ edit_job_form.start_amount.label_tag }}</div>
     <div class="input-wrap">
       <i class="fas fa-dollar-sign"></i>
@@ -71,6 +79,6 @@
   <input type="hidden" name="post_from_url" value="{{ post_from_url }}">
 
   {% include 'includes/forms/search_inputs.html' %}
-  
+
   <input class="form-submit-btn" type="submit" value="Save" />
 </form>

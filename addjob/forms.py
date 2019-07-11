@@ -13,7 +13,7 @@ class AddJob(ModelForm, forms.Form):
     """
     class Meta:
         model = Job
-        fields = ['house', 'start_amount', 'document_link']
+        fields = ['house', 'start_amount', 'job_type', 'document_link']
 
         #custom labels for each input
         labels = {
@@ -49,7 +49,7 @@ class AddJob_Customer(ModelForm, forms.Form):
     """
     class Meta:
         model = Job
-        fields = ['company', 'house', 'start_amount', 'document_link']
+        fields = ['company', 'house', 'start_amount', 'job_type', 'document_link']
 
         #custom labels for each input
         labels = {

@@ -62,9 +62,15 @@
 
 <div id="expenses-and-jobs">
   {% if expenses_and_jobs %}
-    <h2 class="sub-title">Expenses & Approved Jobs</h2>
     {% for item in expenses_and_jobs %}
       {% ifchanged %}
+      <h2 class="sub-title">
+        {% if item|get_class == 'Job' %}
+          {{ item.job_type }}
+        {% else %}
+          Expenses & Approved Jobs
+        {% endif %}
+      </h2>
       <div class="item-headings-wrapper container-fluid">
         <ul class="item-headings row">
           <div class="col col-sm-6">
