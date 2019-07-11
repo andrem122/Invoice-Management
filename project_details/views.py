@@ -34,10 +34,11 @@ def project_details(request, house_id):
             .add_potential_profit()
         )[0]
 
+        approved_jobs = Job.objects.filter(house=house, approved=True).add_balance().order_by('job_type')
+
         expenses = Expenses.objects.filter(house=house)
-        approved_jobs = Job.objects.filter(house=house, approved=True).add_balance()
         expenses_and_jobs_list = list(chain(expenses, approved_jobs))
-        paginator = Paginator(expenses_and_jobs_list, 25)
+        paginator = Paginator(expenses_and_jobs_list, 25) #25 items per page
 
         page = request.GET.get('page')
         expenses_and_jobs = paginator.get_page(page)

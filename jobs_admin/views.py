@@ -232,6 +232,7 @@ def edit_job(request, customer):
         previous_company = job.company
         new_house = edit_job_form.cleaned_data.get('house', None)
         new_company = edit_job_form.cleaned_data.get('company', None)
+        new_job_type = edit_job_form.cleaned_data.get('job_type', None)
         document_link = edit_job_form.cleaned_data.get('document_link', None)
         notes = edit_job_form.cleaned_data.get('notes', None)
         start_amount = edit_job_form.cleaned_data.get('start_amount', None)
@@ -297,6 +298,11 @@ def edit_job(request, customer):
 
             except ObjectDoesNotExist as e:
                 print(e)
+
+        if new_job_type != None:
+            #change and save new job type on job object
+            job.job_type = new_job_type
+            job.save(update_fields=['job_type'])
 
         if document_link != None:
             job.document_link = document_link

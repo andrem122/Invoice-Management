@@ -43,8 +43,6 @@ def projects(request):
         .add_num_active_jobs()
     )
 
-    print(archived_houses.query)
-
     template = loader.get_template('projects/projects.html')
     send_data_form = Send_Data()
     archive_house_form = Archive_House()
