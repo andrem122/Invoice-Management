@@ -107,16 +107,17 @@
 
       </div>
       <div class="popup-forms">
-        {% include 'includes/forms/edit_job.html' %}
+        {% if item|get_class == 'Expenses' %}
+          {% include 'includes/forms/edit_expense.html' %}
+        {% else %}
+          {% include 'includes/forms/edit_job.html' %}
+        {% endif %}
         <ul class="mobile-option-icons popup animated bounceInUp">
 
           <li>
             {% if item|get_class == 'Expenses' %}
 
-            <button type="submit" form="delete_exp_form_{{ item.id }}" class="delete-option-m mobile-option-item">
-              <span>Delete</span>
-              <i class="far fa-trash-alt"></i>
-            </button>
+              {% include 'includes/option_items/mobile_options_expense.html' %}
 
             {% else %}
 
@@ -198,9 +199,7 @@
                     <i class="fas fa-ellipsis-v"></i>
                   </a>
                   {% if item|get_class == 'Expenses' %}
-                  <div class="dropdown-menu">
-                    <button type="submit" form="delete_exp_form_{{ item.id }}" class="dropdown-item delete-exp-option">Delete</button>
-                  </div>
+                    {% include 'includes/option_items/desktop_options_expense.html' %}
                   {% else %}
                     {% include 'includes/option_items/desktop_options_job.html' %}
                   {% endif %}

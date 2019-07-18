@@ -5,6 +5,7 @@ from project_management.decorators import customer_and_staff_check
 from send_data.forms import Send_Data
 from jobs.models import House, Job
 from expenses.models import Expenses
+from expenses.forms import Edit_Expense
 from jobs_admin.forms import Edit_Job
 from django.core.paginator import Paginator
 from itertools import chain
@@ -16,6 +17,7 @@ def project_details(request, house_id):
 
     #get forms and template
     send_data_form = Send_Data()
+    edit_expense_form = Edit_Expense(user=current_user)
     edit_job_form = Edit_Job(user=current_user)
     template = loader.get_template('project_details/project_details.html')
 
@@ -23,6 +25,7 @@ def project_details(request, house_id):
         'current_user': current_user,
         'send_data_form': send_data_form,
         'edit_job_form': edit_job_form,
+        'edit_expense_form': edit_expense_form,
     }
 
     if house_id:

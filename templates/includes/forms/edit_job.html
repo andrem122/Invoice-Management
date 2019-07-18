@@ -1,5 +1,5 @@
 {# Edit Job Form #}
-<form id="edit-job-form-{{ item.id }}{{ job.id }}" class="edit-job-form popup" action="{% url 'jobs_admin:index' %}" method="post" enctype="multipart/form-data">
+<form id="edit-job-form-{{ item.id }}{{ job.id }}" class="edit-job-form edit-item-form popup" action="{% url 'jobs_admin:index' %}" method="post" enctype="multipart/form-data">
   <a class="exit-on-click">
      <i class="fas fa-times popup-remove-trigger"></i>
   </a>

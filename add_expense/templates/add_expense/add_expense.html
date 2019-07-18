@@ -50,6 +50,16 @@
         <div class="input-wrap input-wrap-select"><i class="fas fa-tags"></i>{{ add_expense_form.expense_type }}</div>
       </div>
 
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ add_expense_form.description.label_tag }}</div>
+        <div class="input-wrap">{{ add_expense_form.description }}</div>
+      </div>
+
+      <div class="input-label-wrap">
+        <div class="label-wrap">{{ add_expense_form.memo.label_tag }}</div>
+        <div class="input-wrap">{{ add_expense_form.memo }}</div>
+      </div>
+
       <div class="input-label-file-wrap">
         <div class="label-wrap">
           {{ add_expense_form.document_link.label_tag }}

@@ -13,11 +13,15 @@ class Add_Expense(ModelForm, forms.Form):
             'house',
             'amount',
             'expense_type',
+            'description',
+            'memo',
             'document_link',
         ]
 
         widgets = {
             'document_link': forms.FileInput(attrs={'class': 'file_upload'}),
+            'description': forms.TextInput(attrs={'placeholder': 'Anything you need to remember...'}),
+            'memo': forms.TextInput(attrs={'placeholder': 'Memo'}),
         }
 
     def __init__(self, user, *args, **kwargs):

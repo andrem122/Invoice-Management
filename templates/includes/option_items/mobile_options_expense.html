@@ -1,5 +1,10 @@
 <li>
-  <button type="submit" form="delete_exp_form_{{ expense.id }}" class="delete-option-m mobile-option-item">
+  <button type="submit" form="delete_exp_form_{{ expense.id }}{{ item.id }}" class="delete-option-m mobile-option-item">
     <span>Delete</span><i class="far fa-trash-alt"></i>
+  </button>
+</li>
+<li>
+  <button class="edit-item-popup edit-item-option-m mobile-option-item trigger-within-popup">
+    <span class="edit-item-popup trigger-within-popup">Edit Expense</span><i class="far fa-edit edit-item-popup trigger-within-popup"></i>
   </button>
 </li>

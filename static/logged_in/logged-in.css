@@ -825,7 +825,7 @@ form ul.messages li.error {
 
 /* Edit Job Form */
 
-form.edit-job-form {
+form.edit-job-form, form.edit-expense-form {
   top: 50%;
   transform: translateY(-50%);
   overflow-y: scroll;

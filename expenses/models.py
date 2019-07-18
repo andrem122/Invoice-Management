@@ -5,10 +5,12 @@ import os
 
 class Expenses(models.Model):
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer_expenses')
-    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='expense_house')
+    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='expense_house', null=True, blank=True)
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     submit_date = models.DateTimeField(auto_now_add=True, blank=True)
     pay_this_week = models.BooleanField(default=False)
+    description = models.TextField(max_length=3000, default='', blank=True)
+    memo = models.TextField(max_length=400, default='', blank=True)
 
     materials = 'Materials'
     no_1099 = 'No 1099'
@@ -31,7 +33,7 @@ class Expenses(models.Model):
     def generate_file_path(self, file_name):
         return os.path.join('customer_uploads', 'expenses', str(self.house.address), str(file_name))
 
-    document_link = models.FileField(null=True, upload_to=generate_file_path)
+    document_link = models.FileField(null=True, blank=True, upload_to=generate_file_path)
 
     def __str__(self):
         return str(self.house) + '-' + str(self.amount) + '-' + str(self.submit_date)
