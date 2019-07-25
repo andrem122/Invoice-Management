@@ -7,7 +7,7 @@ window.addEventListener('DOMContentLoaded', function() {
     var $search_input = $('#search');
 
     //submit the form with ajax when the user types into the search input
-    $search_input.on('keyup changed', function(e) {
+    $search_input.on('keydown changed', function(e) {
        $.ajax({
          type: 'GET',
          url: '/search/ajax',

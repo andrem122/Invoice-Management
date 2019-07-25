@@ -37,3 +37,7 @@ class Expenses(models.Model):
 
     def __str__(self):
         return str(self.house) + '-' + str(self.amount) + '-' + str(self.submit_date)
+
+    @property
+    def filename(self):
+        return os.path.basename(self.document_link.name)

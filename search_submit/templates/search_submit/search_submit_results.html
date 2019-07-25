@@ -279,6 +279,7 @@
         </div>
 
         <div class="popup-forms">
+          {% include 'includes/forms/edit_expense.html' %}
           <ul class="mobile-option-icons popup animated bounceInUp">
             {% include 'includes/option_items/mobile_options_expense.html' %}
           </ul>
@@ -336,9 +337,7 @@
                       <i class="fas fa-ellipsis-v"></i>
                     </a>
 
-                    <div class="dropdown-menu">
-                      <button type="submit" form="delete_exp_form_{{ expense.id }}" class="dropdown-item delete-exp-option">Delete</button>
-                    </div>
+                    {% include 'includes/option_items/desktop_options_expense.html' %}
 
                   </div>
                 </ul>

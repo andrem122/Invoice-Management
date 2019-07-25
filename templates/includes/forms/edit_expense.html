@@ -17,11 +17,8 @@
     <div class="input-wrap input-wrap-select">
       <i class="fas fa-home"></i>
       <select id="id_house" name="house">
-        <option selected value="">
-          House
-        </option>
         {% for house in edit_expense_form.fields.house.queryset %}
-          <option value="{{ house.id }}">{{ house }}</option>
+          <option{% if expense.house == house or item.house == house %} selected{% endif %} value="{{ house.id }}">{{ house.address }}</option>
         {% endfor %}
       </select>
     </div>
@@ -41,7 +38,11 @@
     <div class="label-wrap">{{ edit_expense_form.expense_type.label_tag }}</div>
     <div class="input-wrap input-wrap-select">
       <i class="fa fa-list-alt" aria-hidden="true"></i>
-      {{ edit_expense_form.expense_type }}
+      <select name="expense_type" id="id_expense_type">
+        {% for expense_type, expense_value in edit_expense_form.expense_type.field.choices %}
+          <option{% if expense.expense_type == expense_type or item.expense_type == expense_type %} selected{% endif %} value="{{ expense_type }}">{{ expense_type }}</option>
+        {% endfor %}
+      </select>
     </div>
   </div>
 
@@ -73,11 +74,9 @@
   </div>
 
   {# Pay This Week #}
-  <div class="input-label-wrap">
-    <div class="label-wrap">{{ edit_expense_form.pay_this_week.label_tag }}</div>
-    <div class="input-wrap">
-      {{ edit_expense_form.pay_this_week }}
-    </div>
+  <div class="inputGroup">
+    <input name="pay_this_week" id="id_pay_this_week_{{ item.id }}{{ expense.id }}" type="checkbox" {% if item.pay_this_week == True or expense.pay_this_week == True %}checked{% endif %}>
+    <label for="id_pay_this_week_{{ item.id }}{{ expense.id }}">Pay This Week?</label>
   </div>
 
   <input type="hidden" name="expense_id" value="{{ item.id }}{{ expense.id }}" />
@@ -86,5 +85,5 @@
 
   {% include 'includes/forms/search_inputs.html' %}
 
-  <input class="form-submit-btn" type="submit" value="Save" />
+  <input class="form-submit-btn edit-item-submit-btn" type="submit" form="edit-expense-form-{{ item.id }}{{ expense.id }}" value="Save" />
 </form>

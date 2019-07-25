@@ -46,7 +46,7 @@
               House
             </option>
             {% for house in form.fields.house.queryset %}
-              <option value="{{house.id}}">{{house}}</option>
+              <option value="{{ house.id }}">{{ house }}</option>
             {% endfor %}
           </select>
         </div>
@@ -56,6 +56,11 @@
         <div class="label-wrap">{{ form.job_type.label_tag }}</div>
         <div class="input-wrap input-wrap-select">
           <i class="fa fa-list-alt" aria-hidden="true"></i>
+          <select name="job_type" id="id_job_type" required>
+            {% for job_type, job_value in form.job_type.field.choices %}
+              <option value="{{ job_type }}">{{ job_type }}</option>
+            {% endfor %}
+          </select>
           {{ form.job_type }}
         </div>
       </div>

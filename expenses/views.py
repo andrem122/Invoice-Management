@@ -3,9 +3,61 @@ from django.http import HttpResponse
 from jobs.models import House
 from .models import Expenses
 from .forms import Delete_Expense, Edit_Expense
+from payment_history.forms import Upload_Document_Form
+from jobs_admin.forms import Edit_Job, Approve_Job, Approve_As_Payment, Reject_Estimate
 from django.contrib.auth.decorators import user_passes_test
+from search_submit.views import Search_Submit_View
 from project_management.decorators import customer_and_staff_check
 from customer_register.customer import Customer
+from ajax.ajax import Ajax
+
+def load_ajax_search_results(request):
+    """Loads ajax html for the search view"""
+    search_submit_context = {
+        'current_user': request.user,
+        'query': request.POST.get('query', None),
+        'post_from_url': request.POST.get('post_from_url', None),
+        'edit_job_form': Edit_Job(user=request.user),
+        'edit_expense_form': Edit_Expense(user=request.user),
+        'approve_form': Approve_Job(),
+        'approve_as_payment_form': Approve_As_Payment(),
+        'reject_estimate_form': Reject_Estimate(),
+        'upload_document_form': Upload_Document_Form(),
+        'delete_exp_form': Delete_Expense(),
+    }
+
+    search_submit_view = Search_Submit_View()
+    html = search_submit_view.search_results(
+        query=search_submit_context.get('query'),
+        request=request,
+        context=search_submit_context,
+        ajax=True)
+
+    return html
+
+def return_html_or_redirect(request, response):
+    """
+    Returns html if the request is ajax
+    or redirects the user if the request is
+    not ajax
+
+    Args:
+        request: The request object.
+        response: The reponse string.
+
+    Returns:
+        A HttpResponse object OR a redirect object.
+
+    Raises:
+        None.
+    """
+
+    if request.is_ajax(): # Ajax requests return HTML as a result, so use HttpResponse
+        return HttpResponse(response)
+    elif response == '<h2>Error</h2>':
+        return HttpResponse(response)
+    else:
+        return redirect(response)
 
 def delete_expense(request, customer):
     # Handles POST requests to delete an expense object
@@ -38,6 +90,7 @@ def edit_expense(request, customer):
     post_from_url = request.POST.get('post_from_url', None)
 
     edit_expense_form = Edit_Expense(data=request.POST, files=request.FILES, user=request.user)
+    print(edit_expense_form.fields)
 
     if edit_expense_form.is_valid():
 
@@ -45,11 +98,10 @@ def edit_expense(request, customer):
         new_house = edit_expense_form.cleaned_data.get('house', None)
         new_amount = edit_expense_form.cleaned_data.get('amount', None)
         new_expense_type = edit_expense_form.cleaned_data.get('expense_type', None)
-        pay_this_week = edit_expense_form.cleaned_data.get('pay_this_week', None)
+        new_pay_this_week = edit_expense_form.cleaned_data.get('pay_this_week', None)
         new_description = edit_expense_form.cleaned_data.get('description', None)
         new_memo = edit_expense_form.cleaned_data.get('memo', None)
         document_link = edit_expense_form.cleaned_data.get('document_link', None)
-        print(edit_expense_form.cleaned_data)
 
         #update the expense instance based on which fields were submitted in the form
         if new_house != None:
@@ -75,6 +127,10 @@ def edit_expense(request, customer):
             expense.memo = new_memo
             expense.save(update_fields=['memo'])
 
+        if new_pay_this_week != None:
+            expense.pay_this_week = new_pay_this_week
+            expense.save(update_fields=['pay_this_week'])
+
         if new_amount != None and 1 + float(new_amount) != 1.0: #update balance_amount if amount is in the POST data
             expense.amount = new_amount
             expense.save(update_fields=['amount'])
@@ -83,31 +139,25 @@ def edit_expense(request, customer):
         print(edit_expense_form.errors)
 
 
-    # if request.is_ajax():
-    #     if 'search' in post_from_url:
-    #         return load_ajax_search_results(request)
-    #     else:
-    #         ajax = Ajax(customer)
-    #         html = ajax.load_ajax_results('jobs')
-    #         return html
-    # else:
-    #     return request.POST.get('post_from_url', None)
-
-    return request.POST.get('post_from_url', None)
+    if request.is_ajax():
+        return load_ajax_search_results(request)
+    else:
+        return request.POST.get('post_from_url', None)
 
 @user_passes_test(customer_and_staff_check, login_url='/accounts/login/')
 def expenses(request):
     customer = Customer(request.user)
 
-    # POST requests
+    # Handle HTTP requests
     response = '<h2>Error</h2>'
+    # POST requests
     if request.method == 'POST':
         if request.POST.get('delete_exp_form', None) != None:
             response = delete_expense(request, customer)
         elif request.POST.get('edit_expense', None) != None:
             response = edit_expense(request, customer)
 
-    if response == '<h2>Error</h2>':
-        return HttpResponse(response)
-    else:
-        return redirect(response)
+        return return_html_or_redirect(request, response)
+
+    else: # GET or any other method
+        return return_html_or_redirect(request, response)

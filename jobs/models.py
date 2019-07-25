@@ -231,7 +231,7 @@ class Job(models.Model):
         (misc, 'Miscellaneous'),
     )
 
-    job_type = models.CharField(max_length=100, choices=job_choices, default='')
+    job_type = models.CharField(max_length=100, choices=job_choices, default='', blank=True)
 
     def __str__(self):
         return str(self.company.get_username()) + '-' + str(self.house.address + '-' + str(self.start_amount))

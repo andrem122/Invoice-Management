@@ -16,9 +16,9 @@ window.addEventListener('DOMContentLoaded', function() {
     return cookieValue;
   }
 
-  function ajax_post() {
+  function ajax_http(http_method) {
     document.addEventListener('click', function(e){
-      if (e.target.classList.contains('option-item')) {
+      if (e.target.classList.contains('option-item') || e.target.classList.contains('edit-item-submit-btn')) {
         e.target.disabled = true; //disable to button to prevent double submissions
         e.preventDefault(); //prevent form submission
 
@@ -26,23 +26,27 @@ window.addEventListener('DOMContentLoaded', function() {
         var $form = $('#' + form_id);
         var url = $form.attr('action');
         var csrftoken = getCookie('csrftoken');
-        var post_string = $form.serialize();
+        var query_string = $form.serialize();
 
-        if (post_string.indexOf('csrfmiddlewaretoken') === -1) {
-          post_string += '&csrfmiddlewaretoken=' + csrftoken;
+        // Add csrfmiddlewaretoken to query string
+        if (query_string.indexOf('csrfmiddlewaretoken') === -1) {
+          query_string += '&csrfmiddlewaretoken=' + csrftoken;
         }
 
+        console.log(query_string);
 
-        //ajax POST
+        //ajax POST or GET
          $.ajax({
            type: 'POST',
            url: url,
-           data: post_string,
+           data: query_string,
            success: function(data, textStatus) {
              $('#results-container').html(data);
              delete_no_ajax_search_results();
+             document.getElementById('overlay_id').classList.remove('visible');
            },
            error: function(xhr, status, e) {
+             document.getElementById('overlay_id').classList.remove('visible');
              console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
            }
          });
@@ -50,7 +54,7 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  ajax_post();
+  ajax_http();
 
 
 });

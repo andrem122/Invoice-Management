@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from jobs.models import Job, Request_Payment
 from expenses.models import Expenses
+from expenses.forms import Edit_Expense
 from django.db.models import Q
 from django.shortcuts import redirect
 from customer_register.customer import Customer
@@ -45,6 +46,7 @@ class Search_Submit_View(View):
 
         if query != None and query != '':
             query_terms = self.normalize_query(query)
+
             #search jobs table
             queryset_jobs = functools.reduce(operator.__or__, (
                 Q(company__username__icontains=term) |
@@ -83,6 +85,7 @@ class Search_Submit_View(View):
 
             context['query'] = query
 
+            # Replace the post_from_url with the format 'search/?search=' + query
             replacement_string = 'search/?search=' + query
             if 'ajax' in request.build_absolute_uri():
                 context['post_from_url'] = request.build_absolute_uri().replace('ajax', '')
@@ -104,12 +107,14 @@ class Search_Submit_View(View):
 
             if ajax:
                 context['edit_job_form'] = Edit_Job(user=request.user)
+                context['edit_expense_form'] = Edit_Expense(user=request.user)
                 context['approve_form'] = Approve_Job()
                 context['approve_as_payment_form'] = Approve_As_Payment()
                 context['reject_estimate_form'] = Reject_Estimate()
                 context['upload_document_form'] = Upload_Document_Form()
                 context['delete_exp_form'] = Delete_Expense()
                 context['request'] = request
+
                 return render_to_string('search_submit/search_submit_results.html', context)
 
             return context
@@ -117,6 +122,7 @@ class Search_Submit_View(View):
         else:
             upload_document_form = Upload_Document_Form()
             edit_job_form = Edit_Job(user=request.user)
+            edit_expense_form = Edit_Expense(user=request.user)
 
             if not ajax:
                 return context
@@ -134,6 +140,7 @@ class Search_Submit_View(View):
         upload_document_form = Upload_Document_Form()
         send_data_form = Send_Data()
         edit_job_form = Edit_Job(user=current_user)
+        edit_expense_form = Edit_Expense(user=current_user)
         query = request.GET.get('search', None)
 
         context = {
@@ -141,6 +148,7 @@ class Search_Submit_View(View):
             'upload_document_form': upload_document_form,
             'send_data_form': send_data_form,
             'edit_job_form': edit_job_form,
+            'edit_expense_form': edit_expense_form,
         }
 
         context = self.search_results(query=query, request=request, context=context)

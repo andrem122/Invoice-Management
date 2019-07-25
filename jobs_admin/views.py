@@ -392,7 +392,7 @@ def index(request):
         context['worker_url'] = worker_url
         context['staff_url'] = staff_url
 
-    #form logic
+    # HTTP requests
     if request.method == 'POST':
         response = '<h2>Error</h2>'
 
@@ -413,8 +413,7 @@ def index(request):
         else:
             return redirect(response)
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
+    else: # if a GET (or any other method) we'll create a blank form
         approve_form = Approve_Job()
         approve_as_payment_form = Approve_As_Payment()
         edit_job_form = Edit_Job(user=request.user)
