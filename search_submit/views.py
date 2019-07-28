@@ -79,7 +79,7 @@ class Search_Submit_View(View):
                 for term in query_terms)
             )
 
-            jobs = Job.objects.filter(queryset_jobs, house__customer=customer.customer)
+            jobs = Job.objects.filter(queryset_jobs, house__customer=customer.customer).add_balance()
             payments = Request_Payment.objects.filter(queryset_payments, job__house__customer=customer.customer)
             expenses = Expenses.objects.filter(queryset_expenses, house__customer=customer.customer)
 

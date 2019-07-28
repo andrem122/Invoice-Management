@@ -23,23 +23,27 @@ window.addEventListener('DOMContentLoaded', function() {
         e.preventDefault(); //prevent form submission
 
         var form_id = e.target.getAttribute('form');
-        var $form = $('#' + form_id);
-        var url = $form.attr('action');
+        var form = document.getElementById(form_id);
+        var url = form.getAttribute('action');
         var csrftoken = getCookie('csrftoken');
-        var query_string = $form.serialize();
+        var form_data = new FormData(form);
 
-        // Add csrfmiddlewaretoken to query string
-        if (query_string.indexOf('csrfmiddlewaretoken') === -1) {
-          query_string += '&csrfmiddlewaretoken=' + csrftoken;
+        // Add csrfmiddlewaretoken to form_data object if it does not have it
+        if (!form_data.has('csrfmiddlewaretoken')) {
+          form_data.append('csrfmiddlewaretoken', csrftoken);
         }
 
-        console.log(query_string);
+        for(var pair of form_data.entries()) {
+          console.log(pair[0]+ ', '+ pair[1]);
+        }
 
-        //ajax POST or GET
+        //ajax POST
          $.ajax({
            type: 'POST',
            url: url,
-           data: query_string,
+           data: form_data,
+           processData: false,
+           contentType: false,
            success: function(data, textStatus) {
              $('#results-container').html(data);
              delete_no_ajax_search_results();

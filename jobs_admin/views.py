@@ -244,7 +244,8 @@ def edit_job(request, customer):
         start_amount = edit_job_form.cleaned_data.get('start_amount', None)
 
         #update the job instance based on which fields were submitted in the form
-        if new_house != None:
+        if new_house != None and new_house != previous_house:
+            print('New House selected')
             job.house = new_house
 
             #update objects
@@ -285,8 +286,8 @@ def edit_job(request, customer):
                 previous_house.save(update_fields=['rejected_jobs'])
 
 
-        if new_company != None:
-
+        if new_company != None and new_company != previous_company:
+            print('New company selected')
             job.company = new_company
             job.save(update_fields=['company'])
 

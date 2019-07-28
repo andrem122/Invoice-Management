@@ -11,10 +11,9 @@ from itertools import chain
 from optimize_image import optimize_image, is_image, generate_file_path
 
 def generate_login_url(request):
+    protocol = 'http://'
     if request.is_secure():
         protocol = 'https://'
-    else:
-        protocol = 'http://'
 
     return protocol + request.get_host() + '/accounts/login/'
 

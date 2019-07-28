@@ -52,7 +52,7 @@
                   {# Job Status #}
                   {% if job.approved == False and job.rejected == False %}
                   <div class="status new">New</div>
-                  {% elif job.approved == True and job.balance > 0 %}
+                  {% elif job.approved == True and job.balance1 > 0 %}
                   <div class="status active">Active</div>
                   {% elif job.approved == True %}
                   <div class="status approved">Approved</div>
@@ -65,7 +65,7 @@
                 <hr>
                 {% if job.approved == True %}
                 <span class="info-title">Balance</span>
-                <li class="info-1">${{ job.balance_amount|intcomma }}</li>
+                <li class="info-1">${{ job.balance1|intcomma }}</li>
                 <hr>
                 {% endif %}
               </ul>
