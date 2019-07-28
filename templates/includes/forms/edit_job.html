@@ -11,16 +11,14 @@
   </div>
   {% endif %}
 
+  {# House #}
   <div class="input-label-wrap">
     <div class="label-wrap">{{ edit_job_form.house.label_tag }}</div>
     <div class="input-wrap input-wrap-select">
       <i class="fas fa-home"></i>
       <select id="id_house" name="house">
-        <option selected value="">
-          House
-        </option>
         {% for house in edit_job_form.fields.house.queryset %}
-          <option value="{{ house.id }}">{{ house }}</option>
+          <option{% if job.house == house or item.house == house %} selected{% endif %} value="{{ house.id }}">{{ house.address }}</option>
         {% endfor %}
       </select>
     </div>
@@ -31,11 +29,8 @@
     <div class="input-wrap input-wrap-select">
       <i class="far fa-building"></i>
       <select id="id_company" name="company">
-        <option selected value="">
-          Company
-        </option>
         {% for company in edit_job_form.fields.company.queryset %}
-          <option value="{{ company.id }}">{{ company }}</option>
+          <option{% if job.company == company or item.company == company %} selected{% endif %} value="{{ company.id }}">{{ company }}</option>
         {% endfor %}
       </select>
     </div>
@@ -45,7 +40,23 @@
     <div class="label-wrap">{{ edit_job_form.job_type.label_tag }}</div>
     <div class="input-wrap input-wrap-select">
       <i class="fa fa-list-alt" aria-hidden="true"></i>
-      {{ edit_job_form.job_type }}
+      <select name="job_type" id="id_job_type">
+        {% for job_type, job_value in edit_job_form.job_type.field.choices %}
+
+          {% if forloop.first %}
+            <option value="">Job Type</option>
+          {% endif %}
+
+          {% if job_type != '' %}
+            {% if job.job_type == job_type or item.job_type == job_type %}
+              <option selected value="{{ job_type }}">{{ job_type }}</option>
+            {% else %}
+              <option value="{{ job_type }}">{{ job_type }}</option>
+            {% endif %}
+          {% endif %}
+
+        {% endfor %}
+      </select>
     </div>
   </div>
 

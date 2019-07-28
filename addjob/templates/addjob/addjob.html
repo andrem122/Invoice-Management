@@ -60,6 +60,7 @@
             {% for job_type, job_value in form.job_type.field.choices %}
               <option value="{{ job_type }}">{{ job_type }}</option>
             {% endfor %}
+
           </select>
           {{ form.job_type }}
         </div>

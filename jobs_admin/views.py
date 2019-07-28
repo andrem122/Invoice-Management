@@ -73,7 +73,7 @@ def approve_job(request, customer):
         job_id = int(request.POST.get('job_id'))
         post_from_url = request.POST.get('post_from_url', None)
 
-        job = Job.objects.get(pk=job_id)
+        job = Job.objects.filter(pk=job_id).add_balance()[0]
         house = job.house
 
         #update approved column to True for the specific job
@@ -82,9 +82,9 @@ def approve_job(request, customer):
         job.save(update_fields=['approved', 'rejected'])
 
         #add the user as a current worker on the house OR do nothing if they are already active
-        if job.balance_amount > 0 and job.approved == True:
+        if float(job.balance1) > 0 and job.approved == True:
             current_worker, created = Current_Worker.objects.get_or_create(house=house, job=job, company=job.company, customer=request.user)
-            current_worker.current = True
+            current_worker.current = True # IF a current_worker object already exists
             current_worker.save(update_fields=['current'])
 
         else: #this job may be complete because payments may have been made previously, so set house.completed_jobs=True
@@ -200,7 +200,13 @@ def reject_estimate(request, customer):
 
         #update current worker object 'current' attribute to false if rejecting an active job
         try:
-            current_worker = Current_Worker.objects.get(house=job.house, job=job, company=job.company, customer=request.user, current=True)
+            current_worker = Current_Worker.objects.get(
+                house=job.house,
+                job=job,
+                company=job.company,
+                customer=request.user,
+                current=True
+            )
             current_worker.current = False
             current_worker.save()
         except ObjectDoesNotExist as e:
@@ -417,5 +423,6 @@ def index(request):
         approve_form = Approve_Job()
         approve_as_payment_form = Approve_As_Payment()
         edit_job_form = Edit_Job(user=request.user)
+        reject_estimate_form = Reject_Estimate()
 
     return HttpResponse(template.render(context, request))
