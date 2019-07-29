@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import redirect
-from jobs.models import Job, Current_Worker, Request_Payment
+from jobs.models import Job, Request_Payment
 from project_details.house import _House
 from .forms import Approve_Job, Approve_As_Payment, Reject_Estimate, Edit_Job
 from django.contrib.auth.decorators import user_passes_test
@@ -81,28 +81,6 @@ def approve_job(request, customer):
         job.rejected = False
         job.save(update_fields=['approved', 'rejected'])
 
-        #add the user as a current worker on the house OR do nothing if they are already active
-        if float(job.balance1) > 0 and job.approved == True:
-            current_worker, created = Current_Worker.objects.get_or_create(house=house, job=job, company=job.company, customer=request.user)
-            current_worker.current = True # IF a current_worker object already exists
-            current_worker.save(update_fields=['current'])
-
-        else: #this job may be complete because payments may have been made previously, so set house.completed_jobs=True
-            house.completed_jobs = True
-            house.save(update_fields=['completed_jobs'])
-
-        if customer.current_week_payment_requests().exists(): #check if house has payment requests for current week
-            house.pending_payments = True
-            house.save(update_fields=['pending_payments'])
-
-        if customer.current_week_approved_payments().exists(): #check if house has approved payments for current week
-            house.payment_history = True
-            house.save(update_fields=['payment_history'])
-
-        if not customer.current_week_proposed_jobs(house=house).exists(): #check if house has estimates for current week
-            house.proposed_jobs = False
-            house.save(update_fields=['proposed_jobs'])
-
         #send approval email
         send_approval_mail(request, job, 'Job Approved!', 'Job Approved!')
 
@@ -140,18 +118,6 @@ def approve_as_payment(request, customer):
         job.approved = True
         job.save(update_fields=['approved'])
 
-        #update house to have a payment history
-        house.payment_history = True
-        house.save(update_fields=['payment_history'])
-
-        #update house to have completed jobs if balance is <= 0
-        if job.balance <= 0:
-            house.completed_jobs = True
-            house.save(update_fields=['completed_jobs'])
-        if not customer.current_week_proposed_jobs(house=house).exists():
-            house.proposed_jobs = False
-            house.save(update_fields=['proposed_jobs'])
-
         #send approval email to worker
         send_approval_mail(request, job, 'Payment Approved!', 'Payment Approved!')
 
@@ -179,7 +145,6 @@ def reject_estimate(request, customer):
         #set rejected equal to True for the estimate/job
         job.approved = False
         job.rejected = True
-        house.rejected_jobs = True
 
         #update job total paid and delete payment object if payment object associated with job was NOT requested by the worker
         try:
@@ -189,28 +154,6 @@ def reject_estimate(request, customer):
             print('No elements in the "Request_Payment" QuerySet, so an IndexError will occur')
 
         job.save()
-        house.save(update_fields=['rejected_jobs'])
-
-        if not customer.current_week_proposed_jobs(house=house).exists():
-            house.proposed_jobs = False
-            house.save(update_fields=['proposed_jobs'])
-        if not customer.completed_jobs(house=house).exists():
-            house.completed_jobs = False
-            house.save(update_fields=['completed_jobs'])
-
-        #update current worker object 'current' attribute to false if rejecting an active job
-        try:
-            current_worker = Current_Worker.objects.get(
-                house=job.house,
-                job=job,
-                company=job.company,
-                customer=request.user,
-                current=True
-            )
-            current_worker.current = False
-            current_worker.save()
-        except ObjectDoesNotExist as e:
-            print(e)
 
         if request.is_ajax():
             if 'search' in post_from_url:
@@ -245,66 +188,15 @@ def edit_job(request, customer):
 
         #update the job instance based on which fields were submitted in the form
         if new_house != None and new_house != previous_house:
-            print('New House selected')
             job.house = new_house
 
             #update objects
             Request_Payment.objects.filter(job__pk=job_id).update(house=new_house) #get payments associated with job instance
             job.save(update_fields=['house'])
 
-            #if the company working on the previous house has no more active jobs with that house, set current to false on the current_worker object
-            if not _House(previous_house).has_active_jobs(company=job.company):
-                try:
-                    current_worker = Current_Worker.objects.get(house=previous_house, job=job, company=previous_company, customer=request.user, current=True)
-                    current_worker.current = False
-                    current_worker.save(update_fields=['current'])
-
-                except ObjectDoesNotExist as e:
-                    print(e)
-
-            #if the new house now has an active job, create a current worker object
-            if _House(new_house).has_active_jobs():
-
-                #if both the house and company are being changed, get the new company and use it to get or create a current_worker object
-                company = job.company
-                if new_company != None:
-                    company = new_company
-
-                current_worker, created = Current_Worker.objects.get_or_create(house=job.house, job=job, company=company, customer=request.user, current=False)
-                #if there was a current_worker object already, get it and set current equal to True
-                current_worker.current = True
-                current_worker.save(update_fields=['current'])
-
-            #if new house has rejected jobs, set rejected_jobs attribute to True.
-            if _House(new_house).has_rejected_jobs():
-                new_house.rejected_jobs = True
-                new_house.save(update_fields=['rejected_jobs'])
-
-            #if previous house has no more rejected job, set rejected_jobs attribute to False
-            if not _House(previous_house).has_rejected_jobs():
-                previous_house.rejected_jobs = False
-                previous_house.save(update_fields=['rejected_jobs'])
-
-
         if new_company != None and new_company != previous_company:
-            print('New company selected')
             job.company = new_company
             job.save(update_fields=['company'])
-
-            #when changing the company, set current to false for the previous current worker object and create a new worker object
-            try:
-                #get previous current_worker object
-                current_worker = Current_Worker.objects.get(house=previous_house, job=job, company=previous_company, customer=request.user, current=True)
-                current_worker.current = False
-                current_worker.save()
-
-                new_current_worker, created = Current_Worker.objects.get_or_create(house=job.house, job=job, company=new_company, customer=request.user, current=False)
-                #if there was a current_worker object already (current was set to False), get it and set current equal to True
-                new_current_worker.current = True
-                new_current_worker.save(update_fields=['current'])
-
-            except ObjectDoesNotExist as e:
-                print(e)
 
         if new_job_type != None:
             #change and save new job type on job object

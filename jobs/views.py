@@ -17,20 +17,6 @@ def generate_login_url(request):
 
     return protocol + request.get_host() + '/accounts/login/'
 
-def generate_unique_house_queryset(houses=[]):
-    """
-    Removes duplicate house objects by comparing
-    current_worker objects to house objects
-    """
-    for house in houses:
-        try:
-            if house.house in houses: #if house from current_worker object is in list, continue onto next loop
-                continue
-            else:
-                yield house
-        except AttributeError as e:
-            yield house
-
 @user_passes_test(worker_check, login_url='/accounts/login/')
 def index(request):
     current_user = request.user
@@ -40,13 +26,14 @@ def index(request):
     unapproved_houses = worker.current_week_unapproved_houses()
     completed_houses = worker.current_week_completed_houses()
 
-    approved_jobs = worker.approved_jobs()
+    active_jobs = worker.active_jobs()
     unapproved_jobs = worker.current_week_unapproved_jobs()
     completed_jobs = worker.current_week_completed_jobs()
 
-    houses = list(chain(approved_houses, unapproved_houses, completed_houses))
-    houses = generate_unique_house_queryset(houses=houses)
-    items = list(chain(approved_jobs, unapproved_jobs, completed_jobs))
+    print(active_jobs)
+
+    houses = set(chain(approved_houses, unapproved_houses, completed_houses))
+    items = set(chain(active_jobs, unapproved_jobs, completed_jobs))
 
     template = loader.get_template('jobs/index.html')
     request_payment_form = Request_Payment_Form()
@@ -56,6 +43,7 @@ def index(request):
         'items': items,
         'current_user': current_user,
         'request_payment_form': request_payment_form,
+        'login_url': generate_login_url(request),
     }
 
     #check if the user is new to send a welcome message

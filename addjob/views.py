@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
-from jobs.models import Job, Current_Worker, House
+from jobs.models import Job, House
 from .forms import AddJob, AddJob_Customer
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages

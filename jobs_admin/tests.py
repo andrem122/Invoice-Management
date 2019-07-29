@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test import Client
-from jobs.models import Current_Worker, House, Job, Request_Payment
+from jobs.models import House, Job, Request_Payment
 from .views import index
 from django.contrib.auth.models import User, Group
 
@@ -80,9 +80,6 @@ class Test_Send_Data(TestCase):
             }
         )
 
-        #current worker
-        self.assertEqual(Current_Worker.objects.count(), 0)
-
         #house
         house = House.objects.get(pk=1)
         self.assertTrue(house.completed_jobs)
@@ -119,9 +116,6 @@ class Test_Send_Data(TestCase):
             }
         )
 
-        #current worker
-        self.assertEqual(Current_Worker.objects.count(), 1)
-
         #house
         house = House.objects.get(pk=1)
         self.assertTrue(house.completed_jobs)
@@ -149,9 +143,6 @@ class Test_Send_Data(TestCase):
                 'reject_estimate': 'reject_estimate',
             }
         )
-
-        #current worker
-        self.assertEqual(Current_Worker.objects.count(), 1)
 
         #house
         house = House.objects.get(pk=1)

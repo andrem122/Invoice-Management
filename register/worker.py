@@ -1,4 +1,4 @@
-from jobs.models import Job, Current_Worker, House
+from jobs.models import Job, House
 from django.contrib.auth.models import User
 import datetime
 import pytz
@@ -33,26 +33,27 @@ class Worker:
     """Houses"""
     #gets all houses the worker is approved to work on
     def approved_houses(self):
-        sql = 'SELECT * FROM jobs_current_worker WHERE customer_id={customer_id} AND current=1 AND company_id={company_id} GROUP BY house_id'.format(customer_id=self.customer.id, company_id=self.worker.id)
-        return Current_Worker.objects.raw(sql)
+        return House.objects.filter(
+            customer=self.customer,
+            job__company=self.worker,
+            job__approved=True,
+            job__rejected=False,
+        )
 
     #get all houses with pending jobs for the current week
     def current_week_unapproved_houses(self):
         return House.objects.filter(
             customer=self.customer,
-            proposed_jobs=True,
             job__company=self.worker,
             job__approved=False,
             job__rejected=False,
-            job__balance_amount__gt=0,
             job__start_date__range=[Worker.start_week, Worker.today],
-        ).distinct()
+        )
 
     #gets all houses the worker has completed jobs for the current week
     def current_week_completed_houses(self):
         return House.objects.filter(
             customer=self.customer,
-            completed_jobs=True,
             job__company=self.worker,
             job__approved=True,
             job__balance_amount__lte=0,
@@ -61,10 +62,11 @@ class Worker:
 
     """Jobs"""
     #gets all approved jobs for the worker
-    def approved_jobs(self):
-        return Job.objects.filter(
+    def active_jobs(self):
+        return Job.objects.add_balance().filter(
             company=self.worker,
-            approved=True, balance_amount__gt=0,
+            approved=True,
+            balance1__gt=0,
         )
 
     #gets all unapproved jobs for the worker for the current week

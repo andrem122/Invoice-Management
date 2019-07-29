@@ -33,8 +33,7 @@ class Customer:
             self.customer = customer
         self.houses = self._houses()
 
-
-    """Current (Active) Houses"""
+    """Active Houses"""
     def active_houses(self):
         """
         Gets all active houses of the customer.
@@ -463,9 +462,6 @@ class Customer:
 
         Raises:
             None.
-
-        Notes: House pending_payments attribute will NOT update
-              if you filter houses by pending_payments=True in the queryset below
         """
         return House.objects.filter(
             customer=self.customer,

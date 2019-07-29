@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
-from jobs.models import Job, Request_Payment, Current_Worker
+from jobs.models import Job, Request_Payment
 from search_submit.views import Search_Submit_View
 from .forms import Change_Payment_Status
 from expenses.forms import Delete_Expense
@@ -87,33 +87,6 @@ def approve_payment(request, customer):
         payment.rejected = False
         payment.save(update_fields=['approved', 'approved_date', 'rejected'])
 
-        #since a payment was approved, set payment history to true
-        house.payment_history = True
-
-        #if balance is less than or equal to zero, set completed_jobs=True
-        if job.balance_amount <= 0:
-            house.completed_jobs = True
-
-
-        """if there are no more unapproved payments for a house,
-        set pending_payments=False for that specific house
-        """
-        if not Request_Payment.objects.filter(house=house, approved=False).exists():
-            house.pending_payments = False
-
-        """if a company has no more approved jobs for a house with a balance greater than zero,
-        then set current to false for that current_worker object"""
-        if not Job.objects.filter(company=job.company, house=job.house, balance_amount__gt=0, approved=True).exists():
-            try:
-                current_worker = Current_Worker.objects.get(company=job.company, job=job, house=job.house, customer=request.user)
-                current_worker.current = False
-                current_worker.save()
-
-            except ObjectDoesNotExist as e:
-                print(e)
-
-        house.save(update_fields=['pending_payments', 'payment_history', 'completed_jobs'])
-
         #send approval email to worker
         send_approval_mail(request, payment, 'Payment Approved!', 'Payment Approved!')
 
@@ -150,49 +123,14 @@ def reject_estimate(request, customer):
                 job.approved = False
 
             job.rejected = False
-            house.proposed_jobs = True
         else:
             payment.approved = False
             payment.rejected = True
-            house.pending_payments = True
-            house.rejected_payments = True
-
-        #if job balance greater than zero after rejection, add as current worker
-        if job.balance_amount > 0 and payment.requested_by_worker == True:
-            current_worker, created = Current_Worker.objects.get_or_create(
-                company=job.company,
-                house=house,
-                customer=request.user,
-                job=job,
-            )
-
-            current_worker.current = True
-            current_worker.save()
 
         job.save(update_fields=['approved', 'rejected'])
 
         if payment.requested_by_worker == True:
             payment.save(update_fields=['approved', 'rejected'])
-
-        """
-        if no more completed jobs for the house, set completed_jobs=False
-        """
-        if not Job.objects.filter(house=house, approved=True, balance_amount__lte=0).exists():
-            house.completed_jobs = False
-
-        """if there are no more rejected or approved payments for the house,
-        set payment_history/rejected_payments=False for the house
-        """
-        if not Request_Payment.objects.filter(house=house, approved=True).exists():
-            house.payment_history = False
-        else:
-            house.payment_history = True
-
-        if not customer.current_week_rejected_payments(house=house).exists():
-            house.rejected_payments = False
-            house.save(update_fields=['rejected_payments'])
-
-        house.save()
 
         if request.is_ajax():
             if 'search' in post_from_url:

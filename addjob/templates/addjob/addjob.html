@@ -58,11 +58,17 @@
           <i class="fa fa-list-alt" aria-hidden="true"></i>
           <select name="job_type" id="id_job_type" required>
             {% for job_type, job_value in form.job_type.field.choices %}
-              <option value="{{ job_type }}">{{ job_type }}</option>
-            {% endfor %}
 
+              {% if forloop.first %}
+                <option value="">Job Type</option>
+              {% endif %}
+
+              {% if job_type != '' %}
+                <option value="{{ job_type }}">{{ job_type }}</option>
+              {% endif %}
+              
+            {% endfor %}
           </select>
-          {{ form.job_type }}
         </div>
       </div>
 
