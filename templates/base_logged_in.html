@@ -26,21 +26,21 @@
     <!-- Animate CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
     <!-- Custom -->
-    <link rel="stylesheet" href="{% static 'logged-in.css' %}?v=1.50" />
+    <link rel="stylesheet" href="{% static 'logged-in.css' %}?v=1.51" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400|Raleway:300" />
-    <script defer src="{% static 'logged-in.js' %}?v=1.21" type="text/javascript"></script>
+    <script defer src="{% static 'logged-in.js' %}?v=1.22" type="text/javascript"></script>
 
     {% if request.path == '/search/' %}
-    <script defer src="{% static 'ajax_search.js' %}?v=1.2" type="text/javascript"></script>
+    <script defer src="{% static 'ajax_search.js' %}?v=1.3" type="text/javascript"></script>
     {% endif %}
 
     {% if request.path == '/jobs-admin/' or request.path == '/payments/' or request.path == '/search/' %}
-    <script defer src="{% static 'search_submit/search_submit.js' %}?v=1.2"></script>
-    <script defer src="{% static 'ajax_form_submit.js' %}?v=1.10" type="text/javascript"></script>
+    <script defer src="{% static 'search_submit/search_submit.js' %}?v=1.3"></script>
+    <script defer src="{% static 'ajax_form_submit.js' %}?v=1.11" type="text/javascript"></script>
     {% endif %}
 
-    <script defer src="{% static 'form.js' %}?v=1.17" type="text/javascript"></script>
-    <script defer src="{% static 'item_form_popup.js' %}?v=1.15" type="text/javascript"></script>
+    <script defer src="{% static 'form.js' %}?v=1.18" type="text/javascript"></script>
+    <script defer src="{% static 'item_form_popup.js' %}?v=1.16" type="text/javascript"></script>
 
     {% block scripts %}
     {% endblock scripts %}

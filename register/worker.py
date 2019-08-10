@@ -52,13 +52,24 @@ class Worker:
 
     #gets all houses the worker has completed jobs for the current week
     def current_week_completed_houses(self):
-        return House.objects.filter(
-            customer=self.customer,
-            job__company=self.worker,
-            job__approved=True,
-            job__balance_amount__lte=0,
-            job__start_date__range=[Worker.start_week, Worker.today],
-        ).distinct()
+        sql = """
+        SELECT DISTINCT h.id, h.address
+        FROM jobs_house h
+        INNER JOIN jobs_job j
+        ON j.house_id = h.id
+        WHERE customer_id = %s
+        AND j.company_id = %s
+        AND j.approved = 1
+        AND j.start_date BETWEEN %s AND %s
+        AND COALESCE(j.start_amount, 0) - COALESCE(
+            (SELECT COALESCE(SUM(p.amount), 0)
+             FROM jobs_request_payment p
+             WHERE p.job_id = j.id
+             AND p.approved = 1
+             AND j.approved = 1), 0)
+        <= 0;
+        """
+        return House.objects.raw(sql, params=[self.customer.id, self.worker.id, Worker.start_week, Worker.today])
 
     """Jobs"""
     #gets all approved jobs for the worker
@@ -71,19 +82,19 @@ class Worker:
 
     #gets all unapproved jobs for the worker for the current week
     def current_week_unapproved_jobs(self):
-        return Job.objects.filter(
+        return Job.objects.add_balance().filter(
             company=self.worker,
             approved=False,
             rejected=False,
-            balance_amount__gt=0,
+            balance1__gt=0,
             start_date__range=[Worker.start_week, Worker.today],
         )
 
     #gets all completed jobs for the worker for the current week
     def current_week_completed_jobs(self):
-        return Job.objects.filter(
+        return Job.objects.add_balance().filter(
             company=self.worker,
             approved=True,
-            balance_amount__lte=0,
+            balance1__lte=0,
             start_date__range=[Worker.start_week, Worker.today],
         )

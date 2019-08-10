@@ -132,7 +132,7 @@ def edit_expense(request, customer):
             expense.pay_this_week = new_pay_this_week
             expense.save(update_fields=['pay_this_week'])
 
-        if new_amount != None and 1 + float(new_amount) != 1.0: #update balance_amount if amount is in the POST data
+        if new_amount != None and 1 + float(new_amount) != 1.0:
             expense.amount = new_amount
             expense.save(update_fields=['amount'])
 

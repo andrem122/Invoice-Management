@@ -74,7 +74,7 @@ class _House:
         Raises:
             None.
         """
-        if Job.objects.filter(house=self.house, balance_amount__gt=0, approved=True, **kwargs).exists():
+        if Job.objects.add_balance().filter(house=self.house, balance1__gt=0, approved=True, **kwargs).exists():
             return True
 
         return False

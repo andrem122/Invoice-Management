@@ -211,10 +211,9 @@ def edit_job(request, customer):
             job.notes = notes
             job.save(update_fields=['notes'])
 
-        if start_amount != None and 1 + float(start_amount) != 1.0: #update balance_amount if start_amount is in the POST data
+        if start_amount != None and 1 + float(start_amount) != 1.0:
             job.start_amount = start_amount
-            job.balance_amount = job.balance
-            job.save(update_fields=['start_amount', 'balance_amount'])
+            job.save(update_fields=['start_amount'])
 
     else:
         print(edit_job_form.errors)

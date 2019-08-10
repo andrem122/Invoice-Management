@@ -15,13 +15,7 @@
 {% if items %}
   {% for house in houses %}
     <h3 class="sub-title">
-
-      {% if house.address %} {# House Object #}
         {{ house.address }}
-      {% else %}
-        {{ house.house.address }} {# Current_Worker object #}
-      {% endif %}
-
     </h3>
     {% if forloop.first %}
     <div class="item-headings-wrapper container-fluid">

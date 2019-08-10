@@ -44,7 +44,9 @@
 {% block item_heading_1_m_v %}{{ item.company }}{% endblock item_heading_1_m_v %}
 
 {% block item_heading_2_m %}Balance{% endblock item_heading_2_m %}
-{% block item_heading_2_m_v %}${{ item.balance1|intcomma }}{% endblock item_heading_2_m_v %}
+{% block item_heading_2_m_v %}
+  ${{ item.balance1|intcomma }}
+{% endblock item_heading_2_m_v %}
 
 {% block item_heading_3_m %}Contract Link{% endblock item_heading_3_m %}
 {% block item_heading_3_m_v %}<a rel="noopener noreferrer" target="_blank" href="{{ item.document_link.url }}">View Contract</a>{% endblock item_heading_3_m_v %}
@@ -65,7 +67,7 @@
 {% block desktop_option_btns %}
   {% if item.approved == True %}
     <div class="dropdown-menu
-      {% if item.approved == True and item.balance > 0 %}
+      {% if item.approved == True and item.balance1 > 0 %}
       dropdown-active
       {% else %}
       dropdown-new-approved
