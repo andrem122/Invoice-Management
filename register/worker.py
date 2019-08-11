@@ -32,12 +32,13 @@ class Worker:
 
     """Houses"""
     #gets all houses the worker is approved to work on
-    def approved_houses(self):
+    def current_week_approved_houses(self):
         return House.objects.filter(
             customer=self.customer,
             job__company=self.worker,
             job__approved=True,
             job__rejected=False,
+            job__start_date__range=[Worker.start_week, Worker.today],
         )
 
     #get all houses with pending jobs for the current week

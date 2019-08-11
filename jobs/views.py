@@ -22,7 +22,7 @@ def index(request):
     current_user = request.user
 
     worker = Worker(current_user)
-    approved_houses = worker.approved_houses()
+    approved_houses = worker.current_week_approved_houses()
     unapproved_houses = worker.current_week_unapproved_houses()
     completed_houses = worker.current_week_completed_houses()
 
