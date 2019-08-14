@@ -28,7 +28,7 @@ class Test_Payment_Requests(TestCase):
         are correct after unapproving a payment for a house that originally
         had 1 completed job, had 1 approved payment, had 0
         pending payments, had 0 proposed_jobs, and payment with
-        attribute requested_by_worker=True
+        attribute created_by_system=True
         """
         #create test data
         house = House.objects.create(
@@ -56,7 +56,7 @@ class Test_Payment_Requests(TestCase):
             house=house,
             job=job,
             amount=4000.00,
-            requested_by_worker=True,
+            created_by_system=True,
             approved=True,
         )
 
@@ -84,7 +84,7 @@ class Test_Payment_Requests(TestCase):
 
         payment = Request_Payment.objects.get(pk=1)
         self.assertFalse(payment.approved)
-        self.assertTrue(payment.requested_by_worker)
+        self.assertTrue(payment.created_by_system)
         self.assertEqual(float(payment.amount), 4000.00)
         self.assertEqual(payment.job, job)
         self.assertEqual(payment.house, house)
@@ -103,7 +103,7 @@ class Test_Payment_Requests(TestCase):
         are correct after unapproving a payment for a house that originally
         had 1 completed job, had 1 approved payment, had 0
         pending payments, had 0 proposed_jobs, and payment with
-        attribute requested_by_worker=False
+        attribute created_by_system=False
         """
         #create test data
         house = House.objects.create(
@@ -131,7 +131,7 @@ class Test_Payment_Requests(TestCase):
             house=house,
             job=job,
             amount=7354.43,
-            requested_by_worker=False,
+            created_by_system=False,
             approved=True,
         )
 
@@ -171,7 +171,7 @@ class Test_Payment_Requests(TestCase):
         are correct after unapproving a payment for a house that originally
         had 1 completed jobs, had 2 approved payments, had 2
         pending payments, had 0 proposed_jobs, and payment with
-        attribute requested_by_worker=False
+        attribute created_by_system=False
         """
         #create test data
         house = House.objects.create(
@@ -213,7 +213,7 @@ class Test_Payment_Requests(TestCase):
             house=house,
             job=job,
             amount=3006.24,
-            requested_by_worker=True,
+            created_by_system=True,
             approved=True,
         ).save()
         Request_Payment.objects.create(
@@ -221,7 +221,7 @@ class Test_Payment_Requests(TestCase):
             house=house,
             job=job,
             amount=2248.54,
-            requested_by_worker=True,
+            created_by_system=True,
             approved=True,
         ).save()
 
@@ -251,14 +251,14 @@ class Test_Payment_Requests(TestCase):
         self.assertEqual(payment_approved_1.house, house)
         self.assertEqual(payment_approved_1.job, active_job)
         self.assertEqual(float(payment_approved_1.amount), 3006.24)
-        self.assertTrue(payment_approved_1.requested_by_worker)
+        self.assertTrue(payment_approved_1.created_by_system)
         self.assertTrue(payment_approved_1.approved)
 
         payment_approved_2 = Request_Payment.objects.get(pk=2)
         self.assertEqual(payment_approved_2.house, house)
         self.assertEqual(payment_approved_2.job, active_job)
         self.assertEqual(float(payment_approved_2.amount), 2248.54)
-        self.assertTrue(payment_approved_2.requested_by_worker)
+        self.assertTrue(payment_approved_2.created_by_system)
         self.assertFalse(payment_approved_2.approved)
 
         worker = Current_Worker.objects.all()[0]

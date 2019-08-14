@@ -102,7 +102,7 @@ class Test_Send_Data(TestCase):
         #payment
         payment = Request_Payment.objects.get(pk=1)
         self.assertTrue(payment.approved)
-        self.assertFalse(payment.requested_by_worker)
+        self.assertFalse(payment.created_by_system)
         self.assertEqual(Request_Payment.objects.count(), 1)
         self.assertEqual(payment.amount, 5000.00)
         self.assertEqual(payment.job, job)

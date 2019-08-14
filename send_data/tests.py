@@ -70,7 +70,7 @@ class Test_Send_Data(TestCase):
             house=house,
             job=job,
             amount=5000.00,
-            requested_by_worker=False,
+            created_by_system=False,
             approved=True,
         ).save()
 
@@ -127,7 +127,7 @@ class Test_Send_Data(TestCase):
         self.assertEqual(payment.job, job)
         self.assertEqual(payment.job.company, self.worker)
         self.assertEqual(payment.amount, 5000.00)
-        self.assertFalse(payment.requested_by_worker)
+        self.assertFalse(payment.created_by_system)
         self.assertTrue(payment.approved)
 
         self.assertRedirects(response, '/payment-history/thank_you')

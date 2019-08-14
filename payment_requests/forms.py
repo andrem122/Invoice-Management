@@ -13,6 +13,6 @@ class Change_Payment_Status(ModelForm, forms.Form):
             'approved',
             'house',
             'document_link',
-            'requested_by_worker',
+            'created_by_system',
             'paid_link',
         ]

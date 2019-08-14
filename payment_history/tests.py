@@ -59,7 +59,7 @@ class Test_Payment_Requests(TestCase):
             house=house,
             job=job,
             amount=4000.00,
-            requested_by_worker=True,
+            created_by_system=True,
             approved=True,
         ).save()
         Request_Payment.objects.create(
@@ -67,7 +67,7 @@ class Test_Payment_Requests(TestCase):
             house=house,
             job=job,
             amount=1000.00,
-            requested_by_worker=True,
+            created_by_system=True,
             approved=True,
         ).save()
 
@@ -86,7 +86,7 @@ class Test_Payment_Requests(TestCase):
         payment_1 = response.context['payments'][0]
         payment_2 = response.context['payments'][1]
 
-        attributes = ('house', 'job', 'amount', 'requested_by_worker', 'approved')
+        attributes = ('house', 'job', 'amount', 'created_by_system', 'approved')
         asserts = (
             ['assertEqual', house],
             ['assertEqual', job],

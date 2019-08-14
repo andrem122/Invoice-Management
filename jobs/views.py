@@ -70,7 +70,7 @@ def index(request):
             payment = request_payment_form.save(commit=False)
             payment.job = job
             payment.house = house
-            payment.requested_by_worker=True
+            payment.created_by_system=True
             payment.save()
 
             if not House.objects.filter(pk=house.pk, pending_payments=True).exists():

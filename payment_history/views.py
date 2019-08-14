@@ -20,6 +20,7 @@ def p_history_job(request, job_id):
         'current_user': current_user,
         'upload_document_form': upload_document_form,
         'send_data_from': send_data_from,
+        'post_from_url': request.build_absolute_uri(),
     }
 
     #get the job and house address associated with the payment

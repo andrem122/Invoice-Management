@@ -256,7 +256,7 @@ class Request_Payment(models.Model):
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)
-    requested_by_worker = models.BooleanField(default=False)
+    created_by_system = models.BooleanField(default=False)
 
     def __str__(self):
         info = [self.job.id, self.house.address, self.job.company, self.amount, self.approved]

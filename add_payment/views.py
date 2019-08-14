@@ -4,7 +4,6 @@ from .forms import Add_Payment
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from customer_register.customer import Customer
-#from optimize_image import optimize_image, is_image, generate_file_path
 
 def is_customer(user):
     """Checks if the current user is a customer"""
@@ -30,13 +29,12 @@ def add_payment(request, job_id):
                 messages.error(request, 'Please enter an amount greater than zero.')
             else:
                 #create new payment object from POST data
-                payment = form.save(commit=False)
-                payment.amount = amount
-                payment.house = house
-                payment.job = job
-                payment.approved = True
-
-                payment.save()
+                Request_Payment.objects.create(
+                    amount=amount,
+                    house=house,
+                    job=job,
+                    approved=True,
+                )
 
                 messages.success(request, 'Thanks! The payment has been added.')
                 form = Add_Payment()

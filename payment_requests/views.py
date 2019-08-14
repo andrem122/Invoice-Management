@@ -101,7 +101,7 @@ def approve_payment(request, customer):
             return request.POST.get('post_from_url', None)
 
 
-def reject_estimate(request, customer):
+def reject_payment(request, customer):
     change_payment_status_form = Change_Payment_Status(request.POST)
 
     if change_payment_status_form.is_valid():
@@ -114,7 +114,8 @@ def reject_estimate(request, customer):
         job = payment.job
         house = job.house
 
-        if payment.requested_by_worker == False:
+        # Edit or delete objects
+        if payment.created_by_system == True: #if the payment is created by the system
             payment.delete()
 
             if customer.current_week_approved_payments(job=job): #if there are approved or rejected payments for the job, set job.approved = True
@@ -127,11 +128,12 @@ def reject_estimate(request, customer):
             payment.approved = False
             payment.rejected = True
 
+        # Update objects if edited
         job.save(update_fields=['approved', 'rejected'])
-
-        if payment.requested_by_worker == True:
+        if payment.created_by_system == False:
             payment.save(update_fields=['approved', 'rejected'])
 
+        # Return html if the request is AJAX else return a url if not AJAX
         if request.is_ajax():
             if 'search' in post_from_url:
                 return load_ajax_search_results(request=request)
@@ -197,7 +199,7 @@ def payments(request):
             response = approve_payment(request=request, customer=customer)
 
         elif request.POST.get('reject_payment'):
-            response = reject_estimate(request=request, customer=customer)
+            response = reject_payment(request=request, customer=customer)
 
         if request.is_ajax():
             return HttpResponse(response)
