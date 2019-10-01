@@ -40,6 +40,7 @@ urlpatterns = [
     path('send-data/', include('send_data.urls')),
     path('project-details/', include('project_details.urls')),
     path('customer-payments/', include('customer_payments.urls')),
+    path('appointments/', include('appointments.urls', namespace="appointments")),
 ]
 
 if settings.DEBUG:
