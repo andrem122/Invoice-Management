@@ -22,19 +22,24 @@ def send_sms_reminder(appointment_id):
         # has been deleted, so we don't need to do anything
         return
 
+    address = '2929 Panthersville Rd, Decatur, GA 30034'
+    apartment_complex_name = 'Hidden Villas Apartments'
     appointment_time = arrow.get(appointment.time, appointment.time_zone.zone)
+
     message = (
     'Hello {name}! You have an appointment coming up at {time} to see an apartment unit at '
-    '1800 Nebraska Avenue, Fort Pierce, FL 34950 '
+    '{address}. '
     'Please reply "y" to confirm your appointment or "c" to cancel.\n\n'
-    'This is an automated message Reply "STOP" to end SMS alerts from Mayfair At Lawnwood.'
+    'This is an automated message. Reply "STOP" to end SMS alerts from {apartment_complex_name}.'
     ).format(
         name=appointment.name,
+        address=address,
         time=appointment_time.format('h:mm a'),
+        apartment_complex_name=apartment_complex_name,
     )
 
     client.messages.create(
-        body=body,
-        to=appointment.phone_number,
+        body=message,
+        to=appointment.phone_number.as_e164,
         from_=settings.TWILIO_NUMBER,
     )

@@ -7,6 +7,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from timezone_field import TimeZoneField
+from phonenumber_field.modelfields import PhoneNumberField
 
 import arrow
 
@@ -14,13 +15,29 @@ import arrow
 @python_2_unicode_compatible
 class Appointment(models.Model):
     name = models.CharField(max_length=150)
-    phone_number = models.CharField(max_length=20)
+    phone_number = PhoneNumberField()
     time = models.DateTimeField()
-    time_zone = TimeZoneField(default='US/Eastern', editable=False)
 
     # Additional fields not visible to users
     task_id = models.CharField(max_length=50, blank=True, editable=False)
     created = models.DateTimeField(auto_now_add=True)
+    time_zone = TimeZoneField(default='US/Eastern', editable=False)
+    confirmed = models.BooleanField(default=False)
+
+    #categories
+    three_bed = '3 Bedrooms'
+    two_bed   = '2 Bedrooms'
+    one_bed   = '1 Bedroom'
+
+    unit_type_choices = (
+        ('', 'Unit Type'),
+        (three_bed, '3 Bedrooms'),
+        (two_bed, '2 Bedrooms'),
+        (one_bed, '1 Bedroom'),
+    )
+
+    unit_type = models.CharField(max_length=100, choices=unit_type_choices, default='',)
+
 
     def __str__(self):
         return 'Appointment #{0} - {1}'.format(self.pk, self.name)
