@@ -60,7 +60,7 @@ class Appointment(models.Model):
 
         # Calculate the correct time to send this reminder
         appointment_time = arrow.get(self.time, self.time_zone.zone)
-        reminder_time = appointment_time.shift(minutes=-30)
+        reminder_time = appointment_time.shift(minutes=-60)
         now = arrow.now(self.time_zone.zone)
         milli_to_wait = int(
             (reminder_time - now).total_seconds()) * 1000

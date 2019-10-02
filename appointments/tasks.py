@@ -24,7 +24,7 @@ def send_sms_reminder(appointment_id):
 
     address = '2929 Panthersville Rd, Decatur, GA 30034'
     apartment_complex_name = 'Hidden Villas Apartments'
-    appointment_time = arrow.get(appointment.time, appointment.time_zone.zone)
+    appointment_time = arrow.get(appointment.time).to(appointment.time_zone.zone)
 
     message = (
     'Hello {name}! You have an appointment coming up at {time} to see an apartment unit at '
