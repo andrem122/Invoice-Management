@@ -22,6 +22,7 @@
             <th>Phone number</th>
             <th>Appointment Time</th>
             <th>Created at</th>
+            <th>Confirmed?</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -33,6 +34,7 @@
               <td>{{ appointment.phone_number }}</td>
               <td>{{ appointment.time }}</td>
               <td>{{ appointment.created }}</td>
+              <td>{{ appointment.confirmed }}</td>
               <td>
                 <a class="btn btn-default btn-xs" href="{% url 'appointments:edit_appointment' appointment.pk %}">Edit</a>
                 <a class="btn btn-xs btn-danger" href="{% url 'appointments:delete_appointment' appointment.pk %}">Delete</a>

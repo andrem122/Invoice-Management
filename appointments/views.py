@@ -10,6 +10,7 @@ from django_twilio.decorators import twilio_view
 from twilio.rest import Client
 from django.conf import settings
 from django.core.mail import send_mail
+from .forms import AppointmentForm
 import arrow
 
 from .models import Appointment
@@ -30,10 +31,9 @@ class AppointmentDetailView(DetailView):
 class AppointmentCreateView(SuccessMessageMixin, CreateView):
     """Powers a form to create a new appointment"""
 
-    model = Appointment
-    fields = ['name', 'phone_number', 'time', 'unit_type',]
+    form_class = AppointmentForm
+    template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully created.'
-
 
 class AppointmentUpdateView(SuccessMessageMixin, UpdateView):
     """Powers a form to edit existing appointments"""
@@ -95,6 +95,8 @@ def send_confirmation_notification(appointment_object, apartment_complex_name, p
 
 @twilio_view
 def incoming_sms(request):
+    """Responds to incoming sms"""
+
     incoming_sms = request.POST.get('Body', None)
     incoming_sms_number = request.POST.get('From', None)
     address = '2929 Panthersville Rd, Decatur, GA 30034'

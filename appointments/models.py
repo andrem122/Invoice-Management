@@ -48,7 +48,7 @@ class Appointment(models.Model):
     def clean(self):
         """Checks that appointments are not scheduled in the past"""
 
-        appointment_time = arrow.get(self.time, self.time_zone.zone)
+        appointment_time = arrow.get(self.time).to('UTC')
 
         if appointment_time < arrow.utcnow():
             raise ValidationError(
