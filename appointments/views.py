@@ -10,19 +10,20 @@ from django_twilio.decorators import twilio_view
 from twilio.rest import Client
 from django.conf import settings
 from django.core.mail import send_mail
-from .forms import AppointmentForm
+from .forms import AppointmentFormCreate, AppointmentFormUpdate
+from django.contrib.auth.mixins import LoginRequiredMixin
 import arrow
 
 from .models import Appointment
 
 
-class AppointmentListView(ListView):
+class AppointmentListView(LoginRequiredMixin, ListView):
     """Shows users a list of appointments"""
     paginate_by = 25
     model = Appointment
 
 
-class AppointmentDetailView(DetailView):
+class AppointmentDetailView(LoginRequiredMixin, DetailView):
     """Shows users a single appointment"""
 
     model = Appointment
@@ -31,16 +32,81 @@ class AppointmentDetailView(DetailView):
 class AppointmentCreateView(SuccessMessageMixin, CreateView):
     """Powers a form to create a new appointment"""
 
-    form_class = AppointmentForm
+    form_class = AppointmentFormCreate
     template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully created.'
+
+    def get_context_data(self, **kwargs):
+        from datetime import datetime
+
+        now = datetime.now()
+        appointments = Appointment.objects.filter(time__gte=now)
+        appointments_count = appointments.count()
+
+        appointments_list = []
+        for count, appointment in enumerate(appointments):
+            appointment_time = arrow.get(appointment.time)
+
+            start_appointment_time = (
+            appointment_time.shift(minutes=-1)
+            .to(appointment.time_zone.zone)
+            .format('MM/DD/YYYY hh:mm A')
+            )
+
+            end_appointment_time = (
+            appointment_time.shift(minutes=+29)
+            .to(appointment.time_zone.zone)
+            .format('MM/DD/YYYY hh:mm A')
+            )
+
+
+            appointment_slot = (start_appointment_time, end_appointment_time)
+
+            appointments_list.append(appointment_slot)
+
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = appointments_list
+        return context
 
 class AppointmentUpdateView(SuccessMessageMixin, UpdateView):
     """Powers a form to edit existing appointments"""
 
     model = Appointment
-    fields = ['name', 'phone_number', 'time', 'unit_type',]
+    form_class = AppointmentFormUpdate
+    template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully updated.'
+
+    def get_context_data(self, **kwargs):
+        from datetime import datetime
+
+        now = datetime.now()
+        appointments = Appointment.objects.filter(time__gte=now)
+        appointments_count = appointments.count()
+
+        appointments_list = []
+        for count, appointment in enumerate(appointments):
+            appointment_time = arrow.get(appointment.time)
+
+            start_appointment_time = (
+            appointment_time.shift(minutes=-1)
+            .to(appointment.time_zone.zone)
+            .format('MM/DD/YYYY hh:mm A')
+            )
+
+            end_appointment_time = (
+            appointment_time.shift(minutes=+29)
+            .to(appointment.time_zone.zone)
+            .format('MM/DD/YYYY hh:mm A')
+            )
+
+
+            appointment_slot = (start_appointment_time, end_appointment_time)
+
+            appointments_list.append(appointment_slot)
+
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = appointments_list
+        return context
 
 
 class AppointmentDeleteView(DeleteView):
