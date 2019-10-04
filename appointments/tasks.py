@@ -32,7 +32,7 @@ def send_sms_reminder(appointment_id):
     'Please reply "y" to confirm your appointment or "c" to cancel.\n\n'
     'This is an automated message. Reply "STOP" to end SMS alerts from {apartment_complex_name}.'
     ).format(
-        name=appointment.name,
+        name=appointment.name.strip().title(),
         address=address,
         time=appointment_time.format('h:mm a'),
         apartment_complex_name=apartment_complex_name,

@@ -46,7 +46,7 @@ class Appointment(models.Model):
         return reverse('appointments:view_appointment', args=[str(self.id)])
 
     def clean(self):
-        """Checks that appointments are not scheduled in the past"""
+        # Checks that appointments are not scheduled in the past
 
         appointment_time = arrow.get(self.time).to('UTC')
 
@@ -54,6 +54,8 @@ class Appointment(models.Model):
             raise ValidationError(
                 'You cannot schedule an appointment for the past. '
                 'Please check your time.')
+
+
 
     def schedule_reminder(self):
         """Schedule a Dramatiq task to send a reminder for this appointment"""

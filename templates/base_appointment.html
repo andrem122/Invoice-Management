@@ -25,6 +25,7 @@
 
   <body>
 
+    {% if user.is_authenticated %}
     <div class="navbar navbar-default navbar-static-top">
       <div class="container">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
@@ -35,14 +36,13 @@
         <a class="navbar-brand" href="/appointments/new">Novaone</a>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
-            {% if user.is_authenticated %}
             <li><a href="{% url 'appointments:new_appointment' %}">New</a></li>
             <li><a href="{% url 'appointments:list_appointments' %}">List</a></li>
-            {% endif %}
           </ul>
         </div>
       </div>
     </div>
+    {% endif %}
 
     <div class="container">
       {% if messages %}

@@ -10,7 +10,7 @@ from django_twilio.decorators import twilio_view
 from twilio.rest import Client
 from django.conf import settings
 from django.core.mail import send_mail
-from .forms import AppointmentFormCreate, AppointmentFormUpdate
+from .forms import AppointmentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 import arrow
 
@@ -32,7 +32,7 @@ class AppointmentDetailView(DetailView):
 class AppointmentCreateView(SuccessMessageMixin, CreateView):
     """Powers a form to create a new appointment"""
 
-    form_class = AppointmentFormCreate
+    form_class = AppointmentForm
     template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully created.'
 
@@ -41,7 +41,6 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 
         now = datetime.now()
         appointments = Appointment.objects.filter(time__gte=now)
-        appointments_count = appointments.count()
 
         appointments_list = []
         for count, appointment in enumerate(appointments):
@@ -72,11 +71,13 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         context['apartment_complex_email'] = 'jazmond@bluedrg.com'
         return context
 
+
+
 class AppointmentUpdateView(SuccessMessageMixin, UpdateView):
     """Powers a form to edit existing appointments"""
 
     model = Appointment
-    form_class = AppointmentFormUpdate
+    form_class = AppointmentForm
     template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully updated.'
 
@@ -85,7 +86,6 @@ class AppointmentUpdateView(SuccessMessageMixin, UpdateView):
 
         now = datetime.now()
         appointments = Appointment.objects.filter(time__gte=now)
-        appointments_count = appointments.count()
 
         appointments_list = []
         for count, appointment in enumerate(appointments):
@@ -123,7 +123,7 @@ class AppointmentDeleteView(DeleteView):
     model = Appointment
     success_url = reverse_lazy('appointments:list_appointments')
 
-def send_confirmation_notification(appointment_object, apartment_complex_name, phone_numbers, emails):
+def send_notifications(appointment_object, apartment_complex_name, phone_numbers, emails,):
     """Sends an sms and email notification once an appointment has been
     confirmed"""
 
@@ -135,18 +135,22 @@ def send_confirmation_notification(appointment_object, apartment_complex_name, p
     )
     appointment_time = arrow.get(appointment_object.time).to(appointment_object.time_zone.zone)
 
-    # Setup message
+    is_confirmed = 'confirmed'
+    if appointment_object.confirmed == True: # Appointment was canceled, but object not updated yet in database
+        is_confirmed = 'canceled';
+
     message = (
-    'Hello, an appointment has been confirmed. See details below:\n'
+    'Hello, an appointment has been {is_confirmed}. See details below:\n\n'
     'Name: {name}\n'
     'Phone Number: {phone_number}\n'
     'Showing Time: {time}\n'
     'Unit Type: {unit_type}'
     + end_of_reponse_message
     ).format(
+        is_confirmed=is_confirmed,
         name=appointment_object.name,
         phone_number=appointment_object.phone_number,
-        time=appointment_time.format('h:mm a'),
+        time=appointment_time.format('MM/DD/YYYY hh:mm A'),
         unit_type=appointment_object.unit_type,
     )
 
@@ -226,14 +230,14 @@ def incoming_sms(request):
         'See you then!'
         + end_of_reponse_message
         ).format(
-            name=appointment.name,
-            time=appointment_time.format('h:mm a'),
+            name=appointment.name.strip().title(),
+            time=appointment_time.format('MM/DD/YYYY hh:mm A'),
             address=address,
         )
 
         # Send notifications if appointment not confirmed
         if appointment.confirmed != True:
-            send_confirmation_notification(appointment, apartment_complex_name, numbers_to_notify, emails_to_notify)
+            send_notifications(appointment, apartment_complex_name, numbers_to_notify, emails_to_notify)
 
         # Confirm appointment in database
         appointment.confirmed = True
@@ -250,6 +254,10 @@ def incoming_sms(request):
             )
             r.message(response_message)
             return r
+
+        # Send notifications if appointment was confirmed before
+        if appointment.confirmed == True:
+            send_notifications(appointment, apartment_complex_name, numbers_to_notify, emails_to_notify)
 
         # Cancel appointment in database
         appointment.confirmed = False
