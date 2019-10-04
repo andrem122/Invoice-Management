@@ -23,7 +23,7 @@ class AppointmentListView(LoginRequiredMixin, ListView):
     model = Appointment
 
 
-class AppointmentDetailView(LoginRequiredMixin, DetailView):
+class AppointmentDetailView(DetailView):
     """Shows users a single appointment"""
 
     model = Appointment
@@ -66,6 +66,10 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 
         context = super().get_context_data(**kwargs)
         context['appointments'] = appointments_list
+        context['apartment_complex_name'] = 'Hidden Villas Apartments'
+        context['apartment_complex_address'] = '2929 Panthersville Rd, Decatur, GA 30034'
+        context['apartment_complex_number'] = '786-818-3015'
+        context['apartment_complex_email'] = 'jazmond@bluedrg.com'
         return context
 
 class AppointmentUpdateView(SuccessMessageMixin, UpdateView):
@@ -106,6 +110,10 @@ class AppointmentUpdateView(SuccessMessageMixin, UpdateView):
 
         context = super().get_context_data(**kwargs)
         context['appointments'] = appointments_list
+        context['apartment_complex_name'] = 'Hidden Villas Apartments'
+        context['apartment_complex_address'] = '2929 Panthersville Rd, Decatur, GA 30034'
+        context['apartment_complex_number'] = '786-818-3015'
+        context['apartment_complex_email'] = 'jazmond@bluedrg.com'
         return context
 
 
@@ -150,7 +158,7 @@ def send_confirmation_notification(appointment_object, apartment_complex_name, p
             from_=settings.TWILIO_NUMBER,
         )
 
-    # Send Email notification
+    # Send Email
     send_mail(
         'Appointment Confirmed',
         message,
@@ -167,8 +175,8 @@ def incoming_sms(request):
     incoming_sms_number = request.POST.get('From', None)
     address = '2929 Panthersville Rd, Decatur, GA 30034'
     apartment_complex_name = 'Hidden Villas Apartments'
-    numbers_to_notify = ('+15613465571',)
-    emails_to_notify = ['contact@mayfairatlawnwood.com', 'andre@graystonerealtyfl.com']
+    numbers_to_notify = ('+17722423154',)
+    emails_to_notify = ['contact@mayfairatlawnwood.com', 'andre.mashraghi@gmail.com']
     r = MessagingResponse()
 
     end_of_reponse_message = (
@@ -211,10 +219,6 @@ def incoming_sms(request):
             r.message(response_message)
             return r
 
-        # Confirm appointment in database
-        appointment.confirmed = True
-        appointment.save()
-
         response_message = (
         'Your appointment at {time} has been confirmed. '
         'The address of the appointment is {address}. '
@@ -226,8 +230,13 @@ def incoming_sms(request):
             address=address,
         )
 
-        # Send notifications
-        #send_confirmation_notification(appointment, apartment_complex_name, numbers_to_notify, emails_to_notify)
+        # Send notifications if appointment not confirmed
+        if appointment.confirmed != True:
+            send_confirmation_notification(appointment, apartment_complex_name, numbers_to_notify, emails_to_notify)
+
+        # Confirm appointment in database
+        appointment.confirmed = True
+        appointment.save()
 
     # Appointment object found and appointment canceled
     elif appointment is not None and incoming_sms.lower() == 'c':

@@ -247,6 +247,11 @@ footer {
   padding: 36px 0 18px;
 }
 
+footer.appointment-footer {
+  background-color: transparent;
+  color: inherit;
+}
+
 footer .footer-nav-menu .footer-nav-menu-item > a {
   color: #fff;
   opacity: 0.45;

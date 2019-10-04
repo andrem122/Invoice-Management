@@ -13,11 +13,18 @@
       <div class="page-header">
         <h1>
           {% if not object.pk %}
-            New appointment
+            Set Up Appointment
           {% else %}
             Edit appointment
           {% endif %}
           </h1>
+          <p>
+            Thanks for your interest in {{ apartment_complex_name }} located
+            at {{ apartment_complex_address }}. Please fill out the form below to make an appointment
+            for a tour of the unit you are interested in. If you have any questions,
+            you can contact us at <a href="tel:{{ apartment_complex_number }}">{{ apartment_complex_number }}</a>
+            or email us at <a href="mailto:{{ apartment_complex_email }}">{{ apartment_complex_email }}</a>.
+          </p>
       </div>
 
       <form class="form-horizontal" method="post">
@@ -25,8 +32,7 @@
         {{ form|as_bootstrap_horizontal }}
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
-            <a href="#back" class="btn btn-default">Cancel</a>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="standard-btn">
               {% if not object.pk %}
                 Create appointment
               {% else %}
@@ -69,8 +75,6 @@
         return moments_array;
       }
 
-      r = create_moments(appointments);
-      console.log(r);
       $(function() {
           $('#id_time').datetimepicker({
             format: 'MM/DD/YYYY hh:mm A',
@@ -80,7 +84,11 @@
             daysOfWeekDisabled: [0],
             stepping: 30,
             enabledHours: [9, 10, 11, 12, 13, 14, 15, 16, 17],
-            disabledTimeIntervals: r,
+            disabledTimeIntervals: create_moments(appointments),
+            focusOnShow: false,
+            showClose: true,
+            ignoreReadonly: true,
+            allowInputToggle: true,
           });
       });
   </script>
