@@ -2,8 +2,6 @@ db.sqlite3
 media/
 __pycache__/
 migrations/
-my.cnf
-secret_key.txt
 .env
 
 # Byte-compiled / optimized / DLL files
