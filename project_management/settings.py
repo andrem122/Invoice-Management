@@ -16,13 +16,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-with open(os.path.join(BASE_DIR, 'project_management', 'secret_key.txt')) as f:
-    SECRET_KEY = f.read().strip()
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'b9536b6c.ngrok.io']
+ALLOWED_HOSTS = ['127.0.0.1', 'project-management-novaone.herokuapp.com']
 
 # Application definition
 
@@ -228,10 +227,10 @@ LOGGING = {
 
 #Email
 EMAIL_USE_SSL = True
-EMAIL_HOST = 'mail.privateemail.com'
-EMAIL_HOST_USER = 'no-reply@novaonesoftware.com'
-DEFAULT_FROM_EMAIL = 'no-reply@novaonesoftware.com'
-EMAIL_HOST_PASSWORD = '!xJy]x$5cQxWa'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 465
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -242,7 +241,7 @@ STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
 #Twilio
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-TWILIO_NUMBER = '+15612202733'
+TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
 PHONENUMBER_DB_FORMAT = 'E164'
 PHONENUMBER_DEFAULT_REGION = 'US'
 
