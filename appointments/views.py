@@ -159,13 +159,14 @@ def send_confirmation_notification(appointment_object, apartment_complex_name, p
         )
 
     # Send Email
-    send_mail(
-        'Appointment Confirmed',
-        message,
-        'no-reply@novaonesoftware.com',
-        emails,
-        fail_silently=False,
-    )
+    for email in emails:
+        send_mail(
+            'Appointment Confirmed',
+            message,
+            'no-reply@novaonesoftware.com',
+            [email],
+            fail_silently=False,
+        )
 
 @twilio_view
 def incoming_sms(request):
