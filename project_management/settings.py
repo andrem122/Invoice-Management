@@ -269,4 +269,3 @@ REMINDER_TIME = 30  # minutes
 # Configure Django App for Heroku.
 import django_heroku
 django_heroku.settings(locals())
-print(DATABASES)
