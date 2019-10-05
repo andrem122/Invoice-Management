@@ -230,6 +230,13 @@ LOGGING = {
     },
 }
 
+CACHES = {
+    "default": {
+         "BACKEND": "redis_cache.RedisCache",
+         "LOCATION": os.environ.get('REDIS_URL'),
+    }
+}
+
 #Email
 EMAIL_USE_SSL = True
 EMAIL_HOST = os.environ.get('EMAIL_HOST')

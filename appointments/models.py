@@ -8,9 +8,10 @@ from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from timezone_field import TimeZoneField
 from phonenumber_field.modelfields import PhoneNumberField
+from django.conf import settings
 
 import arrow
-
+import os
 
 @python_2_unicode_compatible
 class Appointment(models.Model):
@@ -98,4 +99,7 @@ class Appointment(models.Model):
 
     def cancel_task(self):
         redis_client = redis.Redis(host='localhost', port=6379, db=0)
+        if settings.DEBUG == False: # For Heroku
+            redis_client = redis.from_url(os.environ.get("REDIS_URL"))
+
         redis_client.hdel("dramatiq:default.DQ.msgs", self.task_id)
