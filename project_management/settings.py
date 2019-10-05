@@ -136,17 +136,16 @@ WSGI_APPLICATION = 'project_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-# if DEBUG == False:
-#     DATABASES = {
-#        'default': {
-#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#             'NAME': os.environ.get('DATABASE_NAME'),
-#             'USER': os.environ.get('DATABASE_USER'),
-#             'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-#             'HOST': os.environ.get('DATABASE_HOST'),
-#             'PORT': os.environ.get('DATABASE_PORT'),
-#         }
-#     }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'sqlite3.db',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
