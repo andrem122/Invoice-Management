@@ -5,7 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.utils.translation import gettext as _
 import arrow
 
-class AppointmentForm(forms.ModelForm):
+class AppointmentFormCreate(forms.ModelForm):
     time = forms.DateTimeField(
         input_formats=['%m/%d/%Y %I:%M %p'],
         widget=forms.TextInput(attrs={'onkeydown':'return false', 'readonly': 'true'}),
@@ -34,10 +34,20 @@ class AppointmentForm(forms.ModelForm):
 
         return cleaned_data
 
+class AppointmentFormUpdate(forms.ModelForm):
+    time = forms.DateTimeField(
+        input_formats=['%m/%d/%Y %I:%M %p'],
+        widget=forms.TextInput(attrs={'onkeydown':'return false', 'readonly': 'true'}),
+    )
+
+    class Meta:
+        model = Appointment
+        fields = ['time', 'name', 'phone_number', 'unit_type',]
+
 class AppointmentCreate(CreateView):
-    form_class = AppointmentForm
+    form_class = AppointmentFormCreate
     model = Appointment
 
 class AppointmentUpdate(UpdateView):
-    form_class = AppointmentForm
+    form_class = AppointmentFormUpdate
     model = Appointment

@@ -137,11 +137,12 @@ WSGI_APPLICATION = 'project_management.wsgi.application'
 
 DATABASES = {
    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': os.path.join(BASE_DIR, 'config', 'my.cnf'),
-            'sql_mode': 'traditional',
-        },
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DATABASE_NAME'),
+        'USER': os.environ.get('DATABASE_USER'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT'),
     }
 }
 
@@ -201,8 +202,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'thank_you_assets'),
     os.path.join(BASE_DIR, '404_assets'),
 ]
-
-print(os.path.join(BASE_DIR, 'login_assets'),)
 
 #Media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -270,4 +269,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Reminder time: how early text messages are sent in advance of appointments
 REMINDER_TIME = 30  # minutes
 
-django_heroku.settings(local())
+django_heroku.settings(locals())

@@ -10,7 +10,7 @@ from django_twilio.decorators import twilio_view
 from twilio.rest import Client
 from django.conf import settings
 from django.core.mail import send_mail
-from .forms import AppointmentForm
+from .forms import AppointmentFormCreate, AppointmentFormUpdate
 from django.contrib.auth.mixins import LoginRequiredMixin
 import arrow
 
@@ -32,7 +32,7 @@ class AppointmentDetailView(DetailView):
 class AppointmentCreateView(SuccessMessageMixin, CreateView):
     """Powers a form to create a new appointment"""
 
-    form_class = AppointmentForm
+    form_class = AppointmentFormCreate
     template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully created.'
 
@@ -77,7 +77,7 @@ class AppointmentUpdateView(SuccessMessageMixin, UpdateView):
     """Powers a form to edit existing appointments"""
 
     model = Appointment
-    form_class = AppointmentForm
+    form_class = AppointmentFormUpdate
     template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully updated.'
 
