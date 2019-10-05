@@ -2,14 +2,10 @@
 {% load static %}
 {% block title %}Rehab Software{% endblock title %}
 {% block scripts %}
-<link rel="stylesheet" href="{% static 'login.css' %}">
+<link rel="stylesheet" href="{% static 'customer_register/login.css' %}">
 {% endblock scripts %}
 {% block body_class %}customer-register{% endblock body_class %}
 {% block content %}
-{% comment %}
-  IMPORTANT: Paths to files on production server need the folder's name they are in prepended
-	to them. Ex: 'logged-in.js' becomes 'login/logged-in.js'
-{% endcomment %}
 <div class="container">
       <div class="row">
       <h2 id="signup-title">Sign Up For Free Rehab Software</h2>
