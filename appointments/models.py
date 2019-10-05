@@ -16,7 +16,7 @@ import arrow
 class Appointment(models.Model):
     name = models.CharField(max_length=150)
     phone_number = PhoneNumberField()
-    #time = models.DateTimeField()
+    time = models.DateTimeField()
 
     # Additional fields not visible to users
     task_id = models.CharField(max_length=50, blank=True, editable=False)
