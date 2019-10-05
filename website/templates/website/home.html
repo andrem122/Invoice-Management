@@ -1,4 +1,4 @@
-{% extends 'base_generic_website.html' %}
+{% extends 'website/base_generic_website.html' %}
 {% load static %}
 
 {% block scripts %}
@@ -6,7 +6,7 @@
 
 
 {% block content %}
-{% include 'includes/website_parts/navigation.html' %}
+{% include 'website/navigation.html' %}
 
 <div id="page-content">
   <main id="main">
@@ -26,7 +26,7 @@
             </div>
           </div>
           <figure class="col-lg-6">
-            <img src="{% static 'images/construction-workers.jpg' %}" alt="Construction Workers">
+            <img src="{% static 'website/images/construction-workers.jpg' %}" alt="Construction Workers">
           </figure>
         </div>
 
@@ -87,7 +87,7 @@
 
               <div class="col-md icon-title-description">
                 <div class="icon">
-                  <img src="{% static 'images/checklist.png' %}" alt="Checklist">
+                  <img src="{% static 'website/images/checklist.png' %}" alt="Checklist">
                 </div>
                 <h4>Manage</h4>
                 <p>
@@ -97,7 +97,7 @@
 
               <div class="col-md icon-title-description">
                 <div class="icon">
-                  <img src="{% static 'images/notification-bell.png' %}" alt="Notification Bell">
+                  <img src="{% static 'website/images/notification-bell.png' %}" alt="Notification Bell">
                 </div>
                 <h4>Alerts</h4>
                 <p>
@@ -107,7 +107,7 @@
 
               <div class="col-md icon-title-description">
                 <div class="icon">
-                  <img src="{% static 'images/organize.png' %}" alt="Organize Diagram">
+                  <img src="{% static 'website/images/organize.png' %}" alt="Organize Diagram">
                 </div>
                 <h4>Organize</h4>
                 <p>
@@ -117,7 +117,7 @@
 
               <div class="col-md icon-title-description">
                 <div class="icon">
-                  <img src="{% static 'images/house.png' %}" alt="House">
+                  <img src="{% static 'website/images/house.png' %}" alt="House">
                 </div>
                 <h4>Projects</h4>
                 <p>
@@ -151,8 +151,8 @@
             <div class="row">
               <div class="col-lg-7">
                 <div class="video-container">
-                  <video autoplay playsinline muted loop poster="{% static 'images/novaone-video-poster.png' %}" width="100%" height="auto">
-										<source src="{% static 'videos/novaone.mp4' %}" type="video/mp4">
+                  <video autoplay playsinline muted loop poster="{% static 'website/images/novaone-video-poster.png' %}" width="100%" height="auto">
+										<source src="{% static 'website/videos/novaone.mp4' %}" type="video/mp4">
 									</video>
                 </div>
               </div>
@@ -208,7 +208,7 @@
       <div class="container-fluid max-width-container">
         <div class="row">
           <div class="col-md-12">
-            <img src="{% static 'images/agreement.png' %}" alt="Sign Up">
+            <img src="{% static 'website/images/agreement.png' %}" alt="Sign Up">
             <h2>Sign Up Free</h2>
             <p class="description-text">
               Sign up for free today and get all features, free updates, and unparalleled support.
@@ -222,5 +222,5 @@
   </main>
 </div>
 
-{% include 'includes/website_parts/footer.html' %}
+{% include 'website/footer.html' %}
 {% endblock content %}

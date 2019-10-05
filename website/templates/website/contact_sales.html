@@ -1,4 +1,4 @@
-{% extends 'base_generic_website.html' %}
+{% extends 'website/base_generic_website.html' %}
 {% load static %}
 
 {% block scripts %}
@@ -6,7 +6,7 @@
 
 
 {% block content %}
-{% include 'includes/website_parts/navigation.html' %}
+{% include 'website/navigation.html' %}
 <div id="page-content">
   <main id="main">
     <section id="contact-sales-home-banner" class="home-banner">
@@ -69,5 +69,5 @@
   </main>
 </div>
 
-{% include 'includes/website_parts/footer.html' %}
+{% include 'website/footer.html' %}
 {% endblock content %}

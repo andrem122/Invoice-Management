@@ -115,7 +115,7 @@ ROOT_URLCONF = 'project_management.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -179,12 +179,29 @@ LOGIN_URL = '/accounts/login'
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+'django.contrib.staticfiles.finders.FileSystemFinder',
+'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+# 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 ]
+
+# Url that will be prepended to any static file path
 STATIC_URL = '/static/'
 
+# Where all static files will be collected during deployment of the app
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# For production server file serving
+if DEBUG == False:
+    STATIC_URL = STATIC_ROOT
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'login_assets'),
+    os.path.join(BASE_DIR, 'logged_in_assets'),
+    os.path.join(BASE_DIR, 'thank_you_assets'),
+    os.path.join(BASE_DIR, '404_assets'),
+]
+
+print(os.path.join(BASE_DIR, 'login_assets'),)
 
 #Media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

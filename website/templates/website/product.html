@@ -1,4 +1,4 @@
-{% extends 'base_generic_website.html' %}
+{% extends 'website/base_generic_website.html' %}
 {% load static %}
 
 {% block scripts %}
@@ -6,7 +6,7 @@
 
 
 {% block content %}
-{% include 'includes/website_parts/navigation.html' %}
+{% include 'website/navigation.html' %}
 
 <div id="page-content">
   <main id="main">
@@ -27,28 +27,28 @@
 
           <div class="col-md icon-title-description">
             <div class="icon">
-              <img src="{% static 'checklist.png' %}" alt="Checklist">
+              <img src="{% static 'website/images/checklist.png' %}" alt="Checklist">
             </div>
             <h4>Manage</h4>
           </div>
 
           <div class="col-md icon-title-description">
             <div class="icon">
-              <img src="{% static 'notification-bell.png' %}" alt="Notification Bell">
+              <img src="{% static 'website/images/notification-bell.png' %}" alt="Notification Bell">
             </div>
             <h4>Alerts</h4>
           </div>
 
           <div class="col-md icon-title-description">
             <div class="icon">
-              <img src="{% static 'organize.png' %}" alt="Organize Diagram">
+              <img src="{% static 'website/images/organize.png' %}" alt="Organize Diagram">
             </div>
             <h4>Organize</h4>
           </div>
 
           <div class="col-md icon-title-description">
             <div class="icon">
-              <img src="{% static 'house.png' %}" alt="House">
+              <img src="{% static 'website/images/house.png' %}" alt="House">
             </div>
             <h4>Projects</h4>
           </div>
@@ -90,7 +90,7 @@
             <div class="tab-pane active" id="budget" role="tabpanel" aria-labelledby="budget-tab">
               <div class="row">
                 <div class="col-md">
-                  <img src="{% static 'budget-tracking.png' %}" srcset="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines@2x-1.png 2x">
+                  <img src="{% static 'website/images/budget-tracking.png' %}" srcset="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines@2x-1.png 2x">
                 </div>
                 <div class="col-md product-feature-description">
                   <h2>Painless Budget Tracking</h2>
@@ -111,7 +111,7 @@
             <div class="tab-pane" id="track-jobs" role="tabpanel" aria-labelledby="track-jobs-tab">
               <div class="row">
                 <div class="col-md">
-                  <img src="{% static 'job-tracking.png' %}" srcset="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines@2x-1.png 2x">
+                  <img src="{% static 'website/images/job-tracking.png' %}" srcset="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines@2x-1.png 2x">
                 </div>
                 <div class="col-md product-feature-description">
                   <h2>Tracking jobs is easy</h2>
@@ -132,7 +132,7 @@
             <div class="tab-pane" id="organization" role="tabpanel" aria-labelledby="organization-tab">
               <div class="row">
                 <div class="col-md">
-                  <img src="{% static 'organization.png' %}" srcset="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines@2x-1.png 2x">
+                  <img src="{% static 'website/images/organization.png' %}" srcset="https://shortlist.co/wp-content/uploads/2018/10/Hiring-Pipelines@2x-1.png 2x">
                 </div>
                 <div class="col-md product-feature-description">
                   <h2>Organization</h2>
@@ -186,7 +186,7 @@
               <div class="col-lg-7">
                 <div class="video-container">
                   <video autoplay="" playsinline="" muted="" loop="" poster="/static/novaone-video-poster.png" width="100%" height="auto">
-										<source src="{% static 'novaone.mp4' %}" type="video/mp4">
+										<source src="{% static 'website/videos/novaone.mp4' %}" type="video/mp4">
 									</video>
                 </div>
               </div>
@@ -205,21 +205,21 @@
 
               <div class="col-md-4 icon-title-description">
                 <div class="icon">
-                  <img src="{% static 'notification-bell.png' %}" alt="Notification Bell">
+                  <img src="{% static 'website/images/notification-bell.png' %}" alt="Notification Bell">
                 </div>
                 <h4>Alerts</h4>
               </div>
 
               <div class="col-md-4 icon-title-description">
                 <div class="icon">
-                  <img src="{% static 'organize.png' %}" alt="Organize Diagram">
+                  <img src="{% static 'website/images/organize.png' %}" alt="Organize Diagram">
                 </div>
                 <h4>Organize</h4>
               </div>
 
               <div class="col-md-4 icon-title-description">
                 <div class="icon">
-                  <img src="{% static 'house.png' %}" alt="House">
+                  <img src="{% static 'website/images/house.png' %}" alt="House">
                 </div>
                 <h4>Projects</h4>
               </div>
@@ -255,13 +255,13 @@
             </ul>
           </div>
           <div class="col-lg-8 product-media">
-            <img src="{% static 'active-projects.png' %}" alt="Active Projects">
+            <img src="{% static 'website/images/active-projects.png' %}" alt="Active Projects">
           </div>
         </div>
 
         <div class="row">
           <div class="col-lg-8 product-media">
-            <img src="{% static 'track-expenses-jobs.png' %}" alt="Expense and Job Tracking">
+            <img src="{% static 'website/images/track-expenses-jobs.png' %}" alt="Expense and Job Tracking">
           </div>
 
           <div class="col-lg-4 product-media-content">
@@ -373,7 +373,7 @@
       <div class="container-fluid max-width-container">
         <div class="row">
           <div class="col-md-12">
-            <img src="{% static 'agreement.png' %}" alt="Sign Up">
+            <img src="{% static 'website/images/agreement.png' %}" alt="Sign Up">
             <h2>Sign Up Free</h2>
             <p class="description-text">
               Sign up for free today and get all features, free updates, and unparalleled support.
@@ -387,5 +387,5 @@
   </main>
 </div>
 
-{% include 'includes/website_parts/footer.html' %}
+{% include 'website/footer.html' %}
 {% endblock content %}

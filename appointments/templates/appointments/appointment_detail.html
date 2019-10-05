@@ -1,0 +1,27 @@
+{% extends "appointments/base_appointment.html" %}
+
+{% block title %}{{ appointment }}{% endblock title %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-lg-9">
+      <div class="page-header">
+        <h1>Appointment</h1>
+      </div>
+
+      <dl class="dl-horizontal">
+        <dt><strong>Name:</strong></dt>
+        <dd>{{ appointment.name }}</dd>
+        <dt><strong>Phone number:</strong></dt>
+        <dd>{{ appointment.phone_number }}</dd>
+        <dt><strong>Time:</strong></dt>
+        <dd>{{ appointment.time }}</dd>
+        <dt><strong>Time zone:</strong></dt>
+        <dd>{{ appointment.time_zone }}</dd>
+      </dl>
+
+      <a class="btn btn-default" href="{% url 'appointments:new_appointment' %}">Back</a>
+      <a class="btn btn-default" href="{% url 'appointments:edit_appointment' appointment.id %}">Edit</a>
+    </div>
+  </div>
+{% endblock %}
