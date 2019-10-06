@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
 
-import redis
-
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
@@ -10,7 +8,7 @@ from timezone_field import TimeZoneField
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 
-import arrow, urllib.parse, os
+import redis, arrow, os
 
 @python_2_unicode_compatible
 class Appointment(models.Model):
@@ -82,7 +80,6 @@ class Appointment(models.Model):
         # Check if we have scheduled a reminder for this appointment before
         if self.task_id:
             # Revoke that task in case its time has changed
-            print('Canceling task...')
             self.cancel_task()
 
         # Save our appointment, which populates self.pk,
