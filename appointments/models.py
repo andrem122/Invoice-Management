@@ -98,8 +98,6 @@ class Appointment(models.Model):
         super(Appointment, self).save(*args, **kwargs)
 
     def cancel_task(self):
-        redis_client = redis.Redis(host='localhost', port=6379, db=0)
-        if settings.DEBUG == False: # For Heroku
-            redis_client = redis.from_url(os.environ.get("REDIS_URL"))
+        redis_client = redis.from_url(os.environ.get("REDIS_URL"))
 
         redis_client.hdel("dramatiq:default.DQ.msgs", self.task_id)

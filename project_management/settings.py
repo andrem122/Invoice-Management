@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'project-management-novaone.herokuapp.com']
 
@@ -138,8 +138,12 @@ WSGI_APPLICATION = 'project_management.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'sqlite3.db',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'default',                      # Or path to database file if using sqlite3.
+        'USER': 'genuwine12',                      # Or path to database file if using sqlite3.
+        'PASSWORD': '537H%[*tsnap]Ty',                      # Or path to database file if using sqlite3.
+        'HOST': '127.0.0.1',                      # Or path to database file if using sqlite3.
+        'PORT': '',                      # Or path to database file if using sqlite3.
     }
 }
 
