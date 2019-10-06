@@ -20,7 +20,6 @@ class AppointmentFormCreate(forms.ModelForm):
 
         # Call clean method from base class first
         cleaned_data = super().clean()
-        print(cleaned_data)
 
         now = datetime.now()
         try:

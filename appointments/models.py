@@ -67,8 +67,6 @@ class Appointment(models.Model):
         milli_to_wait = int(
             (reminder_time - now).total_seconds()) * 1000
 
-        print(reminder_time)
-
         # Schedule the Dramatiq task
         from .tasks import send_sms_reminder
         result = send_sms_reminder.send_with_options(
