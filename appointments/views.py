@@ -136,8 +136,10 @@ def send_notifications(appointment_object, apartment_complex_name, phone_numbers
     appointment_time = arrow.get(appointment_object.time).to(appointment_object.time_zone.zone)
 
     is_confirmed = 'confirmed'
+    subject = 'Appointment Confirmed'
     if appointment_object.confirmed == True: # Appointment was canceled, but object not updated yet in database
         is_confirmed = 'canceled';
+        subject = 'Appointment Canceled'
 
     message = (
     'Hello, an appointment has been {is_confirmed}. See details below:\n\n'
@@ -165,7 +167,7 @@ def send_notifications(appointment_object, apartment_complex_name, phone_numbers
     # Send Email
     for email in emails:
         send_mail(
-            'Appointment Confirmed',
+            subject,
             message,
             'no-reply@novaonesoftware.com',
             [email],
@@ -197,7 +199,7 @@ def incoming_sms(request):
 
     # Get our most recent appointment from the database for the phone number
     appointment = Appointment.objects.filter(phone_number=incoming_sms_number).last()
-    
+
     try:
         # Get appointment time if appointment object found
         appointment_time = arrow.get(appointment.time).to(appointment.time_zone.zone)
