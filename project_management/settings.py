@@ -27,7 +27,6 @@ ALLOWED_HOSTS = ['127.0.0.1', 'project-management-novaone.herokuapp.com']
 # Application definition
 
 DJANGO_APPS = (
-    'django_dramatiq',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

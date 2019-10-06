@@ -97,13 +97,14 @@ class Appointment(models.Model):
         super(Appointment, self).save(*args, **kwargs)
 
     def cancel_task(self):
-        redis_url = os.getenv('REDISTOGO_URL')
-
-        urllib.parse.uses_netloc.append('redis')
-        url = urllib.parse.urlparse(redis_url)
-        conn = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
-        conn.hdel("dramatiq:default.DQ.msgs", self.task_id)
+        redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+        redis = redis.from_url(redis_url)
+        redis.hdel("dramatiq:default.DQ.msgs", self.task_id)
 
         # if settings.DEBUG == True:
         #     redis_client = redis.Redis(host='localhost', port=6379, db=0)
         #     redis_client.hdel("dramatiq:default.DQ.msgs", self.task_id)
+        # else:
+        #     redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+        #     redis = redis.from_url(redis_url)
+        #     redis.hdel("dramatiq:default.DQ.msgs", self.task_id)
