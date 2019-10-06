@@ -80,6 +80,10 @@ class Appointment(models.Model):
 
     def save(self, *args, **kwargs):
         """Custom save method which also schedules a reminder"""
+        redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+        redis = redis.from_url(redis_url)
+        print('HELLO!')
+        print(redis.client_getname())
 
         # Check if we have scheduled a reminder for this appointment before
         if self.task_id:
@@ -95,9 +99,6 @@ class Appointment(models.Model):
 
         # Save our appointment again, with the new task_id
         super(Appointment, self).save(*args, **kwargs)
-        redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
-        redis = redis.from_url(redis_url)
-        print(redis.client_getname())
 
     def cancel_task(self):
         redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
