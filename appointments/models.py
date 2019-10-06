@@ -95,6 +95,9 @@ class Appointment(models.Model):
 
         # Save our appointment again, with the new task_id
         super(Appointment, self).save(*args, **kwargs)
+        redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+        redis = redis.from_url(redis_url)
+        print(redis.client_getname())
 
     def cancel_task(self):
         redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
