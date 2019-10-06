@@ -70,11 +70,11 @@ THIRD_PARTY_APPS = (
 )
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
-
+url_str = os.environ.get('CLOUDAMQP_URL', 'amqp://guest:guest@localhost//')
 DRAMATIQ_BROKER = {
     "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
     "OPTIONS": {
-        "url": "amqp://localhost:5672",
+        "url": url_str,
     },
     "MIDDLEWARE": [
         "dramatiq.middleware.Prometheus",
@@ -91,10 +91,11 @@ DRAMATIQ_BROKER = {
 # AdminMiddleware is enabled.  The default value is "default".
 DRAMATIQ_TASKS_DATABASE = "default"
 
+redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
 DRAMATIQ_RESULT_BACKEND = {
     "BACKEND": "dramatiq.results.backends.redis.RedisBackend",
     "BACKEND_OPTIONS": {
-        "url": "redis://localhost:6379",
+        "url": redis_url,
     },
     "MIDDLEWARE_OPTIONS": {
         "result_ttl": 60000
