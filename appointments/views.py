@@ -197,6 +197,7 @@ def incoming_sms(request):
 
     # Get our most recent appointment from the database for the phone number
     appointment = Appointment.objects.filter(phone_number=incoming_sms_number).last()
+    
     try:
         # Get appointment time if appointment object found
         appointment_time = arrow.get(appointment.time).to(appointment.time_zone.zone)
@@ -208,7 +209,7 @@ def incoming_sms(request):
     if appointment is None and (incoming_sms.lower() == 'y' or incoming_sms.lower() == 'c'):
         response_message = (
         'No appointment was found for number {number}. You can make an appointment '
-        'online at https://www.novaonesoftware.com/appointments/new.'
+        'online at https://project-management-novaone.herokuapp.com/appointments/new.'
         + end_of_reponse_message
         ).format(number=incoming_sms_number)
 
@@ -265,7 +266,7 @@ def incoming_sms(request):
 
         response_message = (
         'Your appointment has been canceled. If you would like to make '
-        'another appointment, you can do so by going online at https://www.novaonesoftware.com/appointments/new.'
+        'another appointment, you can do so by going online at https://project-management-novaone.herokuapp.com/appointments/new.'
         + end_of_reponse_message
         )
 

@@ -82,17 +82,18 @@ class Appointment(models.Model):
         # Check if we have scheduled a reminder for this appointment before
         if self.task_id:
             # Revoke that task in case its time has changed
+            print('Canceling task...')
             self.cancel_task()
 
         # Save our appointment, which populates self.pk,
         # which is used in schedule_reminder
-        super(Appointment, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
         # Schedule a new reminder task for this appointment
         self.task_id = self.schedule_reminder()
 
         # Save our appointment again, with the new task_id
-        super(Appointment, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def cancel_task(self):
         redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
