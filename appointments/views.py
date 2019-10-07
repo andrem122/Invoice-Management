@@ -182,8 +182,8 @@ def incoming_sms(request):
     incoming_sms_number = request.POST.get('From', None)
     address = '2929 Panthersville Rd, Decatur, GA 30034'
     apartment_complex_name = 'Hidden Villas Apartments'
-    numbers_to_notify = ('+17722423154',)
-    emails_to_notify = ['contact@mayfairatlawnwood.com', 'andre.mashraghi@gmail.com']
+    numbers_to_notify = ('+5613465571',)
+    emails_to_notify = ['andre.mashraghi@gmail.com', ]
     r = MessagingResponse()
 
     end_of_reponse_message = (
@@ -211,7 +211,7 @@ def incoming_sms(request):
     if appointment is None and (incoming_sms.lower() == 'y' or incoming_sms.lower() == 'c'):
         response_message = (
         'No appointment was found for number {number}. You can make an appointment '
-        'online at https://project-management-novaone.herokuapp.com/appointments/new.'
+        'online at https://project-management-novaone.herokuapp.com/appointments/new?apartment-complex=Hidden%20Villas.'
         + end_of_reponse_message
         ).format(number=incoming_sms_number)
 
@@ -221,7 +221,7 @@ def incoming_sms(request):
         if appointment_time < arrow.utcnow():
             response_message = (
             'Your appointment has passed. If you would like to make '
-            'another appointment, you can do so by going online at https://www.novaonesoftware.com/appointments/new.'
+            'another appointment, you can do so by going online at https://project-management-novaone.herokuapp.com/appointments/new?apartment-complex=Hidden%20Villas.'
             + end_of_reponse_message
             )
             r.message(response_message)
@@ -252,7 +252,7 @@ def incoming_sms(request):
         if appointment_time < arrow.utcnow():
             response_message = (
             'Your appointment has passed. If you would like to make '
-            'another appointment, you can do so by going online at https://www.novaonesoftware.com/appointments/new.'
+            'another appointment, you can do so by going online at https://project-management-novaone.herokuapp.com/appointments/new?apartment-complex=Hidden%20Villas.'
             + end_of_reponse_message
             )
             r.message(response_message)
@@ -268,7 +268,7 @@ def incoming_sms(request):
 
         response_message = (
         'Your appointment has been canceled. If you would like to make '
-        'another appointment, you can do so by going online at https://project-management-novaone.herokuapp.com/appointments/new.'
+        'another appointment, you can do so by going online at https://project-management-novaone.herokuapp.com/appointments/new?apartment-complex=Hidden%20Villas.'
         + end_of_reponse_message
         )
 

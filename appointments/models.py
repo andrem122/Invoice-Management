@@ -56,7 +56,8 @@ class Appointment(models.Model):
 
 
     def schedule_reminder(self):
-        """Schedule a Dramatiq task to send a reminder for this appointment"""
+        """Schedule a Dramatiq task to send an appointment reminder
+        and apply link for this appointment"""
 
         # Calculate the correct time to send this reminder
         appointment_time = arrow.get(self.time, self.time_zone.zone)
@@ -93,14 +94,10 @@ class Appointment(models.Model):
         super().save(*args, **kwargs)
 
     def cancel_task(self):
-        redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
-        redis_client = redis.from_url(redis_url)
-        redis_client.hdel("dramatiq:default.DQ.msgs", self.task_id)
-
-        # if settings.DEBUG == True:
-        #     redis_client = redis.Redis(host='localhost', port=6379, db=0)
-        #     redis_client.hdel("dramatiq:default.DQ.msgs", self.task_id)
-        # else:
-        #     redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
-        #     redis_client = redis.from_url(redis_url)
-        #     redis_client.hdel("dramatiq:default.DQ.msgs", self.task_id)
+        if settings.DEBUG == True:
+            redis_client = redis.Redis(host='localhost', port=6379, db=0)
+            redis_client.hdel("dramatiq:default.DQ.msgs", self.task_id)
+        else:
+            redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+            redis_client = redis.from_url(redis_url)
+            redis_client.hdel("dramatiq:default.DQ.msgs", self.task_id)
