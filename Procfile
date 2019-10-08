@@ -1,1 +1,1 @@
-web: gunicorn project_management.wsgi; python my_django_app/manage.py collectstatic --noinput
+web: gunicorn project_management.wsgi; python project_management/manage.py collectstatic --noinput;
