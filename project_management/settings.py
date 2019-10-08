@@ -201,8 +201,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # For production server file serving
 if DEBUG == False:
-    print('DEBUG VALUE')
-    print(DEBUG)
     STATIC_ROOT = 'static'
 
 STATICFILES_DIRS = [

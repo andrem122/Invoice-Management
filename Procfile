@@ -1,2 +1,1 @@
-web: python manage.py collectstatic --noinput
-web: gunicorn project_management.wsgi
+web: python manage.py collectstatic --noinput; gunicorn project_management.wsgi
