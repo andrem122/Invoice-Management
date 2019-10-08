@@ -29,7 +29,8 @@ def send_sms_reminder(appointment_id):
     message = (
     'Hello {name}! You have an appointment coming up at {time} to see an apartment unit at '
     '{address}. '
-    'Please reply "y" to confirm your appointment or "c" to cancel.\n\n'
+    'Please reply "y" to confirm your appointment or "c" to cancel. Your appointment will be canceled '
+    'if no response is recieved.\n\n'
     'This is an automated message. Reply "STOP" to end SMS alerts from {apartment_complex_name}.'
     ).format(
         name=appointment.name.strip().title(),
