@@ -200,10 +200,11 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # For production server file serving
-if DEBUG == False:
-    STATIC_URL = STATIC_ROOT
+# if DEBUG == False:
+#     STATIC_URL = STATIC_ROOT
 
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'login_assets'),
     os.path.join(BASE_DIR, 'logged_in_assets'),
     os.path.join(BASE_DIR, 'thank_you_assets'),
