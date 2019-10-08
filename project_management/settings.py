@@ -65,12 +65,13 @@ LOCAL_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'whitenoise.runserver_nostatic',
     'storages',
     'bootstrap3',
     'phonenumber_field',
 )
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 
 # The URL used to configure the options for Rabbitmq
 rabbitmq_url = os.environ.get('CLOUDAMQP_URL', 'amqp://guest:guest@localhost//')
@@ -107,8 +108,8 @@ DRAMATIQ_RESULT_BACKEND = {
 }
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -118,7 +119,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'project_management.urls'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 TEMPLATES = [
     {
@@ -291,6 +291,9 @@ AWS_DEFAULT_ACL = None
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_REGION_NAME = 'us-east-2'
+
+# Storage
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Bootstrap
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
