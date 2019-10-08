@@ -118,6 +118,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'project_management.urls'
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 TEMPLATES = [
     {
@@ -196,7 +197,7 @@ STATICFILES_FINDERS = [
 STATIC_URL = '/static/'
 
 # Where all static files will be collected during deployment of the app
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # For production server file serving
 if DEBUG == False:
@@ -299,4 +300,4 @@ REMINDER_TIME = 30  # minutes
 
 # Configure Django App for Heroku.
 import django_heroku
-django_heroku.settings(locals(), logging=False)
+django_heroku.settings(locals(), logging=False, staticfiles=False)
