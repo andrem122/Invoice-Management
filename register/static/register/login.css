@@ -142,7 +142,7 @@ body.customer-register {
       rgba(0, 0, 0, 0.20),
       rgba(0, 0, 0, 0.20)
     ),
-    url('/static/customer_register/william-iven-5893-unsplash(1).jpg');
+    url('/static/customer_register/customer-register-bg.jpg');
     background-repeat: no-repeat;
     background-size: cover;
 }
