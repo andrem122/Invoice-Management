@@ -182,8 +182,8 @@ def incoming_sms(request):
     incoming_sms_number = request.POST.get('From', None)
     address = '2929 Panthersville Rd, Decatur, GA 30034'
     apartment_complex_name = 'Hidden Villas Apartments'
-    numbers_to_notify = ('+15613465571',)
-    emails_to_notify = ['andre.mashraghi@gmail.com', ]
+    numbers_to_notify = ('+15613465571', '+17868183015')
+    emails_to_notify = ['andre.mashraghi@gmail.com', 'rene@bluedrg.com', 'sabrina@bluedrg.com', 'terrell@bluedrg.com', 'jazmond@bluedrg.com']
     r = MessagingResponse()
 
     end_of_reponse_message = (
