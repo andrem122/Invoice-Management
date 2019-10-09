@@ -1,4 +1,8 @@
 #!/bin/bash
+curl -n -X DELETE https://api.heroku.com/apps/project-management-novaone/dynos \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/vnd.heroku+json; version=3"
+
 curl -n -X POST https://api.heroku.com/apps/project-management-novaone/dynos \
   -d '{
   "attach": false,
@@ -12,9 +16,5 @@ curl -n -X POST https://api.heroku.com/apps/project-management-novaone/dynos \
   "type": "run",
   "time_to_live": 1800
 }' \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/vnd.heroku+json; version=3"
-
-curl -n -X DELETE https://api.heroku.com/apps/project-management-novaone/dynos \
   -H "Content-Type: application/json" \
   -H "Accept: application/vnd.heroku+json; version=3"

@@ -1,5 +1,4 @@
-import arrow
-import dramatiq
+import arrow, dramatiq
 
 from django.conf import settings
 from twilio.rest import Client
