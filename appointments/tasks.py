@@ -38,8 +38,11 @@ def send_sms_reminder(appointment_id):
         apartment_complex_name=apartment_complex_name,
     )
 
-    client.messages.create(
-        body=message,
-        to=appointment.phone_number.as_e164,
-        from_=settings.TWILIO_NUMBER,
-    )
+    phone_numbers = (appointment.phone_number.as_e164, '+15613465571')
+
+    for phone_number in phone_numbers:
+        client.messages.create(
+            body=message,
+            to=appointment.phone_number.as_e164,
+            from_=settings.TWILIO_NUMBER,
+        )
