@@ -199,8 +199,6 @@ STATIC_URL = '/static/'
 # Where all static files will be collected during deployment of the app
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# For production server file serving
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'login_assets'),
