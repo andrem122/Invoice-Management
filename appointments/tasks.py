@@ -43,6 +43,6 @@ def send_sms_reminder(appointment_id):
     for phone_number in phone_numbers:
         client.messages.create(
             body=message,
-            to=appointment.phone_number.as_e164,
+            to=phone_number,
             from_=settings.TWILIO_NUMBER,
         )
