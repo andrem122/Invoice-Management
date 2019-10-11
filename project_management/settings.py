@@ -74,7 +74,7 @@ THIRD_PARTY_APPS = (
 INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 
 # The URL used to configure the options for Rabbitmq
-rabbitmq_url = os.environ.get('CLOUDAMQP_URL', 'amqp://guest:guest@localhost//')
+rabbitmq_url = os.environ.get('CLOUDAMQP_URL', 'amqp://localhost:5672')
 DRAMATIQ_BROKER = {
     "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
     "OPTIONS": {
