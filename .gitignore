@@ -1,7 +1,6 @@
 db.sqlite3
 media/
 __pycache__/
-migrations/
 .env
 
 # Byte-compiled / optimized / DLL files

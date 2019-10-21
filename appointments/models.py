@@ -24,7 +24,7 @@ class Appointment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     time_zone = TimeZoneField(default='US/Eastern', editable=False)
     confirmed = models.BooleanField(default=False)
-    apartment_complex_name = models.CharField(max_length=128, blank=True, editable=False, default=None)
+    #apartment_complex_name = models.CharField(max_length=128, blank=True, editable=False, default=None)
 
     #categories
     three_bed = '3 Bedrooms'
