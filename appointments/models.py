@@ -19,8 +19,8 @@ class Appointment(models.Model):
     time = models.DateTimeField()
 
     # Additional fields not visible to users
-    appointment_task_id = models.CharField(max_length=50, blank=True, editable=False)
-    apply_task_id = models.CharField(max_length=50, blank=True, editable=False)
+    task_id = models.CharField(max_length=50, blank=True, editable=False)
+    #apply_task_id = models.CharField(max_length=50, blank=True, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     time_zone = TimeZoneField(default='US/Eastern', editable=False)
     confirmed = models.BooleanField(default=False)
