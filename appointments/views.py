@@ -105,8 +105,8 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         appointment.save()
 
         # Schedule reminder for appointment an hour before appointment time
-        appointment_task_id = appointment.schedule_reminder('send_appointment_reminder', -60)
-        appointment.appointment_task_id = appointment_task_id
+        # appointment_task_id = appointment.schedule_reminder('send_appointment_reminder', -60)
+        # appointment.appointment_task_id = appointment_task_id
         appointment.save()
 
         return super().form_valid(form)
