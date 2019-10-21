@@ -1,5 +1,17 @@
 var format = "MM/DD/YYYY hh:mm A";
 var appointments = JSON.parse(document.getElementById('appointments_time').textContent);
+var page_url = new URL(document.location.href);
+var apartmentComplexName = page_url.searchParams.get('apartment-complex-name').toLowerCase();
+
+if (apartmentComplexName === 'hidden villas') {
+  var enabledHours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+  var daysOfWeekDisabled = [0];
+}
+
+else if (apartmentComplexName === 'mayfair at lawnwood') {
+  var enabledHours = [12, 13, 14, 15];
+  var daysOfWeekDisabled = [0, 1, 2, 3, 4, 5];
+}
 
 function create_moments(appointments) {
 
@@ -27,9 +39,9 @@ $(function() {
       extraFormats: ['YYYY-MM-DD hh:mm:ss A'],
       sideBySide: true,
       inline: true,
-      // enabledHours: [9, 10, 11, 12, 13, 14, 15, 16, 17],
-      // daysOfWeekDisabled: [0],
-      // stepping: 30,
+      enabledHours: enabledHours,
+      daysOfWeekDisabled: daysOfWeekDisabled,
+      stepping: 30,
       disabledTimeIntervals: create_moments(appointments),
       focusOnShow: false,
       showClose: true,
