@@ -11,7 +11,7 @@
       </div>
 
       {% if not object_list %}
-        <p><strong>No upcoming appointments.</strong> Why not <a href="{% url 'appointments:new_appointment' %}">schedule one?</a>
+        <p><strong>No upcoming appointments.</strong> Why not <a href="{% url 'appointments:new_appointment' %}?apartment-complex-name=Mayfair%20At%20Lawnwood">schedule one?</a>
       {% endif %}
 
       <table class="table table-striped">
@@ -21,7 +21,7 @@
             <th>Name</th>
             <th>Phone number</th>
             <th>Appointment Start Time</th>
-            <th>Created at</th>
+            <th>Apartment Complex</th>
             <th>Confirmed?</th>
             <th>Actions</th>
           </tr>
@@ -33,7 +33,7 @@
               <td>{{ appointment.name }}</td>
               <td>{{ appointment.phone_number }}</td>
               <td>{{ appointment.time }}</td>
-              <td>{{ appointment.created }}</td>
+              <td>{{ appointment.apartment_complex_name }}</td>
               <td>{{ appointment.confirmed }}</td>
               <td>
                 <a class="btn btn-default btn-xs" href="{% url 'appointments:edit_appointment' appointment.pk %}">Edit</a>
@@ -44,7 +44,7 @@
         </tbody>
       </table>
 
-      <a class="btn btn-primary" href="{% url 'appointments:new_appointment' %}">New</a>
+      <a class="btn btn-primary" href="{% url 'appointments:new_appointment' %}?apartment-complex-name=Mayfair%20At%20Lawnwood">New</a>
     </div>
   </div>
 {% endblock %}

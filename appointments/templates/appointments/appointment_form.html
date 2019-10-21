@@ -1,8 +1,9 @@
 {% extends 'appointments/base_appointment.html' %}
 
+{% load static %}
 {% load bootstrap_tags %}
 
-{% block title %}New reminder{% endblock title %}
+{% block title %}New Appointment{% endblock title %}
 {% block page_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
 {% endblock page_css %}
@@ -48,48 +49,8 @@
 {% endblock %}
 
 {% block page_js %}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 {{ appointments|json_script:"appointments_time" }}
-  <script type="text/javascript">
-      var format = "MM/DD/YYYY hh:mm A";
-      var appointments = JSON.parse(document.getElementById('appointments_time').textContent);
-
-      function create_moments(appointments) {
-
-        var appointmentsLength = appointments.length;
-        var moments_array = [];
-        for (var i = 0; i < appointmentsLength; i++) {
-
-          time_slot = [];
-          for (var j = 0; j < 2; j++) {
-            var this_moment = moment(appointments[i][j], format);
-            time_slot.push(this_moment);
-
-          }
-
-          moments_array.push(time_slot);
-
-        }
-
-        return moments_array;
-      }
-
-      $(function() {
-          $('#id_time').datetimepicker({
-            format: 'MM/DD/YYYY hh:mm A',
-            extraFormats: ['YYYY-MM-DD hh:mm:ss A'],
-            sideBySide: true,
-            inline: true,
-            enabledHours: [9, 10, 11, 12, 13, 14, 15, 16, 17],
-            daysOfWeekDisabled: [0],
-            stepping: 30,
-            disabledTimeIntervals: create_moments(appointments),
-            focusOnShow: false,
-            showClose: true,
-            ignoreReadonly: true,
-            allowInputToggle: true,
-          });
-      });
-  </script>
+<script defer src="{% static 'appointments/appointments.js' %}?v=1.0" type="text/javascript"></script>
 {% endblock %}

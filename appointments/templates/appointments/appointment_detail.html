@@ -20,8 +20,8 @@
         <dd>{{ appointment.time_zone }}</dd>
       </dl>
 
-      <a class="btn btn-default" href="{% url 'appointments:new_appointment' %}">Back</a>
-      <a class="btn btn-default" href="{% url 'appointments:edit_appointment' appointment.id %}">Edit</a>
+      <a class="btn btn-default" href="{% url 'appointments:new_appointment' %}?apartment-complex-name={{ apartment_complex_name }}">Back</a>
+      <a class="btn btn-danger" href="{% url 'appointments:delete_appointment' appointment.id %}">Delete</a>
     </div>
   </div>
 {% endblock %}
