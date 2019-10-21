@@ -257,24 +257,23 @@ def incoming_sms(request):
             appointment_link = 'https://project-management-novaone.herokuapp.com/appointments/new?apartment-complex-name={get_parameter_value}'.format(get_parameter_value=get_parameter_value)
             apartment_complex_number = '(772) 242-3154'
 
-        end_of_reponse_message = (
-        '\n\nThis is an automated message. Reply "STOP" to end '
-        'SMS alerts from {apartment_complex_name}.'.format(apartment_complex_name=apartment_complex_name)
-        )
+    end_of_reponse_message = (
+    '\n\nThis is an automated message. Reply "STOP" to end '
+    'SMS alerts from NovaOne'.
+    )
 
-        response_message = (
-        'Your response was not understood. Please reply "y" to '
-        'confirm your appointment or "c" to cancel.'
-        + end_of_reponse_message
-        )
+    response_message = (
+    'Your response was not understood. Please reply "y" to '
+    'confirm your appointment or "c" to cancel.'
+    + end_of_reponse_message
+    )
 
     # Appointment object NOT found and reply is valid
     if appointment is None and (incoming_sms.lower() == 'y' or incoming_sms.lower() == 'c'):
         response_message = (
-        'No appointment was found for number {number}. You can make an appointment '
-        'online at {appointment_link}.'
+        'No appointment was found for number {number}.'
         + end_of_reponse_message
-        ).format(number=incoming_sms_number, appointment_link=appointment_link)
+        ).format(number=incoming_sms_number, )
 
     # Appointment object found and appointment confirmed
     elif appointment is not None and incoming_sms.lower() == 'y':
