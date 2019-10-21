@@ -259,7 +259,7 @@ def incoming_sms(request):
 
     end_of_reponse_message = (
     '\n\nThis is an automated message. Reply "STOP" to end '
-    'SMS alerts from NovaOne'.
+    'SMS alerts from NovaOne.'
     )
 
     response_message = (
