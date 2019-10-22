@@ -99,17 +99,16 @@ class House_Set(models.QuerySet):
     def add_num_active_jobs(self):
         sql = """
         COALESCE(
-        (SELECT COUNT(U0.`id`)
-        FROM `jobs_job` U0
-        WHERE (U0.`approved` = True AND U0.`house_id` = (`jobs_house`.`id`))
-        AND COALESCE(U0.`start_amount`, 0) - COALESCE((SELECT SUM(p.amount)
+        (SELECT COUNT(U0.id)
+        FROM jobs_job U0
+        WHERE (U0.approved = TRUE AND U0.house_id = (jobs_house.id))
+        AND COALESCE(U0.start_amount, 0) - COALESCE((SELECT SUM(p.amount)
             FROM jobs_request_payment p
-            WHERE p.`job_id` = U0.`id`
-            AND U0.`approved` = 1
-            AND p.`approved` = 1
-            GROUP BY U0.`id`), 0) > 0
-        GROUP BY U0.`house_id`
-        ORDER BY NULL
+            WHERE p.job_id = U0.id
+            AND U0.approved = TRUE
+            AND p.approved = TRUE
+            GROUP BY U0.id), 0) > 0
+        GROUP BY U0.house_id
         LIMIT 1), 0)
         """
 

@@ -60,14 +60,14 @@ class Worker:
         ON j.house_id = h.id
         WHERE customer_id = %s
         AND j.company_id = %s
-        AND j.approved = 1
+        AND j.approved = TRUE
         AND j.start_date BETWEEN %s AND %s
         AND COALESCE(j.start_amount, 0) - COALESCE(
             (SELECT COALESCE(SUM(p.amount), 0)
              FROM jobs_request_payment p
              WHERE p.job_id = j.id
-             AND p.approved = 1
-             AND j.approved = 1), 0)
+             AND p.approved = TRUE
+             AND j.approved = TRUE), 0)
         <= 0;
         """
         return House.objects.raw(sql, params=[self.customer.id, self.worker.id, Worker.start_week, Worker.today])
