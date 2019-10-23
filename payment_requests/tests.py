@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.test import Client
 from .views import approved_payments
 from django.contrib.auth.models import User, Group
-from jobs.models import Job, House, Request_Payment, Current_Worker
+from jobs.models import Job, House, Request_Payment
 
 class Test_Payment_Requests(TestCase):
     def setUp(self):
@@ -24,7 +24,7 @@ class Test_Payment_Requests(TestCase):
         self.assertEqual(response.status_code, 200)
     def test_approved_payments_by_worker(self):
         """
-        Test if values for house, job, payment, and current_worker
+        Test if values for house, job, payment
         are correct after unapproving a payment for a house that originally
         had 1 completed job, had 1 approved payment, had 0
         pending payments, had 0 proposed_jobs, and payment with
@@ -89,17 +89,12 @@ class Test_Payment_Requests(TestCase):
         self.assertEqual(payment.job, job)
         self.assertEqual(payment.house, house)
 
-        worker = Current_Worker.objects.get(pk=1)
-        self.assertIsNotNone(worker)
-        self.assertEqual(worker.company, job.company)
-        self.assertTrue(worker.current)
-
         #check redirection after POST request is successful
         self.assertRedirects(response, '/payments')
 
     def test_approved_payments_by_code(self):
         """
-        Test if values for house, job, payment, and current_worker
+        Test if values for house, job, payment
         are correct after unapproving a payment for a house that originally
         had 1 completed job, had 1 approved payment, had 0
         pending payments, had 0 proposed_jobs, and payment with
@@ -160,14 +155,11 @@ class Test_Payment_Requests(TestCase):
         payment = Request_Payment.objects.filter(pk=1).exists()
         self.assertFalse(payment)
 
-        worker = Current_Worker.objects.filter(pk=1)
-        self.assertFalse(worker)
-
         #check redirection after POST request is successful
         self.assertRedirects(response, '/payments')
     def test_approved_payments_multiple_payments(self):
         """
-        Test if values for house, job, payment, and current_worker
+        Test if values for house, job, payment
         are correct after unapproving a payment for a house that originally
         had 1 completed jobs, had 2 approved payments, had 2
         pending payments, had 0 proposed_jobs, and payment with
@@ -260,13 +252,6 @@ class Test_Payment_Requests(TestCase):
         self.assertEqual(float(payment_approved_2.amount), 2248.54)
         self.assertTrue(payment_approved_2.created_by_system)
         self.assertFalse(payment_approved_2.approved)
-
-        worker = Current_Worker.objects.all()[0]
-        worker_count = Current_Worker.objects.count()
-        self.assertEqual(worker_count, 1)
-        self.assertEqual(worker.company, active_job.company)
-        self.assertEqual(worker.house, house)
-        self.assertTrue(worker.current)
 
         #check redirection after POST request is successful
         self.assertRedirects(response, '/payments')
