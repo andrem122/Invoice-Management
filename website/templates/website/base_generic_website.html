@@ -35,7 +35,9 @@
   </head>
 
   <body class="{% block body_class %}{% endblock body_class %}">
+    {% include 'website/navigation.html' %}
     {% block content %}
     {% endblock content %}
+    {% include 'website/footer.html' %}
   </body>
 </html>

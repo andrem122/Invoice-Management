@@ -10,7 +10,7 @@ if (apartmentComplexName === 'hidden villas') {
 
 else if (apartmentComplexName === 'mayfair at lawnwood') {
   var enabledHours = [12, 13, 14, 15];
-  var daysOfWeekDisabled = [0, 1, 2, 3, 4, 5];
+  var daysOfWeekDisabled = [0, 1, 3, 4, 5];
 }
 
 function create_moments(appointments) {

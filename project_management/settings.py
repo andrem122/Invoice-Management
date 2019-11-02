@@ -69,6 +69,7 @@ THIRD_PARTY_APPS = (
     'whitenoise.runserver_nostatic',
     'storages',
     'bootstrap3',
+    'bootstrap4',
     'phonenumber_field',
 )
 

@@ -38,8 +38,6 @@ def add_expense(request):
 
             add_expense_form = Add_Expense(user=current_user)
             messages.success(request, 'Thanks! The expense has been added.')
-        else:
-            messages.error(request, 'Something went wrong. Please try again.')
 
     # if a GET (or any other method) we'll create a blank form
     else:

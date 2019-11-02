@@ -25,4 +25,4 @@ class Customer_User_Register(ModelForm):
     class Meta:
         model = Customer_User
         #widgets for each input element
-        fields = ['phone_number']
+        fields = ['phone_number', 'customer_type']

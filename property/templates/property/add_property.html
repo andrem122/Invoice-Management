@@ -1,0 +1,55 @@
+{% extends 'bootstrap_base.html' %}
+
+{% load static %}
+{% load bootstrap_tags %}
+
+{% block title %}Add Management Property{% endblock title %}
+{% block scripts %}
+<script defer src="{% static 'appointments/appointments.js' %}?v=1.0" type="text/javascript"></script>
+{% endblock scripts %}
+
+{% block content %}
+  <div class="row">
+
+    <div class="col">
+
+      {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{ message }}
+        </div>
+        {% endfor %}
+      {% endif %}
+
+      <form class="form-horizontal add-property-form" method="post">
+        <div class="form-intro col">
+          <h2>Add Management Property</h2>
+          <p>
+            Add your management by property
+            by filling out the details below!
+          </p>
+        </div>
+
+        {% if form.errors %}
+        <div class="form-messages">
+          <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ form.errors }}
+          </div>
+        </div>
+
+        {% endif %}
+        {% csrf_token %}
+        {{ form|as_bootstrap_horizontal }}
+        <div class="form-group text-center col-md-10">
+          <button type="submit" class="standard-btn-full-width">
+            Add Property
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+{% endblock %}

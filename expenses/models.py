@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from jobs.models import House
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext as _
 import os
 
 class Expenses(models.Model):
@@ -41,3 +43,27 @@ class Expenses(models.Model):
     @property
     def filename(self):
         return os.path.basename(self.document_link.name)
+
+    def clean(self):
+        """Checks that expenses added have correct data"""
+
+        # Make sure a file is uploaded
+        if self.document_link == None:
+            raise ValidationError(
+                _('You must upload a file for this expense.'),
+                code='MissingFile'
+            )
+
+        # Make sure a property is selected
+        if self.house == None:
+            raise ValidationError(
+                _('You must choose a property in the list.'),
+                code='NoItemSelected'
+            )
+
+        # Make sure amount is greater than zero
+        if self.amount <= 0:
+            raise ValidationError(
+                _('Expense amount must be greater than zero.'),
+                code='LessThanOrEqualToZero'
+            )

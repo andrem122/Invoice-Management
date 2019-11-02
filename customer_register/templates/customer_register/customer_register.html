@@ -1,46 +1,52 @@
 {% extends 'base_generic.html' %}
 {% load static %}
-{% block title %}Rehab Software{% endblock title %}
+{% block title %}Rehab & Property Management Software{% endblock title %}
 {% block scripts %}
 <link rel="stylesheet" href="{% static 'customer_register/login.css' %}">
 {% endblock scripts %}
 {% block body_class %}customer-register{% endblock body_class %}
 {% block content %}
 <div class="container">
-      <div class="row">
-      <h2 id="signup-title">Sign Up For Free Rehab Software</h2>
-      <div class="col-md-6 col-md-offset-3">
-        <div class="panel panel-login">
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-lg-12">
-                <form id="register-form" action="{% url 'customer_register:customer-register' %}" method="post" role="form">
-                  {% csrf_token %}
+  <div class="row">
+    <div class="logo-container">
+      <img src="{% static 'website/images/logo-white.png' %}" alt="Nova One Software">
+    </div>
+    <h2 id="signup-title">
+      Get Free Rehab And Property Management Software.<br/>
+      No credit card required.
+    </h2>
+    <div class="col-md-6 col-md-offset-3">
+      <div class="panel panel-login">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <form id="register-form" action="{% url 'customer_register:customer-register' %}" method="post" role="form">
+                {% csrf_token %}
 
-                  {% if user_register_form.errors or customer_user_form.errors %}
-                  <div class="form-messages">
-                    <p>{{ user_register_form.errors }}</p>
-                    <p>{{ customer_user_form.errors }}</p>
-                  </div>
-                  {% endif %}
+                {% if user_register_form.errors or customer_user_form.errors %}
+                <div class="form-messages">
+                  <p>{{ user_register_form.errors }}</p>
+                  <p>{{ customer_user_form.errors }}</p>
+                </div>
+                {% endif %}
 
-                  {{ user_register_form }}
-                  {{ customer_user_form }}
-                  <div class="form-group">
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Get Free Rehab Software">
-                      </div>
+                {{ user_register_form }}
+                {{ customer_user_form }}
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="standard-btn" value="Get Free Rehab Software">
                     </div>
                   </div>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
   {% if next %}
     {% if user.is_authenticated %}

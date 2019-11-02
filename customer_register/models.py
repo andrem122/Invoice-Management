@@ -7,9 +7,19 @@ from utils.utils import get_succeeded
 
 class Customer_User(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_paying = models.BooleanField(default=False)
+    is_paying = models.BooleanField(default=False, editable=False)
     wants_sms = models.BooleanField(default=False)
     phone_number = PhoneNumberField(null=True, blank=False, unique=True)
+
+    house_flipper = 'House Flipper'
+    property_manager = 'Property Manager'
+
+    customer_types = (
+        (house_flipper, 'House Flipper'),
+        (property_manager, 'Property Manager'),
+    )
+
+    customer_type = models.CharField(max_length=100, choices=customer_types, default=house_flipper)
 
 
 @receiver(post_save, sender=User)
