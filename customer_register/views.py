@@ -6,7 +6,7 @@ from .models import Customer_User
 from django.contrib.auth import authenticate, login
 from .forms import User_Register, Customer_User_Register
 
-def register(request):
+def customer_register(request):
     current_user = request.user
 
     #get the empty form
@@ -15,11 +15,6 @@ def register(request):
 
     #load the template
     template = loader.get_template('customer_register/customer_register.html')
-
-    context = {
-        'user_register_form': user_register_form,
-        'customer_user_form': customer_user_form,
-    }
 
     #form logic
     if request.method == 'POST':
@@ -30,17 +25,26 @@ def register(request):
         if user_register_form.is_valid() and customer_user_form.is_valid():
 
             #get data from post
-            username = user_register_form.cleaned_data['username']
+            first_name = user_register_form.cleaned_data['first_name']
+            last_name = user_register_form.cleaned_data['last_name']
             email = user_register_form.cleaned_data['email']
             password = user_register_form.cleaned_data['password']
             phone_number = customer_user_form.cleaned_data['phone_number']
+            customer_type = customer_user_form.cleaned_data['customer_type']
 
             #create user and save to the database
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create_user(
+                username=email,
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                password=password,
+            )
             customer_user = Customer_User.objects.create(
                 user=user,
                 is_paying=False,
                 phone_number=phone_number,
+                customer_type=customer_type,
             )
 
             user.save()
@@ -71,10 +75,14 @@ def register(request):
             redirect_url = '/jobs-admin/?worker_url=' + urls[0] + '&staff_url=' + urls[1]
 
             #login new user
-            new_user = authenticate(username=username, password=password)
+            new_user = authenticate(username=email, password=password)
             login(request, new_user)
 
             #redirect
+            if customer_type.lower() == 'property manager':
+                redirect_url = '/property/add-property?c={customer_id}'.format(customer_id=str(customer_user.id))
+                return redirect(redirect_url)
+
             return redirect(redirect_url)
         else:
             print(user_register_form.errors)
@@ -83,5 +91,10 @@ def register(request):
     else:
         user_register_form = User_Register(auto_id=False)
         customer_user_form = Customer_User_Register()
+
+    context = {
+        'user_register_form': user_register_form,
+        'customer_user_form': customer_user_form,
+    }
 
     return HttpResponse(template.render(context, request))

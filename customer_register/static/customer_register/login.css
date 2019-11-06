@@ -148,27 +148,27 @@ body.customer-register {
 }
 
 body.customer-register .panel-login {
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
+  background-color: #fff;
+  padding: 10px 20px;
+  border: none;
+  box-shadow: none;
 }
 
-body.customer-register .panel-login input[type="text"], body.customer-register .panel-login input[type="email"],
-body.customer-register .panel-login input[type="password"], body.customer-register .panel-login input[type="tel"] {
+body.customer-register .panel-login input:not([type="submit"]), body.customer-register .panel-login select {
     padding: 21px 23px;
     height: auto;
     font-size: 16px;
-    color: #fff;
+    color: #868686;
 }
 
 body.customer-register input:-ms-input-placeholder, body.customer-register input::-ms-input-placeholder,
 body.customer-register input::placeholder {
-    color: #fff;
+    color: #868686;
 }
 
 body.customer-register input::placeholder {
     opacity: 1;
-    color: #fff;
+    color: #868686;
 }
 
 body.customer-register span.helptext {
@@ -178,8 +178,9 @@ form#register-form {
   color: #fff;
 }
 #signup-title {
- text-align: center;
- color: #fff;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 42px;
 }
 
 @media all and (min-width: 820px) {
@@ -206,4 +207,22 @@ form#register-form {
   background-color: #fff;
   color: #536cdb;
   text-decoration: none;
+}
+
+/* Errors */
+.errorlist {
+  padding: 0;
+  list-style: none;
+}
+.errorlist > li {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+
+.errorlist > li {
+	padding: 15px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+	border-radius: 4px;
 }

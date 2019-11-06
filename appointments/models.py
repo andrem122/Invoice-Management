@@ -69,8 +69,12 @@ class Appointment(models.Model):
             (reminder_time - now).total_seconds()
         ) * 1000
 
-        print('MILI TO WAIT')
-        print(milli_to_wait)
+        print('NOW')
+        print(now)
+        print('APPOINTMENT TIME')
+        print(appointment_time)
+        print('REMINDER TIME')
+        print(reminder_time)
 
         # Schedule the Dramatiq task
         task_function = getattr(import_module('appointments.tasks'), task_function_name)
