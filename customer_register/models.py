@@ -21,6 +21,9 @@ class Customer_User(models.Model):
 
     customer_type = models.CharField(max_length=100, choices=customer_types, default=house_flipper)
 
+    def __str__(self):
+        return self.user.first_name + '-' + self.user.last_name + '-' + str(self.user.id)
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

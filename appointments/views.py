@@ -1,9 +1,7 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import DetailView
-from django.views.generic.edit import CreateView
-from django.views.generic.edit import DeleteView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from twilio.twiml.messaging_response import MessagingResponse
 from django_twilio.decorators import twilio_view

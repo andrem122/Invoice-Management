@@ -82,7 +82,7 @@ class Customer_User_Register(ModelForm):
         # Check to see if any users already exist with this phone number.
         try:
             match = Customer_User.objects.get(phone_number=phone_number)
-        except User.DoesNotExist:
+        except Customer_User.DoesNotExist:
             # Unable to find a user, this is fine
             return phone_number
 

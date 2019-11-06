@@ -7,7 +7,12 @@ class PropertyFormCreate(forms.ModelForm):
 
     class Meta:
         model = Property
-        fields = '__all__'
+        fields = [
+            'name',
+            'address',
+            'phone_number',
+            'email',
+        ]
 
         labels = {
             'name': _('Property Name'),
