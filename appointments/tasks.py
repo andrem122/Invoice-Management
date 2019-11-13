@@ -16,17 +16,12 @@ def send_appointment_reminder(appointment_id):
         appointment = Appointment.objects.get(pk=appointment_id)
     except Appointment.DoesNotExist:
         # The appointment we were trying to remind someone about
-        # has been deleted, so we don't need to do anything
+        # has been deleted or was never made, so we don't need to do anything
         return
 
-    if appointment.apartment_complex_name.lower() == 'hidden villas':
-        address = '2929 Panthersville Rd, Decatur, GA 30034'
-        apartment_complex_name = 'Hidden Villas Apartments'
-        apartment_complex_number = '(786) 818-3015'
-    elif appointment.apartment_complex_name.lower() == 'mayfair at lawnwood':
-        address = '1800 Nebraska Avenue, Fort Pierce, FL 34950'
-        apartment_complex_name = 'Mayfair At Lawnwood'
-        apartment_complex_number = '(772) 242-3154'
+    address = appointment.customer_user.property.address
+    apartment_complex_name = appointment.customer_user.property.name
+    apartment_complex_number = appointment.customer_user.property.phone_number
 
     appointment_time = arrow.get(appointment.time).to(appointment.time_zone.zone)
 
@@ -67,14 +62,9 @@ def send_application_reminder(appointment_id):
         # has been deleted, so we don't need to do anything
         return
 
-    if appointment.apartment_complex_name.lower() == 'hidden villas':
-        address = '2929 Panthersville Rd, Decatur, GA 30034'
-        apartment_complex_name = 'Hidden Villas Apartments'
-        apartment_complex_number = '(786) 818-3015'
-    elif appointment.apartment_complex_name.lower() == 'mayfair at lawnwood':
-        address = '1800 Nebraska Avenue, Fort Pierce, FL 34950'
-        apartment_complex_name = 'Mayfair At Lawnwood'
-        apartment_complex_number = '(772) 242-3154'
+    address = appointment.customer_user.property.address
+    apartment_complex_name = appointment.customer_user.property.name
+    apartment_complex_number = appointment.customer_user.property.phone_number
 
     message = (
     'Hello again {name}! We hope you enjoyed your showing at {apartment_complex_name}. '

@@ -10,6 +10,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from importlib import import_module
 from datetime import datetime, timedelta
+from customer_register.models import Customer_User
 import arrow, pytz
 
 @python_2_unicode_compatible
@@ -24,7 +25,7 @@ class Appointment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     time_zone = TimeZoneField(default='US/Eastern', editable=False)
     confirmed = models.BooleanField(default=False)
-    apartment_complex_name = models.CharField(max_length=128, blank=True, editable=False, default=None)
+    customer_user = models.ForeignKey(Customer_User, on_delete=models.CASCADE, null=True, blank=True, editable=False)
 
     #categories
     three_bed = '3 Bedrooms'
@@ -44,8 +45,13 @@ class Appointment(models.Model):
     def __str__(self):
         return 'Appointment #{0} - {1}'.format(self.pk, self.name)
 
+    def toUTC(self, datetime_object):
+        # Convert to UTC time
+        tz = pytz.timezone('UTC')
+        return tz.normalize(datetime_object.astimezone(pytz.utc))
+
     def get_absolute_url(self):
-        return reverse('appointments:view_appointment', args=[str(self.id)]) + '?apartment-complex-name=' + self.apartment_complex_name
+        return reverse('appointments:view_appointment', args=[str(self.id)]) + '?c=' + str(self.customer_user.id)
 
     def clean(self):
         """Checks that appointments are not scheduled in the past"""
@@ -62,8 +68,7 @@ class Appointment(models.Model):
 
         # Calculate the correct time to send this reminder
         now = timezone.now()
-        now = now.replace(tzinfo=pytz.timezone('US/Eastern'))
-        appointment_time = self.time.replace(tzinfo=pytz.timezone('US/Eastern'))
+        appointment_time = self.toUTC(self.time)
         reminder_time = appointment_time + timedelta(minutes=minutes)
         milli_to_wait = int(
             (reminder_time - now).total_seconds()

@@ -12,20 +12,22 @@ class PropertyFormCreate(forms.ModelForm):
             'address',
             'phone_number',
             'email',
+            'days_of_the_week_enabled',
+            'hours_of_the_day_enabled',
         ]
 
-        labels = {
-            'name': _('Property Name'),
-            'address': _('Property Address'),
-            'phone_number': _('Property Phone'),
-            'email': _('Property Email'),
-        }
+        # labels = {
+        #     'name': _('Property Name'),
+        #     'address': _('Property Address'),
+        #     'phone_number': _('Property Phone'),
+        #     'email': _('Property Email'),
+        # }
 
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Property Name'}),
-            'address': forms.TextInput(attrs={'placeholder': 'Property Address'}),
-            'phone_number': forms.PasswordInput(attrs={'placeholder': 'Property Phone Number'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Property Email'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Property Name', 'class': 'full-width'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Property Address', 'class': 'full-width'}),
+            'phone_number': forms.PasswordInput(attrs={'placeholder': 'Property Phone Number', 'class': 'full-width'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Property Email', 'class': 'full-width'}),
         }
 
     def __init__(self, *args, **kwargs):

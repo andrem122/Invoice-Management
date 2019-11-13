@@ -10,9 +10,9 @@
         <h1>Appointments</h1>
       </div>
 
-      {% if not object_list %}
-        <p><strong>No upcoming appointments.</strong> Why not <a href="{% url 'appointments:new_appointment' %}?apartment-complex-name=Mayfair%20At%20Lawnwood">schedule one?</a>
-      {% endif %}
+        {% if not object_list %}
+        <p><strong>No upcoming appointments.</strong> Why not <a href="{% url 'appointments:new_appointment' %}?c={{ user.customer_user.id }}">schedule one?</a>
+        {% endif %}
 
       <table class="table table-striped">
         <thead>
@@ -44,7 +44,7 @@
         </tbody>
       </table>
 
-      <a class="btn btn-primary" href="{% url 'appointments:new_appointment' %}?apartment-complex-name=Mayfair%20At%20Lawnwood">New</a>
+      <a class="btn btn-primary" href="{% url 'appointments:new_appointment' %}?c={{ user.customer_user.id }}">New</a>
     </div>
   </div>
 {% endblock %}

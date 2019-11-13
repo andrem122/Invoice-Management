@@ -13,10 +13,10 @@ class User_Register(ModelForm):
         #widgets for each input element
         fields = ['first_name', 'last_name', 'email', 'password']
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name'}),
-            'password': forms.PasswordInput(attrs={'placeholder': 'Password'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'full-width'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'full-width'}),
+            'password': forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'full-width'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'full-width'}),
         }
 
         help_texts = {
@@ -65,6 +65,7 @@ class Customer_User_Register(ModelForm):
             'placeholder': 'Phone Number',
             'type': 'tel',
             'required': 'false',
+            'class': 'full-width',
         }
         widgets = {
             'phone_number': forms.TextInput(attrs=attrs),

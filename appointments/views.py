@@ -12,14 +12,25 @@ from .forms import AppointmentFormCreate, AppointmentFormUpdate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 import arrow, pytz, urllib.parse
+from django.http import Http404
+from django.core.exceptions import PermissionDenied
 
 from .models import Appointment
+from customer_register.models import Customer_User
 
 
 class AppointmentListView(LoginRequiredMixin, ListView):
     """Shows users a list of appointments"""
     paginate_by = 25
-    model = Appointment
+
+    def get_queryset(self):
+        # Filter objects displayed by user
+        return Appointment.objects.filter(customer_user=self.request.user.customer_user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
 
 class AppointmentDetailView(DetailView):
     """Shows users a single appointment"""
@@ -27,18 +38,37 @@ class AppointmentDetailView(DetailView):
     model = Appointment
 
     def get_context_data(self, **kwargs):
-        apartment_complex_name = self.request.GET.get('apartment-complex-name', None)
+
+        # Get customer by id
+        customer_id = self.request.GET.get('c', None)
+        customer = Customer_User.objects.get(id=int(customer_id))
+
         context = super().get_context_data(**kwargs)
-        context['apartment_complex_name'] = apartment_complex_name
+        context['customer'] = customer
         return context
 
     def dispatch(self, request, *args, **kwargs):
         # Check if there is a GET variable if not redirect to the home page
-        apartment_complex_name = request.GET.get('apartment-complex-name', None)
-        if apartment_complex_name == None or apartment_complex_name == '':
-            return redirect('/')
-        else:
-            return super().dispatch(request, *args, **kwargs)
+        try:
+            customer_id = int(request.GET.get('c', None))
+        except ValueError:
+            # Customer id was empty in GET variable
+            raise Http404('Customer user not found!')
+        except TypeError:
+            # No GET variables attached to url
+            raise Http404('Invalid url!')
+
+        if request.user.is_authenticated and request.user.customer_user.id != customer_id:
+            # Do not allow the customer_user (if they are logged in) to make appointments for other customers calendars
+            raise PermissionDenied('Request denied!')
+
+        try:
+            customer_user = Customer_User.objects.get(id=customer_id)
+        except Customer_User.DoesNotExist:
+            # Customer id was in GET variable but NOT found in database
+            raise Http404('Customer user not found!')
+
+        return super().dispatch(request, *args, **kwargs)
 
 class AppointmentCreateView(SuccessMessageMixin, CreateView):
     """Powers a form to create a new appointment"""
@@ -50,11 +80,13 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
     def get_context_data(self, **kwargs):
         from datetime import datetime
 
-        apartment_complex_name = self.request.GET.get('apartment-complex-name', None)
+        customer_id = self.request.GET.get('c', None)
+        customer_user = Customer_User.objects.get(id=int(customer_id))
+
         now = datetime.now()
         appointments = Appointment.objects.filter(
             time__gte=now,
-            apartment_complex_name=apartment_complex_name
+            customer_user=customer_user,
         )
 
         appointments_list = []
@@ -80,26 +112,22 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 
         context = super().get_context_data(**kwargs)
         context['appointments'] = appointments_list
-
-        if apartment_complex_name.lower() == 'hidden villas':
-            context['apartment_complex_name'] = 'Hidden Villas Apartments'
-            context['apartment_complex_address'] = '2929 Panthersville Rd, Decatur, GA 30034'
-            context['apartment_complex_number'] = '786-818-3015'
-            context['apartment_complex_email'] = 'jazmond@bluedrg.com'
-        elif apartment_complex_name.lower() == 'mayfair at lawnwood':
-            context['apartment_complex_name'] = 'Mayfair At Lawnwood'
-            context['apartment_complex_address'] = '1800 Nebraska Avenue, Fort Pierce, FL 34950'
-            context['apartment_complex_number'] = '772-242-3154'
-            context['apartment_complex_email'] = 'contact@mayfairatlawnwood.com'
+        context['apartment_complex_name'] = customer_user.property.name
+        context['apartment_complex_address'] = customer_user.property.address
+        context['apartment_complex_phone_number'] = customer_user.property.phone_number
+        context['apartment_complex_email'] = customer_user.property.email
+        context['days_of_the_week_enabled'] = customer_user.property.days_of_the_week_enabled
+        context['hours_of_the_day_enabled'] = customer_user.property.hours_of_the_day_enabled
 
         return context
 
     def form_valid(self, form):
-        # Set apartment_complex_name and timezone when form has been validated
-        apartment_complex_name = self.request.GET.get('apartment-complex-name', None)
+        # Set customer_id and timezone when form has been validated
+        customer_id = self.request.GET.get('c', None)
+        customer_user = Customer_User.objects.get(id=int(customer_id))
         appointment = form.save(commit=False) # Call form.save(commit=False) to create an object 'in memory' and not in the database
-        appointment.apartment_complex_name = apartment_complex_name
         appointment.time.replace(tzinfo=pytz.timezone('US/Eastern'))
+        appointment.customer_user = customer_user
         appointment.save()
 
         # Schedule reminder for appointment an hour before appointment time
@@ -111,11 +139,26 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         # Check if there is a GET variable if not redirect to the home page
-        apartment_complex_name = request.GET.get('apartment-complex-name', None)
-        if apartment_complex_name == None or apartment_complex_name == '':
-            return redirect('/')
-        else:
-            return super().dispatch(request, *args, **kwargs)
+        try:
+            customer_id = int(request.GET.get('c', None))
+        except ValueError:
+            # Customer id was empty in GET variable
+            raise Http404('Customer user not found!')
+        except TypeError:
+            # No GET variables attached to url
+            raise Http404('Invalid url!')
+
+        if request.user.is_authenticated and request.user.customer_user.id != customer_id:
+            # Do not allow the customer_user (if they are logged in) to make appointments for other customers calendars
+            raise PermissionDenied('Request denied!')
+
+        try:
+            customer_user = Customer_User.objects.get(id=customer_id)
+        except Customer_User.DoesNotExist:
+            # Customer id was in GET variable but NOT found in database
+            raise Http404('Customer user not found!')
+
+        return super().dispatch(request, *args, **kwargs)
 
 class AppointmentUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     """Powers a form to edit existing appointments"""
@@ -154,10 +197,13 @@ class AppointmentUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView)
 
         context = super().get_context_data(**kwargs)
         context['appointments'] = appointments_list
-        context['apartment_complex_name'] = 'Hidden Villas Apartments'
-        context['apartment_complex_address'] = '2929 Panthersville Rd, Decatur, GA 30034'
-        context['apartment_complex_number'] = '786-818-3015'
-        context['apartment_complex_email'] = 'jazmond@bluedrg.com'
+        context['apartment_complex_name'] = customer_user.property.name
+        context['apartment_complex_address'] = customer_user.property.address
+        context['apartment_complex_phone_number'] = customer_user.property.phone_number
+        context['apartment_complex_email'] = customer_user.property.email
+        context['days_of_the_week_enabled'] = customer_user.property.days_of_the_week_enabled
+        context['hours_of_the_day_enabled'] = customer_user.property.hours_of_the_day_enabled
+
         return context
 
 
@@ -217,6 +263,13 @@ def send_notifications(appointment_object, apartment_complex_name, phone_numbers
             [email],
             fail_silently=False,
         )
+def generate_appointment_url(request, customer_user):
+    if request.is_secure():
+        protocol = 'https://'
+    else:
+        protocol = 'http://'
+
+    return protocol + request.get_host() + '/appointments/new?c=' + str(customer_user.id)
 
 @twilio_view
 def incoming_sms(request):
@@ -232,28 +285,19 @@ def incoming_sms(request):
     try:
         # Get appointment time if appointment object found
         appointment_time = arrow.get(appointment.time).to(appointment.time_zone.zone)
-        apartment_complex_name = appointment.apartment_complex_name
+        customer_user = appointment.customer_user
     except AttributeError as e:
         # No appointment object found
         print(e)
 
     # Set property values
     if appointment != None:
-        if apartment_complex_name.lower() == 'hidden villas':
-            get_parameter_value = urllib.parse.quote(apartment_complex_name)
-            address = '2929 Panthersville Rd, Decatur, GA 30034'
-            numbers_to_notify = ('+15613465571', '+17868183015')
-            emails_to_notify = ('andre.mashraghi@gmail.com','rene@bluedrg.com', 'sabrina@bluedrg.com', 'terrell@bluedrg.com', 'jazmond@bluedrg.com')
-            appointment_link = 'https://project-management-novaone.herokuapp.com/appointments/new?apartment-complex-name={get_parameter_value}'.format(get_parameter_value=get_parameter_value)
-            apartment_complex_number = '(786) 818-3015'
-
-        elif apartment_complex_name.lower() == 'mayfair at lawnwood':
-            get_parameter_value = urllib.parse.quote(apartment_complex_name)
-            address = '1800 Nebraska Avenue, Fort Pierce, FL 34950'
-            numbers_to_notify = ('+17722423154', )
-            emails_to_notify = ('contact@mayfairatlawnwood.com', )
-            appointment_link = 'https://project-management-novaone.herokuapp.com/appointments/new?apartment-complex-name={get_parameter_value}'.format(get_parameter_value=get_parameter_value)
-            apartment_complex_number = '(772) 242-3154'
+        address = customer_user.property.address
+        numbers_to_notify = (customer_user.property.phone_number,)
+        emails_to_notify = (customer_user.property.email,)
+        appointment_link = generate_appointment_url(request, customer_user)
+        apartment_complex_number = customer_user.property.phone_number
+        apartment_complex_name = customer_user.property.name
 
     end_of_reponse_message = (
     '\n\nThis is an automated message. Reply "STOP" to end '

@@ -116,7 +116,6 @@ form select {
 }
 
 form input {
-  width: 100%;
   background-color: transparent;
   border: 1px solid #ddd;
   padding: 10px;
@@ -125,6 +124,10 @@ form input {
 
 form input[type="submit"] {
   display: block;
+}
+
+.full-width {
+  width: 100%;
 }
 
 /* Customer Register */
@@ -174,9 +177,7 @@ body.customer-register input::placeholder {
 body.customer-register span.helptext {
     color: #fff;
 }
-form#register-form {
-  color: #fff;
-}
+
 #signup-title {
   text-align: center;
   color: #fff;

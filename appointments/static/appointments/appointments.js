@@ -1,16 +1,23 @@
 var format = "MM/DD/YYYY hh:mm A";
 var appointments = JSON.parse(document.getElementById('appointments_time').textContent);
-var page_url = new URL(document.location.href);
-var apartmentComplexName = page_url.searchParams.get('apartment-complex-name').toLowerCase();
+var days_of_the_week_enabled = JSON.parse(document.getElementById('days_of_the_week_enabled').textContent);
+var enabled_hours = JSON.parse(document.getElementById('hours_of_the_day_enabled').textContent);
 
-if (apartmentComplexName === 'hidden villas') {
-  var enabledHours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
-  var daysOfWeekDisabled = [0];
-}
+function get_days_of_the_week_disabled(days_of_the_week_enabled) {
+  // Gets the days of the week that are disabled from the enabled days array
 
-else if (apartmentComplexName === 'mayfair at lawnwood') {
-  var enabledHours = [12, 13, 14, 15];
-  var daysOfWeekDisabled = [0, 1, 3, 4, 5];
+  days_of_the_week_enabled = days_of_the_week_enabled.map(Number);
+  days_of_the_week_disabled = [];
+  for(var i = 0; i < 7; i++) {
+    // If loop variable IS in the days_of_the_week_enabled array, then do NOT include it in the new array
+    if(!days_of_the_week_enabled.includes(i)) {
+      days_of_the_week_disabled.push(i);
+    }
+
+  }
+  console.log(days_of_the_week_disabled);
+  console.log(days_of_the_week_enabled);
+  return days_of_the_week_disabled;
 }
 
 function create_moments(appointments) {
@@ -39,8 +46,8 @@ $(function() {
       extraFormats: ['YYYY-MM-DD hh:mm:ss A'],
       sideBySide: true,
       inline: true,
-      enabledHours: enabledHours,
-      daysOfWeekDisabled: daysOfWeekDisabled,
+      enabledHours: enabled_hours.map(Number),
+      daysOfWeekDisabled: get_days_of_the_week_disabled(days_of_the_week_enabled),
       stepping: 30,
       disabledTimeIntervals: create_moments(appointments),
       focusOnShow: false,

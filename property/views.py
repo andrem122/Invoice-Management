@@ -14,5 +14,8 @@ class PropertyCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy('appointments:list_appointments')
 
     def form_valid(self, form):
-        form.instance.customer_user = self.request.user.customer_user
+        # Associate the property added with the customer
+        customer_user = self.request.user.customer_user
+        customer_user.property = form.save()
+        customer_user.save()
         return super().form_valid(form)

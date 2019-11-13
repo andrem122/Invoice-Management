@@ -23,7 +23,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'project-management-novaone.herokuapp.com', 'd4cb5fcc.ngrok.io']
+ALLOWED_HOSTS = ['127.0.0.1', 'project-management-novaone.herokuapp.com', ' ad5518e2.ngrok.io']
 
 # Application definition
 
@@ -71,6 +71,7 @@ THIRD_PARTY_APPS = (
     'bootstrap3',
     'bootstrap4',
     'phonenumber_field',
+    'multiselectfield',
 )
 
 INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
