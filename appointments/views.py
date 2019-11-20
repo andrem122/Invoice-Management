@@ -241,7 +241,7 @@ def send_notifications(appointment_object, apartment_complex_name, phone_numbers
     ).format(
         is_confirmed=is_confirmed,
         name=appointment_object.name,
-        phone_number=appointment_object.phone_number,
+        phone_number=appointment_object.phone_number.as_e164,
         time=appointment_time.format('MM/DD/YYYY hh:mm A'),
         unit_type=appointment_object.unit_type,
     )
