@@ -259,7 +259,7 @@ def send_notifications(appointment_object, apartment_complex_name, phone_numbers
         send_mail(
             subject,
             message,
-            'no-reply@novaonesoftware.com',
+            settings.DEFAULT_FROM_EMAIL,
             [email],
             fail_silently=False,
         )
