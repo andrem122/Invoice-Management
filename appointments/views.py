@@ -250,7 +250,7 @@ def send_notifications(appointment_object, apartment_complex_name, phone_numbers
     for phone_number in phone_numbers:
         client.messages.create(
             body=message,
-            to=phone_number,
+            to=phone_number.as_e164,
             from_=settings.TWILIO_NUMBER,
         )
 
