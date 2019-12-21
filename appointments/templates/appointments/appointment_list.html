@@ -1,72 +1,126 @@
 {% extends "appointments/base_appointment.html" %}
+{% load static %}
 
 {% block title %}All Appointments{% endblock title %}
 
+{% block scripts %}
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'appointments/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'appointments/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'appointments/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'appointments/vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'appointments/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'appointments/css/table.css' %}">
+<!--===============================================================================================-->
+	<script defer src="{% static 'appointments/vendor/bootstrap/js/popper.js' %}"></script>
+<!--===============================================================================================-->
+	<script defer src="{% static 'appointments/vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script defer src="{% static 'appointments/js/main.js' %}"></script>
+{% endblock scripts %}
+
 {% block content %}
   <div class="row">
-    <div class="col-lg-9">
+    <div class="limiter">
+			<div class="text-center title-with-paragraph">
+				<h1>Appointments</h1>
+				<p>View showing appointments for your property.</p>
+			</div>
+      <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table">
 
-      <div class="page-header">
-        <h1>Appointments</h1>
+              <div class="table-row header">
+                <div class="cell">
+                  Name
+                </div>
+                <div class="cell">
+                  Phone Number
+                </div>
+                <div class="cell">
+                  Time
+                </div>
+                <div class="cell">
+                  Created
+                </div>
+                <div class="cell">
+                  Status
+                </div>
+								<div class="cell">
+                  Delete
+                </div>
+              </div>
+
+              {% for appointment in object_list %}
+              <div class="table-row">
+                <div class="cell" data-title="Full Name">
+                  <a href="{{ appointment.get_absolute_url }}">{{ appointment.name }}</a>
+                </div>
+                <div class="cell" data-title="Phone Number">
+                  <a href="tel:{{ appointment.phone_number }}">{{ appointment.phone_number }}</a>
+                </div>
+                <div class="cell" data-title="Time">
+                  {{ appointment.time }}
+                </div>
+                <div class="cell" data-title="Created">
+                  {{ appointment.created }}
+                </div>
+                <div class="cell" data-title="Status">
+									{% if appointment.confirmed == False %}
+										Not Confirmed
+									{% else %}
+										Confirmed
+									{% endif %}
+                </div>
+                <div class="cell" data-title="Actions">
+                  <a class="delete-appointment-button-icon" href="{% url 'appointments:delete_appointment' appointment.pk %}">
+										<i class="fa fa-trash" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+              {% endfor %}
+
+            </div>
+        </div>
+
       </div>
+			<div class="container">
+				<div class="center-children-and-stack">
+					<a class="standard-btn" href="{% url 'appointments:new_appointment' %}?c={{ user.customer_user.id }}">Create Appointment</a>
 
-        {% if not object_list %}
-        <p><strong>No upcoming appointments.</strong> Why not <a href="{% url 'appointments:new_appointment' %}?c={{ user.customer_user.id }}">schedule one?</a>
-        {% endif %}
-
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Phone number</th>
-            <th>Appointment Start Time</th>
-            <th>Apartment Complex</th>
-            <th>Confirmed?</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for appointment in object_list %}
-            <tr>
-              <td><a href="{{ appointment.get_absolute_url }}">{{ appointment.pk }}</a></td>
-              <td>{{ appointment.name }}</td>
-              <td>{{ appointment.phone_number }}</td>
-              <td>{{ appointment.time }}</td>
-              <td>{{ appointment.apartment_complex_name }}</td>
-              <td>{{ appointment.confirmed }}</td>
-              <td>
-                <a class="btn btn-default btn-xs" href="{% url 'appointments:edit_appointment' appointment.pk %}">Edit</a>
-                <a class="btn btn-xs btn-danger" href="{% url 'appointments:delete_appointment' appointment.pk %}">Delete</a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
-      <a class="btn btn-primary" href="{% url 'appointments:new_appointment' %}?c={{ user.customer_user.id }}">New</a>
+					<!-- Start Pagination -->
+					{% if is_paginated %}
+					<ul class="pagination collapse-fix">
+						{% if page_obj.has_previous %}
+							<li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+						{% else %}
+							<li class="disabled"><span>&laquo;</span></li>
+						{% endif %}
+						{% for i in paginator.page_range %}
+							{% if page_obj.number == i %}
+								<li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+							{% else %}
+								<li><a href="?page={{ i }}">{{ i }}</a></li>
+							{% endif %}
+						{% endfor %}
+						{% if page_obj.has_next %}
+							<li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+						{% else %}
+							<li class="disabled"><span>&raquo;</span></li>
+						{% endif %}
+					</ul>
+					{% endif %}
+					<!-- End Pagination -->
+				</div>
+			</div>
     </div>
   </div>
-
-  {% if is_paginated %}
-  <ul class="pagination">
-    {% if page_obj.has_previous %}
-      <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
-    {% endif %}
-    {% for i in paginator.page_range %}
-      {% if page_obj.number == i %}
-        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if page_obj.has_next %}
-      <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-  </ul>
-  {% endif %}
 {% endblock %}

@@ -8,7 +8,7 @@ class Contact_Sales(forms.Form):
     first_name = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
     last_name = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
     email = forms.CharField(label='', max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Email'}))
-    phone_number = forms.CharField(label='', max_length=100, widget=forms.TextInput(attrs={'placeholder': '201-327-3282'}))
+    phone_number = forms.CharField(label='', max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Phone Number'}))
 
 class Contact_Support(forms.Form):
     """

@@ -10,7 +10,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from .forms import AppointmentFormCreate, AppointmentFormUpdate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 import arrow, pytz, urllib.parse
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
@@ -171,8 +171,15 @@ class AppointmentUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView)
     def get_context_data(self, **kwargs):
         from datetime import datetime
 
+        # Get single appointment by id
+        appointment = get_object_or_404(Appointment, pk=self.kwargs['pk'])
+        customer_user = appointment.customer_user
+
         now = datetime.now()
-        appointments = Appointment.objects.filter(time__gte=now)
+        appointments = Appointment.objects.filter(
+            time__gte=now,
+            customer_user=customer_user,
+        )
 
         appointments_list = []
         for count, appointment in enumerate(appointments):
@@ -205,7 +212,6 @@ class AppointmentUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView)
         context['hours_of_the_day_enabled'] = customer_user.property.hours_of_the_day_enabled
 
         return context
-
 
 class AppointmentDeleteView(DeleteView):
     """Prompts users to confirm deletion of an appointment"""

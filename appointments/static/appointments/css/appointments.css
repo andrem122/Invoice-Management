@@ -1,0 +1,104 @@
+/* Start Buttons */
+.standard-btn {
+  background-color: #536cdb;
+  border-radius: 33px;
+  padding: 16px 30px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-align: center;
+  color: #fff;
+  border: 2px solid #536cdb;
+}
+
+.standard-btn:hover {
+  background-color: transparent;
+  color: #536cdb;
+  text-decoration: none;
+}
+
+/* End Buttons */
+
+/* Start Forms */
+form input, form label {
+  display: block;
+  width: 100%;
+}
+
+form input:not([type="submit"]) {
+  margin-bottom: 20px;
+  border-radius: 30px;
+  padding: 12px 25px;
+  border: 1px solid #ccc;
+}
+
+form input[type="submit"] {
+  cursor: pointer;
+}
+/* End Forms */
+
+/* Start Appointment List Page */
+body.appointments-list {
+  background: #c4d3f6;
+}
+
+div.center-children-and-stack > * {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+  max-width: 300px;
+  display: block;
+  text-align: center;
+}
+
+div.center-children-and-stack > .pagination li {
+  display: inline-block;
+}
+
+.title-with-paragraph > h1, .title-with-paragraph > h2, .title-with-paragraph > h3,
+.title-with-paragraph > h4, .title-with-paragraph > h5, .title-with-paragraph > h6 {
+  margin-bottom: 20px;
+}
+
+.delete-appointment-button-icon {
+  font-size: 21px;
+  text-align: center;
+  display: inline-block;
+  padding: 10px;
+}
+/* End Appointment List Page */
+
+/* Start Navigation */
+.navbar .navbar-brand {
+  padding: 0;
+}
+
+@media (max-width: 767px) {
+  .container > .navbar-collapse {
+    clear: both;
+  }
+
+  .navbar .navbar-toggle {
+    margin-bottom: 20px;
+    margin-top: 16px;
+  }
+
+  .navbar .navbar-brand {
+    margin-top: 7px;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar.navbar-default.navbar-static-top {
+    padding: 8px 0;
+  }
+}
+/* End Navigation */
+
+/* Start Footer */
+footer {
+  text-align: center;
+  margin: 30px 0;
+}
+/* End Footer */

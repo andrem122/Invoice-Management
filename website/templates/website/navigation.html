@@ -3,7 +3,7 @@
 <nav id="navbar" class="navbar navbar-expand-lg navbar-light fixed-top">
   <div class="container-fluid max-width-container">
     <a class="navbar-brand" href="/">
-      <img src="{% static 'website/images/logo-black.png' %}" alt="Nova One Software">
+      <img src="{% static 'website/images/logo-black.png' %}" alt="NovaOne Software">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -14,14 +14,14 @@
         <li class="nav-item active">
           <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="{% url 'website:product' %}">Product</a>
+        </li> -->
         <li class="nav-item">
-          <a class="nav-link" href="/product">Product</a>
+          <a class="nav-link" href="{% url 'website:contact_sales' %}">Demo</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/accounts/login">Log In</a>
-        </li>
-        <li class="nav-item">
-          <a class="standard-btn" href="/contact-sales">See Demo</a>
+          <a class="standard-btn" href="{% url 'customer_register:customer-register' %}">Try Free</a>
         </li>
       </ul>
     </div>

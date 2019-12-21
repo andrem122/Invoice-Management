@@ -13,18 +13,18 @@
 
         <div class="row">
           <div class="col-lg-6 title-p-cta">
-            <h1>The Easiest, Fastest Way to Manage Your Rehab Projects</h1>
+            <h1>The Easiest, Fastest Way to Manage Your Rental Leads</h1>
             <p class="description-text">
-              Painlessly keep track of your budget, easily manage invoices, and
-              effortlessly stay on top of rehab projects.
+              Automated lead contact, lead qualification, and appointment scheduling.
+              Stress-free, automated lead tracking.
             </p>
-            <a href="/customer-register" class="standard-btn">Try It For Free</a>
+            <a href="{% url 'customer_register:customer-register' %}" class="standard-btn">Try It For Free</a>
             <div class="description">
               <p>Already on Nova One? <a href="/accounts/login">Log in</a></p>
             </div>
           </div>
           <figure class="col-lg-6">
-            <img src="{% static 'website/images/construction-workers.jpg' %}" alt="Construction Workers">
+            <img src="{% static 'website/images/house-for-rent.png' %}" alt="Construction Workers">
           </figure>
         </div>
 
@@ -45,16 +45,16 @@
           <div class="counter col-md-4">
               <span class="text-above">Over</span>
               <div class="number-wrap">
-                <span class="number" data-count-params='{"num_begin": 0, "num_end":6,"duration":1500}'>6</span>
+                <span class="number" data-count-params='{"num_begin": 0, "num_end":500,"duration":400}'>500</span><span class="number-suffix">+</span>
               </div>
-              <span class="text-below">Million Dollars Tracked</span>
+              <span class="text-below">Rental Properties Tracked</span>
           </div>
           <div class="counter col-md-4">
               <span class="text-above">More Than</span>
               <div class="number-wrap">
-                <span class="number" data-count-params='{"num_begin": 0, "num_end":30,"duration":1500}'>30</span>
+                <span class="number" data-count-params='{"num_begin": 0, "num_end":400,"duration":800}'>400</span><span class="number-suffix">+</span>
               </div>
-              <span class="text-below">Projects Tracked</span>
+              <span class="text-below">Leads Qualified</span>
           </div>
         </div>
       </div>
@@ -66,17 +66,17 @@
 
           <div class="col-12">
             <h1 class="p1">
-              "Nova One has helped us stay on top of our budget, allowing us to ensure a profit."
+              "NovaOne has expedited our lead process, allowing us to rent to leads before our competitors do."
             </h1>
             <p class="ps-text">
               This is a comment from one of our customers, which we hear <i>a lot</i>.
             </p>
             <p class="description-text">
-              Your business runs on time, and every minute counts. Nova One helps you
+              Your rental business runs on time, and every minute counts. NovaOne helps you
               stay ahead of the curve by automating tasks.
             </p>
             <p>
-              <a href="/product">Product Overview <i class="fas fa-arrow-right"></i></a>
+              <a href="{% url 'customer_register:customer-register' %}" class="standard-btn">Join For Free</a>
             </p>
           </div>
 
@@ -89,7 +89,7 @@
                 </div>
                 <h4>Manage</h4>
                 <p>
-                  Easily keep track of jobs and payments
+                  Hands-off tracking of incoming leads
                 </p>
               </div>
 
@@ -99,7 +99,7 @@
                 </div>
                 <h4>Alerts</h4>
                 <p>
-                  Get SMS alerts to effortlessly stay on top of your projects
+                  Recieve SMS and email alerts when qualified leads make appointments
                 </p>
               </div>
 
@@ -107,9 +107,9 @@
                 <div class="icon">
                   <img src="{% static 'website/images/organize.png' %}" alt="Organize Diagram">
                 </div>
-                <h4>Organize</h4>
+                <h4>24/7 Automated Contact</h4>
                 <p>
-                  Painlessly have all your expenses, jobs, and payments organized by Nova One
+                  Let NovaOne effortlessly contact and qualify leads for you 24/7
                 </p>
               </div>
 
@@ -117,10 +117,10 @@
                 <div class="icon">
                   <img src="{% static 'website/images/house.png' %}" alt="House">
                 </div>
-                <h4>Projects</h4>
+                <h4>Automated Scheduling</h4>
                 <p>
-                  Frustration-free project tracking: track budgets, jobs, and expenses
-                  for each project
+                  Frustration-free appointment scheduling: set your showing
+                  schedule and NovaOne does the rest
                 </p>
               </div>
 
@@ -136,13 +136,15 @@
         <div class="row">
 
           <div class="col-12 home-solutions-intro">
-            <h2>
-              See How Nova One Can Help You
-            </h2>
-            <p class="description-text">
-              Watch the video below to see how Nova One
-              can help you easily stay on top of your projects.
-            </p>
+            <div class="page-section-title-with-text">
+              <h2>
+                See How NovaOne Can Help You
+              </h2>
+              <p class="description-text">
+                Watch the video below to see how NovaOne
+                can help you easily stay on top of your projects.
+              </p>
+            </div>
           </div>
 
           <div class="home-solutions-columns">
@@ -157,46 +159,20 @@
               <div class="col-lg-5 home-solutions-items">
                 <div class="row">
                   <div class="col-md-4 col-lg-12 item-with-title-p">
-                    <h4>Organize Projects</h4>
-                    <p>Painlessly keep track of all your projects with automation.</p>
+                    <h4><i class="fas fa-rocket"></i>Rent Faster</h4>
+                    <p>NovaOne works all day 7 days a week to make sure your property gets rented.</p>
                   </div>
                   <div class="col-md-4 col-lg-12 item-with-title-p">
-                    <h4>Track Expenses</h4>
-                    <p>Easily track expenses without any hassles or frustration.</p>
+                    <h4><i class="fas fa-robot"></i>Automate Qualification</h4>
+                    <p>Painlessly pre-qualify tenants automatically with NovaOne.</p>
                   </div>
                   <div class="col-md-4 col-lg-12 item-with-title-p">
-                    <h4>Budget Tracking</h4>
-                    <p>Effortlessly track how much you are spending on each project.</p>
+                    <h4><i class="far fa-calendar-alt"></i>Reduce No-Shows</h4>
+                    <p>Effortlessly reduce appointment no-shows with NovaOne.</p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="home-team page-section">
-      <div class="container-fluid max-width-container">
-        <div class="row">
-          <div class="col-md-7 home-team-content">
-            <h2>More Than Just A Software</h3>
-            <p class="description-text">
-              You're in a good place. You really are.
-              From day one of your sign up, you will
-              get unparalleled support from our team
-              of solution advisors. Our solution advisors
-              aren't just software nerds. They are here
-              to help you solve your problems and make life
-              easier. Whether you need help learning how to
-              use the product or just a person to lend an ear, our
-              solution advisors are on call waiting for you.
-            </p>
-          </div>
-          <div class="col-md-5 home-team-image">
-            <img src="{% static 'website/images/andre.jpg' %}" alt="Andre Mashraghi">
-            <h3>Andre</h3>
-            <p>Solution Advisor</p>
           </div>
         </div>
       </div>
@@ -211,7 +187,7 @@
             <p class="description-text">
               Sign up for free today and get all features, free updates, and unparalleled support.
             </p>
-            <a href="/customer-register" class="standard-btn">Try It For Free</a>
+            <a href="{% url 'customer_register:customer-register' %}" class="standard-btn">Start For Free</a>
           </div>
         </div>
       </div>
