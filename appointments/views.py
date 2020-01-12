@@ -25,7 +25,9 @@ class AppointmentListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # Filter objects displayed by user
-        return Appointment.objects.filter(customer_user=self.request.user.customer_user)
+        return Appointment.objects.filter(
+            customer_user=self.request.user.customer_user
+        ).order_by('-time')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
