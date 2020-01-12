@@ -63,6 +63,7 @@ LOCAL_APPS = (
     'addjob.apps.AddjobConfig',
     'csv_generator.apps.CSVGeneratorConfig',
     'payment_requests.apps.PaymentRequestsConfig',
+    'tenants.apps.TenantsConfig',
 )
 
 THIRD_PARTY_APPS = (
