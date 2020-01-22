@@ -1,0 +1,56 @@
+{# Edit Project #}
+<form id="edit_project_form_{{ project.id }}" class="edit_project_form edit-item-form popup" action="{% url 'projects:projects' %}" method="post">
+  <a class="exit-on-click">
+     <i class="fas fa-times popup-remove-trigger"></i>
+  </a>
+  <h2>Edit Project</h2>
+  {% csrf_token %}
+
+  {% if edit_project_form.errors %}
+  <div class="form-messages">
+    <p>Please try again.</p>
+  </div>
+  {% endif %}
+
+  {# Address #}
+  <div class="input-label-wrap">
+    <div class="label-wrap">{{ edit_project_form.address.label_tag }}</div>
+    <div class="input-wrap">
+      <i class="fas fa-home"></i>
+      <input type="text" name="address" maxlength="250" required="" id="id_address" value="{{ project.address }}">
+    </div>
+  </div>
+
+  {# Purchase Price #}
+  <div class="input-label-wrap">
+    <div class="label-wrap">{{ edit_project_form.purchase_price.label_tag }}</div>
+    <div class="input-wrap">
+      <i class="fas fa-dollar-sign"></i>
+      <input type="number" name="purchase_price" step="0.01" required="" id="id_purchase_price" value="{{ project.purchase_price }}">
+    </div>
+  </div>
+
+  {# Profit #}
+  <div class="input-label-wrap">
+    <div class="label-wrap">{{ edit_project_form.profit.label_tag }}</div>
+    <div class="input-wrap">
+      <i class="fas fa-dollar-sign"></i>
+      <input type="number" name="profit" step="0.01" required="" id="id_profit" value="{{ project.profit }}">
+    </div>
+  </div>
+
+  {# After Repair Value #}
+  <div class="input-label-wrap">
+    <div class="label-wrap">{{ edit_project_form.after_repair_value.label_tag }}</div>
+    <div class="input-wrap">
+      <i class="fas fa-dollar-sign"></i>
+      <input type="number" name="after_repair_value" step="0.01" required="" id="id_after_repair_value" value="{{ project.after_repair_value }}">
+    </div>
+  </div>
+
+  {# Hidden Inputs #}
+  <input type="hidden" name="project_id" value="{{ project.id }}">
+  {{ edit_project_form.action }}
+
+  <input class="form-submit-btn edit-item-submit-btn" form="edit_project_form_{{ project.id }}" name="edit_project" type="submit" value="Save">
+</form>

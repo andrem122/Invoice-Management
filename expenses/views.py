@@ -101,7 +101,6 @@ def edit_expense(request, customer):
         new_description = edit_expense_form.cleaned_data.get('description', None)
         new_memo = edit_expense_form.cleaned_data.get('memo', None)
         document_link = edit_expense_form.cleaned_data.get('document_link', None)
-        print(edit_expense_form.cleaned_data)
 
         #update the expense instance based on which fields were submitted in the form
         if new_house != None:

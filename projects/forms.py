@@ -22,3 +22,17 @@ class Archive_House(ModelForm, forms.Form):
                    'after_repair_value',
                    'house_list_file',
                   ]
+
+class Edit_Project(ModelForm, forms.Form):
+    """
+    Allows users to edit an expense instance
+    """
+
+    class Meta:
+        model = House
+        fields = [
+            'address',
+            'purchase_price',
+            'profit',
+            'after_repair_value',
+        ]

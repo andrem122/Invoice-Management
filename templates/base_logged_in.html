@@ -36,7 +36,7 @@
     <script defer src="{% static 'ajax_search.js' %}?v=1.3" type="text/javascript"></script>
     {% endif %}
 
-    {% if request.path == '/jobs-admin/' or request.path == '/payments/' or request.path == '/search/' %}
+    {% if request.path == '/jobs-admin/' or request.path == '/payments/' or request.path == '/search/' or request.path == '/projects/' %}
     <script defer src="{% static 'search_submit/search_submit.js' %}?v=1.3"></script>
     <script defer src="{% static 'ajax_form_submit.js' %}?v=1.11" type="text/javascript"></script>
     {% endif %}

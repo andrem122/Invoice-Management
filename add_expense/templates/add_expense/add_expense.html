@@ -42,7 +42,9 @@
 
       <div class="input-label-wrap">
         <div class="label-wrap">{{ add_expense_form.amount.label_tag }}</div>
-        <div class="input-wrap"><i class="fas fa-dollar-sign"></i>{{ add_expense_form.amount }}</div>
+        <div class="input-wrap"><i class="fas fa-dollar-sign"></i>
+          <input type="number" name="amount" value="" step="0.01" required="" id="id_amount">
+        </div>
       </div>
 
       <div class="input-label-wrap">

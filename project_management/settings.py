@@ -314,6 +314,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Reminder time: how early text messages are sent in advance of appointments
 REMINDER_TIME = 30  # minutes
 
+# Security enforce https requests
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+
 # Configure Django App for Heroku.
 import django_heroku
 django_heroku.settings(locals(), logging=False, staticfiles=False)

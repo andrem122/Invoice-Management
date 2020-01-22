@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function(e){
    * @param {string} element_to_popup_class The class of the element to popup into view.
    * @param {array} trigger_button_classes The classes of the elements that will be clicked on or touched.
    * @param {object} overlay_element The overlay (background) element to popup into view.
+   * @param {string} parent_to_fetch_class The class of element containing the popup forms.
    * @return {null} Nothing returned.
    */
 
@@ -148,6 +149,6 @@ document.addEventListener('DOMContentLoaded', function(e){
   var overlay = document.getElementById('overlay_id');
   trigger_within_popup('edit-item-form', ['edit-item-option-m'], overlay, '.popup-forms');
   item_options_popup('mobile-option-icons', ['item-options-toggle-mobile-btn'], overlay, '.item-container');
-  item_options_popup('edit-item-form', ['edit-job-option', 'edit-expense-option'], overlay, '.item-container');
+  item_options_popup('edit-item-form', ['edit-job-option', 'edit-expense-option', 'edit-project-option'], overlay, '.item-container');
 
 });

@@ -22,7 +22,7 @@
   {% endif %}
 
   {% for project in projects %}
-
+  
   {% ifchanged %}
   <div class="item-headings-wrapper container-fluid">
     <ul class="item-headings row">
@@ -55,7 +55,7 @@
 
     </div>
     <div class="popup-forms">
-
+      {% include 'includes/forms/edit_project.html' %}
       {# Mobile Option Buttons #}
       <ul class="mobile-option-icons popup animated bounceInUp">
 
@@ -69,6 +69,9 @@
               <span>Unarchive</span><i class="fas fa-undo"></i>
           </button>
           {% endif %}
+          <button form="edit_project_form_{{ project.id }}" class="edit-item-option-m mobile-option-item">
+              <span>Edit Project</span><i class="fas fa-undo"></i>
+          </button>
         </li>
 
       </ul>
@@ -146,19 +149,18 @@
                 <i class="fas fa-ellipsis-v"></i>
               </a>
 
-              {% if project.archived == False %}
               <div class="dropdown-menu">
+              {% if project.archived == False %}
                 <button type="submit" form="narchive_house_form_{{ project.id }}" class="dropdown-item archive-house-option">
                   Archive
                 </button>
-              </div>
               {% else %}
-              <div class="dropdown-menu">
                 <button type="submit" form="archive_house_form_{{ project.id }}" class="dropdown-item archive-house-option">
                     Unarchive
                 </button>
-              </div>
               {% endif %}
+              <button class="dropdown-item edit-project-option project-option edit-item-popup">Edit Project</button>
+              </div>
 
             </div>
 

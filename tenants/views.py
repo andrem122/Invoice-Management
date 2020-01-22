@@ -9,7 +9,9 @@ class TenantListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # Filter objects displayed by user
-        return Tenant.objects.filter(customer_user=self.request.user.customer_user)
+        return Tenant.objects.filter(
+            customer_user=self.request.user.customer_user,
+        ).order_by('-name')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
