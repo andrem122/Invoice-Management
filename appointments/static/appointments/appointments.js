@@ -49,7 +49,7 @@ $(function() {
       inline: true,
       enabledHours: enabled_hours.map(Number),
       daysOfWeekDisabled: get_days_of_the_week_disabled(days_of_the_week_enabled),
-      stepping: 1,
+      stepping: 30,
       disabledTimeIntervals: create_moments(appointments),
       focusOnShow: false,
       showClose: true,
