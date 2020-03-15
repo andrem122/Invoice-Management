@@ -4,21 +4,23 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
 from utils.utils import get_succeeded
-from property.models import Property
+from property.models import Company
 
 class Customer_User(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_paying = models.BooleanField(default=False, editable=False)
     wants_sms = models.BooleanField(default=False)
     phone_number = PhoneNumberField(null=True, blank=False, unique=True)
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
 
-    house_flipper = 'House Flipper'
-    property_manager = 'Property Manager'
+    house_flipper    = 'HF'
+    property_manager = 'PM'
+    medical_worker   = 'MW'
 
     customer_types = (
         (house_flipper, 'House Flipper'),
         (property_manager, 'Property Manager'),
+        (medical_worker, 'Medical Worker'),
     )
 
     customer_type = models.CharField(max_length=100, choices=customer_types, default=house_flipper)

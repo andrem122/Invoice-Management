@@ -30,10 +30,19 @@
 {% block content %}
   <div class="row">
     <div class="limiter">
+
 			<div class="text-center title-with-paragraph">
+				{% if object_list %}
 				<h1>Appointments</h1>
-				<p>View showing appointments for your property.</p>
+				<p>View showing appointments for your company.</p>
+				{% else %}
+				<h1>No Appointments</h1>
+				<p>There are currently no appointments.</p>
+				{% endif %}
 			</div>
+
+			{# Appointment Table #}
+			{% if object_list %}
       <div class="container-table100">
         <div class="wrap-table100">
             <div class="table">
@@ -90,11 +99,12 @@
 
             </div>
         </div>
-
       </div>
+			{% endif %}
+
 			<div class="container">
 				<div class="center-children-and-stack">
-					<a class="standard-btn" href="{% url 'appointments:new_appointment' %}?c={{ user.customer_user.id }}">Create Appointment</a>
+					<a class="standard-btn create-appointment-btn" href="{% url 'appointments:new_appointment' %}?c={{ user.customer_user.id }}">Create Appointment<i class="fas fa-pencil-alt"></i></a>
 
 					<!-- Start Pagination -->
 					{% if is_paginated %}

@@ -23,7 +23,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'project-management-novaone.herokuapp.com', ' ad5518e2.ngrok.io']
+ALLOWED_HOSTS = ['127.0.0.1', 'project-management-novaone.herokuapp.com']
 
 # Application definition
 
@@ -277,18 +277,8 @@ STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
 
 #Twilio
-# TWILIO_ACCOUNT_SID = os.environ.get('TEST_TWILIO_ACCOUNT_SID')
-# TWILIO_AUTH_TOKEN = os.environ.get('TEST_TWILIO_AUTH_TOKEN')
-# if DEBUG == False:
-#     TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-#     TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-
-# TWILIO_NUMBER = '+15005550006'
-# if DEBUG == False:
-#     TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
 
 TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
 
@@ -315,8 +305,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 REMINDER_TIME = 30  # minutes
 
 # Security enforce https requests
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+if DEBUG == False:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+else:
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False
 
 # Configure Django App for Heroku.
 import django_heroku

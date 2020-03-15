@@ -8,16 +8,14 @@ from django_twilio.decorators import twilio_view
 from twilio.rest import Client
 from django.conf import settings
 from django.core.mail import send_mail
-from .forms import AppointmentFormCreate, AppointmentFormUpdate
+from .forms import get_create_form, AppointmentFormUpdate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, get_object_or_404
-import arrow, pytz, urllib.parse
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
-
-from .models import Appointment
+from .models import Appointment_Real_Estate, Appointment_Base, Appointment_Medical
 from customer_register.models import Customer_User
-
+import arrow, pytz
 
 class AppointmentListView(LoginRequiredMixin, ListView):
     """Shows users a list of appointments"""
@@ -25,7 +23,7 @@ class AppointmentListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # Filter objects displayed by user
-        return Appointment.objects.filter(
+        return Appointment_Base.objects.filter(
             customer_user=self.request.user.customer_user
         ).order_by('-time')
 
@@ -37,16 +35,20 @@ class AppointmentListView(LoginRequiredMixin, ListView):
 class AppointmentDetailView(DetailView):
     """Shows users a single appointment"""
 
-    model = Appointment
+    model = Appointment_Base
 
     def get_context_data(self, **kwargs):
-
-        # Get customer by id
-        customer_id = self.request.GET.get('c', None)
-        customer = Customer_User.objects.get(id=int(customer_id))
-
         context = super().get_context_data(**kwargs)
-        context['customer'] = customer
+
+        customer_user = kwargs['object'].customer_user
+        if customer_user.customer_type == 'MW': # For medical field
+            appointment_medical = Appointment_Medical.objects.get(pk=kwargs['object'].pk)
+            context['appointment_medical'] = appointment_medical
+        elif customer_user.customer_type == 'PM': # For real estate
+            appointment_real_estate = Appointment_Real_Estate.objects.get(pk=kwargs['object'].pk)
+            context['appointment_real_estate'] = appointment_real_estate
+
+        context['customer_user'] = customer_user
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -60,9 +62,10 @@ class AppointmentDetailView(DetailView):
             # No GET variables attached to url
             raise Http404('Invalid url!')
 
-        if request.user.is_authenticated and request.user.customer_user.id != customer_id:
-            # Do not allow the customer_user (if they are logged in) to make appointments for other customers calendars
-            raise PermissionDenied('Request denied!')
+        if not request.user.is_superuser: # Will raise 'User object has no customer_user object if superuser'
+            if request.user.is_authenticated and request.user.customer_user.id != customer_id:
+                # Do not allow the customer_user (if they are logged in) to make appointments for other customers calendars
+                raise PermissionDenied('Request denied!')
 
         try:
             customer_user = Customer_User.objects.get(id=customer_id)
@@ -75,9 +78,28 @@ class AppointmentDetailView(DetailView):
 class AppointmentCreateView(SuccessMessageMixin, CreateView):
     """Powers a form to create a new appointment"""
 
-    form_class = AppointmentFormCreate
     template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully created.'
+
+
+    def get_form_class(self):
+        """Get the form class and fields based on the customer type"""
+
+        # Get customer from url
+        customer_id = self.request.GET.get('c', None)
+        customer_user = Customer_User.objects.get(id=int(customer_id))
+        customer_type = customer_user.customer_type
+
+        model = Appointment_Base
+        if customer_type == 'MW': # medical worker customers
+            model = Appointment_Medical
+            fields = ['time', 'name', 'phone_number', 'address', 'email', 'date_of_birth', 'gender', 'test_type']
+
+        elif customer_type == 'PM':
+            model = Appointment_Real_Estate
+            fields = ['time', 'name', 'phone_number', 'unit_type']
+
+        return get_create_form(model, fields)
 
     def get_context_data(self, **kwargs):
         from datetime import datetime
@@ -86,7 +108,7 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         customer_user = Customer_User.objects.get(id=int(customer_id))
 
         now = datetime.now()
-        appointments = Appointment.objects.filter(
+        appointments = Appointment_Base.objects.filter(
             time__gte=now,
             customer_user=customer_user,
         )
@@ -114,12 +136,11 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 
         context = super().get_context_data(**kwargs)
         context['appointments'] = appointments_list
-        context['apartment_complex_name'] = customer_user.property.name
-        context['apartment_complex_address'] = customer_user.property.address
-        context['apartment_complex_phone_number'] = customer_user.property.phone_number
-        context['apartment_complex_email'] = customer_user.property.email
-        context['days_of_the_week_enabled'] = customer_user.property.days_of_the_week_enabled
-        context['hours_of_the_day_enabled'] = customer_user.property.hours_of_the_day_enabled
+        context['company_name'] = customer_user.company.name
+        context['company_phone_number'] = customer_user.company.phone_number
+        context['company_email'] = customer_user.company.email
+        context['days_of_the_week_enabled'] = customer_user.company.days_of_the_week_enabled
+        context['hours_of_the_day_enabled'] = customer_user.company.hours_of_the_day_enabled
 
         return context
 
@@ -132,8 +153,8 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         appointment.customer_user = customer_user
         appointment.save()
 
-        # Schedule reminder for appointment an hour before appointment time
-        appointment_task_id = appointment.schedule_reminder('send_appointment_reminder', -60)
+        # Schedule reminder for appointment an two hours before appointment time
+        appointment_task_id = appointment.schedule_reminder('send_appointment_reminder', -120)
         appointment.appointment_task_id = appointment_task_id #
         appointment.save()
 
@@ -150,9 +171,10 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
             # No GET variables attached to url
             raise Http404('Invalid url!')
 
-        if request.user.is_authenticated and request.user.customer_user.id != customer_id:
-            # Do not allow the customer_user (if they are logged in) to make appointments for other customers calendars
-            raise PermissionDenied('Request denied!')
+        if not request.user.is_superuser: # Will raise 'User object has no customer_user object if superuser'
+            if request.user.is_authenticated and request.user.customer_user.id != customer_id:
+                # Do not allow the customer_user (if they are logged in) to make appointments for other customers calendars
+                raise PermissionDenied('Request denied!')
 
         try:
             customer_user = Customer_User.objects.get(id=customer_id)
@@ -165,7 +187,7 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 class AppointmentUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     """Powers a form to edit existing appointments"""
 
-    model = Appointment
+    model = Appointment_Real_Estate
     form_class = AppointmentFormUpdate
     template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully updated.'
@@ -206,22 +228,34 @@ class AppointmentUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView)
 
         context = super().get_context_data(**kwargs)
         context['appointments'] = appointments_list
-        context['apartment_complex_name'] = customer_user.property.name
-        context['apartment_complex_address'] = customer_user.property.address
-        context['apartment_complex_phone_number'] = customer_user.property.phone_number
-        context['apartment_complex_email'] = customer_user.property.email
-        context['days_of_the_week_enabled'] = customer_user.property.days_of_the_week_enabled
-        context['hours_of_the_day_enabled'] = customer_user.property.hours_of_the_day_enabled
+        context['company_name'] = customer_user.company.name
+        context['company_address'] = customer_user.company.address
+        context['company_phone_number'] = customer_user.company.phone_number
+        context['company_email'] = customer_user.company.email
+        context['days_of_the_week_enabled'] = customer_user.company.days_of_the_week_enabled
+        context['hours_of_the_day_enabled'] = customer_user.company.hours_of_the_day_enabled
 
         return context
 
 class AppointmentDeleteView(DeleteView):
     """Prompts users to confirm deletion of an appointment"""
 
-    model = Appointment
-    success_url = reverse_lazy('appointments:list_appointments')
+    model = Appointment_Base
 
-def send_notifications(appointment_object, apartment_complex_name, phone_numbers, emails,):
+    def get_success_url(self):
+        """Redirect user on successful deletion based on whether the user is anonymous or authenticated"""
+
+        # User is authenticated and is NOT a super user
+        if self.request.user.is_authenticated and not self.request.user.is_superuser:
+            return reverse_lazy('appointments:list_appointments')
+
+        # User is anonymous
+        appointment = Appointment_Base.objects.get(pk=self.kwargs['pk'])
+        customer_user = appointment.customer_user
+        return reverse_lazy('appointments:new_appointment') + '?c=' + str(customer_user.id)
+
+
+def send_notifications(appointment_object, company_name, phone_numbers, emails,):
     """Sends an sms and email notification once an appointment has been
     confirmed"""
 
@@ -229,7 +263,7 @@ def send_notifications(appointment_object, apartment_complex_name, phone_numbers
 
     end_of_reponse_message = (
     '\n\nThis is an automated message. Reply "STOP" to end '
-    'alerts from {apartment_complex_name}.'.format(apartment_complex_name=apartment_complex_name)
+    'alerts from NovaOne Software.'
     )
     appointment_time = arrow.get(appointment_object.time).to(appointment_object.time_zone.zone)
 
@@ -240,19 +274,58 @@ def send_notifications(appointment_object, apartment_complex_name, phone_numbers
         subject = 'Appointment Canceled'
 
     message = (
-    'Hello, an appointment has been {is_confirmed}. See details below:\n\n'
-    'Name: {name}\n'
-    'Phone Number: {phone_number}\n'
-    'Showing Time: {time}\n'
-    'Unit Type: {unit_type}'
-    + end_of_reponse_message
-    ).format(
-        is_confirmed=is_confirmed,
-        name=appointment_object.name,
-        phone_number=appointment_object.phone_number.as_e164,
-        time=appointment_time.format('MM/DD/YYYY hh:mm A'),
-        unit_type=appointment_object.unit_type,
-    )
+        'Hello, an appointment has been {is_confirmed}. See details below:\n\n'
+        'Name: {name}\n'
+        'Appointment Time: {time}\n'
+        'Phone Number: {phone_number}\n'
+        + end_of_reponse_message
+        ).format(
+            is_confirmed=is_confirmed,
+            name=appointment_object.name,
+            time=appointment_time.format('MM/DD/YYYY hh:mm A'),
+            phone_number=appointment_object.phone_number.as_e164,
+        )
+
+    customer_type = appointment_object.customer_user.customer_type
+    if customer_type == 'PM':
+        message = (
+            'Hello, an appointment has been {is_confirmed}. See details below:\n\n'
+            'Name: {name}\n'
+            'Appointment Time: {time}\n'
+            'Phone Number: {phone_number}\n'
+            'Unit Type: {unit_type}'
+            + end_of_reponse_message
+            ).format(
+                is_confirmed=is_confirmed,
+                name=appointment_object.name,
+                time=appointment_time.format('MM/DD/YYYY hh:mm A'),
+                phone_number=appointment_object.phone_number.as_e164,
+                unit_type=appointment_object.unit_type,
+            )
+
+    elif customer_type == 'MW':
+        message = (
+            'Hello, an appointment has been {is_confirmed}. See details below:\n\n'
+            'Name: {name}\n'
+            'Appointment Time: {time}\n'
+            'Phone Number: {phone_number}\n'
+            'Patient Address: {address}\n'
+            'Email: {email}\n'
+            'Date Of Birth: {date_of_birth}\n'
+            'Gender: {gender}\n'
+            'Test Type: {test_type}'
+            + end_of_reponse_message
+            ).format(
+                is_confirmed=is_confirmed,
+                name=appointment_object.name,
+                time=appointment_time.format('MM/DD/YYYY hh:mm A'),
+                phone_number=appointment_object.phone_number.as_e164,
+                address=appointment_object.address,
+                email=appointment_object.email,
+                date_of_birth=appointment_object.date_of_birth,
+                gender=appointment_object.gender,
+                test_type=appointment_object.test_type,
+            )
 
     # Send text notification
     for phone_number in phone_numbers:
@@ -271,6 +344,7 @@ def send_notifications(appointment_object, apartment_complex_name, phone_numbers
             [email],
             fail_silently=False,
         )
+
 def generate_appointment_url(request, customer_user):
     if request.is_secure():
         protocol = 'https://'
@@ -287,25 +361,33 @@ def incoming_sms(request):
     incoming_sms_number = request.POST.get('From', None)
     r = MessagingResponse()
 
-    # Get our most recent appointment from the database for the phone number
-    appointment = Appointment.objects.filter(phone_number=incoming_sms_number).last()
+    # Get our most recent appointment from the database for the phone number from Appointment_Base
+    appointment = Appointment_Base.objects.filter(phone_number=incoming_sms_number).last()
+    customer_user = None
+    customer_type = None
 
     try:
-        # Get appointment time if appointment object found
+        # Get appointment time, customer user, and customer type if appointment object found
         appointment_time = arrow.get(appointment.time).to(appointment.time_zone.zone)
         customer_user = appointment.customer_user
+        customer_type = customer_user.customer_type
     except AttributeError as e:
         # No appointment object found
         print(e)
 
-    # Set property values
+    # Get appointment type based on customer type
+    if customer_type == 'MW':
+        appointment = Appointment_Medical.objects.filter(appointment_base_ptr_id=appointment.pk).last()
+    elif customer_type == 'PM':
+        appointment = Appointment_Real_Estate.objects.filter(appointment_base_ptr_id=appointment.pk).last()
+
+    # Set property values for company object
     if appointment != None:
-        address = customer_user.property.address
-        numbers_to_notify = (customer_user.property.phone_number,)
-        emails_to_notify = (customer_user.property.email,)
+        numbers_to_notify = (customer_user.company.phone_number,)
+        emails_to_notify = (customer_user.company.email,)
         appointment_link = generate_appointment_url(request, customer_user)
-        apartment_complex_number = customer_user.property.phone_number
-        apartment_complex_name = customer_user.property.name
+        company_number = customer_user.company.phone_number
+        company_name = customer_user.company.name
 
     end_of_reponse_message = (
     '\n\nThis is an automated message. Reply "STOP" to end '
@@ -319,14 +401,14 @@ def incoming_sms(request):
     )
 
     # Appointment object NOT found and reply is valid
-    if appointment is None and (incoming_sms.lower() == 'y' or incoming_sms.lower() == 'c'):
+    if appointment == None and (incoming_sms.lower() == 'y' or incoming_sms.lower() == 'c'):
         response_message = (
         'No appointment was found for number {number}.'
         + end_of_reponse_message
         ).format(number=incoming_sms_number, )
 
     # Appointment object found and appointment confirmed
-    elif appointment is not None and incoming_sms.lower() == 'y':
+    elif appointment != None and incoming_sms.lower() == 'y':
         # If appointment has passed and user still confirms
         if appointment_time < arrow.utcnow():
             response_message = (
@@ -337,22 +419,40 @@ def incoming_sms(request):
             r.message(response_message)
             return r
 
-        response_message = (
-        'Your appointment at {time} has been confirmed. '
-        'The address of the appointment is {address}. '
-        'If you have any questions, please call {apartment_complex_number} '
-        'Thanks and see you then!'
-        + end_of_reponse_message
-        ).format(
-            name=appointment.name.strip().title(),
-            time=appointment_time.format('MM/DD/YYYY hh:mm A'),
-            address=address,
-            apartment_complex_number=apartment_complex_number,
-        )
+        # Appointment is still available and user confirms
+        if customer_user.customer_type == 'PM': # Property Managers
+            address = customer_user.company.address # Address of apartment complex
+            response_message = (
+            'Your appointment at {time} has been confirmed. '
+            'The address of the appointment is {address}. '
+            'If you have any questions, please call {company_number} '
+            'Thanks and see you then!'
+            + end_of_reponse_message
+            ).format(
+                name=appointment.name.strip().title(),
+                time=appointment_time.format('MM/DD/YYYY hh:mm A'),
+                address=address,
+                company_number=company_number,
+            )
+
+        elif customer_user.customer_type == 'MW': # Medical workers
+            address = appointment.address # Address of patient
+            response_message = (
+            'Your appointment at {time} has been confirmed. '
+            'We will arrive shortly at your address, {address}. '
+            'If you have any questions, please call {company_number}. '
+            'Thanks and see you then!'
+            + end_of_reponse_message
+            ).format(
+                name=appointment.name.strip().title(),
+                time=appointment_time.format('MM/DD/YYYY hh:mm A'),
+                address=address,
+                company_number=company_number,
+            )
 
         # Send notifications if appointment was not confirmed before
         if appointment.confirmed != True:
-            send_notifications(appointment, apartment_complex_name, numbers_to_notify, emails_to_notify)
+            send_notifications(appointment, company_name, numbers_to_notify, emails_to_notify)
 
 
         # Confirm appointment in database and schedule apply reminder
@@ -375,7 +475,7 @@ def incoming_sms(request):
 
         # Send notifications if appointment was confirmed before
         if appointment.confirmed == True:
-            send_notifications(appointment, apartment_complex_name, numbers_to_notify, emails_to_notify)
+            send_notifications(appointment, company_name, numbers_to_notify, emails_to_notify)
 
         # Cancel appointment in database
         appointment.confirmed = False

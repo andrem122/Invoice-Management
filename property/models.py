@@ -39,7 +39,7 @@ HOURS_OF_THE_DAY = (
     (23, '11:00 PM'),
 )
 
-class Property(models.Model):
+class Company(models.Model):
     name = models.CharField(max_length=150)
     address = models.CharField(max_length=255)
     phone_number = PhoneNumberField(null=True, blank=False, unique=True)

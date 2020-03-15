@@ -1,12 +1,12 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Property
+from .models import Company
 from django.utils.translation import gettext_lazy as _
 
-class PropertyFormCreate(forms.ModelForm):
+class CompanyFormCreate(forms.ModelForm):
 
     class Meta:
-        model = Property
+        model = Company
         fields = [
             'name',
             'address',
@@ -16,18 +16,11 @@ class PropertyFormCreate(forms.ModelForm):
             'hours_of_the_day_enabled',
         ]
 
-        # labels = {
-        #     'name': _('Property Name'),
-        #     'address': _('Property Address'),
-        #     'phone_number': _('Property Phone'),
-        #     'email': _('Property Email'),
-        # }
-
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Property Name', 'class': 'full-width'}),
-            'address': forms.TextInput(attrs={'placeholder': 'Property Address', 'class': 'full-width'}),
-            'phone_number': forms.PasswordInput(attrs={'placeholder': 'Property Phone Number', 'class': 'full-width'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Property Email', 'class': 'full-width'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'full-width'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Company Address', 'class': 'full-width'}),
+            'phone_number': forms.PasswordInput(attrs={'placeholder': 'Company Phone Number', 'class': 'full-width'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Company Email', 'class': 'full-width'}),
         }
 
     def __init__(self, *args, **kwargs):

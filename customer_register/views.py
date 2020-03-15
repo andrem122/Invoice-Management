@@ -78,8 +78,8 @@ def customer_register(request):
             new_user = authenticate(username=email, password=password)
             login(request, new_user)
 
-            # Redirect use to add a property if they are a property manager
-            if customer_type.lower() == 'property manager':
+            # Redirect user to add a property if they are a property manager or medical worker
+            if customer_type.lower() == 'pm' or customer_type.lower() == 'mw':
                 redirect_url = '/property/add-property?c={customer_id}'.format(customer_id=str(customer_user.id))
                 return redirect(redirect_url)
 

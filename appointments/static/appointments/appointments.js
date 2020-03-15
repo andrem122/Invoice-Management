@@ -15,8 +15,7 @@ function get_days_of_the_week_disabled(days_of_the_week_enabled) {
     }
 
   }
-  console.log(days_of_the_week_disabled);
-  console.log(days_of_the_week_enabled);
+
   return days_of_the_week_disabled;
 }
 
@@ -41,6 +40,8 @@ function create_moments(appointments) {
 }
 
 $(function() {
+
+    // Set options for appointment time field
     $('#id_time').datetimepicker({
       format: 'MM/DD/YYYY hh:mm A',
       extraFormats: ['YYYY-MM-DD hh:mm:ss A'],
@@ -48,11 +49,29 @@ $(function() {
       inline: true,
       enabledHours: enabled_hours.map(Number),
       daysOfWeekDisabled: get_days_of_the_week_disabled(days_of_the_week_enabled),
-      stepping: 30,
+      stepping: 1,
       disabledTimeIntervals: create_moments(appointments),
       focusOnShow: false,
       showClose: true,
       ignoreReadonly: true,
       allowInputToggle: true,
     });
+
+    // Set options for date of birth field if it exists
+    var DOBExists = document.getElementById('id_date_of_birth');
+    if (DOBExists !== null) {
+      $('#id_date_of_birth').datetimepicker({
+        format: 'MM/DD/YYYY',
+        extraFormats: ['YYYY-MM-DD'],
+        sideBySide: true,
+        inline: true,
+        focusOnShow: false,
+        showClose: true,
+        ignoreReadonly: true,
+        allowInputToggle: true,
+        defaultDate: new Date(1975, 0, 1, 00, 01),
+        viewMode: 'years',
+      });
+    }
+
 });
