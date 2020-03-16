@@ -29,7 +29,18 @@ class AppointmentListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user'] = self.request.user
+
+        customer_user = self.request.user.customer_user
+        if customer_user.customer_type == 'MW': # For medical field
+            appointments_medical = Appointment_Medical.objects.filter(customer_user=customer_user)
+            context['fields'] = ('Name', 'Time', 'Phone Number', 'Address', 'Email', 'Date Of Birth', 'Gender', 'Test Type', 'Confirmed') # fields to show in table header
+            context['object_list'] = appointments_medical
+        elif customer_user.customer_type == 'PM': # For real estate
+            appointments_real_estate = Appointment_Real_Estate.objects.filter(customer_user=customer_user)
+            context['fields'] = ('Name', 'Time', 'Phone Number', 'Unit Type', 'Confirmed')
+            context['object_list'] = appointments_real_estate
+
+        context['customer_user'] = customer_user
         return context
 
 class AppointmentDetailView(DetailView):

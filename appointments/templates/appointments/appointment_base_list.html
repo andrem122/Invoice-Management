@@ -32,6 +32,7 @@
     <div class="limiter">
 
 			<div class="text-center title-with-paragraph">
+
 				{% if object_list %}
 				<h1>Appointments</h1>
 				<p>View showing appointments for your company.</p>
@@ -39,6 +40,7 @@
 				<h1>No Appointments</h1>
 				<p>There are currently no appointments.</p>
 				{% endif %}
+
 			</div>
 
 			{# Appointment Table #}
@@ -48,52 +50,79 @@
             <div class="table">
 
               <div class="table-row header">
-                <div class="cell">
-                  Name
-                </div>
-                <div class="cell">
-                  Phone Number
-                </div>
-                <div class="cell">
-                  Time
-                </div>
-                <div class="cell">
-                  Created
-                </div>
-                <div class="cell">
-                  Status
-                </div>
+								{% for field in fields %}
 								<div class="cell">
-                  Delete
+                  {{ field }}
                 </div>
+								{% endfor %}
+								<div class="cell">
+                  Actions
+                </div>
+
               </div>
 
               {% for appointment in object_list %}
               <div class="table-row">
-                <div class="cell" data-title="Full Name">
+
+								{# Name #}
+                <div class="cell" data-title="Name">
                   <a href="{{ appointment.get_absolute_url }}">{{ appointment.name }}</a>
                 </div>
+
+								{# Appointment Time #}
+								<div class="cell" data-title="Appointment Time">
+                  {{ appointment.time }}
+                </div>
+
+								{# Phone Number #}
                 <div class="cell" data-title="Phone Number">
                   <a href="tel:{{ appointment.phone_number }}">{{ appointment.phone_number }}</a>
                 </div>
-                <div class="cell" data-title="Time">
-                  {{ appointment.time }}
+
+								{% if customer_user.customer_type == 'MW' %}
+								<div class="cell" data-title="Patient Address">
+                  {{ appointment.address }}
                 </div>
-                <div class="cell" data-title="Created">
-                  {{ appointment.created }}
-                </div>
-                <div class="cell" data-title="Status">
+
+								<div class="cell" data-title="Email">
+									{{ appointment.email }}
+								</div>
+
+								<div class="cell" data-title="Date Of Birth">
+									{{ appointment.date_of_birth }}
+								</div>
+
+								<div class="cell" data-title="Gender">
+									{{ appointment.gender }}
+								</div>
+
+								<div class="cell" data-title="Test Type">
+									{{ appointment.test_type }}
+								</div>
+
+								{% elif customer_user.customer_type == 'PM' %}
+								<div class="cell" data-title="Unit Type">
+									{{ appointment.unit_type }}
+								</div>
+
+								{% endif %}
+
+								{# Status #}
+                <div class="cell" data-title="Confirmed">
 									{% if appointment.confirmed == False %}
-										Not Confirmed
+										No
 									{% else %}
-										Confirmed
+										Yes
 									{% endif %}
                 </div>
+
+								{# Actions #}
                 <div class="cell" data-title="Actions">
                   <a class="delete-appointment-button-icon" href="{% url 'appointments:delete_appointment' appointment.pk %}">
 										<i class="fa fa-trash" aria-hidden="true"></i>
                   </a>
                 </div>
+
               </div>
               {% endfor %}
 
