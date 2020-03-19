@@ -47,6 +47,7 @@ LOCAL_APPS = (
     'appointments.apps.AppointmentsConfig',
     'sms_alerts.apps.SmsAlertsConfig',
     'project_details.apps.ProjectDetailsConfig',
+    'leads.apps.LeadsConfig',
     'add_expense.apps.AddExpenseConfig',
     'add_payment.apps.AddPaymentConfig',
     'search_submit.apps.SearchSubmitConfig',
