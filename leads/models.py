@@ -13,3 +13,6 @@ class Lead(models.Model):
     sent_email_date = models.DateTimeField(auto_now_add=True)
     filled_out_form = models.BooleanField(default=False)
     made_appointment = models.BooleanField(default=False)
+
+    def __str__(self):
+        return 'Lead #{0} - {1} - {2}'.format(self.pk, self.name, self.company.name)
