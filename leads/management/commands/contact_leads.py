@@ -107,11 +107,11 @@ class Command(BaseCommand):
                                         )
 
         try:
-            # client.messages.create(
-            #     to=phone_number,
-            #     from_=settings.TWILIO_NUMBER,
-            #     body=text_message
-            # )
+            client.messages.create(
+                to=phone_number,
+                from_=settings.TWILIO_NUMBER,
+                body=text_message
+            )
 
             success_message = 'Text sent successfully to lead {full_name} !\n\n'.format(full_name=full_name) + text_message
             print(success_message)
@@ -150,7 +150,7 @@ class Command(BaseCommand):
             [lead_info['lead_email']],
             reply_to=[company_email],
         )
-        #email.send()
+        email.send()
         success_message = 'Email sent successfully to lead email {lead_email}!\n\n'.format(lead_email=lead_info['lead_email']) + text_content
         print(success_message)
 
@@ -395,7 +395,7 @@ class Command(BaseCommand):
         # Get date for emails sent up to a day ago
         utc = pytz.UTC
         date_now = datetime.now()
-        date_one_day_ago = date_now - timedelta(days=5)
+        date_one_day_ago = date_now - timedelta(days=1)
         sent_since_date = date_one_day_ago.strftime("%-d-%b-%Y")
         date_one_day_ago.replace(tzinfo=utc)
 
