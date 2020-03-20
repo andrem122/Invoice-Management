@@ -9,8 +9,8 @@ class Lead(models.Model):
     date_of_inquiry = models.DateTimeField()
     renter_brand = models.CharField(max_length=50)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
-    sent_text_date = models.DateTimeField(auto_now_add=True)
-    sent_email_date = models.DateTimeField(auto_now_add=True)
+    sent_text_date = models.DateTimeField(null=True)
+    sent_email_date = models.DateTimeField(null=True)
     filled_out_form = models.BooleanField(default=False)
     made_appointment = models.BooleanField(default=False)
 

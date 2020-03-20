@@ -118,6 +118,7 @@ class Command(BaseCommand):
 
             # Alter lead info dict if text is sent successfully
             lead_info['sent_text'] = True
+            lead_info['sent_text_date'] = self.convert_to_utc(datetime.now())
             lead_info['sent_text_message'] = text_message
         except Exception as e:
             print(e)
@@ -156,6 +157,7 @@ class Command(BaseCommand):
 
         # Alter lead info dict if email is sent successfully
         lead_info['sent_email'] = True
+        lead_info['sent_email_date'] = self.convert_to_utc(datetime.now())
         lead_info['sent_email_message'] = text_content
 
 
@@ -247,8 +249,10 @@ class Command(BaseCommand):
                 lead_info['phone'] = [self.format_phone_number(lead_info['phone'][0])]
                 lead_info['unit_number'] = ''
                 lead_info['sent_email'] = False
+                lead_info['sent_email_date'] = None
                 lead_info['sent_email_message'] = 'No email message was sent to the lead because no email was provided.'
                 lead_info['sent_text'] = False
+                lead_info['sent_text_date'] = None
                 lead_info['sent_text_message'] = 'No text message was sent to the lead because no phone number was provided.'
                 lead_info['written_to_database'] = False
 
@@ -273,8 +277,10 @@ class Command(BaseCommand):
         lead_info['renterBrand'] = ['Realtor.com']
         lead_info['date_of_inquiry'] = date_of_inquiry
         lead_info['sent_email'] = False
+        lead_info['sent_email_date'] = None
         lead_info['sent_email_message'] = 'No email message was sent to the lead because no email was provided.'
         lead_info['sent_text'] = False
+        lead_info['sent_text_date'] = None
         lead_info['sent_text_message'] = 'No text message was sent to the lead because no phone number was provided.'
         lead_info['written_to_database'] = False
 
@@ -289,8 +295,10 @@ class Command(BaseCommand):
         lead_info['renterBrand'] = ['Apartments.com']
         lead_info['unit_number'] = ''
         lead_info['sent_email'] = False
+        lead_info['sent_email_date'] = None
         lead_info['sent_email_message'] = 'No email message was sent to the lead because no email was provided.'
         lead_info['sent_text'] = False
+        lead_info['sent_text_date'] = None
         lead_info['sent_text_message'] = 'No text message was sent to the lead because no phone number was provided.'
         lead_info['written_to_database'] = False
 
@@ -330,6 +338,8 @@ class Command(BaseCommand):
         email             = lead_info['lead_email']
         renter_brand      = lead_info['renterBrand'][0]
         date_of_inquiry   = lead_info['date_of_inquiry']
+        sent_text_date    = lead_info['sent_text_date']
+        sent_email_date   = lead_info['sent_email_date']
         company = Company.objects.get(pk=int(company_id))
 
         # Write to table
@@ -338,6 +348,8 @@ class Command(BaseCommand):
             phone_number=phone_number,
             email=email,
             renter_brand=renter_brand,
+            sent_text_date=sent_text_date,
+            sent_email_date=sent_email_date,
             date_of_inquiry=date_of_inquiry,
             company=company,
         )
@@ -371,14 +383,20 @@ class Command(BaseCommand):
     def convert_to_utc(self, date_object):
         """Converts a date object to UTC time zone"""
         utc = pytz.UTC
-        converted_date = date_object.replace(tzinfo=utc)
-        return converted_date
+        try:
+            converted_date = date_object.replace(tzinfo=utc)
+            return converted_date
+        except AttributeError:
+            return date_object
 
     def convert_to_eastern(self, date_object):
         """Convert a date object to local time zone"""
         eastern = pytz.timezone('US/Eastern')
-        converted_date = date_object.replace(tzinfo=eastern)
-        return converted_date
+        try:
+            converted_date = date_object.replace(tzinfo=eastern)
+            return converted_date
+        except AttributeError:
+            return date_object
 
     def main(
         self,
@@ -457,14 +475,20 @@ class Command(BaseCommand):
                     sent_email_date = self.convert_to_eastern(lead_found.sent_email_date)
 
                     # Contact leads by text
-                    if date_of_inquiry > date_one_day_ago and sent_text_date <= date_one_day_ago and lead_phone_number != None:
-                        print('Lead {name} has contacted you again. Sending a text message...'.format(name=name))
-                        self.send_text(lead_info, company_address, company_phone, company_name, form_link)
+                    try:
+                        if date_of_inquiry > date_one_day_ago and sent_text_date <= date_one_day_ago and lead_phone_number != None:
+                            print('Lead {name} has contacted you again. Sending a text message...'.format(name=name))
+                            self.send_text(lead_info, company_address, company_phone, company_name, form_link)
+                    except TypeError:
+                        pass # sent_text_date is NULL/None so we cannot compare it to a date object
 
                     # Contact leads by email
-                    if date_of_inquiry > date_one_day_ago and sent_email_date <= date_one_day_ago and lead_email != '':
-                        print('Lead {name} has contacted you again. Sending an email message...'.format(name=name))
-                        self.send_email(lead_info, company_address, company_phone, company_name, company_email, form_link)
+                    try:
+                        if date_of_inquiry > date_one_day_ago and sent_email_date <= date_one_day_ago and lead_email != '':
+                            print('Lead {name} has contacted you again. Sending an email message...'.format(name=name))
+                            self.send_email(lead_info, company_address, company_phone, company_name, company_email, form_link)
+                    except TypeError:
+                        pass # sent_email_date is NULL/None so we cannot compare it to a date object
 
                     # Send notification emails and write to database
                     if lead_info['sent_text'] != False or lead_info['sent_email'] != False:
