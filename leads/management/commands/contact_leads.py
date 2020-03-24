@@ -413,7 +413,7 @@ class Command(BaseCommand):
         # Get date for emails sent up to a day ago
         utc = pytz.UTC
         date_now = datetime.now()
-        date_one_day_ago = date_now - timedelta(days=1)
+        date_one_day_ago = date_now - timedelta(days=4)
         sent_since_date = date_one_day_ago.strftime("%-d-%b-%Y")
         date_one_day_ago.replace(tzinfo=utc)
 
@@ -452,19 +452,15 @@ class Command(BaseCommand):
                 name              = ' '.join(lead_info['name'])
                 date_of_inquiry   = lead_info['date_of_inquiry']
 
-                # Search through lead database for the phone number and get the date the lead contacted us if found
+                # Search through lead database for the phone number/email
                 lead_found = None
-                try:
-                    if lead_email != '': # If email exists, look for the lead by email in database
-                        lead_found = Lead.objects.filter(email=lead_email).last()
-                    else: # if email does not exist for lead, then they must have a phone number, so look for that in the database
-                        lead_found = Lead.objects.filter(phone_number=lead_phone_number).last()
-                except Lead.DoesNotExist:
-                    # Lead not found in database and is new
-                    print("Lead {name} not found in database".format(name=name))
+                if lead_email != '': # If email exists, look for the lead by email in database
+                    lead_found = Lead.objects.filter(email=lead_email).last()
+                else: # if email does not exist for lead, then they must have a phone number, so look for that in the database
+                    lead_found = Lead.objects.filter(phone_number=lead_phone_number).last()
 
 
-                if lead_found != None:
+                if lead_found != None: # Lead has been found in database
                     print("Lead {name} found in database!".format(name=lead_found.name))
                     # Contact leads who have contacted us again if they inquire again after 5 or more days since the bot has contacted them
 
@@ -494,40 +490,25 @@ class Command(BaseCommand):
                     if lead_info['sent_text'] != False or lead_info['sent_email'] != False:
                         self.send_notification_email(lead_info, emails_to_notify, company_name)
                         self.write_to_database(lead_info, company_id)
-                        return # Exit the script so the below code will not run
 
-                # Search database for lead by phone number in database if phone number is NOT 'None'
-                lead_phone_number_found = None
-                if lead_phone_number != None:
-                    try:
-                        lead_phone_number_found = Lead.objects.filter(phone_number=lead_info['phone'][0]).last()
-                    except Lead.DoesNotExist:
-                        print("Lead not found in database")
+                else: # Lead not found in database, so this code will run
+                    print("Lead {name} not found in database!".format(name=name))
+                    if lead_phone_number != None:
+                        # Send text
+                        self.send_text(lead_info, company_address, company_phone, company_name, form_link)
 
-                if lead_phone_number != None and lead_phone_number_found == None:
-                    # Send text
-                    self.send_text(lead_info, company_address, company_phone, company_name, form_link)
+                    # Send email if lead email exists and is NOT found in database
+                    if lead_email != '':
+                        self.send_email(lead_info, company_address, company_phone, company_name, company_email, form_link)
 
-                # Search database for lead by email in database if email is NOT an empty string
-                lead_email_found = None
-                if lead_email != '':
-                    try:
-                        lead_email_found = Lead.objects.filter(email=lead_info['lead_email']).last()
-                    except Lead.DoesNotExist:
-                        print("Lead not found in database")
+                    # Phone NOT found in database and phone exists so write to database
+                    if lead_phone_number != None:
+                        self.write_to_database(lead_info, company_id)
 
-                # Send email if lead email exists and is NOT found in database
-                if lead_email != '' and lead_email_found == None:
-                    self.send_email(lead_info, company_address, company_phone, company_name, company_email, form_link)
+                    # Email NOT found in database and email exists so write to database if it has not been written already
+                    if lead_email != '' and lead_info['written_to_database'] == False:
+                        self.write_to_database(lead_info, company_id)
 
-                # Phone NOT found in database and phone exists so write to database
-                if lead_phone_number_found == None and lead_phone_number != None:
-                    self.write_to_database(lead_info, company_id)
-
-                # Email NOT found in database and email exists so write to database if it has not been written already
-                if lead_email_found == None and lead_email != '' and lead_info['written_to_database'] == False:
-                    self.write_to_database(lead_info, company_id)
-
-                # Send notification email if a text message or email was sent to the lead
-                if lead_info['sent_text'] != False or lead_info['sent_email'] != False:
-                    self.send_notification_email(lead_info, emails_to_notify, company_name)
+                    # Send notification email if a text message or email was sent to the lead
+                    if lead_info['sent_text'] != False or lead_info['sent_email'] != False:
+                        self.send_notification_email(lead_info, emails_to_notify, company_name)
