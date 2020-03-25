@@ -387,6 +387,7 @@ class Command(BaseCommand):
             converted_date = date_object.replace(tzinfo=utc)
             return converted_date
         except AttributeError:
+            print('Could not change time zone to UTC')
             return date_object
 
     def convert_to_eastern(self, date_object):
@@ -396,6 +397,7 @@ class Command(BaseCommand):
             converted_date = date_object.replace(tzinfo=eastern)
             return converted_date
         except AttributeError:
+            print('Could not change time zone to Eastern')
             return date_object
 
     def main(
@@ -465,10 +467,10 @@ class Command(BaseCommand):
                     # Contact leads who have contacted us again if they inquire again after 5 or more days since the bot has contacted them
 
                     # Convert all datetime objects to eastern time for comparison
-                    date_of_inquiry = self.convert_to_eastern(date_of_inquiry)
-                    date_one_day_ago = self.convert_to_eastern(date_one_day_ago)
-                    sent_text_date = self.convert_to_eastern(lead_found.sent_text_date)
-                    sent_email_date = self.convert_to_eastern(lead_found.sent_email_date)
+                    date_of_inquiry = self.convert_to_eastern(date_of_inquiry).date()
+                    date_one_day_ago = self.convert_to_eastern(date_one_day_ago).date()
+                    sent_text_date = self.convert_to_eastern(lead_found.sent_text_date).date()
+                    sent_email_date = self.convert_to_eastern(lead_found.sent_email_date).date()
 
                     # Contact leads by text
                     try:
