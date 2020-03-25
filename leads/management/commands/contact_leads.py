@@ -469,8 +469,18 @@ class Command(BaseCommand):
                     # Convert all datetime objects to eastern time for comparison
                     date_of_inquiry = self.convert_to_eastern(date_of_inquiry).date()
                     date_one_day_ago = self.convert_to_eastern(date_one_day_ago).date()
-                    sent_text_date = self.convert_to_eastern(lead_found.sent_text_date).date()
-                    sent_email_date = self.convert_to_eastern(lead_found.sent_email_date).date()
+                    sent_text_date = lead_found.sent_text_date # Initialize
+                    sent_email_date = lead_found.sent_email_date # Initialize
+
+                    try:
+                        sent_text_date = self.convert_to_eastern(sent_text_date).date()
+                    except AttributeError:
+                        pass # Could not convert sent_text_date to a date object because it is a NoneType
+
+                    try:
+                        sent_email_date = self.convert_to_eastern(sent_email_date).date()
+                    except AttributeError:
+                        pass # Could not convert sent_email_date to a date object because it is a NoneType
 
                     # Contact leads by text
                     try:
