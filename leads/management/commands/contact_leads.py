@@ -107,11 +107,11 @@ class Command(BaseCommand):
                                         )
 
         try:
-            client.messages.create(
-                to=phone_number,
-                from_=settings.TWILIO_NUMBER,
-                body=text_message
-            )
+            # client.messages.create(
+            #     to=phone_number,
+            #     from_=settings.TWILIO_NUMBER,
+            #     body=text_message
+            # )
 
             success_message = 'Text sent successfully to lead {full_name} !\n\n'.format(full_name=full_name) + text_message
             print(success_message)
@@ -151,7 +151,7 @@ class Command(BaseCommand):
             [lead_info['lead_email']],
             reply_to=[company_email],
         )
-        email.send()
+        #email.send()
         success_message = 'Email sent successfully to lead email {lead_email}!\n\n'.format(lead_email=lead_info['lead_email']) + text_content
         print(success_message)
 
@@ -211,7 +211,7 @@ class Command(BaseCommand):
             subject, from_email = 'Lead Contacted!', 'no-reply@novaonesoftware.com'
             msg = EmailMultiAlternatives(subject, text_content, from_email, [email_to_notify])
             msg.attach_alternative(html_content, "text/html")
-            msg.send()
+            #msg.send()
             success_message = 'Notification email sent successfully to {email_to_notify}!'.format(email_to_notify=email_to_notify)
             print(success_message)
 
@@ -397,7 +397,6 @@ class Command(BaseCommand):
             converted_date = date_object.replace(tzinfo=eastern)
             return converted_date
         except AttributeError:
-            print('Could not change time zone to Eastern')
             return date_object
 
     def main(
@@ -466,13 +465,12 @@ class Command(BaseCommand):
                     print("Lead {name} found in database!".format(name=lead_found.name))
                     # Contact leads who have contacted us again if they inquire again after 5 or more days since the bot has contacted them
 
-                    # Convert all datetime objects to eastern time for comparison
-                    date_of_inquiry = self.convert_to_eastern(date_of_inquiry).date()
-                    date_one_day_ago = self.convert_to_eastern(date_one_day_ago).date()
-                    sent_text_date = self.convert_to_eastern(lead_found.sent_text_date)
-                    sent_email_date = self.convert_to_eastern(lead_found.sent_email_date)
+                    # Convert to date objects for easier comparison without time complications
+                    date_of_inquiry = date_of_inquiry.date()
+                    date_one_day_ago = date_one_day_ago # already a date object, so no need to call date() method
+                    sent_text_date = lead_found.sent_text_date
+                    sent_email_date = lead_found.sent_email_date
 
-                    # Try to convert to date objects
                     try:
                         sent_text_date = sent_text_date.date()
                     except AttributeError:
