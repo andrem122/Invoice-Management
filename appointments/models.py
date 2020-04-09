@@ -10,7 +10,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from importlib import import_module
 from datetime import datetime, timedelta
-from customer_register.models import Customer_User
+from property.models import Company
 import arrow, pytz
 
 @python_2_unicode_compatible
@@ -24,11 +24,11 @@ class Appointment_Base(models.Model):
     time_zone = TimeZoneField(default='US/Eastern', editable=False)
     appointment_task_id = models.CharField(max_length=50, blank=True, editable=False)
     confirmed = models.BooleanField(default=False)
-    customer_user = models.ForeignKey(Customer_User, on_delete=models.CASCADE, null=True, blank=True, editable=False)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
 
 
     def __str__(self):
-        return 'Appointment #{0} - {1} - {2}'.format(self.pk, self.name, self.customer_user.user.first_name)
+        return 'Appointment #{0} - {1} - {2}'.format(self.pk, self.name, self.company.customer_user.user.first_name)
 
     def toUTC(self, datetime_object):
         # Convert to UTC time
@@ -36,7 +36,7 @@ class Appointment_Base(models.Model):
         return tz.normalize(datetime_object.astimezone(pytz.utc))
 
     def get_absolute_url(self):
-        return reverse('appointments:view_appointment', args=[str(self.id)]) + '?c=' + str(self.customer_user.id)
+        return reverse('appointments:view_appointment', args=[str(self.id)]) + '?c=' + str(self.company.id)
 
     def clean(self):
         """Checks that appointments are not scheduled in the past"""
@@ -63,9 +63,11 @@ class Appointment_Base(models.Model):
         # Get the appointment model to query when sending a text message with appointment details based on customer type
 
         model_name = 'Appointment_Base'
-        if self.customer_user.customer_type == 'PM':
+        customer_type = self.company.customer_user.customer_type
+        
+        if customer_type == 'PM':
             model_name = 'Appointment_Real_Estate'
-        elif self.customer_user.customer_type == 'MW':
+        elif customer_type == 'MW':
             model_name = 'Appointment_Medical'
 
         task_function = getattr(import_module('appointments.tasks'), task_function_name)

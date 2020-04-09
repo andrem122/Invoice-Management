@@ -20,7 +20,7 @@
         <dd>{{ appointment_base.time }}</dd>
 
         {# Display extra information for Medical Workers #}
-        {% if customer_user.customer_type == 'MW' %}
+        {% if company.customer_user.customer_type == 'MW' %}
         <dt><strong>Email:</strong></dt>
         <dd>{{ appointment_medical.email }}</dd>
 
@@ -35,14 +35,14 @@
 
         <dt><strong>Test Type:</strong></dt>
         <dd>{{ appointment_medical.test_type }}</dd>
-        {% elif customer_user.customer_type == 'PM' %}
+        {% elif company.customer_user.customer_type == 'PM' %}
         <dt><strong>Unit Type:</strong></dt>
         <dd>{{ appointment_real_estate.unit_type }}</dd>
         {% endif %}
 
       </dl>
 
-      <a class="btn btn-default" href="{% url 'appointments:new_appointment' %}?c={{ customer_user.id }}">Back</a>
+      <a class="btn btn-default" href="{% url 'property:companies' %}">Back</a>
       <a class="btn btn-danger" href="{% url 'appointments:delete_appointment' appointment_base.id %}">Delete</a>
     </div>
   </div>

@@ -80,7 +80,7 @@ def customer_register(request):
 
             # Redirect user to add a property if they are a property manager or medical worker
             if customer_type.lower() == 'pm' or customer_type.lower() == 'mw':
-                redirect_url = '/property/add-property?c={customer_id}'.format(customer_id=str(customer_user.id))
+                redirect_url = '/property/add-company?c={customer_id}'.format(customer_id=str(customer_user.id))
                 return redirect(redirect_url)
 
             return redirect(redirect_url)

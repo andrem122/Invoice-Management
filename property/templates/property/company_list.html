@@ -1,7 +1,7 @@
 {% extends "appointments/base_appointment.html" %}
 {% load static %}
 
-{% block title %}All Appointments{% endblock title %}
+{% block title %}Companies{% endblock title %}
 
 {% block scripts %}
 <!--===============================================================================================-->
@@ -19,12 +19,14 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{% static 'appointments/css/util.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'appointments/css/table.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'property/css/company_list.css' %}">
 <!--===============================================================================================-->
 	<script defer src="{% static 'appointments/vendor/bootstrap/js/popper.js' %}"></script>
 <!--===============================================================================================-->
 	<script defer src="{% static 'appointments/vendor/select2/select2.min.js' %}"></script>
 <!--===============================================================================================-->
 	<script defer src="{% static 'appointments/js/main.js' %}"></script>
+  <script defer src="{% static 'property/js/company_list.js' %}?v=1.0" type="text/javascript"></script>
 {% endblock scripts %}
 
 {% block content %}
@@ -34,11 +36,11 @@
 			<div class="text-center title-with-paragraph">
 
 				{% if object_list %}
-				<h1>Appointments</h1>
-				<p>View showing appointments for your company.</p>
+				<h1>Companies</h1>
+				<p>Select the company you want to make an appointment for.</p>
 				{% else %}
-				<h1>No Appointments</h1>
-				<p>There are currently no appointments.</p>
+				<h1>No Companies</h1>
+				<p>You have no companies.</p>
 				{% endif %}
 
 			</div>
@@ -55,72 +57,40 @@
                   {{ field }}
                 </div>
 								{% endfor %}
-								<div class="cell">
-                  Actions
-                </div>
 
               </div>
 
-              {% for appointment in object_list %}
-              <div class="table-row">
+              {% for company in object_list %}
+              <div class="table-row" data-appointment-link="{% url 'appointments:new_appointment' %}?c={{ company.id }}">
 
-								{# Name #}
+								{# Company Name #}
                 <div class="cell" data-title="Name">
-                  <a href="{{ appointment.get_absolute_url }}">{{ appointment.name }}</a>
+                  {{ company.name }}
                 </div>
 
-								{# Appointment Time #}
-								<div class="cell" data-title="Appointment Time">
-                  {{ appointment.time }}
+								{# Company Address #}
+								<div class="cell" data-title="Address">
+                  {{ company.address }}
+                </div>
+
+                {# Company City #}
+								<div class="cell" data-title="City">
+                  {{ company.city }}
+                </div>
+
+                {# Company State #}
+								<div class="cell" data-title="State">
+                  {{ company.state }}
                 </div>
 
 								{# Phone Number #}
                 <div class="cell" data-title="Phone Number">
-                  <a href="tel:{{ appointment.phone_number }}">{{ appointment.phone_number }}</a>
+                  <a href="tel:{{ company.phone_number }}">{{ company.phone_number }}</a>
                 </div>
 
-								{% if customer_user.customer_type == 'MW' %}
-								<div class="cell" data-title="Patient Address">
-                  {{ appointment.address }}
-                </div>
-
-								<div class="cell" data-title="Email">
-									{{ appointment.email }}
-								</div>
-
-								<div class="cell" data-title="Date Of Birth">
-									{{ appointment.date_of_birth }}
-								</div>
-
-								<div class="cell" data-title="Gender">
-									{{ appointment.gender }}
-								</div>
-
-								<div class="cell" data-title="Test Type">
-									{{ appointment.test_type }}
-								</div>
-
-								{% elif customer_user.customer_type == 'PM' %}
-								<div class="cell" data-title="Unit Type">
-									{{ appointment.unit_type }}
-								</div>
-
-								{% endif %}
-
-								{# Status #}
-                <div class="cell" data-title="Confirmed">
-									{% if appointment.confirmed == False %}
-										No
-									{% else %}
-										Yes
-									{% endif %}
-                </div>
-
-								{# Actions #}
-                <div class="cell" data-title="Actions">
-                  <a class="delete-appointment-button-icon" href="{% url 'appointments:delete_appointment' appointment.pk %}">
-										<i class="fa fa-trash" aria-hidden="true"></i>
-                  </a>
+                {# Email #}
+                <div class="cell" data-title="Email">
+                  <a href="mailto:{{ company.email }}">{{ company.email }}</a>
                 </div>
 
               </div>
@@ -134,8 +104,6 @@
 			<div class="container">
 				<div class="center-children-and-stack">
 					{# List companies and allow the user to select the company they want to make an appointment for #}
-					<a class="standard-btn create-appointment-btn" href="{% url 'property:companies' %}">Create Appointment<i class="fas fa-pencil-alt"></i></a>
-
 					<!-- Start Pagination -->
 					{% if is_paginated %}
 					<ul class="pagination collapse-fix">

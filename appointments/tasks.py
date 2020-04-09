@@ -37,9 +37,9 @@ def send_appointment_reminder(appointment_id, appointment_model):
         print('No appointment found')
         return
 
-    customer_type = appointment.customer_user.customer_type
-    company_name = appointment.customer_user.company.name
-    company_number = appointment.customer_user.company.phone_number
+    customer_type = appointment.company.customer_user.customer_type
+    company_name = appointment.company.name
+    company_number = appointment.company.phone_number
     appointment_time = arrow.get(appointment.time).to(appointment.time_zone.zone)
 
     message = (
@@ -76,7 +76,7 @@ def send_appointment_reminder(appointment_id, appointment_model):
         ).format(
             name=appointment.name.strip().title(),
             time=appointment_time.format('MM/DD/YYYY hh:mm A'),
-            address=appointment.customer_user.company.address,
+            address=appointment.company.address,
             company_name=company_name,
         )
 
@@ -104,9 +104,9 @@ def send_application_reminder(appointment_id):
         # has been deleted, so we don't need to do anything
         return
 
-    address = appointment.customer_user.company.address
-    company_name = appointment.customer_user.company.name
-    company_number = appointment.customer_user.company.phone_number
+    address = appointment.company.address
+    company_name = appointment.company.name
+    company_number = appointment.company.phone_number
 
     message = (
     'Hello again {name}! We hope you enjoyed your showing at {company_name}. '

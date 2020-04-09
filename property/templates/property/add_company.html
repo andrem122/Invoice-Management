@@ -1,0 +1,135 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block title %}Add Your Company Information{% endblock title %}
+
+{% block scripts %}
+<!-- Animate CSS -->
+<link rel="stylesheet" href="{% static 'animate.css' %}">
+
+<!-- Custom  -->
+<link rel="stylesheet" href="{% static 'customer_register/login.css' %}">
+<link rel="stylesheet" href="{% static 'property/css/add_company.css' %}">
+<!-- Google Places Autocomplete  -->
+<script defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4W5bUpErgWQAGqDuGtTkP5xfqegLeJew&libraries=places"></script>
+<script defer src="{% static 'google_places.js' %}?v=1.0" type="text/javascript"></script>
+
+<!-- Custom -->
+<script defer src="{% static 'property/js/add_company.js' %}?v=1.0" type="text/javascript"></script>
+{% endblock scripts %}
+
+{% block body_class %}customer-register{% endblock body_class %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="logo-container">
+      <img src="{% static 'website/images/logo-white.png' %}" alt="Nova One Software">
+    </div>
+    <h2 id="signup-title">
+      Almost Done!<br/>
+      Add Your Company Information Below.
+    </h2>
+    <div class="col-md-6 col-md-offset-3">
+      <div class="panel panel-login">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <form id="add-company-form" action="{% url 'property:add_company' %}" method="post" role="form">
+                {% csrf_token %}
+
+                <div class="form-slider-slide-container" id="company_info_container">
+
+                  {{ form.name.errors }}
+                  {{ form.name }}
+
+                  {{ form.address.errors }}
+                  {{ form.address }}
+
+                  {{ form.city.errors }}
+                  {{ form.city }}
+
+                  {{ form.state.errors }}
+                  {{ form.state }}
+
+                  {{ form.zip.errors }}
+                  {{ form.zip }}
+
+                  {{ form.phone_number.errors }}
+                  {{ form.phone_number }}
+
+                  {{ form.email.errors }}
+                  {{ form.email }}
+                </div>
+
+                <div class="form-slider-slide-container" id="days_of_the_week_enabled_container">
+                  <h3>Appointment Allowed Days</h3>
+                  <ul class="enabled_options_list" id="id_days_of_the_week_enabled">
+                    <div>{{ form.days_of_the_week_enabled.errors }}</div>
+                    <li>
+                      <label class="checkbox_container">
+                        <input id="select_all_days_of_the_week_enabled" type="checkbox">
+                        <span class="checkmark"></span>
+                        Select All
+                      </label>
+                    </li>
+                    {% for value, text in form.days_of_the_week_enabled.field.choices %}
+                    <li>
+                      <label class="checkbox_container">
+                        <input id="id_days_of_the_week_enabled_{{ forloop.counter0 }}" name="{{ form.days_of_the_week_enabled.name }}" type="checkbox" value="{{ value }}">
+                        <span class="checkmark"></span>
+                        {{ text }}
+                      </label>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+
+                <div class="form-slider-slide-container" id="hours_of_the_day_enabled_container">
+                  <h3>Appointment Allowed Hours</h3>
+                  <ul class="enabled_options_list" id="id_hours_of_the_day_enabled">
+                    <div>{{ form.hours_of_the_day_enabled.errors }}</div>
+                    <li>
+                      <label class="checkbox_container">
+                        <input id="select_all_hours_of_the_day_enabled" type="checkbox">
+                        <span class="checkmark"></span>
+                        Select All
+                      </label>
+                    </li>
+                    {% for value, text in form.hours_of_the_day_enabled.field.choices %}
+                    <li>
+                      <label class="checkbox_container">
+                        <input id="id_hours_of_the_day_enabled_{{ forloop.counter0 }}" name="{{ form.hours_of_the_day_enabled.name }}" type="checkbox" value="{{ value }}">
+                        <span class="checkmark"></span>
+                        {{ text }}
+                      </label>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+
+                <div class="form-group action_buttons">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <button id="id_next_button" class="standard-btn action_button" type="button">Next</button>
+                      <button id="id_back_button" class="standard-btn action_button" type="button">Back</button>
+                    </div>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+  {% endif %}
+{% endblock content %}

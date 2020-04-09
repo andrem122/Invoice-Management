@@ -53,8 +53,8 @@
 {{ appointments|json_script:"appointments_time" }}
 {{ days_of_the_week_enabled|json_script:"days_of_the_week_enabled" }}
 {{ hours_of_the_day_enabled|json_script:"hours_of_the_day_enabled" }}
-<script defer src="{% static 'appointments/appointments.js' %}?v=1.1" type="text/javascript"></script>
+<script defer src="{% static 'appointments/js/appointments.js' %}?v=1.1" type="text/javascript"></script>
 <!-- Google Maps Place Autocomplete  -->
 <script defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4W5bUpErgWQAGqDuGtTkP5xfqegLeJew&libraries=places"></script>
-<script defer src="{% static 'appointments/google_places.js' %}?v=1.0" type="text/javascript"></script>
+<script defer src="{% static 'google_places.js' %}?v=1.0" type="text/javascript"></script>
 {% endblock %}

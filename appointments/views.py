@@ -15,7 +15,35 @@ from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from .models import Appointment_Real_Estate, Appointment_Base, Appointment_Medical
 from customer_register.models import Customer_User
+from property.models import Company
 import arrow, pytz
+
+def dispatch(class_name, class_instance, request, *args, **kwargs):
+    # Check if there is a GET variable if not redirect to the home page
+    try:
+        company_id = int(request.GET.get('c', None))
+    except ValueError:
+        # Customer id was empty in GET variable
+        raise Http404('Company not found!')
+    except TypeError:
+        # No GET variables attached to url
+        raise Http404('Invalid url!')
+
+    # Get the company
+    company = None
+    try:
+        company = Company.objects.get(id=company_id)
+    except Company.DoesNotExist:
+        # Company id was in GET variable but NOT found in database
+        raise Http404('Company not found!')
+
+    customer_id = company.customer_user.id
+    if not request.user.is_superuser: # Will raise 'User object has no customer_user object if superuser'
+        if request.user.is_authenticated and request.user.customer_user.id != customer_id:
+            # Do not allow the customer_user (if they are logged in) to make appointments for other customers calendars
+            raise PermissionDenied('Request denied!')
+
+    return super(class_name, class_instance).dispatch(request, args, kwargs)
 
 class AppointmentListView(LoginRequiredMixin, ListView):
     """Shows users a list of appointments"""
@@ -23,20 +51,27 @@ class AppointmentListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # Filter objects displayed by user
+
+        # Get all companies owned by the user
+        companies = Company.objects.filter(customer_user=self.request.user.customer_user)
         return Appointment_Base.objects.filter(
-            customer_user=self.request.user.customer_user
+            company__in=companies
         ).order_by('-time')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         customer_user = self.request.user.customer_user
-        if customer_user.customer_type == 'MW': # For medical field
-            appointments_medical = Appointment_Medical.objects.filter(customer_user=customer_user)
+        customer_type = customer_user.customer_type
+        companies = Company.objects.filter(customer_user=customer_user)
+
+        if customer_type == 'MW': # For medical field
+            appointments_medical = Appointment_Medical.objects.filter(company__in=companies)
             context['fields'] = ('Name', 'Time', 'Phone Number', 'Address', 'Email', 'Date Of Birth', 'Gender', 'Test Type', 'Confirmed') # fields to show in table header
             context['object_list'] = appointments_medical
-        elif customer_user.customer_type == 'PM': # For real estate
-            appointments_real_estate = Appointment_Real_Estate.objects.filter(customer_user=customer_user)
+
+        elif customer_type == 'PM': # For real estate
+            appointments_real_estate = Appointment_Real_Estate.objects.filter(company__in=companies)
             context['fields'] = ('Name', 'Time', 'Phone Number', 'Unit Type', 'Confirmed')
             context['object_list'] = appointments_real_estate
 
@@ -51,40 +86,22 @@ class AppointmentDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        customer_user = kwargs['object'].customer_user
-        if customer_user.customer_type == 'MW': # For medical field
+        company = kwargs['object'].company
+        customer_type = company.customer_user.customer_type
+
+        if customer_type == 'MW': # For medical field
             appointment_medical = Appointment_Medical.objects.get(pk=kwargs['object'].pk)
             context['appointment_medical'] = appointment_medical
-        elif customer_user.customer_type == 'PM': # For real estate
+
+        elif customer_type == 'PM': # For real estate
             appointment_real_estate = Appointment_Real_Estate.objects.get(pk=kwargs['object'].pk)
             context['appointment_real_estate'] = appointment_real_estate
 
-        context['customer_user'] = customer_user
+        context['company'] = company
         return context
 
     def dispatch(self, request, *args, **kwargs):
-        # Check if there is a GET variable if not redirect to the home page
-        try:
-            customer_id = int(request.GET.get('c', None))
-        except ValueError:
-            # Customer id was empty in GET variable
-            raise Http404('Customer user not found!')
-        except TypeError:
-            # No GET variables attached to url
-            raise Http404('Invalid url!')
-
-        if not request.user.is_superuser: # Will raise 'User object has no customer_user object if superuser'
-            if request.user.is_authenticated and request.user.customer_user.id != customer_id:
-                # Do not allow the customer_user (if they are logged in) to make appointments for other customers calendars
-                raise PermissionDenied('Request denied!')
-
-        try:
-            customer_user = Customer_User.objects.get(id=customer_id)
-        except Customer_User.DoesNotExist:
-            # Customer id was in GET variable but NOT found in database
-            raise Http404('Customer user not found!')
-
-        return super().dispatch(request, *args, **kwargs)
+        return dispatch(AppointmentDetailView, self, request, args, kwargs)
 
 class AppointmentCreateView(SuccessMessageMixin, CreateView):
     """Powers a form to create a new appointment"""
@@ -97,9 +114,9 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         """Get the form class and fields based on the customer type"""
 
         # Get customer from url
-        customer_id = self.request.GET.get('c', None)
-        customer_user = Customer_User.objects.get(id=int(customer_id))
-        customer_type = customer_user.customer_type
+        company_id = self.request.GET.get('c', None)
+        company = Company.objects.get(pk=int(company_id))
+        customer_type = company.customer_user.customer_type
 
         model = Appointment_Base
         if customer_type == 'MW': # medical worker customers
@@ -115,13 +132,13 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
     def get_context_data(self, **kwargs):
         from datetime import datetime
 
-        customer_id = self.request.GET.get('c', None)
-        customer_user = Customer_User.objects.get(id=int(customer_id))
+        company_id = self.request.GET.get('c', None)
+        company = Company.objects.get(id=int(company_id))
 
         now = datetime.now()
         appointments = Appointment_Base.objects.filter(
             time__gte=now,
-            customer_user=customer_user,
+            company=company,
         )
 
         appointments_list = []
@@ -147,53 +164,32 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 
         context = super().get_context_data(**kwargs)
         context['appointments'] = appointments_list
-        context['company_name'] = customer_user.company.name
-        context['company_phone_number'] = customer_user.company.phone_number
-        context['company_email'] = customer_user.company.email
-        context['days_of_the_week_enabled'] = customer_user.company.days_of_the_week_enabled
-        context['hours_of_the_day_enabled'] = customer_user.company.hours_of_the_day_enabled
+        context['company_name'] = company.name
+        context['company_phone_number'] = company.phone_number
+        context['company_email'] = company.email
+        context['days_of_the_week_enabled'] = company.days_of_the_week_enabled
+        context['hours_of_the_day_enabled'] = company.hours_of_the_day_enabled
 
         return context
 
     def form_valid(self, form):
         # Set customer_id and timezone when form has been validated
-        customer_id = self.request.GET.get('c', None)
-        customer_user = Customer_User.objects.get(id=int(customer_id))
+        company_id = self.request.GET.get('c', None)
+        company = Company.objects.get(id=int(company_id))
         appointment = form.save(commit=False) # Call form.save(commit=False) to create an object 'in memory' and not in the database
         appointment.time.replace(tzinfo=pytz.timezone('US/Eastern'))
-        appointment.customer_user = customer_user
+        appointment.company = company
         appointment.save()
 
-        # Schedule reminder for appointment an two hours before appointment time
+        # Schedule reminder for appointment two hours before appointment time
         appointment_task_id = appointment.schedule_reminder('send_appointment_reminder', -120)
-        appointment.appointment_task_id = appointment_task_id #
+        appointment.appointment_task_id = appointment_task_id
         appointment.save()
 
         return super().form_valid(form)
 
     def dispatch(self, request, *args, **kwargs):
-        # Check if there is a GET variable if not redirect to the home page
-        try:
-            customer_id = int(request.GET.get('c', None))
-        except ValueError:
-            # Customer id was empty in GET variable
-            raise Http404('Customer user not found!')
-        except TypeError:
-            # No GET variables attached to url
-            raise Http404('Invalid url!')
-
-        if not request.user.is_superuser: # Will raise 'User object has no customer_user object if superuser'
-            if request.user.is_authenticated and request.user.customer_user.id != customer_id:
-                # Do not allow the customer_user (if they are logged in) to make appointments for other customers calendars
-                raise PermissionDenied('Request denied!')
-
-        try:
-            customer_user = Customer_User.objects.get(id=customer_id)
-        except Customer_User.DoesNotExist:
-            # Customer id was in GET variable but NOT found in database
-            raise Http404('Customer user not found!')
-
-        return super().dispatch(request, *args, **kwargs)
+        return dispatch(AppointmentCreateView, self, request, args, kwargs)
 
 class AppointmentUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     """Powers a form to edit existing appointments"""
@@ -262,8 +258,8 @@ class AppointmentDeleteView(DeleteView):
 
         # User is anonymous
         appointment = Appointment_Base.objects.get(pk=self.kwargs['pk'])
-        customer_user = appointment.customer_user
-        return reverse_lazy('appointments:new_appointment') + '?c=' + str(customer_user.id)
+        company_id = str(appointment.company.id)
+        return reverse_lazy('appointments:new_appointment') + '?c=' + company_id
 
 
 def send_notifications(appointment_object, company_name, phone_numbers, emails,):
@@ -297,7 +293,7 @@ def send_notifications(appointment_object, company_name, phone_numbers, emails,)
             phone_number=appointment_object.phone_number.as_e164,
         )
 
-    customer_type = appointment_object.customer_user.customer_type
+    customer_type = appointment_object.company.customer_user.customer_type
     if customer_type == 'PM':
         message = (
             'Hello, an appointment has been {is_confirmed}. See details below:\n\n'
@@ -356,13 +352,13 @@ def send_notifications(appointment_object, company_name, phone_numbers, emails,)
             fail_silently=False,
         )
 
-def generate_appointment_url(request, customer_user):
+def generate_appointment_url(request, company):
     if request.is_secure():
         protocol = 'https://'
     else:
         protocol = 'http://'
 
-    return protocol + request.get_host() + '/appointments/new?c=' + str(customer_user.id)
+    return protocol + request.get_host() + '/appointments/new?c=' + str(company.id)
 
 @twilio_view
 def incoming_sms(request):
@@ -374,14 +370,14 @@ def incoming_sms(request):
 
     # Get our most recent appointment from the database for the phone number from Appointment_Base
     appointment = Appointment_Base.objects.filter(phone_number=incoming_sms_number).last()
-    customer_user = None
+    company = None
     customer_type = None
 
     try:
         # Get appointment time, customer user, and customer type if appointment object found
         appointment_time = arrow.get(appointment.time).to(appointment.time_zone.zone)
-        customer_user = appointment.customer_user
-        customer_type = customer_user.customer_type
+        company = appointment.company
+        customer_type = company.customer_user.customer_type
     except AttributeError as e:
         # No appointment object found
         print(e)
@@ -394,11 +390,11 @@ def incoming_sms(request):
 
     # Set property values for company object
     if appointment != None:
-        numbers_to_notify = (customer_user.company.phone_number,)
-        emails_to_notify = (customer_user.company.email,)
-        appointment_link = generate_appointment_url(request, customer_user)
-        company_number = customer_user.company.phone_number
-        company_name = customer_user.company.name
+        numbers_to_notify = (company.phone_number,)
+        emails_to_notify = (company.email,)
+        appointment_link = generate_appointment_url(request, company)
+        company_number = company.phone_number
+        company_name = company.name
 
     end_of_reponse_message = (
     '\n\nThis is an automated message. Reply "STOP" to end '
@@ -431,8 +427,8 @@ def incoming_sms(request):
             return r
 
         # Appointment is still available and user confirms
-        if customer_user.customer_type == 'PM': # Property Managers
-            address = customer_user.company.address # Address of apartment complex
+        if customer_type == 'PM': # Property Managers
+            address = company.address # Address of property
             response_message = (
             'Your appointment at {time} has been confirmed. '
             'The address of the appointment is {address}. '
@@ -446,7 +442,7 @@ def incoming_sms(request):
                 company_number=company_number,
             )
 
-        elif customer_user.customer_type == 'MW': # Medical workers
+        elif customer_type == 'MW': # Medical workers
             address = appointment.address # Address of patient
             response_message = (
             'Your appointment at {time} has been confirmed. '
