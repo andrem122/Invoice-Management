@@ -16,6 +16,8 @@ from django.core.exceptions import PermissionDenied
 from .models import Appointment_Real_Estate, Appointment_Base, Appointment_Medical
 from customer_register.models import Customer_User
 from property.models import Company
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 import arrow, pytz
 
 def dispatch(class_name, class_instance, request, *args, **kwargs):
@@ -188,6 +190,7 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 
         return super().form_valid(form)
 
+    @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return dispatch(AppointmentCreateView, self, request, args, kwargs)
 
