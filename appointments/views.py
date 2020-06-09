@@ -18,6 +18,7 @@ from customer_register.models import Customer_User
 from property.models import Company
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 import arrow, pytz
 
 def dispatch(class_name, class_instance, request, *args, **kwargs):
@@ -111,6 +112,42 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
     template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully created.'
 
+    def form_valid(self, form):
+        # Set customer_id and timezone when form has been validated
+        company_id = self.request.GET.get('c', None)
+        company = Company.objects.get(id=int(company_id))
+        appointment = form.save(commit=False) # Call form.save(commit=False) to create an object 'in memory' and not in the database
+        appointment.time.replace(tzinfo=pytz.timezone('US/Eastern'))
+        appointment.company = company
+        appointment.save()
+
+        # Schedule reminder for appointment two hours before appointment time
+        appointment_task_id = appointment.schedule_reminder('send_appointment_reminder', -120)
+        appointment.appointment_task_id = appointment_task_id
+        appointment.save()
+
+        # Return a JSON response if it is a POST request from the app
+        # Get post parameters from app
+        app_authentication_username = self.request.POST.get('PHPAuthenticationUsername', None)
+        app_authentication_password = self.request.POST.get('PHPAuthenticationPassword', None)
+        if app_authentication_username != None and app_authentication_password != None:
+            print('JSON RESPONSE FOR APP')
+            return JsonResponse(data={'successReason': 'Successfully added appointment'}, status=201)
+        else:
+            print('FORM RESPONSE FOR WEB SUBMISSION')
+            return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Making an appointment from the app
+        # Get post parameters from app and return first error as JSON
+        app_authentication_username = self.request.POST.get('PHPAuthenticationUsername', None)
+        app_authentication_password = self.request.POST.get('PHPAuthenticationPassword', None)
+        if app_authentication_username != None and app_authentication_password != None:
+            for field, errors in form.errors.items():
+                return JsonResponse(data={'reason': form.errors[field][0]}, status=400)
+        else:
+            # If making an appointment from the website
+            return super().form_invalid(form)
 
     def get_form_class(self):
         """Get the form class and fields based on the customer type"""
@@ -173,22 +210,6 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         context['hours_of_the_day_enabled'] = company.hours_of_the_day_enabled
 
         return context
-
-    def form_valid(self, form):
-        # Set customer_id and timezone when form has been validated
-        company_id = self.request.GET.get('c', None)
-        company = Company.objects.get(id=int(company_id))
-        appointment = form.save(commit=False) # Call form.save(commit=False) to create an object 'in memory' and not in the database
-        appointment.time.replace(tzinfo=pytz.timezone('US/Eastern'))
-        appointment.company = company
-        appointment.save()
-
-        # Schedule reminder for appointment two hours before appointment time
-        appointment_task_id = appointment.schedule_reminder('send_appointment_reminder', -120)
-        appointment.appointment_task_id = appointment_task_id
-        appointment.save()
-
-        return super().form_valid(form)
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
