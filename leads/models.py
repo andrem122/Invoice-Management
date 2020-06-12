@@ -7,7 +7,7 @@ class Lead(models.Model):
     phone_number = models.CharField(max_length=50, null=True)
     email = models.EmailField(null=True)
     date_of_inquiry = models.DateTimeField()
-    renter_brand = models.CharField(max_length=50)
+    renter_brand = models.CharField(max_length=50, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     sent_text_date = models.DateTimeField(null=True)
     sent_email_date = models.DateTimeField(null=True)

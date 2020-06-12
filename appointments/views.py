@@ -131,10 +131,8 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         app_authentication_username = self.request.POST.get('PHPAuthenticationUsername', None)
         app_authentication_password = self.request.POST.get('PHPAuthenticationPassword', None)
         if app_authentication_username != None and app_authentication_password != None:
-            print('JSON RESPONSE FOR APP')
             return JsonResponse(data={'successReason': 'Successfully added appointment'}, status=201)
         else:
-            print('FORM RESPONSE FOR WEB SUBMISSION')
             return super().form_valid(form)
 
     def form_invalid(self, form):
