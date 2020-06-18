@@ -19,11 +19,17 @@ def send_sms(to_number, from_number, message):
 
 @twilio_view
 def incoming_call(request):
-    """Responds to incoming calls on advertisements"""
+    """Responds to incoming calls on advertisements with an sms message"""
 
     incoming_number = request.POST.get('From', None)
     twilio_number = request.POST.get('To', None)
+    caller_name = request.POST.get('CallerName', 'From Sign')
     r = VoiceResponse()
+
+    # If the number is anonymous, do not continue with the rest of the code below
+    if incoming_number == '+266696687' or incoming_number == '+7378742883' or incoming_number == '+8656696' or incoming_number == '+2562533' or incoming_number == '+86282452253':
+        r.say('Hello, please unblock your number to recieve more information. Thanks.')
+        return r
 
     # Get the auto respond text for the number
     company = Company.objects.get(auto_respond_number=twilio_number)
@@ -36,7 +42,7 @@ def incoming_call(request):
 
     # Create a lead object and save to database
     lead = Lead(
-        name='From Sign',
+        name=caller_name,
         phone_number=incoming_number,
         email=None,
         renter_brand='From Sign',
@@ -58,15 +64,19 @@ def incoming_sms(request):
     incoming_number = request.POST.get('From', None)
     twilio_number = request.POST.get('To', None)
     r = MessagingResponse()
-
-    # Get the auto respond text for the number
-    company = Company.objects.get(auto_respond_number=twilio_number)
-    auto_respond_text = company.auto_respond_text
-
     end_of_reponse_message = (
     '\n\nThis is an automated message. Reply "STOP" to end '
     'SMS alerts.'
     )
+
+    # If the number is anonymous, do not continue with the rest of the code below
+    if incoming_number == '+266696687' or incoming_number == '+7378742883' or incoming_number == '+8656696' or incoming_number == '+2562533' or incoming_number == '+86282452253':
+        r.message('Hello, please unblock your number to recieve more information. Thanks.' + end_of_reponse_message)
+        return r
+
+    # Get the auto respond text for the number
+    company = Company.objects.get(auto_respond_number=twilio_number)
+    auto_respond_text = company.auto_respond_text
 
     # Create a lead object and save to database
     lead = Lead(
