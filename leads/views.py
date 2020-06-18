@@ -6,6 +6,7 @@ from .models import Lead
 from twilio.rest import Client
 from django.conf import settings
 from django.utils.timezone import now
+import json
 
 def send_sms(to_number, from_number, message):
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
@@ -74,13 +75,17 @@ def incoming_sms(request):
         r.message('Hello, please unblock your number to recieve more information. Thanks.' + end_of_reponse_message)
         return r
 
+    json_string = request.POST.get('AddOns', 'From Sign')
+    caller_info = json.loads(json_string)
+    caller_name = caller_info['results']['twilio_caller_name']['result']['caller_name']['caller_name']
+
     # Get the auto respond text for the number
     company = Company.objects.get(auto_respond_number=twilio_number)
     auto_respond_text = company.auto_respond_text
 
     # Create a lead object and save to database
     lead = Lead(
-        name='From Sign',
+        name=caller_name.title(),
         phone_number=incoming_number,
         email=None,
         renter_brand='From Sign',
