@@ -155,6 +155,8 @@ class Company(models.Model):
 
     state = models.CharField(max_length=10, choices=states, default='')
     zip = models.CharField(max_length=10, default='')
+    auto_respond_text = models.CharField(null=True, max_length=500)
+    auto_respond_number = PhoneNumberField(null=True, blank=False, unique=True)
     phone_number = PhoneNumberField(null=True, blank=False, unique=True)
     email = models.EmailField(max_length=100)
     customer_user = models.ForeignKey(Customer_User, on_delete=models.CASCADE, null=True, blank=True)

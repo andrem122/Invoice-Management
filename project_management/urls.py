@@ -41,7 +41,8 @@ urlpatterns = [
     path('project-details/', include('project_details.urls')),
     path('customer-payments/', include('customer_payments.urls')),
     path('property/', include('property.urls')),
-    path('appointments/', include('appointments.urls', namespace="appointments")),
+    path('appointments/', include('appointments.urls', namespace='appointments')),
+    path('leads/', include('leads.urls')),
 ]
 
 if settings.DEBUG:
