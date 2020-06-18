@@ -42,6 +42,7 @@ def incoming_call(request):
     )
 
     # Create a lead object and save to database
+    caller_name = caller_name if caller_name != '' else 'From Sign'
     lead = Lead(
         name=caller_name.title(),
         phone_number=incoming_number,
@@ -84,6 +85,7 @@ def incoming_sms(request):
     auto_respond_text = company.auto_respond_text
 
     # Create a lead object and save to database
+    caller_name = caller_name if caller_name != '' else 'From Sign'
     lead = Lead(
         name=caller_name.title(),
         phone_number=incoming_number,
