@@ -43,7 +43,7 @@ def incoming_call(request):
 
     # Create a lead object and save to database
     lead = Lead(
-        name=caller_name,
+        name=caller_name.title(),
         phone_number=incoming_number,
         email=None,
         renter_brand='From Sign',
