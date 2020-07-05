@@ -26,15 +26,6 @@ def get_create_form(conditional_model, conditional_fields):
             address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Your address'}))
             email = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Your email', 'type': 'email'}))
 
-            male = 'M'
-            female = 'F'
-            gender_choices = [
-                (male, 'Male'),
-                (female, 'Female'),
-            ]
-
-            gender = forms.ChoiceField(widget=forms.RadioSelect, choices=gender_choices)
-
         class Meta:
             model = conditional_model
             fields = conditional_fields
