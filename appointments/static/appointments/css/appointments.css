@@ -1,6 +1,15 @@
 /* Start Buttons */
 html body {
   font-size: 16px;
+  font-family: 'Open Sans', Helvetica, arial, sans-serif;
+}
+
+h1#appointment-title {
+  font-weight: bold;
+}
+
+p#appointment-description {
+  font-size: 18px;
 }
 
 .standard-btn {
@@ -35,7 +44,7 @@ form .form-control, form label {
 form input:not([type="submit"]) {
   margin-bottom: 20px;
   border-radius: 30px;
-  padding: 12px 25px;
+  padding: 20px 25px;
   border: 1px solid #ccc;
 }
 
@@ -117,3 +126,14 @@ footer {
   margin: 30px 0;
 }
 /* End Footer */
+
+/* Error Messages */
+.error-msg {
+  color: rgb(169, 68, 66);
+  font-weight: 900;
+}
+/* End Error Messages */
+
+/* Radio Buttons */
+
+/* End Radio Buttons */

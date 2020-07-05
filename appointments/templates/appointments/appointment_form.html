@@ -12,14 +12,14 @@
   <div class="row">
     <div class="col-lg-9">
       <div class="page-header">
-        <h1>
+        <h1 id="appointment-title">
           {% if not object.pk %}
             Set Up Appointment
           {% else %}
             Edit appointment
           {% endif %}
           </h1>
-          <p>
+          <p id="appointment-description">
             Thank you for your interest in {{ company_name }}! Please fill out the form below to make an appointment.
             If you have any questions, you can contact us at <a href="tel:{{ apartment_complex_phone_number }}">{{ company_phone_number }}</a>
             or email us at <a href="mailto:{{ apartment_complex_email }}">{{ company_email }}</a>.

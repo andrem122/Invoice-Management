@@ -76,5 +76,4 @@ $(function() {
 
     // Google Autocomplete
     initialize('id_address');
-
 });

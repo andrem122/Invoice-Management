@@ -14,12 +14,26 @@ def get_create_form(conditional_model, conditional_fields):
             input_formats=['%m/%d/%Y %I:%M %p'],
             widget=forms.TextInput(attrs={'onkeydown':'return false', 'readonly': 'true'}),
         )
+        name = forms.CharField(label='Full name', widget=forms.TextInput(attrs={'placeholder':'Full name'}))
+        phone_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Your phone number', 'type': 'tel'}))
 
         if conditional_model == Appointment_Medical:
             date_of_birth = forms.DateField(
                 input_formats=['%m/%d/%Y'],
                 widget=forms.TextInput(attrs={'onkeydown':'return false', 'readonly': 'true'}),
             )
+
+            address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Your address'}))
+            email = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Your email', 'type': 'email'}))
+
+            male = 'M'
+            female = 'F'
+            gender_choices = [
+                (male, 'Male'),
+                (female, 'Female'),
+            ]
+
+            gender = forms.ChoiceField(widget=forms.RadioSelect, choices=gender_choices)
 
         class Meta:
             model = conditional_model
