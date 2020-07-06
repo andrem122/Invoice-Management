@@ -38,11 +38,9 @@ class Command(BaseCommand):
         emails_to_notify = options['notify_emails']
         form_link = options['form_link']
         search_emails_info = zip(options['emails_to_search'], options['emails_to_search_pass'], options['emails_to_search_server'])
-        email_brands = options['email_brands']
 
         self.main(
             search_emails_info,
-            email_brands,
             company_address,
             company_name,
             company_phone,
@@ -439,7 +437,6 @@ class Command(BaseCommand):
     def main(
         self,
         search_emails_info,
-        email_brands,
         company_address,
         company_name,
         company_phone,
