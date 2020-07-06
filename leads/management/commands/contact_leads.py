@@ -27,7 +27,6 @@ class Command(BaseCommand):
         parser.add_argument('--emails_to_search', help='The emails to look for leads', type=str, required=True, nargs='+')
         parser.add_argument('--emails_to_search_pass', help='The emails to look for leads password', type=str, required=True, nargs='+')
         parser.add_argument('--emails_to_search_server', help='The emails to look for leads server name', type=str, required=True, nargs='+')
-        parser.add_argument('--email_brands', help='The websites where lead emails are coming from', type=str, required=True, nargs='+')
         parser.add_argument('--form_link', help='The link to the pre-approval form', type=str, required=True)
 
     def handle(self, *args, **options):
@@ -215,7 +214,11 @@ class Command(BaseCommand):
             success_message = 'Notification email sent successfully to {email_to_notify}!'.format(email_to_notify=email_to_notify)
             print(success_message)
 
-    def get_lead_info(self, mail_object, mail_id_list, email_brand):
+    def get_lead_info_from_emails(self, mail_object, mail_id_list, email_brand):
+        """
+        Gets the lead information from the group of emails found by the search string
+        Returns: a generator object with dictionaries
+        """
         for mail_id in mail_id_list:
                 typ, data = mail_object.fetch(mail_id, '(RFC822)')
                 msg = message_from_bytes(data[0][1])
@@ -231,11 +234,13 @@ class Command(BaseCommand):
                     yield self.parse_zillow_emails(email_body, date_of_inquiry)
                 elif email_brand == 'apartments':
                     yield self.parse_apartments_emails(email_body, date_of_inquiry)
+                elif email_brand == 'realtor':
+                    yield self.parse_realtor_emails(email_body, date_of_inquiry)
 
 
     # Parsing Emails
     def parse_zillow_emails(self, email_body, date_of_inquiry):
-        """Gets the lead information from zillow.com emails"""
+        """Gets the lead information from Zillow emails"""
         # Loop through anchor tags in html
         soup = BeautifulSoup(email_body, 'html.parser')
         items_to_remove = ['utm_medium', 'utm_campaign', 'utm_source', 'landlordBrand', 'inquiryId', 'intentionType', 'utm_term', 'controlHash']
@@ -322,9 +327,30 @@ class Command(BaseCommand):
 
         return lead_info
 
-    def parse_realtor_emails():
+    def parse_realtor_emails(self, email_body, date_of_inquiry):
         """Gets lead information from realtor.com emails"""
-        pass
+        soup = BeautifulSoup(email_body, 'html.parser')
+        anchor_tags = soup.findAll('a', href=True)
+        strong_tags = soup.findAll('strong')
+
+        full_name = strong_tags[1].text.split()
+
+        lead_info = {}
+        lead_info['name'] = [full_name[0], full_name[1]]
+        lead_info['phone'] = [anchor_tags[3].text]
+        lead_info['lead_email'] = anchor_tags[4].text.strip()
+        lead_info['renterBrand'] = ['Realtor.com']
+        lead_info['unit_number'] = ''
+        lead_info['sent_email'] = False
+        lead_info['sent_email_date'] = None
+        lead_info['sent_email_message'] = 'No email message was sent to the lead because no email was provided.'
+        lead_info['sent_text'] = False
+        lead_info['sent_text_date'] = None
+        lead_info['sent_text_message'] = 'No text message was sent to the lead because no phone number was provided.'
+        lead_info['written_to_database'] = False
+        lead_info['date_of_inquiry'] = date_of_inquiry
+
+        return lead_info
 
     def get_leads_from_email(self, imap_server, email, password, search_string):
         # Login to the email server via IMAP
@@ -425,7 +451,7 @@ class Command(BaseCommand):
         # Get date for emails sent up to a day ago
         utc = pytz.UTC
         date_now = datetime.now()
-        date_one_day_ago = date_now - timedelta(days=1)
+        date_one_day_ago = date_now - timedelta(days=5)
         sent_since_date = date_one_day_ago.strftime("%-d-%b-%Y")
         date_one_day_ago.replace(tzinfo=utc)
 
@@ -433,28 +459,30 @@ class Command(BaseCommand):
             """Search for leads in each email provided"""
 
             # Zillow, Trulia, Hotpads
-            leads_info_1 = []
-            if 'zillow' in email_brands:
-                search_string = 'SENTSINCE {sent_since_date} (OR OR FROM "@convo.zillow.com" FROM "@convo.trulia.com" FROM "@convo.hotpads.com")'.format(sent_since_date=sent_since_date)
-                mail_object, mail_id_list = self.get_leads_from_email(search_email_server, search_email, search_email_password, search_string)
-                leads_info_1 = self.get_lead_info(mail_object, mail_id_list, 'zillow')
+            search_string = 'SENTSINCE {sent_since_date} (OR OR FROM "@convo.zillow.com" FROM "@convo.trulia.com" FROM "@convo.hotpads.com")'.format(sent_since_date=sent_since_date)
+            mail_object, mail_id_list = self.get_leads_from_email(search_email_server, search_email, search_email_password, search_string)
+            leads_info_1 = self.get_lead_info_from_emails(mail_object, mail_id_list, 'zillow')
+
 
             # Move.com
-            leads_info_2 = []
-            if 'move' in email_brands:
-                search_string = 'SENTSINCE {sent_since_date} (FROM "RentalRequest@move.com")'.format(sent_since_date=sent_since_date)
-                mail_object, mail_id_list = self.get_leads_from_email(search_email_server, search_email, search_email_password, search_string)
-                leads_info_2 = self.get_lead_info(mail_object, mail_id_list, 'move')
+            search_string = 'SENTSINCE {sent_since_date} (FROM "RentalRequest@move.com")'.format(sent_since_date=sent_since_date)
+            mail_object, mail_id_list = self.get_leads_from_email(search_email_server, search_email, search_email_password, search_string)
+            leads_info_2 = self.get_lead_info_from_emails(mail_object, mail_id_list, 'move')
+
 
             # Apartments.com
-            leads_info_3 = []
-            if 'apartments' in email_brands:
-                search_string = 'SENTSINCE {sent_since_date} (FROM "lead@apartments.com")'.format(sent_since_date=sent_since_date)
-                mail_object, mail_id_list = self.get_leads_from_email(search_email_server, search_email, search_email_password, search_string)
-                leads_info_3 = self.get_lead_info(mail_object, mail_id_list, 'apartments')
+            search_string = 'SENTSINCE {sent_since_date} (FROM "lead@apartments.com")'.format(sent_since_date=sent_since_date)
+            mail_object, mail_id_list = self.get_leads_from_email(search_email_server, search_email, search_email_password, search_string)
+            leads_info_3 = self.get_lead_info_from_emails(mail_object, mail_id_list, 'apartments')
+
+            # Realtor.com
+            search_string = 'SENTSINCE {sent_since_date} (FROM "@email.realtor.com")'.format(sent_since_date=sent_since_date)
+            mail_object, mail_id_list = self.get_leads_from_email(search_email_server, search_email, search_email_password, search_string)
+            leads_info_4 = self.get_lead_info_from_emails(mail_object, mail_id_list, 'realtor')
+
 
             # Chain leads together from all websites
-            leads_info = chain(leads_info_1, leads_info_2, leads_info_3)
+            leads_info = chain(leads_info_1, leads_info_2, leads_info_3, leads_info_4)
 
             for lead_info in leads_info:
 
