@@ -235,6 +235,7 @@ class Command(BaseCommand):
 
     # Parsing Emails
     def parse_zillow_emails(self, email_body, date_of_inquiry):
+        """Gets the lead information from zillow.com emails"""
         # Loop through anchor tags in html
         soup = BeautifulSoup(email_body, 'html.parser')
         items_to_remove = ['utm_medium', 'utm_campaign', 'utm_source', 'landlordBrand', 'inquiryId', 'intentionType', 'utm_term', 'controlHash']
@@ -263,6 +264,7 @@ class Command(BaseCommand):
                 return lead_info
 
     def parse_move_emails(self, email_body, date_of_inquiry):
+        """Gets the lead information from move.com emails"""
         soup = BeautifulSoup(email_body, 'html.parser')
         tags = soup.findAll('span')
 
@@ -287,6 +289,7 @@ class Command(BaseCommand):
         return lead_info
 
     def parse_apartments_emails(self, email_body, date_of_inquiry):
+        """Gets the lead information from apartments.com emails"""
         soup = BeautifulSoup(email_body, 'html.parser')
         tags = soup.findAll('a', href=True)
 
@@ -318,7 +321,6 @@ class Command(BaseCommand):
         lead_info['date_of_inquiry'] = date_of_inquiry
 
         return lead_info
-
 
     def get_leads_from_email(self, imap_server, email, password, search_string):
         # Login to the email server via IMAP
