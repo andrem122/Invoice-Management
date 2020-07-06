@@ -425,7 +425,7 @@ class Command(BaseCommand):
         # Get date for emails sent up to a day ago
         utc = pytz.UTC
         date_now = datetime.now()
-        date_one_day_ago = date_now - timedelta(days=1)
+        date_one_day_ago = date_now - timedelta(days=4)
         sent_since_date = date_one_day_ago.strftime("%-d-%b-%Y")
         date_one_day_ago.replace(tzinfo=utc)
 
