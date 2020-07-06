@@ -322,11 +322,20 @@ class Command(BaseCommand):
 
         return lead_info
 
+    def parse_realtor_emails():
+        """Gets lead information from realtor.com emails"""
+        pass
+
     def get_leads_from_email(self, imap_server, email, password, search_string):
         # Login to the email server via IMAP
         mail = imaplib.IMAP4_SSL(imap_server)
         mail.login(email, password)
-        mail.select('inbox', readonly=True)
+
+        if imap_server == 'imap-mail.outlook.com':
+            mail.select('"Inbox"', readonly=True)
+        else:
+            mail.select('inbox', readonly=True)
+
         mail.recent()
         status, data = mail.search(None, search_string)
 
@@ -426,7 +435,7 @@ class Command(BaseCommand):
             # Zillow, Trulia, Hotpads
             leads_info_1 = []
             if 'zillow' in email_brands:
-                search_string = 'SENTSINCE {sent_since_date} (OR (OR (FROM "@convo.zillow.com") (FROM "@convo.trulia.com") ) (FROM "@convo.hotpads.com"))'.format(sent_since_date=sent_since_date)
+                search_string = 'SENTSINCE {sent_since_date} (OR OR FROM "@convo.zillow.com" FROM "@convo.trulia.com" FROM "@convo.hotpads.com")'.format(sent_since_date=sent_since_date)
                 mail_object, mail_id_list = self.get_leads_from_email(search_email_server, search_email, search_email_password, search_string)
                 leads_info_1 = self.get_lead_info(mail_object, mail_id_list, 'zillow')
 
