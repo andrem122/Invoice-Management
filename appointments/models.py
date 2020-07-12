@@ -64,7 +64,7 @@ class Appointment_Base(models.Model):
 
         model_name = 'Appointment_Base'
         customer_type = self.company.customer_user.customer_type
-        
+
         if customer_type == 'PM':
             model_name = 'Appointment_Real_Estate'
         elif customer_type == 'MW':
@@ -108,41 +108,37 @@ class Appointment_Medical(Appointment_Base):
 
 
     # Test Types
-    test_one       = 'Comprehensive Metabolic Panel'
-    test_two       = 'Basic Metabolic Panel'
-    test_three     = 'Lipid Panel'
-    test_four      = 'Lipid Panel Plus'
-    test_five      = 'Liver Panel Plus'
-    test_six       = 'General Chemistry 6'
-    test_seven     = 'General Chemistry 13'
-    test_eight     = 'Electrolyte Panel'
-    test_nine      = 'Kidney Check'
-    test_ten       = 'Renal Function Panel'
-    test_eleven    = 'MetLyte 8 Panel'
-    test_twelve    = 'Hepatic Function Panel'
-    test_thirteen  = 'Basic Metabolic Panel Plus'
-    test_fourteen  = 'MetLyte Plus CRP'
-    test_fifthteen = 'Biochemistry Panel Plus'
-    test_sixteen   = 'MetLac 12 Panel'
+    test_one       = 'COVID 19 Antibody IgG And IgM'
+    test_two       = 'Mono'
+    test_three     = 'Influenza A And B'
+    test_four      = 'Strep Screen'
+    test_five      = 'CMP'
+    test_six       = 'BMP'
+    test_seven     = 'Lipid Profile'
+    test_eight     = 'Liver Profile'
+    test_nine      = 'Chem 13'
+    test_ten       = 'Glyco Hemoglobin'
+    test_eleven    = 'Microalbumin Urine'
+    test_twelve    = 'Urinalysis'
+    test_thirteen  = 'Pregnancy Test (Qualitative)'
+    test_fourteen  = 'CBC With Diff'
 
     test_type_choices = [
         ('', 'Test Type'),
-        (test_one, 'Comprehensive Metabolic Panel'),
-        (test_two, 'Basic Metabolic Panel'),
-        (test_three, 'Lipid Panel'),
-        (test_four, 'Lipid Panel Plus'),
-        (test_five, 'Liver Panel Plus'),
-        (test_six, 'General Chemistry 6'),
-        (test_seven, 'General Chemistry 13'),
-        (test_eight, 'Electrolyte Panel'),
-        (test_nine, 'Kidney Check'),
-        (test_ten, 'Renal Function Panel'),
-        (test_eleven, 'MetLyte 8 Panel'),
-        (test_twelve, 'Hepatic Function Panel'),
-        (test_thirteen, 'Basic Metabolic Panel Plus'),
-        (test_fourteen, 'MetLyte Plus CRP'),
-        (test_fifthteen, 'Biochemistry Panel Plus'),
-        (test_sixteen, 'MetLac 12 Panel'),
+        (test_one, test_one),
+        (test_two, test_two),
+        (test_three, test_three),
+        (test_four, test_four),
+        (test_five, test_five),
+        (test_six, test_six),
+        (test_seven, test_seven),
+        (test_eight, test_eight),
+        (test_nine, test_nine),
+        (test_ten, test_ten),
+        (test_eleven, test_eleven),
+        (test_twelve, test_twelve),
+        (test_thirteen, test_thirteen),
+        (test_fourteen, test_fourteen),
     ]
 
     # Genders
