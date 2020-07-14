@@ -23,9 +23,32 @@ def get_create_form(conditional_model, conditional_fields):
                 widget=forms.TextInput(attrs={'onkeydown':'return false', 'readonly': 'true'}),
             )
 
+            # Genders
+            male = 'M'
+            female = 'F'
+
+            gender_choices = [
+                (male, 'Male'),
+                (female, 'Female'),
+            ]
+
+            gender = forms.ChoiceField(choices=gender_choices, widget=forms.RadioSelect)
             address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Your address'}))
             email = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Your email', 'type': 'email'}))
 
+        elif conditional_model == Appointment_Real_Estate:
+            # Categories
+            three_bed = '3 Bedrooms'
+            two_bed   = '2 Bedrooms'
+            one_bed   = '1 Bedroom'
+
+            unit_type_choices = (
+                (three_bed, '3 Bedrooms'),
+                (two_bed, '2 Bedrooms'),
+                (one_bed, '1 Bedroom'),
+            )
+
+            unit_type = forms.ChoiceField(choices=unit_type_choices, widget=forms.RadioSelect)
         class Meta:
             model = conditional_model
             fields = conditional_fields

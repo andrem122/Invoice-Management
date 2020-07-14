@@ -201,11 +201,7 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 
         context = super().get_context_data(**kwargs)
         context['appointments'] = appointments_list
-        context['company_name'] = company.name
-        context['company_phone_number'] = company.phone_number
-        context['company_email'] = company.email
-        context['days_of_the_week_enabled'] = company.days_of_the_week_enabled
-        context['hours_of_the_day_enabled'] = company.hours_of_the_day_enabled
+        context['company'] = company
 
         return context
 

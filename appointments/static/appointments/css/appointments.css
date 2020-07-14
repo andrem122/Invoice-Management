@@ -38,14 +38,32 @@ p#appointment-description {
 form .form-control, form label {
   display: block;
   width: 100%;
-  font-size: 16px;
+  font-size: 19px;
 }
 
-form input:not([type="submit"]) {
+form input:not([type="submit"]), form input:not([type="checkbox"]) {
   margin-bottom: 20px;
   border-radius: 30px;
-  padding: 20px 25px;
+  padding: 15px 20px;
   border: 1px solid #ccc;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+form input[type="radio"] {
+  width: auto;
+}
+
+form input[readonly="true"] {
+  background-color: #ebe8e8;
+}
+
+form input:not([type="submit"]):focus {
+  box-shadow: 3px 3px 15px 2px rgba(83, 108, 219, 0.60);
+}
+
+form input[type="radio"]:focus {
+  box-shadow: none;
 }
 
 form input[type="submit"] {
@@ -132,8 +150,112 @@ footer {
   color: rgb(169, 68, 66);
   font-weight: 900;
 }
+
+ul.errorlist {
+  list-style: none;
+  padding: 10px;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+  border-radius: 10px;
+}
 /* End Error Messages */
 
-/* Radio Buttons */
 
-/* End Radio Buttons */
+/* Gender Radio Buttons */
+
+ul.enabled_options_list, ul.radio-select-options {
+  list-style: none;
+  padding: 0;
+}
+
+ul.enabled_options_list > li, ul.radio-select-options > li {
+  display: inline-block;
+  margin: 10px;
+}
+
+@media (max-width: 630px) {
+  ul.enabled_options_list > li, ul.radio-select-options > li {
+    display: block;
+  }
+}
+
+/* Check Box Style */
+.checkbox_container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkbox_container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.checkbox_container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkbox_container input:checked ~ .checkmark {
+  background-color: #536cdb;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkbox_container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkbox_container .checkmark {
+  transition: 0.23s ease-in-out all;
+}
+
+.checkbox_container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+/* End Check Box Style */
+
+/* Titles */
+h3.category-title {
+  text-decoration: underline;
+}
+/* End Titles */

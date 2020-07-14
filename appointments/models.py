@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from timezone_field import TimeZoneField
+from multiselectfield import MultiSelectField
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from importlib import import_module
@@ -108,23 +109,31 @@ class Appointment_Medical(Appointment_Base):
 
 
     # Test Types
-    test_one       = 'COVID 19 Antibody IgG And IgM'
-    test_two       = 'Mono'
-    test_three     = 'Influenza A And B'
-    test_four      = 'Strep Screen'
-    test_five      = 'CMP'
-    test_six       = 'BMP'
-    test_seven     = 'Lipid Profile'
-    test_eight     = 'Liver Profile'
-    test_nine      = 'Chem 13'
-    test_ten       = 'Glyco Hemoglobin'
-    test_eleven    = 'Microalbumin Urine'
-    test_twelve    = 'Urinalysis'
-    test_thirteen  = 'Pregnancy Test (Qualitative)'
-    test_fourteen  = 'CBC With Diff'
+
+    # Chemistry
+    test_one       = 'CMP'
+    test_two       = 'BMP'
+    test_three     = 'Liver Profile'
+    test_four      = 'Lipid Profile'
+    test_five      = 'Chem 13'
+    test_six       = 'Glyco Hemoglobin'
+    test_seven     = 'Microalbumin Urine'
+
+    # Urinalysis
+    test_eight     =  'Urinalysis'
+
+    # Hematology
+    test_nine      = 'CBC'
+    test_ten       = 'CBC With Diff'
+
+    # Serology
+    test_eleven    = 'CoVID19 Antibody IgG / IgM'
+    test_twelve    = 'Mono'
+    test_thirteen  = 'Influenza A & B'
+    test_fourteen  = 'Strep Screen'
+    test_fifthteen = 'Pregnancy Test Qualitative'
 
     test_type_choices = [
-        ('', 'Test Type'),
         (test_one, test_one),
         (test_two, test_two),
         (test_three, test_three),
@@ -139,6 +148,7 @@ class Appointment_Medical(Appointment_Base):
         (test_twelve, test_twelve),
         (test_thirteen, test_thirteen),
         (test_fourteen, test_fourteen),
+        (test_fifthteen, test_fifthteen),
     ]
 
     # Genders
@@ -151,5 +161,5 @@ class Appointment_Medical(Appointment_Base):
         (female, 'Female'),
     ]
 
-    test_type = models.CharField(max_length=100, choices=test_type_choices, default='',)
+    test_type = MultiSelectField(choices=test_type_choices, max_choices=14, default=None)
     gender    = models.CharField(max_length=100, choices=gender_choices, default='',)
