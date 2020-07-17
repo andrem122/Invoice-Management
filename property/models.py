@@ -2,6 +2,8 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from multiselectfield import MultiSelectField
 from customer_register.models import Customer_User
+from django.utils import timezone
+from timezone_field import TimeZoneField
 
 DAYS_OF_THE_WEEK = (
     (0, 'Sunday'),
@@ -39,8 +41,6 @@ HOURS_OF_THE_DAY = (
     (22, '10:00 PM'),
     (23, '11:00 PM'),
 )
-
-
 
 class Company(models.Model):
     name = models.CharField(max_length=150)
@@ -166,3 +166,10 @@ class Company(models.Model):
 
     def __str__(self):
         return str(self.id) + '-' + self.name + '-' + self.address
+
+class Company_Disabled_Datetimes(models.Model):
+    """Additional dates and times the company has disabled"""
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    time_zone = TimeZoneField(default='US/Eastern', editable=False)
+    disabled_datetime_from = models.DateTimeField(default=timezone.now) # The starting disabled time
+    disabled_datetime_to = models.DateTimeField(default=timezone.now) # The ending disabled time

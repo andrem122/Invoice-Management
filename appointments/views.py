@@ -15,7 +15,7 @@ from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from .models import Appointment_Real_Estate, Appointment_Base, Appointment_Medical
 from customer_register.models import Customer_User
-from property.models import Company
+from property.models import Company, Company_Disabled_Datetimes
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -178,6 +178,8 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
             company=company,
         )
 
+        disabled_datetimes_objects = Company_Disabled_Datetimes.objects.filter(company=company)
+
         appointments_list = []
         for count, appointment in enumerate(appointments):
             appointment_time = arrow.get(appointment.time)
@@ -199,8 +201,29 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 
             appointments_list.append(appointment_slot)
 
+        disabled_datetimes_list = []
+        for count, disabled_datetime_object in enumerate(disabled_datetimes_objects):
+            disabled_datetime_from = arrow.get(disabled_datetime_object.disabled_datetime_from)
+            disabled_datetime_to = arrow.get(disabled_datetime_object.disabled_datetime_to)
+
+            disabled_datetime_from_string = (
+            disabled_datetime_from.shift(minutes=-1)
+            .to(disabled_datetime_object.time_zone.zone)
+            .format('MM/DD/YYYY hh:mm A')
+            )
+
+            disabled_datetime_to_string = (
+            disabled_datetime_to.to(disabled_datetime_object.time_zone.zone)
+            .format('MM/DD/YYYY hh:mm A')
+            )
+
+
+            disabled_slot = (disabled_datetime_from_string, disabled_datetime_to_string)
+            disabled_datetimes_list.append(disabled_slot)
+
         context = super().get_context_data(**kwargs)
         context['appointments'] = appointments_list
+        context['disabled_datetimes'] = disabled_datetimes_list
         context['company'] = company
 
         return context

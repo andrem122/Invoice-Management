@@ -3,12 +3,12 @@ from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import CompanyFormCreate
+from .forms import CompanyFormCreate, CompanyDisabledDatetimes
 from django.urls import reverse_lazy
 from .models import Company
 
 class CompanyCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    """Powers a form to create a new management property"""
+    """Powers a form to create a new company"""
 
     form_class = CompanyFormCreate
     template_name = 'property/add_company.html'
@@ -16,7 +16,6 @@ class CompanyCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy('appointments:list_appointments')
 
     def form_valid(self, form):
-        print('Form data is valid!')
         # Associate the company added with the customer
         customer_user = self.request.user.customer_user
         company = form.save()
@@ -40,3 +39,10 @@ class CompaniesListView(LoginRequiredMixin, ListView):
         context['fields'] = ('Name', 'Address', 'City', 'State', 'Phone', 'Email') # fields to show in table header
         context['customer_user'] = customer_user
         return context
+
+class CompanyDisabledDatetimesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    """Allows users to add additional disabled datetimes"""
+    form_class = CompanyDisabledDatetimes
+    template_name = 'property/add_company_disabled_datetimes.html'
+    success_message = 'Disabled date and time successfully added!'
+    success_url = reverse_lazy('property:add_company_disabled_datetimes')

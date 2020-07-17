@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Company
+from .models import Company, Company_Disabled_Datetimes
 from django.utils.translation import gettext as _
 
 class CompanyFormCreate(forms.ModelForm):
@@ -38,3 +38,22 @@ class CompanyFormCreate(forms.ModelForm):
         self.fields['zip'].label = ''
         self.fields['phone_number'].label = ''
         self.fields['email'].label = ''
+
+class CompanyDisabledDatetimes(forms.ModelForm):
+    disabled_datetime_from = forms.DateTimeField(
+        input_formats=['%m/%d/%Y %I:%M %p'],
+        widget=forms.TextInput(attrs={'onkeydown':'return false', 'readonly': 'true'}),
+    )
+
+    disabled_datetime_to = forms.DateTimeField(
+        input_formats=['%m/%d/%Y %I:%M %p'],
+        widget=forms.TextInput(attrs={'onkeydown':'return false', 'readonly': 'true'}),
+    )
+
+    class Meta:
+        model = Company_Disabled_Datetimes
+        fields = [
+            'disabled_datetime_from',
+            'disabled_datetime_to',
+            'company',
+        ]

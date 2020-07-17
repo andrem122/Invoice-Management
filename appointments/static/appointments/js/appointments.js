@@ -1,5 +1,6 @@
 var format = "MM/DD/YYYY hh:mm A";
 var appointments = JSON.parse(document.getElementById('appointments_time').textContent);
+var disabled_datetimes = JSON.parse(document.getElementById('disabled_datetimes').textContent);
 var days_of_the_week_enabled = JSON.parse(document.getElementById('days_of_the_week_enabled').textContent);
 var enabled_hours = JSON.parse(document.getElementById('hours_of_the_day_enabled').textContent);
 
@@ -19,15 +20,15 @@ function get_days_of_the_week_disabled(days_of_the_week_enabled) {
   return days_of_the_week_disabled;
 }
 
-function create_moments(appointments) {
+function create_moments(datetimes) {
 
-  var appointmentsLength = appointments.length;
+  var datetimesLength = datetimes.length;
   var moments_array = [];
-  for (var i = 0; i < appointmentsLength; i++) {
+  for (var i = 0; i < datetimesLength; i++) {
 
     time_slot = [];
     for (var j = 0; j < 2; j++) {
-      var this_moment = moment(appointments[i][j], format);
+      var this_moment = moment(datetimes[i][j], format);
       time_slot.push(this_moment);
 
     }
@@ -40,7 +41,7 @@ function create_moments(appointments) {
 }
 
 $(function() {
-
+    var all_disabled_times = disabled_datetimes.concat(appointments);
     // Set options for appointment time field
     $('#id_time').datetimepicker({
       format: 'MM/DD/YYYY hh:mm A',
@@ -50,7 +51,7 @@ $(function() {
       enabledHours: enabled_hours.map(Number),
       daysOfWeekDisabled: get_days_of_the_week_disabled(days_of_the_week_enabled),
       stepping: 30,
-      disabledTimeIntervals: create_moments(appointments),
+      disabledTimeIntervals: create_moments(all_disabled_times),
       focusOnShow: false,
       showClose: true,
       ignoreReadonly: true,
