@@ -170,6 +170,7 @@ class Company(models.Model):
 class Company_Disabled_Datetimes(models.Model):
     """Additional dates and times the company has disabled"""
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    created = models.DateTimeField(auto_now=True)
     time_zone = TimeZoneField(default='US/Eastern', editable=False)
     disabled_datetime_from = models.DateTimeField(default=timezone.now) # The starting disabled time
     disabled_datetime_to = models.DateTimeField(default=timezone.now) # The ending disabled time

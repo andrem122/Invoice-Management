@@ -94,6 +94,11 @@ div.center-children-and-stack > .pagination li {
   margin-bottom: 20px;
 }
 
+.title-with-paragraph .standard-btn {
+  max-width: 300px;
+  margin-top: 30px;
+}
+
 .delete-appointment-button-icon {
   font-size: 21px;
   text-align: center;

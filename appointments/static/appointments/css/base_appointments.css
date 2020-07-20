@@ -1,0 +1,128 @@
+/* Overlay */
+div#overlay {
+  visibility: hidden; /* Hidden by default */
+  opacity: 0; /* Hidden by default */
+  position: fixed; /* Sit on top of the page content */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: all 0.3s linear;
+  background-color: rgba(0,0,0,0.65); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+}
+/* End Overlay */
+
+/* Actions Cell */
+.cell.actions {
+  text-align: center;
+}
+
+.cell.actions .actions-btn {
+  transition: all 0.2s linear;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.cell.actions .actions-btn:hover {
+  background-color: #ebe7e7;
+}
+
+.cell.actions-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .cell.actions {
+    display: none;
+  }
+
+  .cell.actions-mobile {
+    display: block;
+  }
+}
+/* End Actions Cell */
+
+/* Popup */
+div.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  z-index: 9999;
+  background-color: #fff;
+  padding: 20px;
+  transition: all 0.3s linear;
+  border-radius: 10px;
+  width: 300px;
+  visibility: hidden;
+  opacity: 0;
+}
+
+div.popup > button.remove-popup-btn {
+  position: absolute;
+  top: 4px;
+  right: 14px;
+  padding: 20px;
+}
+
+div.popup > button > svg {
+  font-size: 20px;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+
+div.popup ul > li > a {
+  font-size: 20px;
+  padding: 10px 15px;
+  color: rgb(51, 51, 51);
+  display: flex;
+}
+
+div.popup ul > li > a:active {
+  color: #536cdb;
+}
+
+div.popup ul > li > a > svg {
+  margin-right: 10px;
+  font-size: 25px;
+}
+
+div.popup ul > li {
+  margin-bottom: 10px;
+}
+
+.popup-title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Confrim Action Popup  */
+.confirm_action_button_container {
+  display: flex;
+}
+
+.confirm_action_button_popup > p {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 19px;
+}
+
+.confirm_action_button_container button#cancel_action_button {
+  background-color: transparent;
+  color: #536cdb;
+  border: none;
+}
+/* Confrim Action Popup End */
+
+/* End Popup */
+
+/* Form Messages */
+#alert_message {
+  display: none;
+}
+/* End Form Messages */

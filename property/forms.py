@@ -55,5 +55,4 @@ class CompanyDisabledDatetimes(forms.ModelForm):
         fields = [
             'disabled_datetime_from',
             'disabled_datetime_to',
-            'company',
         ]

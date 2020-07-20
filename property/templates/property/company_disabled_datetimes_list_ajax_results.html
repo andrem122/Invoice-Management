@@ -1,0 +1,48 @@
+<div id="inner_table" class="table">
+
+  <div class="table-row header">
+    {% for field in fields %}
+    <div class="cell">
+      {{ field }}
+    </div>
+    {% endfor %}
+    <div class="cell">
+      Actions
+    </div>
+
+  </div>
+
+  {% for disabled_datetime in object_list %}
+  <div class="table-row">
+
+    {# Disabled From Time #}
+    <div class="cell" data-title="Disabled From">
+      {{ disabled_datetime.disabled_datetime_from }}
+    </div>
+
+    {# Disabled To Time #}
+    <div class="cell" data-title="Disabled To">
+      {{ disabled_datetime.disabled_datetime_to }}
+    </div>
+
+    {# Created #}
+    <div class="cell" data-title="Created">
+      {{ disabled_datetime.created }}
+    </div>
+
+    {# Actions #}
+    <div class="cell actions" data-title="Actions">
+      <button type="button" class="actions-btn actions-trigger" data-object-id="{{ disabled_datetime.id }}">
+        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    {# Actions for mobile devices #}
+    <div class="cell actions-mobile">
+      <button type="button" class="standard-btn actions-mobile-btn actions-trigger" data-object-id="{{ disabled_datetime.id }}">Actions</button>
+    </div>
+
+  </div>
+  {% endfor %}
+
+</div>

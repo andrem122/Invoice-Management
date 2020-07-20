@@ -1,3 +1,21 @@
 body {
   background: #c4d3f6;
 }
+
+/* Actions Icons */
+div.popup ul > li > a > svg.fa-clock {
+  color: rgb(141, 194, 255);
+}
+
+div.popup ul > li > a > svg.fa-calendar {
+  color: #05C280;
+}
+
+div.popup ul > li > a > svg.fa-ban {
+  color: red;
+}
+
+div.popup ul > li > a > svg.fa-trash {
+  color: #536cdb;
+}
+/* End Actions Icons  */
