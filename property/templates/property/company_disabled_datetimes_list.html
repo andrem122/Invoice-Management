@@ -75,7 +75,10 @@
 				{% else %}
 				<h1>No Disabled Dates &amp; Times</h1>
 				<p>There are currently no disabled dates and times.</p>
-				<a href="{% url 'property:add_company_disabled_datetimes' %}?c={{ company_id }}" class="standard-btn">Add A Disabled Time</a>
+				<a href="{% url 'property:add_company_disabled_datetimes' %}?c={{ company_id }}" class="standard-btn">
+					Add A Disabled Time
+					<i class="fa fa-plus" aria-hidden="true"></i>
+				</a>
 				{% endif %}
 
 			</div>
