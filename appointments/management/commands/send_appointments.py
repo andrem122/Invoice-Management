@@ -66,7 +66,6 @@ class Command(BaseCommand):
         appointments = None
         headers = None
         if customer_type == 'MW': # For medical field
-            print(datetime.date(now))
             appointments = Appointment_Medical.objects.filter(company__in=companies, time__date=datetime.date(now))
             headers = ('Name', 'Time', 'Phone Number', 'Address', 'Email', 'Date Of Birth', 'Gender', 'Test Type', 'Confirmed') # fields to show in table header
         elif customer_type == 'PM': # For real estate
@@ -78,7 +77,7 @@ class Command(BaseCommand):
             csv_file = self.create_csv(headers, appointments, customer_type)
 
             subject, from_email = 'Daily Appointments', 'no-reply@novaonesoftware.com'
-            msg = EmailMultiAlternatives(subject, text_content, from_email, [customer_user.user.email])
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [customer_user.user.email], ['andre@novaonesoftware.com'])
             msg.attach_alternative(html_content, "text/html")
             msg.attach('appointments.csv', csv_file, 'text/csv')
             msg.send()
@@ -86,7 +85,8 @@ class Command(BaseCommand):
             success_message = 'Daily appointments email sent successfully to {email}!'.format(email=customer_user.user.email)
             print(success_message)
         else:
-            print('No appointments for today, so no email will be sent to {email}').format(email=customer_user.user.email)
+            fail_message = 'No appointments for today, so no email will be sent to {email}'.format(email=customer_user.user.email)
+            print(fail_message)
     def handle(self, *args, **options):
         # Get all with email notifications enabled
         customer_users = Customer_User.objects.filter(wants_email_notifications=True)

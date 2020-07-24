@@ -124,6 +124,10 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         # Schedule reminder for appointment two hours before appointment time
         appointment_task_id = appointment.schedule_reminder('send_appointment_reminder', -120)
         appointment.appointment_task_id = appointment_task_id
+
+        # Schedule a notification message when somebody makes an appointment
+        message = appointment.schedule_new_appointment_created_notification()
+        print(message)
         appointment.save()
 
         # Return a JSON response if it is a POST request from the app

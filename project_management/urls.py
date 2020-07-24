@@ -43,6 +43,7 @@ urlpatterns = [
     path('property/', include('property.urls')),
     path('appointments/', include('appointments.urls', namespace='appointments')),
     path('leads/', include('leads.urls')),
+    path('redirect/', include('redirect.urls')),
 ]
 
 if settings.DEBUG:

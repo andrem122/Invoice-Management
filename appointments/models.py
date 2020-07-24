@@ -79,6 +79,28 @@ class Appointment_Base(models.Model):
 
         return result.message_id
 
+    def schedule_new_appointment_created_notification(self):
+        """Schedule a Dramatiq task to send a message to the customer that an appointment has been made"""
+
+        # Schedule the Dramatiq task
+        # Get the appointment model to query when sending a text message with appointment details based on customer type
+
+        model_name = 'Appointment_Base'
+        customer_type = self.company.customer_user.customer_type
+
+        if customer_type == 'PM':
+            model_name = 'Appointment_Real_Estate'
+        elif customer_type == 'MW':
+            model_name = 'Appointment_Medical'
+
+        task_function = getattr(import_module('appointments.tasks'), 'send_new_appointment_notification')
+        result = task_function.send_with_options(
+            args=(self.pk, model_name),
+            delay=0,
+        )
+
+        return result
+
 @python_2_unicode_compatible
 class Appointment_Real_Estate(Appointment_Base):
 

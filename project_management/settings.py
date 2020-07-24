@@ -43,6 +43,7 @@ DJANGO_APPS = (
 
 LOCAL_APPS = (
     'customer_register.apps.CustomerRegisterConfig',
+    'redirect.apps.RedirectConfig',
     'property.apps.PropertyConfig',
     'appointments.apps.AppointmentsConfig',
     'sms_alerts.apps.SmsAlertsConfig',
@@ -186,7 +187,7 @@ USE_L10N = True
 USE_TZ = True
 
 # Login Redirect
-LOGIN_REDIRECT_URL = '/jobs/redirect'
+LOGIN_REDIRECT_URL = '/redirect/login'
 LOGIN_URL = '/accounts/login'
 
 # Static files (CSS, JavaScript, Images)
