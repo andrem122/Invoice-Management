@@ -165,7 +165,7 @@ def send_new_appointment_notification(appointment_id, appointment_model):
 
     # Send a notification to me
     client.messages.create(
-        body=message,
+        body=text_message,
         to='+15613465571',
         from_=settings.TWILIO_NUMBER,
     )
