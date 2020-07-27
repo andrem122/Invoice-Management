@@ -112,6 +112,11 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
     template_name = 'appointments/appointment_form.html'
     success_message = 'Appointment successfully created.'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request # Pass request object to form when it is initialized
+        return kwargs
+
     def form_valid(self, form):
         # Set customer_id and timezone when form has been validated
         company_id = self.request.GET.get('c', None)

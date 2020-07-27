@@ -1,0 +1,48 @@
+<div id="inner_table" class="table">
+
+  <div class="table-row header">
+    {% for field in fields %}
+    <div class="cell">
+      {{ field }}
+    </div>
+    {% endfor %}
+    <div class="cell">
+      Actions
+    </div>
+
+  </div>
+
+  {% for company_disabled_days in object_list %}
+  <div class="table-row">
+
+    {# Disabled Day Of The Week #}
+    <div class="cell" data-title="Disabled Week Days">
+      {{ company_disabled_days.disabled_days_of_the_week }}
+    </div>
+
+    {# Disabled Times For Each Day #}
+    <div class="cell" data-title="Disabled Times">
+      {{ company_disabled_days.disabled_times_for_each_day }}
+    </div>
+
+    {# Created #}
+    <div class="cell" data-title="Created">
+      {{ company_disabled_days.created }}
+    </div>
+
+    {# Actions #}
+    <div class="cell actions" data-title="Actions">
+      <button type="button" class="actions-btn actions-trigger" data-object-id="{{ company_disabled_days.id }}">
+        <i class="fa fa-ellipsis-v actions-trigger" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    {# Actions for mobile devices #}
+    <div class="cell actions-mobile">
+      <button type="button" class="standard-btn actions-mobile-btn actions-trigger" data-object-id="{{ company_disabled_days.id }}">Actions</button>
+    </div>
+
+  </div>
+  {% endfor %}
+
+</div>

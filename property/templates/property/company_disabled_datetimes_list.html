@@ -75,20 +75,17 @@
 				{% else %}
 				<h1>No Disabled Dates &amp; Times</h1>
 				<p>There are currently no disabled dates and times.</p>
+				{% endif %}
 				<a href="{% url 'property:add_company_disabled_datetimes' %}?c={{ company_id }}" class="standard-btn">
 					Add A Disabled Time
 					<i class="fa fa-plus" aria-hidden="true"></i>
 				</a>
-				{% endif %}
 
 			</div>
 
 			{# Table #}
 			{% if object_list %}
       <div class="container-table100">
-				<div id="alert_message" class="alert alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        </div>
         <div id="outer_table" class="wrap-table100">
             <div id="inner_table" class="table">
 

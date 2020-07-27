@@ -14,6 +14,8 @@
 <script defer src="{% static 'google_places.js' %}?v=1.0" type="text/javascript"></script>
 
 <!-- Custom -->
+<link rel="stylesheet" type="text/css" href="{% static 'form_slider.css' %}" />
+<script defer src="{% static 'form_slider.js' %}?v=1.0" type="text/javascript"></script>
 <script defer src="{% static 'property/js/add_company.js' %}?v=1.0" type="text/javascript"></script>
 {% endblock scripts %}
 
@@ -62,11 +64,11 @@
 
                 <div class="form-slider-slide-container" id="days_of_the_week_enabled_container">
                   <h3>Appointment Allowed Days</h3>
-                  <ul class="enabled_options_list" id="id_days_of_the_week_enabled">
+                  <ul class="option_checkboxes" id="id_days_of_the_week_enabled">
                     <div>{{ form.days_of_the_week_enabled.errors }}</div>
                     <li>
                       <label class="checkbox_container">
-                        <input id="select_all_days_of_the_week_enabled" type="checkbox">
+                        <input class="select_all_options_checkbox" type="checkbox">
                         <span class="checkmark"></span>
                         Select All
                       </label>
@@ -85,11 +87,11 @@
 
                 <div class="form-slider-slide-container" id="hours_of_the_day_enabled_container">
                   <h3>Appointment Allowed Hours</h3>
-                  <ul class="enabled_options_list" id="id_hours_of_the_day_enabled">
+                  <ul class="option_checkboxes" id="id_hours_of_the_day_enabled">
                     <div>{{ form.hours_of_the_day_enabled.errors }}</div>
                     <li>
                       <label class="checkbox_container">
-                        <input id="select_all_hours_of_the_day_enabled" type="checkbox">
+                        <input class="select_all_options_checkbox" type="checkbox">
                         <span class="checkmark"></span>
                         Select All
                       </label>
@@ -106,7 +108,7 @@
                   </ul>
                 </div>
 
-                <div class="form-group action_buttons">
+                <div id="slider_action_buttons_container" class="form-group">
                   <div class="row">
                     <div class="col-sm-12">
                       <button id="id_next_button" class="standard-btn action_button" type="button">Next</button>

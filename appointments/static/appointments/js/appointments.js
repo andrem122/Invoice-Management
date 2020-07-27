@@ -3,6 +3,14 @@ var appointments = JSON.parse(document.getElementById('appointments_time').textC
 var disabled_datetimes = JSON.parse(document.getElementById('disabled_datetimes').textContent);
 var days_of_the_week_enabled = JSON.parse(document.getElementById('days_of_the_week_enabled').textContent);
 var enabled_hours = JSON.parse(document.getElementById('hours_of_the_day_enabled').textContent);
+var allow_same_day_appointments = JSON.parse(document.getElementById('allow_same_day_appointments').textContent);
+
+// Set the minimum date for the calendar
+var minDate = new Date();
+if(allow_same_day_appointments === false) {
+  minDate.setHours(minDate.getHours() + 24);
+}
+
 
 function get_days_of_the_week_disabled(days_of_the_week_enabled) {
   // Gets the days of the week that are disabled from the enabled days array
@@ -56,6 +64,7 @@ $(function() {
       showClose: true,
       ignoreReadonly: true,
       allowInputToggle: true,
+      minDate: minDate,
     });
 
     // Set options for date of birth field if it exists

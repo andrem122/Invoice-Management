@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Company, Company_Disabled_Datetimes
+from .models import Company, Company_Disabled_Datetimes, Company_Disabled_Days
 from django.utils.translation import gettext as _
 
 class CompanyFormCreate(forms.ModelForm):
@@ -56,3 +56,19 @@ class CompanyDisabledDatetimes(forms.ModelForm):
             'disabled_datetime_from',
             'disabled_datetime_to',
         ]
+
+class Company_Disabled_Days_Form(forms.ModelForm):
+    class Meta:
+        model = Company_Disabled_Days
+        fields = [
+            'disabled_days_of_the_week',
+            'disabled_times_for_each_day',
+        ]
+
+        error_messages = {
+            'disabled_days_of_the_week': {
+                'required': _('Please choose a day of the week to disable.'),
+            }, 'disabled_times_for_each_day': {
+                'required': _('Please choose the hours for each day to disable.'),
+            },
+        }

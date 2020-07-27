@@ -1,7 +1,7 @@
 {% extends "appointments/base_appointment.html" %}
 {% load static %}
 
-{% block title %}Companies{% endblock title %}
+{% block title %}Disabled Days{% endblock title %}
 
 {% block scripts %}
 <!--===============================================================================================-->
@@ -26,6 +26,7 @@
 	<script defer src="{% static 'appointments/vendor/select2/select2.min.js' %}"></script>
 <!--===============================================================================================-->
   <script defer src="{% static 'property/js/popup_actions.js' %}?v=1.0" type="text/javascript"></script>
+  <script defer src="{% static 'property/js/ajax.js' %}?v=1.0" type="text/javascript"></script>
 {% endblock scripts %}
 
 {% block content %}
@@ -37,49 +38,31 @@
 			<i class="fa fa-times" aria-hidden="true"></i>
 		</button>
 		<ul class="actions-list">
-			<li>
-				<a class="action_option" href="/appointments/new">
-					<i class="fa fa-clock" aria-hidden="true"></i>
-					<span>Create Appointment</span>
-				</a>
-			</li>
-			<!-- <li>
+      <!-- <li>
 				<a class="action_option" href="#">
-					<i class="fa fa-clock" aria-hidden="true"></i>
-					<span>Change Hours Enabled</span>
-				</a>
-			</li> -->
-			<!-- <li>
-				<a class="action_option" href="#">
-					<i class="fa fa-calendar" aria-hidden="true"></i>
-					<span>Change Days Enabled</span>
+					<i class="fa fa-edit" aria-hidden="true"></i>
+					<span>Edit</span>
 				</a>
 			</li> -->
 			<li>
-				<a class="action_option" href="{% url 'property:add_company_disabled_datetimes' %}">
-					<i class="fa fa-ban" aria-hidden="true"></i>
-					<span>Block Dates &amp; Times</span>
+				<a class="action_option delete_object_option delete-trigger" href="#">
+					<i class="fa fa-trash delete-trigger" aria-hidden="true"></i>
+					<span class="delete-trigger">Delete</span>
 				</a>
 			</li>
-			<li>
-				<a class="action_option" href="{% url 'property:list_company_disabled_datetimes' %}">
-					<i class="fa fa-lock" aria-hidden="true"></i>
-					<span>View Blocked Dates &amp; Times</span>
-				</a>
-			</li>
-			<li>
-				<a class="action_option" href="{% url 'property:list_company_disabled_days' %}">
-					<i class="fa fa-calendar" aria-hidden="true"></i>
-					<span>View Blocked Days</span>
-				</a>
-			</li>
-			<!-- <li>
-				<a class="action_option" href="#">
-					<i class="fa fa-trash" aria-hidden="true"></i>
-					<span>Delete Company</span>
-				</a>
-			</li> -->
-		</ul>
+	</div>
+
+  <div class="popup confirm_action_button_popup" id="delete-popup">
+		<h3>Delete?</h3>
+		<button type="button" class="remove-popup-btn">
+			<i class="fa fa-times" aria-hidden="true"></i>
+		</button>
+		<p>Are you sure you want to delete the disabled date and time?</p>
+    <div class="confirm_action_button_container">
+      <button class="standard-btn confirm_action_button" id="yes_action_button" type="button">Yes</button>
+      <button class="standard-btn confirm_action_button" id="cancel_action_button" type="button">Cancel</button>
+    </div>
+    {% csrf_token %}
 	</div>
 
   <div class="row">
@@ -88,19 +71,23 @@
 			<div class="text-center title-with-paragraph">
 
 				{% if object_list %}
-				<h1>Your Companies</h1>
+				<h1>Disabled Days</h1>
 				{% else %}
-				<h1>No Companies</h1>
-				<p>You have no companies.</p>
+				<h1>No Disabled Dates &amp; Times</h1>
+				<p>There are currently no disabled days.</p>
 				{% endif %}
+				<a href="{% url 'property:add_company_disabled_datetimes' %}?c={{ company_id }}" class="standard-btn">
+					Add A Disabled Day
+					<i class="fa fa-plus" aria-hidden="true"></i>
+				</a>
 
 			</div>
 
-			{# Appointment Table #}
+			{# Table #}
 			{% if object_list %}
       <div class="container-table100">
-        <div class="wrap-table100">
-            <div class="table">
+        <div id="outer_table" class="wrap-table100">
+            <div id="inner_table" class="table">
 
               <div class="table-row header">
 								{% for field in fields %}
@@ -114,49 +101,34 @@
 
               </div>
 
-              {% for company in object_list %}
-              <div class="table-row" data-appointment-link="{% url 'appointments:new_appointment' %}?c={{ company.id }}">
+              {% for company_disabled_days in object_list %}
+              <div class="table-row">
 
-								{# Company Name #}
-                <div class="cell" data-title="Name">
-                  {{ company.name }}
+								{# Disabled Day Of The Week #}
+                <div class="cell" data-title="Disabled Week Days">
+                  {{ company_disabled_days.disabled_days_of_the_week }}
                 </div>
 
-								{# Company Address #}
-								<div class="cell" data-title="Address">
-                  {{ company.address }}
+								{# Disabled Times For Each Day #}
+								<div class="cell" data-title="Disabled Times">
+                  {{ company_disabled_days.disabled_times_for_each_day }}
                 </div>
 
-                {# Company City #}
-								<div class="cell" data-title="City">
-                  {{ company.city }}
-                </div>
-
-                {# Company State #}
-								<div class="cell" data-title="State">
-                  {{ company.state }}
-                </div>
-
-								{# Phone Number #}
-                <div class="cell" data-title="Phone Number">
-                  <a href="tel:{{ company.phone_number }}">{{ company.phone_number }}</a>
-                </div>
-
-                {# Email #}
-                <div class="cell" data-title="Email">
-                  <a href="mailto:{{ company.email }}">{{ company.email }}</a>
+                {# Created #}
+								<div class="cell" data-title="Created">
+                  {{ company_disabled_days.created }}
                 </div>
 
 								{# Actions #}
 								<div class="cell actions" data-title="Actions">
-									<button type="button" class="actions-btn actions-trigger" data-object-id="{{ company.id }}">
+									<button type="button" class="actions-btn actions-trigger" data-object-id="{{ company_disabled_days.id }}">
 										<i class="fa fa-ellipsis-v actions-trigger" aria-hidden="true"></i>
 									</button>
 								</div>
 
 								{# Actions for mobile devices #}
 								<div class="cell actions-mobile">
-									<button type="button" class="standard-btn actions-mobile-btn actions-trigger" data-object-id="{{ company.id }}">Actions</button>
+									<button type="button" class="standard-btn actions-mobile-btn actions-trigger" data-object-id="{{ company_disabled_days.id }}">Actions</button>
 								</div>
 
               </div>
@@ -169,12 +141,11 @@
 
 			<div class="container">
 				<div class="center-children-and-stack">
-					{# List companies and allow the user to select the company they want to make an appointment for #}
 					<!-- Start Pagination -->
 					{% if is_paginated %}
 					<ul class="pagination collapse-fix">
 						{% if page_obj.has_previous %}
-							<li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+							<li><a href="?page={{ page_obj.previous_page_number }}&c={{ company_id }}">&laquo;</a></li>
 						{% else %}
 							<li class="disabled"><span>&laquo;</span></li>
 						{% endif %}
@@ -182,11 +153,11 @@
 							{% if page_obj.number == i %}
 								<li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
 							{% else %}
-								<li><a href="?page={{ i }}">{{ i }}</a></li>
+								<li><a href="?page={{ i }}&c={{ company_id }}">{{ i }}</a></li>
 							{% endif %}
 						{% endfor %}
 						{% if page_obj.has_next %}
-							<li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+							<li><a href="?page={{ page_obj.next_page_number }}&c={{ company_id }}">&raquo;</a></li>
 						{% else %}
 							<li class="disabled"><span>&raquo;</span></li>
 						{% endif %}

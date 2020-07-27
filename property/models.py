@@ -4,6 +4,7 @@ from multiselectfield import MultiSelectField
 from customer_register.models import Customer_User
 from django.utils import timezone
 from timezone_field import TimeZoneField
+import arrow
 
 DAYS_OF_THE_WEEK = (
     (0, 'Sunday'),
@@ -159,6 +160,7 @@ class Company(models.Model):
     auto_respond_number = PhoneNumberField(null=True, blank=False, unique=True)
     phone_number = PhoneNumberField(null=True, blank=False, unique=True)
     email = models.EmailField(max_length=100)
+    allow_same_day_appointments = models.BooleanField(default=True)
     customer_user = models.ForeignKey(Customer_User, on_delete=models.CASCADE, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     days_of_the_week_enabled = MultiSelectField(choices=DAYS_OF_THE_WEEK, max_choices=7, default=None)
@@ -174,3 +176,18 @@ class Company_Disabled_Datetimes(models.Model):
     time_zone = TimeZoneField(default='US/Eastern', editable=False)
     disabled_datetime_from = models.DateTimeField(default=timezone.now) # The starting disabled time
     disabled_datetime_to = models.DateTimeField(default=timezone.now) # The ending disabled time
+
+    def __str__(self):
+        disabled_datetime_from = arrow.get(self.disabled_datetime_from).to(self.time_zone.zone).format('MM/DD/YYYY hh:mm A')
+        disabled_datetime_to = arrow.get(self.disabled_datetime_to).to(self.time_zone.zone).format('MM/DD/YYYY hh:mm A')
+        return self.company.name + '-Disabled From: ' + disabled_datetime_from + ' Disabled to: ' + disabled_datetime_to
+
+class Company_Disabled_Days(models.Model):
+    """Additional days of the week to be disabled"""
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    disabled_days_of_the_week = MultiSelectField(choices=DAYS_OF_THE_WEEK, max_choices=7, default=None)
+    disabled_times_for_each_day = MultiSelectField(choices=HOURS_OF_THE_DAY, max_choices=24, default=None)
+    created = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'Company Name: ' + self.company.name + '-Disabled Days: ' + ', '.join(self.disabled_days_of_the_week) + '-Disabled Hours: ' + ', '.join(self.disabled_times_for_each_day)

@@ -84,12 +84,12 @@
 }
 
 /* Enabled Options */
-ul.enabled_options_list {
+ul.option_checkboxes {
   list-style: none;
   padding: 0;
 }
 
-ul.enabled_options_list > li {
+ul.option_checkboxes > li {
   display: inline-block;
   margin: 10px;
 }

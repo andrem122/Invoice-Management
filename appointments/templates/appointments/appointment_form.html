@@ -10,7 +10,7 @@
 
 {% block content %}
   <div class="row">
-    <div class="col-lg-9">
+    <div class="col-lg-12">
       <div class="page-header">
         <h1 id="appointment-title">
           {% if not object.pk %}
@@ -98,7 +98,7 @@
         </ul>
 
         <h2>Choose Your Tests Below</h2>
-        <ul class="enabled_options_list" id="id_test_type">
+        <ul class="option_checkboxes" id="id_test_type">
           <div>{{ form.test_type.errors }}</div>
           {% for value, text in form.test_type.field.choices %}
 
@@ -144,6 +144,7 @@
 {{ disabled_datetimes|json_script:"disabled_datetimes" }}
 {{ company.days_of_the_week_enabled|json_script:"days_of_the_week_enabled" }}
 {{ company.hours_of_the_day_enabled|json_script:"hours_of_the_day_enabled" }}
+{{ company.allow_same_day_appointments|json_script:"allow_same_day_appointments" }}
 <script defer src="{% static 'appointments/js/appointments.js' %}?v=1.1" type="text/javascript"></script>
 <!-- Google Maps Place Autocomplete  -->
 <script defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4W5bUpErgWQAGqDuGtTkP5xfqegLeJew&libraries=places"></script>

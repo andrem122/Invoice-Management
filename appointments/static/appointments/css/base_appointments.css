@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 /* Overlay */
 div#overlay {
   visibility: hidden; /* Hidden by default */
@@ -124,5 +127,19 @@ div.popup ul > li {
 /* Form Messages */
 #alert_message {
   display: none;
+  position: relative;
+}
+
+.view_result_action_alert_button {
+  color: #333;
+  border-radius: 6px;
+  transition: all 0.25s linear;
+  float: right;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.view_result_action_alert_button:hover {
+  color: #fff;
 }
 /* End Form Messages */

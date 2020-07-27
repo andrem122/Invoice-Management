@@ -169,18 +169,18 @@ ul.errorlist {
 
 /* Gender Radio Buttons */
 
-ul.enabled_options_list, ul.radio-select-options {
+ul.option_checkboxes, ul.radio-select-options {
   list-style: none;
   padding: 0;
 }
 
-ul.enabled_options_list > li, ul.radio-select-options > li {
+ul.option_checkboxes > li, ul.radio-select-options > li {
   display: inline-block;
   margin: 10px;
 }
 
 @media (max-width: 630px) {
-  ul.enabled_options_list > li, ul.radio-select-options > li {
+  ul.option_checkboxes > li, ul.radio-select-options > li {
     display: block;
   }
 }

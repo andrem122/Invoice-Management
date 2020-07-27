@@ -18,9 +18,12 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{% static 'appointments/vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'appointments/css/util.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'appointments/css/table.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'property/css/company_list.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'appointments/css/util.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'appointments/css/table.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'form_slider.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'property/css/company_list.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'property/css/add_company_disabled_datetimes.css' %}">
+
 <!--===============================================================================================-->
 	<script defer src="{% static 'appointments/vendor/bootstrap/js/popper.js' %}"></script>
 <!--===============================================================================================-->
@@ -28,25 +31,99 @@
 <!--===============================================================================================-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
 	<script defer src="{% static 'appointments/js/main.js' %}"></script>
+	<script defer src="{% static 'property/js/ajax.js' %}"></script>
   <script defer src="{% static 'property/js/add_company_disabled_datetimes.js' %}?v=1.0" type="text/javascript"></script>
 {% endblock scripts %}
 
 {% block content %}
 <div class="row">
-  <div class="col-lg-9">
+  <div class="col-lg-12">
     <div class="page-header">
       <h1 id="appointment-title">
         Add Company Disabled Dates And Times
       </h1>
     </div>
 
-    <form class="form-horizontal" method="post">
+    <form id="add_company_disabled_datetimes" class="form-horizontal form_add_company_disabled_datetimes" method="post">
       {% csrf_token %}
-      {{ form }}
-      <button type="submit" class="standard-btn create-appointment-btn">
-        Add Disabled Times
-        <i class="fas fa-pencil-alt"></i>
-      </button>
+			<input type="hidden" name="company_disabled_days" value="false">
+			<input type="hidden" name="company_disabled_datetime" value="false">
+
+			{# Select block datetime option slide #}
+			<div class="form-slider-slide-container select_block_datetime_options_container">
+				<div class="animated fadeIn select_block_datetime_option_description">
+					<h2>Would you like to...</h2>
+					<p>Select an option below to proceed</p>
+				</div>
+				<a id="block_datetime_option" class="select_block_datetime_option">
+					Block A Certain Date &amp; Time
+					<i class="fa fa-angle-right" aria-hidden="true"></i>
+				</a>
+				<a id="block_day_option" class="select_block_datetime_option">
+					Block A Time For A Day Of The Week
+					<i class="fa fa-angle-right" aria-hidden="true"></i>
+				</a>
+			</div>
+
+			{# Days Of The Week To Disable BEGIN #}
+			<div class="form-slider-slide-container" id="disabled_days_of_the_week_slide">
+				<h3>Days Of The Week To Disable</h3>
+				<ul class="option_checkboxes" id="id_disabled_days_of_the_week">
+					<div>{{ company_disabled_days_form.disabled_days_of_the_week.errors }}</div>
+					<li>
+						<label class="checkbox_container">
+							<input class="select_all_options_checkbox" type="checkbox">
+							<span class="checkmark"></span>
+							All Days
+						</label>
+					</li>
+					{% for value, text in company_disabled_days_form.disabled_days_of_the_week.field.choices %}
+					<li>
+						<label class="checkbox_container">
+							<input id="id_disabled_days_of_the_week_{{ forloop.counter0 }}" name="{{ company_disabled_days_form.disabled_days_of_the_week.name }}" type="checkbox" value="{{ value }}">
+							<span class="checkmark"></span>
+							{{ text }}
+						</label>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+
+			<div class="form-slider-slide-container" id="disabled_hours_of_the_day_slide">
+				<h3>Hours To Disable For Each Day</h3>
+				<ul class="option_checkboxes" id="id_disabled_days_of_the_week">
+					<div>{{ company_disabled_days_form.disabled_times_for_each_day.errors }}</div>
+					<li>
+						<label class="checkbox_container">
+							<input class="select_all_options_checkbox" type="checkbox">
+							<span class="checkmark"></span>
+							Block Whole Day
+						</label>
+					</li>
+					{% for value, text in company_disabled_days_form.disabled_times_for_each_day.field.choices %}
+					<li>
+						<label class="checkbox_container">
+							<input id="id_disabled_times_for_each_day_{{ forloop.counter0 }}" name="{{ company_disabled_days_form.disabled_times_for_each_day.name }}" type="checkbox" value="{{ value }}">
+							<span class="checkmark"></span>
+							{{ text }}
+						</label>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{# Days Of The Week To Disable END #}
+
+			{# Datetimes to disable BEGIN #}
+			<div class="form-slider-slide-container" id="disabled_datetimes_slide">
+				{{ company_disabled_datetimes_form }}
+			</div>
+			{# Datetimes to disable END #}
+
+			<div id="slider_action_buttons_container">
+				<button id="id_next_button" class="standard-btn action_button" type="button">Next</button>
+				<button id="id_back_button" class="standard-btn action_button" type="button">Back</button>
+			</div>
+
     </form>
   </div>
 </div>

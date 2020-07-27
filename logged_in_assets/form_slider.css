@@ -1,0 +1,16 @@
+/* Form Slider Slide Container */
+.form-slider-slide-container:not(:first-of-type) {
+  display: none; /* Hide all slides except the first one */
+}
+
+ul.option_checkboxes > li, ul.radio-select-options > li {
+  display: inline-block;
+  margin: 10px;
+}
+
+@media (max-width: 630px) {
+  ul.option_checkboxes > li, ul.radio-select-options > li {
+    display: block;
+  }
+}
+/* END Form Slider Slide Container */
