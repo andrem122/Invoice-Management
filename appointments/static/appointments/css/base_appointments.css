@@ -143,3 +143,46 @@ div.popup ul > li {
   color: #fff;
 }
 /* End Form Messages */
+
+/* Page Message */
+div.page_message {
+  margin-top: 30px;
+  background-color: #fff;
+  border: 2px solid #536cdb;
+  padding: 20px;
+  display: none;
+}
+
+div.page_message .fa-exclamation-triangle {
+  color: #536cdb;
+  margin-right: 3px;
+}
+
+div.page_message > h4 {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+/* End Page Message */
+
+/* Modal Popup */
+/* .modal-dialog-centered {
+  top: 50%;
+  transform: translateY(-50%);
+} */
+/* End Modal Popup */
+
+/* Video Responsive Iframe */
+.video-responsive{
+    overflow:hidden;
+    padding-bottom:56.25%;
+    position:relative;
+    height:0;
+}
+.video-responsive iframe{
+    left:0;
+    top:0;
+    height:100%;
+    width:100%;
+    position:absolute;
+}
+/* End Video Responsive Iframe */

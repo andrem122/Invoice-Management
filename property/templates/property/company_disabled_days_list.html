@@ -30,7 +30,6 @@
 {% endblock scripts %}
 
 {% block content %}
-
 	{# Actions Popup #}
 	<div id="actions-popup" class="popup actions-popup">
 		<h3 class="popup-title">Actions</h3>
@@ -68,18 +67,20 @@
   <div class="row">
     <div class="limiter">
 
-			<div class="text-center title-with-paragraph">
+			<div class="col-sm-12 text-center title-with-paragraph">
 
 				{% if object_list %}
 				<h1>Disabled Days</h1>
 				{% else %}
-				<h1>No Disabled Dates &amp; Times</h1>
+				<h1>No Disabled Days &amp; Times</h1>
 				<p>There are currently no disabled days.</p>
 				{% endif %}
 				<a href="{% url 'property:add_company_disabled_datetimes' %}?c={{ company_id }}" class="standard-btn">
 					Add A Disabled Day
 					<i class="fa fa-plus" aria-hidden="true"></i>
 				</a>
+
+				{% include 'includes/page_messages/page_message.html' %}
 
 			</div>
 
