@@ -84,8 +84,7 @@ def send_new_appointment_notification(appointment_id, appointment_model):
         appointment_date_of_birth = appointment.date_of_birth
         appointment_gender = appointment.gender
         appointment_test_type = ', '.join(appointment.test_type)
-
-        print('test')
+        
         text_message = (
             'Hello {customer_user_first_name}, an appointment has been made. See details below:\n\n'
             'Name: {appointment_name}\n'
