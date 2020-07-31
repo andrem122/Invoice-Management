@@ -1,0 +1,30 @@
+{% extends 'email_notifications.html' %}
+{% block html_page_title %}New Appointment{% endblock html_page_title %}
+{% block heading %}New Appointment{% endblock heading %}
+
+{% block message %}
+Hello {{ customer_user_first_name }}! You have a new appointment.
+Please see the appointment details below.
+{% endblock message %}
+
+{% block additional_message_content %}
+<b>Name:</b> {{ appointment_name }}<br/>
+<b>Time:</b> {{ appointment_time }}<br/>
+<b>Phone Number:</b> <a href="tel:{{ appointment_phone_number }}">{{ appointment_phone_number }}</a><br/>
+
+{% if customer_type == 'MW' %}
+<b>Address:</b> {{ appointment_address }}<br/>
+<b>City:</b> {{ appointment_city }}<br/>
+<b>Zip:</b> {{ appointment_zip }}<br/>
+<b>Email:</b> <a href="mailto:{{ appointment_email }}">{{ appointment_email }}</a><br/>
+<b>Date Of Birth:</b> {{ appointment_date_of_birth }}<br/>
+<b>Gender:</b> {{ appointment_gender }}<br/>
+<b>Test Type:</b> {{ appointment_test_type }}<br/>
+{% endif %}
+
+{% if customer_type == 'PM' %}
+<b>Unit Type:</b> {{ appointment_unit_type }}<br/>
+{% endif %}
+
+<b>Confirmed:</b> {{ appointment_status }}<br/>
+{% endblock additional_message_content %}
