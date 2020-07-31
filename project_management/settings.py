@@ -317,4 +317,4 @@ else:
 
 # Configure Django App for Heroku.
 import django_heroku
-django_heroku.settings(locals(), logging=False, staticfiles=False)
+django_heroku.settings(locals(), logging=False)
