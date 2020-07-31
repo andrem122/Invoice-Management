@@ -16,14 +16,17 @@ window.addEventListener('DOMContentLoaded', function() {
   function show_page_message() {
     // Show the page message if it has not been closed
     var has_been_closed = window.localStorage.getItem('dismissed_page_message');
-    if(has_been_closed === null) {
+    if(has_been_closed === null && close_page_message_button !== null) {
       // Page message has NOT been closed before
       close_page_message_button.parentElement.parentElement.style.display = 'block';
     }
   }
 
   show_page_message();
-  close_page_message_button.addEventListener('click', hide_page_message);
+
+  if(close_page_message_button !== null) {
+    close_page_message_button.addEventListener('click', hide_page_message);
+  }
 
   var popup_video_modal = $("#popup_video_modal");
   var popup_help_video_iframe = $("#popup_help_video_iframe");

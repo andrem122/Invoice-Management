@@ -126,6 +126,7 @@ class Appointment_Medical(Appointment_Base):
 
     # Additional fields that ARE visible to users
     address = models.CharField(max_length=255, default='')
+    city = models.CharField(max_length=100, default='')
     email = models.EmailField()
     date_of_birth = models.DateField()
 

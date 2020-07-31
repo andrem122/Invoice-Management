@@ -131,8 +131,7 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         appointment.appointment_task_id = appointment_task_id
 
         # Schedule a notification message when somebody makes an appointment
-        message = appointment.schedule_new_appointment_created_notification()
-        print(message)
+        appointment.schedule_new_appointment_created_notification()
         appointment.save()
 
         # Return a JSON response if it is a POST request from the app

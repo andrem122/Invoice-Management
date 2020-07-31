@@ -39,6 +39,7 @@ def get_create_form(conditional_model, conditional_fields):
 
             gender = forms.ChoiceField(choices=gender_choices, widget=forms.RadioSelect)
             address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Your address'}))
+            city = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'City'}))
             email = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Your email', 'type': 'email'}))
 
         elif conditional_model == Appointment_Real_Estate:
