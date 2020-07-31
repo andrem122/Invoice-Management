@@ -78,6 +78,7 @@ def send_new_appointment_notification(appointment_id, appointment_model):
 
         # Additional appointment details based on customer type
         appointment_address = appointment.address
+        appointment_city = appointment.city
         appointment_email = appointment.email
         appointment_date_of_birth = appointment.date_of_birth
         appointment_gender = appointment.gender
@@ -89,6 +90,7 @@ def send_new_appointment_notification(appointment_id, appointment_model):
             'Appointment Time: {appointment_time}\n'
             'Phone Number: {appointment_phone_number}\n'
             'Patient Address: {appointment_address}\n'
+            'Patient City: {appointment_city}\n'
             'Email: {appointment_email}\n'
             'Date Of Birth: {appointment_date_of_birth}\n'
             'Gender: {appointment_gender}\n'
@@ -101,6 +103,7 @@ def send_new_appointment_notification(appointment_id, appointment_model):
                 appointment_time=appointment_time,
                 appointment_phone_number=appointment_phone_number,
                 appointment_address=appointment_address,
+                appointment_city=appointment_city,
                 appointment_email=appointment_email,
                 appointment_date_of_birth=appointment_date_of_birth,
                 appointment_gender=appointment_gender,
@@ -116,6 +119,7 @@ def send_new_appointment_notification(appointment_id, appointment_model):
                 'appointment_time': appointment_time,
                 'appointment_phone_number': appointment_phone_number,
                 'appointment_address': appointment_address,
+                'appointment_city': appointment_city,
                 'appointment_email': appointment_email,
                 'appointment_date_of_birth': appointment_date_of_birth,
                 'appointment_gender': appointment_gender,

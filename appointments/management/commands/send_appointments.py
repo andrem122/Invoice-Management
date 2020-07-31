@@ -28,7 +28,7 @@ class Command(BaseCommand):
             # Write data to csv file
             appointment_time = arrow.get(appointment.time).to(appointment.time_zone.zone)
             if customer_type == 'MW':
-                writer.writerow((appointment.name, appointment_time.format('MM/DD/YYYY hh:mm A'), appointment.phone_number, appointment.address, appointment.email, appointment.date_of_birth, appointment.gender, appointment.test_type, appointment.confirmed))
+                writer.writerow((appointment.name, appointment_time.format('MM/DD/YYYY hh:mm A'), appointment.phone_number, appointment.address, appointment.city, appointment.email, appointment.date_of_birth, appointment.gender, appointment.test_type, appointment.confirmed))
             elif customer_type == 'PM':
                 writer.writerow((appointment.name, appointment_time.format('MM/DD/YYYY hh:mm A'), appointment.phone_number, appointment.unit_type, appointment.confirmed))
 
@@ -52,7 +52,7 @@ class Command(BaseCommand):
                 'current_year': current_year,
         }
 
-        path_to_template = os.path.join(settings.BASE_DIR, 'appointments', 'templates', 'appointments', 'user_appointments_notification.html')
+        path_to_template = os.path.join(settings.BASE_DIR, 'appointments', 'templates', 'appointments', 'daily_appointments_notification.html')
         html_content = loader.render_to_string(
             path_to_template,
             context,
@@ -67,7 +67,7 @@ class Command(BaseCommand):
         headers = None
         if customer_type == 'MW': # For medical field
             appointments = Appointment_Medical.objects.filter(company__in=companies, time__date=datetime.date(now))
-            headers = ('Name', 'Time', 'Phone Number', 'Address', 'Email', 'Date Of Birth', 'Gender', 'Test Type', 'Confirmed') # fields to show in table header
+            headers = ('Name', 'Time', 'Phone Number', 'Address', 'City', 'Email', 'Date Of Birth', 'Gender', 'Test Type', 'Confirmed') # fields to show in table header
         elif customer_type == 'PM': # For real estate
             appointments = Appointment_Real_Estate.objects.filter(company__in=companies, time__date=datetime.date(now))
             headers = ('Name', 'Time', 'Phone Number', 'Unit Type', 'Confirmed')

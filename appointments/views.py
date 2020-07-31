@@ -70,7 +70,7 @@ class AppointmentListView(LoginRequiredMixin, ListView):
 
         if customer_type == 'MW': # For medical field
             appointments_medical = Appointment_Medical.objects.filter(company__in=companies)
-            context['fields'] = ('Name', 'Time', 'Phone Number', 'Address', 'Email', 'Date Of Birth', 'Gender', 'Test Type', 'Confirmed') # fields to show in table header
+            context['fields'] = ('Name', 'Time', 'Phone Number', 'Address', 'City', 'Email', 'Date Of Birth', 'Gender', 'Test Type', 'Confirmed') # fields to show in table header
             context['object_list'] = appointments_medical
 
         elif customer_type == 'PM': # For real estate
@@ -166,7 +166,7 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         model = Appointment_Base
         if customer_type == 'MW': # medical worker customers
             model = Appointment_Medical
-            fields = ['time', 'name', 'phone_number', 'address', 'email', 'date_of_birth', 'gender', 'test_type']
+            fields = ['time', 'name', 'phone_number', 'address', 'city', 'email', 'date_of_birth', 'gender', 'test_type']
 
         elif customer_type == 'PM':
             model = Appointment_Real_Estate
