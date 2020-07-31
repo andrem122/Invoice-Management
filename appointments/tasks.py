@@ -76,10 +76,8 @@ def send_new_appointment_notification(appointment_id, appointment_model):
 
     if customer_type == 'MW':
         # Additional appointment details based on customer type
-        print('MEDICAL WORKER')
         appointment_address = appointment.address
         appointment_city = appointment.city
-        print(appointment_city)
         appointment_zip = appointment.zip
         appointment_email = appointment.email
         appointment_date_of_birth = appointment.date_of_birth
@@ -114,7 +112,6 @@ def send_new_appointment_notification(appointment_id, appointment_model):
                 appointment_test_type=appointment_test_type,
                 appointment_status=appointment_status,
             )
-        print(text_message)
 
         context = {
                 'customer_type': customer_type,
