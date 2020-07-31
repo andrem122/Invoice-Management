@@ -366,6 +366,8 @@ def send_notifications(appointment_object, company_name, phone_numbers, emails,)
             'Appointment Time: {time}\n'
             'Phone Number: {phone_number}\n'
             'Patient Address: {address}\n'
+            'City: {city}\n'
+            'Zip: {zip}\n'
             'Email: {email}\n'
             'Date Of Birth: {date_of_birth}\n'
             'Gender: {gender}\n'
@@ -377,6 +379,8 @@ def send_notifications(appointment_object, company_name, phone_numbers, emails,)
                 time=appointment_time.format('MM/DD/YYYY hh:mm A'),
                 phone_number=appointment_object.phone_number.as_e164,
                 address=appointment_object.address,
+                city=appointment_object.city,
+                zip=appointment_object.zip,
                 email=appointment_object.email,
                 date_of_birth=appointment_object.date_of_birth,
                 gender=appointment_object.gender,

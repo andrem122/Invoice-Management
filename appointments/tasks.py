@@ -4,7 +4,7 @@ from twilio.rest import Client
 from django.template import loader
 from datetime import datetime
 from django.core.mail import EmailMultiAlternatives
-from icalendar import Calendar, Event
+#from icalendar import Calendar, Event
 from .models import Appointment_Base, Appointment_Medical, Appointment_Real_Estate
 
 
