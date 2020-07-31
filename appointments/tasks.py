@@ -75,7 +75,6 @@ def send_new_appointment_notification(appointment_id, appointment_model):
     )
 
     if customer_type == 'MW':
-
         # Additional appointment details based on customer type
         appointment_address = appointment.address
         appointment_city = appointment.city
@@ -84,7 +83,7 @@ def send_new_appointment_notification(appointment_id, appointment_model):
         appointment_date_of_birth = appointment.date_of_birth
         appointment_gender = appointment.gender
         appointment_test_type = ', '.join(appointment.test_type)
-        
+
         text_message = (
             'Hello {customer_user_first_name}, an appointment has been made. See details below:\n\n'
             'Name: {appointment_name}\n'
