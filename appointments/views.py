@@ -133,7 +133,6 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         # Schedule a notification message when somebody makes an appointment
         appointment.schedule_new_appointment_created_notification()
         appointment.save()
-        print('APPOINTMENT CITY: ' + appointment.city + ', APPOINTMENT ZIP: ' + appointment.zip)
 
         # Return a JSON response if it is a POST request from the app
         # Get post parameters from app
