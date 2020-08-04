@@ -2,7 +2,7 @@
 curl -n -X DELETE https://api.heroku.com/apps/project-management-novaone-two/dynos \
   -H "Content-Type: application/json" \
   -H "Accept: application/vnd.heroku+json; version=3" \
-  -H "Authorization: Bearer 4a0eca9f-36a3-4a2c-a398-a158f5cc48c5"
+  -H "Authorization: Bearer $HEROKU_API_KEY"
 
 curl -n -X POST https://api.heroku.com/apps/project-management-novaone-two/dynos \
   -d '{
@@ -13,10 +13,10 @@ curl -n -X POST https://api.heroku.com/apps/project-management-novaone-two/dynos
     "LINES": "24"
   },
   "force_no_tty": null,
-  "size": "Hobby",
+  "size": "Free",
   "type": "run",
   "time_to_live": 1800
 }' \
   -H "Content-Type: application/json" \
   -H "Accept: application/vnd.heroku+json; version=3" \
-  -H "Authorization: Bearer 4a0eca9f-36a3-4a2c-a398-a158f5cc48c5"
+  -H "Authorization: Bearer $HEROKU_API_KEY"
