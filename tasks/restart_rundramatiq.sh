@@ -13,7 +13,7 @@ curl -n -X POST https://api.heroku.com/apps/project-management-novaone-two/dynos
     "LINES": "24"
   },
   "force_no_tty": null,
-  "size": "Free",
+  "size": "Hobby",
   "type": "run",
   "time_to_live": 1800
 }' \
