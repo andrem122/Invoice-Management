@@ -221,6 +221,7 @@ class Command(BaseCommand):
                 typ, data = mail_object.fetch(mail_id, '(RFC822)')
                 msg = message_from_bytes(data[0][1])
                 date_of_inquiry = self.string_to_date(msg.get('date'))
+                reply_to_email = msg.get('reply-to')
 
                 email_body = msg.get_payload(decode=True) # Very important to add decode=True
                 if msg.is_multipart():
@@ -229,7 +230,7 @@ class Command(BaseCommand):
                 if email_brand == 'move':
                     yield self.parse_move_emails(email_body, date_of_inquiry)
                 elif email_brand == 'zillow':
-                    yield self.parse_zillow_emails(email_body, date_of_inquiry)
+                    yield self.parse_zillow_emails(email_body, date_of_inquiry, reply_to_email)
                 elif email_brand == 'apartments':
                     yield self.parse_apartments_emails(email_body, date_of_inquiry)
                 elif email_brand == 'realtor':
@@ -237,34 +238,48 @@ class Command(BaseCommand):
 
 
     # Parsing Emails
-    def parse_zillow_emails(self, email_body, date_of_inquiry):
+    def parse_zillow_emails(self, email_body, date_of_inquiry, reply_to_email):
         """Gets the lead information from Zillow emails"""
-        # Loop through anchor tags in html
         soup = BeautifulSoup(email_body, 'html.parser')
-        items_to_remove = ['utm_medium', 'utm_campaign', 'utm_source', 'landlordBrand', 'inquiryId', 'intentionType', 'utm_term', 'controlHash']
-        for tag in soup.findAll('a', href=True):
-            if tag.text == 'phone contact info':
-                parsed_url = parse.urlsplit(tag['href'])
-                lead_info = parse.parse_qs(parsed_url.query)
-                lead_info['date_of_inquiry'] = date_of_inquiry
-                lead_info['lead_email'] = ''
-                lead_info['renterBrand'][0] = lead_info['renterBrand'][0].title()
-                lead_info['name'] = self.format_name(lead_info['name'][0]).split()
-                lead_info['phone'] = [self.format_phone_number(lead_info['phone'][0])]
-                lead_info['unit_number'] = ''
-                lead_info['sent_email'] = False
-                lead_info['sent_email_date'] = None
-                lead_info['sent_email_message'] = 'No email message was sent to the lead because no email was provided.'
-                lead_info['sent_text'] = False
-                lead_info['sent_text_date'] = None
-                lead_info['sent_text_message'] = 'No text message was sent to the lead because no phone number was provided.'
-                lead_info['written_to_database'] = False
 
-                # Remove items from dictionary we do not want
-                for item in items_to_remove:
-                    lead_info.pop(item)
+        # Initialized lead_info dictionary
+        lead_info = {}
+        lead_info['date_of_inquiry'] = date_of_inquiry
+        lead_info['lead_email'] = ''
+        lead_info['phone'] = ['']
+        lead_info['unit_number'] = ''
+        lead_info['sent_email'] = False
+        lead_info['sent_email_date'] = None
+        lead_info['sent_email_message'] = 'No email message was sent to the lead because no email was provided.'
+        lead_info['sent_text'] = False
+        lead_info['sent_text_date'] = None
+        lead_info['sent_text_message'] = 'No text message was sent to the lead because no phone number was provided.'
+        lead_info['written_to_database'] = False
+        lead_info['renterBrand'] = ['Zillow']
 
-                return lead_info
+        # Find the anchor tag with all the lead information
+        anchor_tags = soup.findAll('a', string='phone contact info')
+
+        if anchor_tags:
+            parsed_url = parse.urlsplit(anchor_tags[0]['href'])
+            lead_info_from_email = parse.parse_qs(parsed_url.query)
+            lead_info['renterBrand'][0] = lead_info_from_email['renterBrand'][0].title()
+            lead_info['name'] = self.format_name(lead_info_from_email['name'][0]).split()
+            lead_info['phone'] = [self.format_phone_number(lead_info_from_email['phone'][0])]
+        else:
+            # No phone contact info supplied by email. Only a name and reply-to email
+            # Get name and reply-to email from the reply_to_email string variable
+            lead_email_and_name_list = reply_to_email.split('<')
+
+            lead_email = lead_email_and_name_list[1].replace('>', '')
+            lead_name  = self.format_name(lead_email_and_name_list[0]).split()
+            lead_renter_brand = lead_email.split('.')[1].replace('.com', '').title()
+
+            lead_info['name'] = lead_name
+            lead_info['lead_email'] = lead_email
+            lead_info['renterBrand'] = [lead_renter_brand]
+
+        return lead_info
 
     def parse_move_emails(self, email_body, date_of_inquiry):
         """Gets the lead information from move.com emails"""
