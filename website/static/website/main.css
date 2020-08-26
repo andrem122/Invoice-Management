@@ -516,3 +516,17 @@ section.analytics .analytics-item img {
   height: 20px;
   width: 20px;
 }
+
+/* Start Polices Pages */
+#policy-and-terms-home-banner {
+  margin-top: 100px;
+  text-align: left;
+  margin-bottom: 45px;
+}
+
+#policy-and-terms-home-banner h2,
+#policy-and-terms-home-banner h3,
+#policy-and-terms-home-banner p {
+  width: 100%;
+}
+/* End Privacy Policies Pages */

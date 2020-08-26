@@ -95,3 +95,17 @@ def contact_support(request):
 
     template = loader.get_template('404.html')
     return HttpResponse(template.render(request=request))
+
+def privacy_policy(request):
+    #load the template
+    template = loader.get_template('website/privacy_policy.html')
+    context = {}
+
+    return HttpResponse(template.render(context, request))
+
+def terms_and_conditions(request):
+    #load the template
+    template = loader.get_template('website/terms_and_conditions.html')
+    context = {}
+
+    return HttpResponse(template.render(context, request))
