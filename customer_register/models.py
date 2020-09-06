@@ -11,6 +11,7 @@ class Customer_User(models.Model):
     wants_sms = models.BooleanField(default=False)
     wants_email_notifications = models.BooleanField(default=False)
     phone_number = PhoneNumberField(null=True, blank=False, unique=True)
+    ios_push_notification_token = models.CharField(max_length=300, null=True)
 
     house_flipper    = 'HF'
     property_manager = 'PM'
