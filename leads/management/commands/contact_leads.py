@@ -8,34 +8,34 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from leads.models import Lead
 from property.models import Company
+from customer_register.models import Customer_User, Customer_User_Push_Notification_Tokens
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import EmailMessage
 from django.template import loader
 from email import message_from_bytes
-import os, pytz
+from utils.push_notifications import send_push_notification
+import os, pytz, asyncio
 
 class Command(BaseCommand):
     help = 'Contacts and collects leads from marketing campaigns via text message and email'
 
     def add_arguments(self, parser):
-        parser.add_argument('--address', help='The company address', type=str, required=True)
-        parser.add_argument('--company_name', help='The company name', type=str, required=True)
-        parser.add_argument('--company_phone', help='The company phone number', type=str, required=True)
-        parser.add_argument('--company_email', help='The company email', type=str, required=True)
         parser.add_argument('--company_id', help='The company id in the database property table', type=str, required=True)
-        parser.add_argument('--notify_emails', help='The emails to notify', type=str, nargs='+', required=True)
         parser.add_argument('--emails_to_search', help='The emails to look for leads', type=str, required=True, nargs='+')
         parser.add_argument('--emails_to_search_pass', help='The emails to look for leads password', type=str, required=True, nargs='+')
         parser.add_argument('--emails_to_search_server', help='The emails to look for leads server name', type=str, required=True, nargs='+')
         parser.add_argument('--form_link', help='The link to the pre-approval form', type=str, required=True)
 
     def handle(self, *args, **options):
-        company_address = options['address']
-        company_name = options['company_name']
-        company_phone = options['company_phone']
-        company_email = options['company_email']
         company_id = options['company_id']
-        emails_to_notify = options['notify_emails']
+        company = Company.objects.get(pk=int(company_id))
+
+        company_address = company.address
+        company_name = company.name
+        company_phone = company.phone_number
+        company_email = company.email
+
+        emails_to_notify = [company_email]
         form_link = options['form_link']
         search_emails_info = zip(options['emails_to_search'], options['emails_to_search_pass'], options['emails_to_search_server'])
 
@@ -463,7 +463,7 @@ class Command(BaseCommand):
         # Get date for emails sent up to a day ago
         utc = pytz.UTC
         date_now = datetime.now()
-        date_one_day_ago = date_now - timedelta(days=1)
+        date_one_day_ago = date_now - timedelta(days=20)
         sent_since_date = date_one_day_ago.strftime("%-d-%b-%Y")
         date_one_day_ago.replace(tzinfo=utc)
 
@@ -496,7 +496,9 @@ class Command(BaseCommand):
             # Chain leads together from all websites
             leads_info = chain(leads_info_1, leads_info_2, leads_info_3, leads_info_4)
 
+            lead_count = 0 # Keep count of leads
             for lead_info in leads_info:
+                lead_count += 1
 
                 #  Get lead info
                 lead_phone_number = lead_info['phone'][0]
@@ -574,3 +576,28 @@ class Command(BaseCommand):
                     # Send notification email if a text message or email was sent to the lead
                     if lead_info['sent_text'] != False or lead_info['sent_email'] != False:
                         self.send_notification_email(lead_info, emails_to_notify, company_name)
+
+            # If lead count is greater than zero, then send push notification to mobile app
+            if lead_count > 0:
+                plural_leads = 'lead was' if lead_count == 1 else 'leads were'
+                alert_body = '{lead_count} new '.format(lead_count=lead_count) + plural_leads + ' contacted by NovaOne'
+                alert_title = 'New Lead' if lead_count == 1 else 'New Leads'
+                alert = {'title': alert_title, 'body': alert_body, 'selected_index': 1}
+
+                # Get all device tokens associated with the customer user account
+                customer_user = Company.objects.get(pk=int(company_id)).customer_user
+                customer_user_push_notification_tokens = Customer_User_Push_Notification_Tokens.objects.filter(customer_user=customer_user)
+
+                # Loop through tokens and send POST request via HTTP 2 to APN servers
+                for customer_user_push_notification_token in customer_user_push_notification_tokens:
+                    if customer_user_push_notification_token.type == 'iOS':
+                        # Get variables for push notification
+                        # device_token, badge, alert = {}
+                        device_token = customer_user_push_notification_token.device_token
+
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
+
+                        loop.run_until_complete(asyncio.gather(
+                            send_push_notification(device_token, lead_count, alert)
+                        ))

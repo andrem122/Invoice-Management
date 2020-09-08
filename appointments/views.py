@@ -14,12 +14,13 @@ from django.shortcuts import redirect, get_object_or_404
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from .models import Appointment_Real_Estate, Appointment_Base, Appointment_Medical
-from customer_register.models import Customer_User
+from customer_register.models import Customer_User, Customer_User_Push_Notification_Tokens
 from property.models import Company, Company_Disabled_Datetimes
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-import arrow, pytz
+from utils.push_notifications import send_push_notification
+import arrow, pytz, asyncio
 
 def dispatch(class_name, class_instance, request, *args, **kwargs):
     # Check if there is a GET variable if not redirect to the home page
@@ -120,6 +121,9 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         # Set customer_id and timezone when form has been validated
         company_id = self.request.GET.get('c', None)
+        app_authentication_username = self.request.POST.get('PHPAuthenticationUsername', None)
+        app_authentication_password = self.request.POST.get('PHPAuthenticationPassword', None)
+
         company = Company.objects.get(id=int(company_id))
         appointment = form.save(commit=False) # Call form.save(commit=False) to create an object 'in memory' and not in the database
         appointment.time.replace(tzinfo=pytz.timezone('US/Eastern'))
@@ -130,14 +134,41 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
         appointment_task_id = appointment.schedule_reminder('send_appointment_reminder', -120)
         appointment.appointment_task_id = appointment_task_id
 
-        # Schedule a notification message when somebody makes an appointment
-        appointment.schedule_new_appointment_created_notification()
+        # Schedule a notification message when somebody makes an appointment NOT from the app
+        if app_authentication_username == None and app_authentication_password == None:
+            appointment.schedule_new_appointment_created_notification()
+
         appointment.save()
 
+        # Send a POST request to Apple's Push Notification Servers if the user has a ios_push_notification_token
+        # Variables for push notification alert messsage
+        appointment_time = arrow.get(appointment.time)
+        appointment_time_formatted = appointment_time.format('MM/DD/YYYY hh:mm A')
+
+        alert_body = '{appointment_name} has made an appointment for {appointment_time}'.format(appointment_name=appointment.name, appointment_time=appointment_time_formatted)
+        alert_title = 'New Appointment'
+        alert = {'title': alert_title, 'body': alert_body, 'selected_index': 1}
+
+        # Get all device tokens associated with the customer user account
+        customer_user = appointment.company.customer_user
+        customer_user_push_notification_tokens = Customer_User_Push_Notification_Tokens.objects.filter(customer_user=customer_user)
+
+        # Loop through tokens and send POST request via HTTP 2 to APN servers
+        for customer_user_push_notification_token in customer_user_push_notification_tokens:
+            if customer_user_push_notification_token.type == 'iOS':
+                # Get variables for push notification
+                # device_token, badge, alert = {}
+                device_token = customer_user_push_notification_token.device_token
+
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+
+                loop.run_until_complete(asyncio.gather(
+                    send_push_notification(device_token, 1, alert)
+                ))
+
+
         # Return a JSON response if it is a POST request from the app
-        # Get post parameters from app
-        app_authentication_username = self.request.POST.get('PHPAuthenticationUsername', None)
-        app_authentication_password = self.request.POST.get('PHPAuthenticationPassword', None)
         if app_authentication_username != None and app_authentication_password != None:
             return JsonResponse(data={'successReason': 'Successfully added appointment'}, status=201)
         else:
