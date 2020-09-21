@@ -498,7 +498,6 @@ class Command(BaseCommand):
 
             lead_count = 0 # Keep count of leads
             for lead_info in leads_info:
-                lead_count += 1
 
                 #  Get lead info
                 lead_phone_number = lead_info['phone'][0]
@@ -554,6 +553,8 @@ class Command(BaseCommand):
                     if lead_info['sent_text'] != False or lead_info['sent_email'] != False:
                         self.send_notification_email(lead_info, emails_to_notify, company_name)
                         self.write_to_database(lead_info, company_id)
+                        lead_count += 1
+
 
                 else: # Lead not found in database, so this code will run
                     print("Lead {name} not found in database!".format(name=name))
@@ -576,6 +577,7 @@ class Command(BaseCommand):
                     # Send notification email if a text message or email was sent to the lead
                     if lead_info['sent_text'] != False or lead_info['sent_email'] != False:
                         self.send_notification_email(lead_info, emails_to_notify, company_name)
+                        lead_count += 1
 
             # If lead count is greater than zero, then send push notification to mobile app
             if lead_count > 0:
