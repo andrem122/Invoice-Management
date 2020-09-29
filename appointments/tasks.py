@@ -59,6 +59,7 @@ def send_new_appointment_notification(appointment_id, appointment_model):
     customer_type = appointment.company.customer_user.customer_type
     text_message = None
     context = None
+    customer_user = appointment.company.customer_user
     customer_user_first_name = appointment.company.customer_user.user.first_name
     additional_message = True
 
@@ -163,12 +164,13 @@ def send_new_appointment_notification(appointment_id, appointment_model):
                 'current_year': current_year,
         }
 
-    # Send text to the company number
-    client.messages.create(
-        body=text_message,
-        to=appointment.company.phone_number.as_e164,
-        from_=settings.TWILIO_NUMBER,
-    )
+    # Send text to the company number if customer wants SMS notifications
+    if customer_user.wants_sms:
+        client.messages.create(
+            body=text_message,
+            to=appointment.company.phone_number.as_e164,
+            from_=settings.TWILIO_NUMBER,
+        )
 
     # Send a notification to me
     client.messages.create(
