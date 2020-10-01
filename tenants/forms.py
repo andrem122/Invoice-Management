@@ -1,41 +1,36 @@
 from django import forms
 from .models import Tenant
-from datetime import datetime
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView
 from django.utils.translation import gettext as _
-import arrow
 
 class TenantFormCreate(forms.ModelForm):
-    class Meta:
-        model = Tenant
-        fields = ['name', 'address', 'phone_number', 'lease_begin',]
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
 
     def clean(self):
-        """Checks if a tenant has already been made"""
+        """Checks if lease length is a positive integer"""
 
         # Call clean method from base class first
         cleaned_data = super().clean()
+        lease_length = cleaned_data.get('lease_length')
+        print(type(lease_length))
 
-        now = datetime.now()
-        try:
-            tenant = Tenant.objects.filter(phone_number=cleaned_data['phone_number'])
-            if tenant.exists():
-                message = 'You have already added {name} as a tenant.'.format(name=cleaned_data['name'])
-                raise forms.ValidationError(_(message), 'object_exists')
-        except KeyError:
-            pass
+        # If lease length is less than or equal to zero, raise an error
+        if lease_length <= 0:
+            message = 'Please choose a number larger than zero for lease length.'
+            raise forms.ValidationError(_(message), 'invalid_input')
 
         return cleaned_data
 
-# class TenantFormUpdate(forms.ModelForm):
-#     class Meta:
-#         model = Tenant
-#         fields = ['name', 'address', 'phone_number', 'lease_begin',]
+    lease_begin = forms.DateTimeField(
+        input_formats=['%m/%d/%Y'],
+        widget=forms.TextInput(attrs={'onkeydown':'return false', 'readonly': 'true'}),
+    )
 
-class TenantCreate(CreateView):
-    form_class = TenantFormCreate
-    model = Tenant
+    class Meta:
+        model = Tenant
+        fields = ['name', 'phone_number', 'email', 'lease_begin', 'lease_length']
 
-class TenantUpdate(UpdateView):
-    form_class = TenantFormCreate
-    model = Tenant
+class TenantMassMessage(forms.Form):
+    message = forms.CharField(label='Message', max_length=1000, widget=forms.Textarea)

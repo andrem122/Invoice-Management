@@ -1,7 +1,7 @@
 {% extends "base_appointment.html" %}
 {% load static %}
 
-{% block title %}Disabled Days{% endblock title %}
+{% block title %}Tenants{% endblock title %}
 
 {% block scripts %}
 <!--===============================================================================================-->
@@ -20,6 +20,7 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'appointments/css/util.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'appointments/css/table.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'property/css/company_list.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'tenants/css/tenant_list.css' %}">
 <!--===============================================================================================-->
 	<script defer src="{% static 'appointments/vendor/bootstrap/js/popper.js' %}"></script>
 <!--===============================================================================================-->
@@ -30,14 +31,22 @@
 {% endblock scripts %}
 
 {% block confirm_delete_message %}
-Are you sure you want to delete the disabled day?
+Are you sure you want to delete the tenant?
 {% endblock confirm_delete_message %}
+
 
 {% block actions_popup_options %}
 <li>
 	<a class="action_option delete_object_option delete-trigger" href="#">
 		<i class="fa fa-trash delete-trigger" aria-hidden="true"></i>
 		<span class="delete-trigger">Delete</span>
+	</a>
+</li>
+
+<li>
+	<a class="action_option delete_object_option" href="#">
+		<i class="fa fa-paper-plane" aria-hidden="true"></i>
+		<span>Send Renewal Invite</span>
 	</a>
 </li>
 {% endblock actions_popup_options %}
@@ -49,18 +58,76 @@ Are you sure you want to delete the disabled day?
 			<div class="col-sm-12 text-center title-with-paragraph">
 
 				{% if object_list %}
-				<h1>Disabled Days</h1>
+				<h1>{{ company.name }} Tenants</h1>
 				{% else %}
-				<h1>No Disabled Days &amp; Times</h1>
-				<p>There are currently no disabled days.</p>
+				<h1>No Tenants</h1>
+				<p>There are currently no tenants.</p>
 				{% endif %}
-				<a href="{% url 'property:add_company_disabled_datetimes' %}?c={{ company_id }}" class="standard-btn">
-					Add A Disabled Day
+				<a type="button" data-toggle="modal" data-target="#page-options" class="standard-btn">
+					<i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+				</a>
+				<a href="{% url 'tenants:add_tenant' %}?c={{ company.id }}" class="standard-btn">
+					Add Tenant
 					<i class="fa fa-plus" aria-hidden="true"></i>
 				</a>
 
-				{% include 'includes/page_messages/page_message.html' %}
+			</div>
 
+			{# Tenant Actions #}
+			<div class="modal fade" id="page-options" tabindex="-1" role="dialog" aria-labelledby="Tenant Options" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h3 class="modal-title">Tenant Actions</h3>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+							<ul class="actions-list">
+								<li>
+									<a href="#" data-dismiss="modal" aria-label="Close" type="button" data-toggle="modal" data-target="#send-mass-text-message">
+										<i class="fa fa-comment" aria-hidden="true"></i>
+										<span>Send Mass Text Message</span>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<i class="fa fa-envelope" aria-hidden="true"></i>
+										<span>Send Mass Email Message</span>
+									</a>
+								</li>
+      				</ul>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			{# Send Mass Text Message #}
+			<div class="modal fade" id="send-mass-text-message" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h3 class="modal-title">Send Mass Text Message</h3>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+							<form class="form-horizontal send-mass-message-form" method="post" action="{% url 'tenants:send_mass_message' %}">
+				        {% csrf_token %}
+								{{ tenant_mass_message_form }}
+								<input type="hidden" name="send_text_message" value="True">
+								<input type="hidden" name="send_email_message" value="False">
+								<input type="hidden" name="company_id" value="{{ company.id }}">
+								<button type="submit" class="standard-btn create-appointment-btn">
+				          Send
+				          <i class="fas fa-pencil-alt"></i>
+				        </button>
+							</form>
+			      </div>
+			    </div>
+			  </div>
 			</div>
 
 			{# Table #}
@@ -81,34 +148,47 @@ Are you sure you want to delete the disabled day?
 
               </div>
 
-              {% for company_disabled_days in object_list %}
+              {% for tenant in object_list %}
               <div class="table-row">
 
-								{# Disabled Day Of The Week #}
-                <div class="cell" data-title="Disabled Week Days">
-                  {{ company_disabled_days.disabled_days_of_the_week }}
+								{# Name #}
+                <div class="cell" data-title="Name">
+									{% if tenant.ending_soon %}
+									<div class="ending_soon_danger">Ending Soon</div>
+									{% endif %}
+                  {{ tenant.name }}
                 </div>
 
-								{# Disabled Times For Each Day #}
-								<div class="cell" data-title="Disabled Times">
-                  {{ company_disabled_days.disabled_times_for_each_day }}
+								{# Phone Number #}
+								<div class="cell" data-title="Phone Number">
+                  <a href="tel:{{ tenant.phone_number }}">{{ tenant.phone_number }}</a>
                 </div>
 
-                {# Created #}
-								<div class="cell" data-title="Created">
-                  {{ company_disabled_days.created }}
+                {# Email #}
+								<div class="cell" data-title="Email">
+                  <a href="mailto:{{ tenant.email }}">{{ tenant.email }}</a>
+                </div>
+
+								{# Lease Begin #}
+								<div class="cell" data-title="Lease Begin">
+                  {{ tenant.lease_begin }}
+                </div>
+
+								{# Lease End #}
+								<div class="cell" data-title="Lease End">
+                  {{ tenant.lease_end }}
                 </div>
 
 								{# Actions #}
 								<div class="cell actions" data-title="Actions">
-									<button type="button" class="actions-btn actions-trigger" data-object-id="{{ company_disabled_days.id }}">
+									<button type="button" class="actions-btn actions-trigger" data-object-id="{{ tenant.id }}">
 										<i class="fa fa-ellipsis-v actions-trigger" aria-hidden="true"></i>
 									</button>
 								</div>
 
 								{# Actions for mobile devices #}
 								<div class="cell actions-mobile">
-									<button type="button" class="standard-btn actions-mobile-btn actions-trigger" data-object-id="{{ company_disabled_days.id }}">Actions</button>
+									<button type="button" class="standard-btn actions-mobile-btn actions-trigger" data-object-id="{{ tenant.id }}">Actions</button>
 								</div>
 
               </div>

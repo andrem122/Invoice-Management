@@ -79,23 +79,23 @@ div.popup > button > svg {
 
 /* Toggle this class when clicking on the popup container (hide and show the popup) */
 
-div.popup ul > li > a {
+ul.actions-list > li > a {
   font-size: 20px;
   padding: 10px 15px;
   color: rgb(51, 51, 51);
   display: flex;
 }
 
-div.popup ul > li > a:active {
+ul.actions-list > li > a:active {
   color: #536cdb;
 }
 
-div.popup ul > li > a > svg {
+ul.actions-list > li > a > svg {
   margin-right: 10px;
   font-size: 25px;
 }
 
-div.popup ul > li {
+ul.actions-list > li {
   margin-bottom: 10px;
 }
 
@@ -164,13 +164,6 @@ div.page_message > h4 {
 }
 /* End Page Message */
 
-/* Modal Popup */
-/* .modal-dialog-centered {
-  top: 50%;
-  transform: translateY(-50%);
-} */
-/* End Modal Popup */
-
 /* Video Responsive Iframe */
 .video-responsive{
     overflow:hidden;
@@ -186,3 +179,17 @@ div.page_message > h4 {
     position:absolute;
 }
 /* End Video Responsive Iframe */
+
+/* Forms */
+.send-mass-message-form > textarea {
+  height: 300px;
+  resize: none;
+  width: 100%;
+  border: 1px solid #ccc;
+  padding:10px;
+}
+
+.send-mass-message-form > textarea:focus {
+  border: 1px solid #ccc !important;
+}
+/* End Forms */

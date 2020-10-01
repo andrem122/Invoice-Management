@@ -91,7 +91,7 @@ $(function() {
 
 
   var all_disabled_times = disabled_datetimes.concat(appointments);
-  // Set options for appointment time field
+  // Set options for disabled time field
   $('#id_time').datetimepicker({
     format: 'MM/DD/YYYY hh:mm A',
     extraFormats: ['YYYY-MM-DD hh:mm:ss A'],

@@ -85,7 +85,7 @@ window.addEventListener('DOMContentLoaded', function() {
     element.parentElement.removeChild(element);
   }
 
-  function ajax_delete(object_id, alert_message_element, endpoint) {
+  function ajax_delete(object_id, alert_message_element, endpoint, html_success_message) {
     // Sends a HTTP POST request
     this.disabled = true; //disable to button to prevent double submissions
 
@@ -108,7 +108,7 @@ window.addEventListener('DOMContentLoaded', function() {
        headers:{"X-CSRFToken": csrftoken},
        success: function(data, textStatus) {
          // Remove the old data and replace with new data
-         var html = 'Disabled date time deleted successfully!';
+         var html = html_success_message;
          alert_message(alert_message_element, html, true);
          outer_table.innerHTML = data;
          this.disabled = false;
@@ -121,7 +121,7 @@ window.addEventListener('DOMContentLoaded', function() {
      });
   }
 
-  function delete_objects(endpoint) {
+  function delete_objects(endpoint, html_success_message) {
     // Sets up the functionality for deleteing objects for each page
     // Elements needed for ajax delete pages
     var delete_object_option_buttons = document.getElementsByClassName('delete_object_option');
@@ -140,7 +140,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
     yes_action_button.addEventListener('click', function() {
       var object_id = delete_popup.getAttribute('data-object-id');
-      ajax_delete(object_id, alert_message_element, endpoint);
+      ajax_delete(object_id, alert_message_element, endpoint, html_success_message);
       window.scroll({
         top: 0,
         left: 0,
@@ -156,8 +156,10 @@ window.addEventListener('DOMContentLoaded', function() {
   // Delete disabled datetimes page
   if(pathname === "/property/company-disabled-datetimes") {
     // Plug in the delete object url for this specific page
-    delete_objects("/property/delete-company-disabled-datetimes");
+    delete_objects("/property/delete-company-disabled-datetimes", "Disabled date time deleted successfully!");
   } else if(pathname === '/property/company-disabled-days') {
-    delete_objects("/property/delete-company-disabled-days");
+    delete_objects("/property/delete-company-disabled-days", "Disabled date time deleted successfully!");
+  } else if(pathname === '/tenants/') {
+    delete_objects("/tenants/delete-tenant", "Tenant deleted successfully!");
   }
 });

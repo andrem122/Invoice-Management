@@ -1,4 +1,4 @@
-{% extends "appointments/base_appointment.html" %}
+{% extends "base_appointment.html" %}
 {% load static %}
 
 {% block title %}Disabled Dates And Times{% endblock title %}
@@ -25,45 +25,24 @@
 <!--===============================================================================================-->
 	<script defer src="{% static 'appointments/vendor/select2/select2.min.js' %}"></script>
 <!--===============================================================================================-->
-  <script defer src="{% static 'property/js/popup_actions.js' %}?v=1.0" type="text/javascript"></script>
-  <script defer src="{% static 'property/js/ajax.js' %}?v=1.0" type="text/javascript"></script>
+  <script defer src="{% static 'js/popup_actions.js' %}?v=1.0" type="text/javascript"></script>
+  <script defer src="{% static 'js/ajax.js' %}?v=1.0" type="text/javascript"></script>
 {% endblock scripts %}
 
+{% block confirm_delete_message %}
+Are you sure you want to delete the disabled date and time?
+{% endblock confirm_delete_message %}
+
+{% block actions_popup_options %}
+<li>
+	<a class="action_option delete_object_option delete-trigger" href="#">
+		<i class="fa fa-trash delete-trigger" aria-hidden="true"></i>
+		<span class="delete-trigger">Delete</span>
+	</a>
+</li>
+{% endblock actions_popup_options %}
+
 {% block content %}
-	{# Actions Popup #}
-	<div id="actions-popup" class="popup actions-popup">
-		<h3 class="popup-title">Actions</h3>
-		<button type="button" class="remove-popup-btn">
-			<i class="fa fa-times" aria-hidden="true"></i>
-		</button>
-		<ul class="actions-list">
-      <!-- <li>
-				<a class="action_option" href="#">
-					<i class="fa fa-edit" aria-hidden="true"></i>
-					<span>Edit</span>
-				</a>
-			</li> -->
-			<li>
-				<a class="action_option delete_object_option delete-trigger" href="#">
-					<i class="fa fa-trash delete-trigger" aria-hidden="true"></i>
-					<span class="delete-trigger">Delete</span>
-				</a>
-			</li>
-	</div>
-
-  <div class="popup confirm_action_button_popup" id="delete-popup">
-		<h3>Delete?</h3>
-		<button type="button" class="remove-popup-btn">
-			<i class="fa fa-times" aria-hidden="true"></i>
-		</button>
-		<p>Are you sure you want to delete the disabled date and time?</p>
-    <div class="confirm_action_button_container">
-      <button class="standard-btn confirm_action_button" id="yes_action_button" type="button">Yes</button>
-      <button class="standard-btn confirm_action_button" id="cancel_action_button" type="button">Cancel</button>
-    </div>
-    {% csrf_token %}
-	</div>
-
   <div class="row">
     <div class="limiter">
 

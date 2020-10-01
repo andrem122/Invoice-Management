@@ -52,15 +52,7 @@ def dispatch(class_name, class_instance, request, *args, **kwargs):
 class AppointmentListView(LoginRequiredMixin, ListView):
     """Shows users a list of appointments"""
     paginate_by = 25
-
-    def get_queryset(self):
-        # Filter objects displayed by user
-
-        # Get all companies owned by the user
-        companies = Company.objects.filter(customer_user=self.request.user.customer_user)
-        return Appointment_Base.objects.filter(
-            company__in=companies
-        ).order_by('-time')
+    model = Appointment_Base
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,19 +60,25 @@ class AppointmentListView(LoginRequiredMixin, ListView):
         customer_user = self.request.user.customer_user
         customer_type = customer_user.customer_type
         companies = Company.objects.filter(customer_user=customer_user)
+        company_id = int(self.request.GET.get('c', None))
+        company = Company.objects.get(pk=company_id)
 
         if customer_type == 'MW': # For medical field
-            appointments_medical = Appointment_Medical.objects.filter(company__in=companies)
+            appointments_medical = Appointment_Medical.objects.filter(company=company)
             context['fields'] = ('Name', 'Time', 'Phone Number', 'Address', 'City', 'Zip', 'Email', 'Date Of Birth', 'Gender', 'Test Type', 'Confirmed') # fields to show in table header
             context['object_list'] = appointments_medical
 
         elif customer_type == 'PM': # For real estate
-            appointments_real_estate = Appointment_Real_Estate.objects.filter(company__in=companies)
+            appointments_real_estate = Appointment_Real_Estate.objects.filter(company=company)
             context['fields'] = ('Name', 'Time', 'Phone Number', 'Unit Type', 'Confirmed')
             context['object_list'] = appointments_real_estate
 
+        context['company'] = company
         context['customer_user'] = customer_user
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        return dispatch(AppointmentListView, self, request, args, kwargs)
 
 class AppointmentDetailView(DetailView):
     """Shows users a single appointment"""
@@ -140,7 +138,7 @@ class AppointmentCreateView(SuccessMessageMixin, CreateView):
 
         appointment.save()
 
-        # Send a POST request to Apple's Push Notification Servers if the user has a ios_push_notification_token
+        # Push Notifications
         # Variables for push notification alert messsage
         appointment_time = arrow.get(appointment.time)
         appointment_time_formatted = appointment_time.format('MM/DD/YYYY hh:mm A')

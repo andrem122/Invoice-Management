@@ -42,6 +42,7 @@ urlpatterns = [
     path('customer-payments/', include('customer_payments.urls')),
     path('property/', include('property.urls')),
     path('appointments/', include('appointments.urls', namespace='appointments')),
+    path('tenants/', include('tenants.urls')),
     path('leads/', include('leads.urls')),
     path('redirect/', include('redirect.urls')),
 ]

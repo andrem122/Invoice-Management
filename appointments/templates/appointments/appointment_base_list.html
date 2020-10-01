@@ -1,4 +1,4 @@
-{% extends "appointments/base_appointment.html" %}
+{% extends "base_appointment.html" %}
 {% load static %}
 
 {% block title %}All Appointments{% endblock title %}
@@ -40,7 +40,7 @@
 				<h1>No Appointments</h1>
 				<p>There are currently no appointments.</p>
 				{% endif %}
-				<a href="{% url 'property:companies' %}" class="standard-btn">
+				<a href="{% url 'appointments:new_appointment' %}?c={{ company.id }}" class="standard-btn">
 					Create Appointment
 					<i class="fa fa-plus" aria-hidden="true"></i>
 				</a>

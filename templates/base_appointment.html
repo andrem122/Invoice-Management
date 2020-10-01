@@ -29,7 +29,7 @@
 
   <body{% if request.path == '/appointments/' %} class="appointments-list"{% endif %}>
     <div id="overlay"></div>
-    {% if user.is_authenticated and  not user.is_superuser %}
+    {% if user.is_authenticated and not user.is_superuser %}
     <div class="navbar navbar-default navbar-static-top">
       <div class="container">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
@@ -43,7 +43,7 @@
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="{% url 'property:companies' %}">Companies</a></li>
-            <li><a href="{% url 'appointments:list_appointments' %}">Appointments</a></li>
+            <li><a href="#">Settings</a></li>
           </ul>
         </div>
       </div>
@@ -61,6 +61,32 @@
       {% endif %}
       <div id="alert_message" class="alert alert-dismissible" role="alert">
       </div>
+
+      {# Actions Popup For All Pages Except The List Companies Page #}
+      {% if request.path != '/property/' %}
+      <div id="actions-popup" class="popup actions-popup">
+        <h3 class="popup-title">Actions</h3>
+        <button type="button" class="remove-popup-btn">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+        <ul class="actions-list">
+          {% block actions_popup_options %}
+          {% endblock actions_popup_options %}
+      </div>
+
+      <div class="popup confirm_action_button_popup" id="delete-popup">
+        <h3>Delete?</h3>
+        <button type="button" class="remove-popup-btn">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+        <p>{% block confirm_delete_message %}{% endblock confirm_delete_message %}</p>
+        <div class="confirm_action_button_container">
+          <button class="standard-btn confirm_action_button" id="yes_action_button" type="button">Yes</button>
+          <button class="standard-btn confirm_action_button" id="cancel_action_button" type="button">Cancel</button>
+        </div>
+        {% csrf_token %}
+      </div>
+      {% endif %}
       {% block content %}{% endblock content %}
 
       <footer class="appointment-footer">

@@ -1,4 +1,4 @@
-{% extends "appointments/base_appointment.html" %}
+{% extends "base_appointment.html" %}
 {% load static %}
 
 {% block title %}Companies{% endblock title %}
@@ -25,7 +25,7 @@
 <!--===============================================================================================-->
 	<script defer src="{% static 'appointments/vendor/select2/select2.min.js' %}"></script>
 <!--===============================================================================================-->
-  <script defer src="{% static 'property/js/popup_actions.js' %}?v=1.0" type="text/javascript"></script>
+  <script defer src="{% static 'js/popup_actions.js' %}?v=1.0" type="text/javascript"></script>
 {% endblock scripts %}
 
 {% block content %}
@@ -38,23 +38,17 @@
 		</button>
 		<ul class="actions-list">
 			<li>
-				<a class="action_option" href="/appointments/new">
+				<a class="action_option" href="{% url 'appointments:new_appointment' %}">
 					<i class="fa fa-clock" aria-hidden="true"></i>
 					<span>Create Appointment</span>
 				</a>
 			</li>
-			<!-- <li>
-				<a class="action_option" href="#">
-					<i class="fa fa-clock" aria-hidden="true"></i>
-					<span>Change Hours Enabled</span>
-				</a>
-			</li> -->
-			<!-- <li>
-				<a class="action_option" href="#">
+			<li>
+				<a class="action_option" href="{% url 'appointments:list_appointments' %}">
 					<i class="fa fa-calendar" aria-hidden="true"></i>
-					<span>Change Days Enabled</span>
+					<span>View Appointments</span>
 				</a>
-			</li> -->
+			</li>
 			<li>
 				<a class="action_option" href="{% url 'property:add_company_disabled_datetimes' %}">
 					<i class="fa fa-ban" aria-hidden="true"></i>
@@ -69,16 +63,24 @@
 			</li>
 			<li>
 				<a class="action_option" href="{% url 'property:list_company_disabled_days' %}">
-					<i class="fa fa-calendar" aria-hidden="true"></i>
+					<i class="fa fa-list" aria-hidden="true"></i>
 					<span>View Blocked Days</span>
 				</a>
 			</li>
-			<!-- <li>
-				<a class="action_option" href="#">
-					<i class="fa fa-trash" aria-hidden="true"></i>
-					<span>Delete Company</span>
+			{% if customer_user.customer_type == 'PM' %}
+			<li>
+				<a class="action_option" href="{% url 'tenants:add_tenant' %}">
+					<i class="fa fa-user" aria-hidden="true"></i>
+					<span>Add Tenant</span>
 				</a>
-			</li> -->
+			</li>
+			<li>
+				<a class="action_option" href="{% url 'tenants:list_tenants' %}">
+					<i class="fa fa-users" aria-hidden="true"></i>
+					<span>View Tenants</span>
+				</a>
+			</li>
+			{% endif %}
 		</ul>
 	</div>
 

@@ -1,0 +1,61 @@
+<div id="inner_table" class="table">
+
+  <div class="table-row header">
+    {% for field in fields %}
+    <div class="cell">
+      {{ field }}
+    </div>
+    {% endfor %}
+    <div class="cell">
+      Actions
+    </div>
+
+  </div>
+
+  {% for tenant in object_list %}
+  <div class="table-row">
+
+    {# Name #}
+    <div class="cell" data-title="Name">
+      {% if tenant.ending_soon %}
+      <div class="ending_soon_danger">Ending Soon</div>
+      {% endif %}
+      {{ tenant.name }}
+    </div>
+
+    {# Phone Number #}
+    <div class="cell" data-title="Phone Number">
+      <a href="tel:{{ tenant.phone_number }}">{{ tenant.phone_number }}</a>
+    </div>
+
+    {# Email #}
+    <div class="cell" data-title="Email">
+      <a href="mailto:{{ tenant.email }}">{{ tenant.email }}</a>
+    </div>
+
+    {# Lease Begin #}
+    <div class="cell" data-title="Lease Begin">
+      {{ tenant.lease_begin }}
+    </div>
+
+    {# Lease End #}
+    <div class="cell" data-title="Lease End">
+      {{ tenant.lease_end }}
+    </div>
+
+    {# Actions #}
+    <div class="cell actions" data-title="Actions">
+      <button type="button" class="actions-btn actions-trigger" data-object-id="{{ tenant.id }}">
+        <i class="fa fa-ellipsis-v actions-trigger" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    {# Actions for mobile devices #}
+    <div class="cell actions-mobile">
+      <button type="button" class="standard-btn actions-mobile-btn actions-trigger" data-object-id="{{ tenant.id }}">Actions</button>
+    </div>
+
+  </div>
+  {% endfor %}
+
+</div>

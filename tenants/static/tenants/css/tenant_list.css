@@ -1,0 +1,10 @@
+.ending_soon_danger {
+  width: 103px;
+  background-color: #c82a2a;
+  color: white;
+  text-transform: uppercase;
+  padding: 3px;
+  border-radius: 1em;
+  font-size: 11px;
+  text-align: center;
+}
