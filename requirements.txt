@@ -18,7 +18,7 @@ contextvars==2.4
 coverage==4.5.4
 cryptography==3.1
 dj-database-url==0.5.0
-Django==2.1.15
+Django==2.2.13
 django-bootstrap3==11.1.0
 django-bootstrap4==1.0.1
 django-dotenv==1.4.2
